@@ -7,42 +7,45 @@
 
 #include <tuple>
 #include "DirectionsPositions.h"
-using namespace PositioningInSpace;
-enum CoordinateType
-{
-    Natural,
-    Parametric,
-    Template
-};
 
-class Coordinate {
-public:
+namespace PositioningInSpace{
+    enum CoordinateType
+    {
+        Natural,
+        Parametric,
+        Template
+    };
 
-    Coordinate(CoordinateType type, Direction direction);
+    class Coordinate {
+    public:
 
-    Coordinate(CoordinateType type, Direction direction, double value);
+        Coordinate(CoordinateType type, Direction direction);
 
-    ~Coordinate();
+        Coordinate(CoordinateType type, Direction direction, double value);
 
-    CoordinateType type();
+        ~Coordinate();
 
-    Direction direction();
+        CoordinateType type();
 
-    double value();
+        Direction direction();
 
-    void setValue(double value);
+        double value();
 
-    bool operator == (const Coordinate& dof);
+        void setValue(double value);
 
-    bool operator != (const Coordinate& dof);
+        bool operator == (const Coordinate& dof);
 
-    void Print();
+        bool operator != (const Coordinate& dof);
 
-private:
-    CoordinateType _type;
-    Direction _direction;
-    double *_value;
-};
+        void Print();
+
+    private:
+        CoordinateType _type;
+        Direction _direction;
+        double *_value;
+    };
+}
+
 
 
 #endif //UNTITLED_COORDINATE_H

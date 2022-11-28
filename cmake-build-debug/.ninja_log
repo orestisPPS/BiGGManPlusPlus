@@ -1,9 +1,7 @@
 # ninja log v5
 1	236	1669600278318942859	CMakeFiles/untitled.dir/Primitives/MatrixTest.cpp.o	200f8ce0516969d3
-0	224	1669600278306942835	CMakeFiles/untitled.dir/main.cpp.o	83c86b9013c6fe62
-0	31	1669601193682935194	build.ninja	2e9672a16005c4d6
-1	241	1669600278322942867	CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o	b40249e5bcb5381c
-241	295	1669600278374942970	untitled	2a5dc15e4185af40
-1	216	1669602358050249773	CMakeFiles/untitled.dir/main.cpp.o	83c86b9013c6fe62
 1	228	1669602358062249774	CMakeFiles/untitled.dir/PositioningInSpace/Coordinate.cpp.o	347c3218452df39c
+1	216	1669602358050249773	CMakeFiles/untitled.dir/main.cpp.o	83c86b9013c6fe62
+0	31	1669603986120778550	build.ninja	2e9672a16005c4d6
+1	241	1669600278322942867	CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o	b40249e5bcb5381c
 228	282	1669602358114249779	untitled	37be482d36f0536c
