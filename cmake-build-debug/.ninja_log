@@ -1,0 +1,10 @@
+# ninja log v5
+2	274	1669563500046259161	CMakeFiles/untitled.dir/main.cpp.o	bb46621666f50de8
+0	31	1669598392276243117	build.ninja	2e9672a16005c4d6
+274	328	1669563500102259137	untitled	fae2b9357ea7cb5a
+1	240	1669598929544927795	CMakeFiles/untitled.dir/Primitives/MatrixTest.cpp.o	fc009332a6b0f38f
+1	241	1669598929544927795	CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o	787ba0f1962c80bf
+0	245	1669598929548927776	CMakeFiles/untitled.dir/main.cpp.o	bb46621666f50de8
+245	309	1669598929612927478	untitled	2a5dc15e4185af40
+0	204	1669598968520748598	CMakeFiles/untitled.dir/main.cpp.o	bb46621666f50de8
+204	258	1669598968572748362	untitled	2a5dc15e4185af40
