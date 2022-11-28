@@ -39,7 +39,7 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = /home/hal9000/code/untitled/cmake-build-debug/
+cmake_ninja_workdir = /home/hal9000/code/BiGGMan++/cmake-build-debug/
 # =============================================================================
 # Object build statements for EXECUTABLE target untitled
 
@@ -49,23 +49,29 @@ cmake_ninja_workdir = /home/hal9000/code/untitled/cmake-build-debug/
 
 build cmake_object_order_depends_target_untitled: phony || CMakeFiles/untitled.dir
 
-build CMakeFiles/untitled.dir/main.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/untitled/main.cpp || cmake_object_order_depends_target_untitled
+build CMakeFiles/untitled.dir/main.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/main.cpp || cmake_object_order_depends_target_untitled
   DEP_FILE = CMakeFiles/untitled.dir/main.cpp.o.d
   FLAGS = -fopenmp -g -std=gnu++14
   OBJECT_DIR = CMakeFiles/untitled.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled.dir
 
-build CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/untitled/DegreesOfFreedom/DegreeOfFreedom.cpp || cmake_object_order_depends_target_untitled
+build CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/DegreesOfFreedom/DegreeOfFreedom.cpp || cmake_object_order_depends_target_untitled
   DEP_FILE = CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o.d
   FLAGS = -fopenmp -g -std=gnu++14
   OBJECT_DIR = CMakeFiles/untitled.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled.dir/DegreesOfFreedom
 
-build CMakeFiles/untitled.dir/Primitives/MatrixTest.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/untitled/Primitives/MatrixTest.cpp || cmake_object_order_depends_target_untitled
+build CMakeFiles/untitled.dir/Primitives/MatrixTest.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/Primitives/MatrixTest.cpp || cmake_object_order_depends_target_untitled
   DEP_FILE = CMakeFiles/untitled.dir/Primitives/MatrixTest.cpp.o.d
   FLAGS = -fopenmp -g -std=gnu++14
   OBJECT_DIR = CMakeFiles/untitled.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled.dir/Primitives
+
+build CMakeFiles/untitled.dir/PositioningInSpace/Coordinate.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/PositioningInSpace/Coordinate.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/PositioningInSpace/Coordinate.cpp.o.d
+  FLAGS = -fopenmp -g -std=gnu++14
+  OBJECT_DIR = CMakeFiles/untitled.dir
+  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/PositioningInSpace
 
 
 # =============================================================================
@@ -75,7 +81,7 @@ build CMakeFiles/untitled.dir/Primitives/MatrixTest.cpp.o: CXX_COMPILER__untitle
 #############################################
 # Link the executable untitled
 
-build untitled: CXX_EXECUTABLE_LINKER__untitled_Debug CMakeFiles/untitled.dir/main.cpp.o CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o CMakeFiles/untitled.dir/Primitives/MatrixTest.cpp.o
+build untitled: CXX_EXECUTABLE_LINKER__untitled_Debug CMakeFiles/untitled.dir/main.cpp.o CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o CMakeFiles/untitled.dir/Primitives/MatrixTest.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/Coordinate.cpp.o
   FLAGS = -fopenmp -g
   OBJECT_DIR = CMakeFiles/untitled.dir
   POST_BUILD = :
@@ -88,7 +94,7 @@ build untitled: CXX_EXECUTABLE_LINKER__untitled_Debug CMakeFiles/untitled.dir/ma
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/hal9000/code/untitled/cmake-build-debug && /snap/clion/209/bin/cmake/linux/bin/ccmake -S/home/hal9000/code/untitled -B/home/hal9000/code/untitled/cmake-build-debug
+  COMMAND = cd /home/hal9000/code/BiGGMan++/cmake-build-debug && /snap/clion/209/bin/cmake/linux/bin/ccmake -S/home/hal9000/code/BiGGMan++ -B/home/hal9000/code/BiGGMan++/cmake-build-debug
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -100,7 +106,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/hal9000/code/untitled/cmake-build-debug && /snap/clion/209/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/hal9000/code/untitled -B/home/hal9000/code/untitled/cmake-build-debug
+  COMMAND = cd /home/hal9000/code/BiGGMan++/cmake-build-debug && /snap/clion/209/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/hal9000/code/BiGGMan++ -B/home/hal9000/code/BiGGMan++/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -116,7 +122,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 
 #############################################
-# Folder: /home/hal9000/code/untitled/cmake-build-debug
+# Folder: /home/hal9000/code/BiGGMan++/cmake-build-debug
 
 build all: phony untitled
 

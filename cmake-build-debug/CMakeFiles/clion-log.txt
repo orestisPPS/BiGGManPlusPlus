@@ -1,4 +1,4 @@
-/snap/clion/209/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/209/bin/ninja/linux/ninja -G Ninja -S /home/hal9000/code/untitled -B /home/hal9000/code/untitled/cmake-build-debug
+/snap/clion/209/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/209/bin/ninja/linux/ninja -G Ninja -S /home/hal9000/code/BiGGMan++ -B /home/hal9000/code/BiGGMan++/cmake-build-debug
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/hal9000/code/untitled/cmake-build-debug
+-- Build files have been written to: /home/hal9000/code/BiGGMan++/cmake-build-debug
