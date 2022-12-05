@@ -13,7 +13,7 @@ using namespace BoundaryConditions;
 int main() {
 
     auto firstDofBoi = new DegreeOfFreedom(DOFType::Temperature, FieldType::VectorComponent1, 1.0);
-    firstDofBoi->Print();
+    //firstDofBoi->Print();
     
     //auto firstCoordinateBoi = new Coordinate(CoordinateType::Natural, Direction::One, 1.0);
     //firstCoordinateBoi->Print();
@@ -23,6 +23,9 @@ int main() {
     auto testVector = new vector<double>();
     testVector->push_back(1.0);
     testVector->push_back(8.0);
+
+    BoundaryCondition *firstBCBOIIIIII;
+    firstBCBOIIIIII = new BoundaryCondition(firstBCBoi);
     
     std::cout << (*firstBCBoi)(*testVector) << std::endl;
     std::cout << "Hello, World!" << std::endl;
