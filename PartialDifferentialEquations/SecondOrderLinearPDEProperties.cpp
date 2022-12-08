@@ -13,8 +13,21 @@ namespace PartialDifferentialEquations {
     SecondOrderLinearPDEProperties::SecondOrderLinearPDEProperties(Matrix<double> *secondOrderCoefficients,
                                                                    vector<double> *firstOrderCoefficients,
                                                                    double *zerothOrderCoefficient,
-                                                                   double *sourceTerm) {
+                                                                   double *sourceTerm, bool *isTransient) {
+        if (secondOrderCoefficients->isSymmetric()==false)
+        {
+            throw std::invalid_argument("Second order coefficients matrix must be symmetric.");
+        }
+        if (secondOrderCoefficients->numberOfColumns() >4 || secondOrderCoefficients->numberOfRows() > 4) {
+            throw std::invalid_argument("Second order derivative coefficients matrix size should not exceed 4x4 (one for each  direction + time)");
+        }
+        if (firstOrderCoefficients->size() > 4) {
+            throw std::invalid_argument("First order derivative coefficients vector size should not exceed 4 (one for each  direction + time)");
+        }
+        
         _type = PropertiesDistributionType::Isotropic;
+        _isTransient = isTransient;
+                
         _secondDerivativeIsotropicProperties = secondOrderCoefficients;
         _firstDerivativeIsotropicProperties = firstOrderCoefficients;
         _zeroDerivativeIsotropicProperties = zerothOrderCoefficient;
@@ -32,13 +45,17 @@ namespace PartialDifferentialEquations {
     SecondOrderLinearPDEProperties::SecondOrderLinearPDEProperties(Matrix<Matrix<double>> *secondOrderCoefficients,
                                                                    vector<vector<double>> *firstOrderCoefficients,
                                                                    double *zerothOrderCoefficient,
-                                                                   double *sourceTerm) {
+                                                                   double *sourceTerm, bool *isTransient) {
+        if (secondOrderCoefficients->numberOfColumns() >4 || secondOrderCoefficients->numberOfRows() > 4) {
+            
+        
         _type = PropertiesDistributionType::FieldAnisotropic;
+        _isTransient = isTransient;
         _secondDerivativeFieldAnisotropicProperties = secondOrderCoefficients;
         _firstDerivativeFieldAnisotropicProperties = firstOrderCoefficients;
         _zeroDerivativeFieldAnisotropicProperties = zerothOrderCoefficient;
         _sourceProperties = sourceTerm;
-        
+                
         _secondDerivativeIsotropicProperties = nullptr;
         _firstDerivativeIsotropicProperties = nullptr;
         _zeroDerivativeIsotropicProperties = nullptr;
@@ -52,8 +69,9 @@ namespace PartialDifferentialEquations {
     SecondOrderLinearPDEProperties::SecondOrderLinearPDEProperties(map<int*, Matrix<Matrix<double>>> *secondOrderCoefficients,
                                                                    map<int*, vector<vector<double>>> *firstOrderCoefficients,
                                                                    map<int*, double> *zerothOrderCoefficients,
-                                                                   map<int*, double> *sourceTerms) {
+                                                                   map<int*, double> *sourceTerms, bool *isTransient) {
         _type = PropertiesDistributionType::LocallyAnisotropic;
+        _isTransient = isTransient;
         _secondDerivativeLocallyAnisotropicProperties = secondOrderCoefficients;
         _firstDerivativeLocallyAnisotropicProperties = firstOrderCoefficients;
         _zeroDerivativeLocallyAnisotropicProperties = zerothOrderCoefficients;
