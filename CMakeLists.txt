@@ -17,4 +17,4 @@ add_executable(untitled main.cpp DegreesOfFreedom/DegreeOfFreedom.cpp
         BoundaryConditions/BoundaryCondition.cpp
         BoundaryConditions/BoundaryCondition.h 
         PartialDifferentialEquations/DifferentialEquation.cpp 
-        PartialDifferentialEquations/DifferentialEquation.h)
+        PartialDifferentialEquations/DifferentialEquation.h PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp PartialDifferentialEquations/SecondOrderLinearPDEProperties.h)

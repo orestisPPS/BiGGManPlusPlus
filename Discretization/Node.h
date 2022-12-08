@@ -14,40 +14,42 @@ using namespace PositioningInSpace;
 using namespace DegreesOfFreedom;
 using namespace std;
 
+namespace Dicretization
+{
+    class Node {
 
-class Node {
-    
-public:
-    
-    Node();
-    
-    ~Node();
-    
-    DiscreteEntityId *id;
-    
-    //Returns the pointer to the coordinate with the given  type and direction
-    Coordinate *coordinate(CoordinateType type, Direction direction);
-    // Adds a coordinate of the given type, direction and value to the node
-    void addCoordinate(CoordinateType type, Direction direction, double value);
-    // Adds a coordinate of the given type and direction to the node
-    void addCoordinate(CoordinateType type, Direction direction);
-    // Removes and deallocates the coordinate of the given type and direction from the node
-    void removeCoordinate(CoordinateType type, Direction direction);
-    
-    //Returns the pointer of the degree of freedom of the given type and field
-    DegreeOfFreedom *degreeOfFreedom(DOFType type, FieldType fieldType);
-    // Adds a degree of freedom of the given type, field and value to the node
-    void addDegreeOfFreedom(DOFType type, FieldType fieldType, double value);
-    // Adds a degree of freedom of the given type and field to the node
-    void addDegreeOfFreedom(DOFType type, FieldType fieldType);
-    // Removes and deallocates the degree of freedom of the given type and field from the node
-    void removeDegreeOfFreedom(DOFType type, FieldType fieldType);
-    
-private:
-    list <Coordinate*> *_coordinates;
+    public:
 
-    list <DegreeOfFreedom*> *_degreesOfFreedom;
-};
+        Node();
+
+        ~Node();
+
+        DiscreteEntityId *id;
+
+        //Returns the pointer to the coordinate with the given  type and direction
+        Coordinate *coordinate(CoordinateType type, Direction direction);
+        // Adds a coordinate of the given type, direction and value to the node
+        void addCoordinate(CoordinateType type, Direction direction, double value);
+        // Adds a coordinate of the given type and direction to the node
+        void addCoordinate(CoordinateType type, Direction direction);
+        // Removes and deallocates the coordinate of the given type and direction from the node
+        void removeCoordinate(CoordinateType type, Direction direction);
+
+        //Returns the pointer of the degree of freedom of the given type and field
+        DegreeOfFreedom *degreeOfFreedom(DOFType type, FieldType fieldType);
+        // Adds a degree of freedom of the given type, field and value to the node
+        void addDegreeOfFreedom(DOFType type, FieldType fieldType, double value);
+        // Adds a degree of freedom of the given type and field to the node
+        void addDegreeOfFreedom(DOFType type, FieldType fieldType);
+        // Removes and deallocates the degree of freedom of the given type and field from the node
+        void removeDegreeOfFreedom(DOFType type, FieldType fieldType);
+
+    private:
+        list <Coordinate*> *_coordinates;
+
+        list <DegreeOfFreedom*> *_degreesOfFreedom;
+    };
+}
 
 
 
