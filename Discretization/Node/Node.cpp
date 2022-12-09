@@ -1,11 +1,13 @@
 //
 // Created by hal9000 on 11/28/22.
 //
-#include "Node.h"
 #include <iostream>
 #include <list>
+#include "Node.h"
+#include "../Id/DiscreteEntityId.h"
+using namespace Discretization;
 
-namespace Discretization
+namespace Dicretization
 {
     Node::Node() {
         id = new DiscreteEntityId();
@@ -48,7 +50,6 @@ namespace Discretization
             }
         }
         _coordinates->push_back(new Coordinate(type, direction));
-        return;
     }
 
     void Node::removeCoordinate(PositioningInSpace::CoordinateType type, PositioningInSpace::Direction direction) {
@@ -56,9 +57,7 @@ namespace Discretization
             if (Coordinate->type() == type && Coordinate->direction() == direction) {
                 _coordinates->remove(Coordinate);
                 delete Coordinate;
-                Coordinate = nullptr;
-                return;
-            }
+                Coordinate = nullptr;}
         }
         throw std::invalid_argument("Trying to remove a coordinate that does not exist");
     }
@@ -79,7 +78,6 @@ namespace Discretization
 
 
         _degreesOfFreedom->push_back(new DegreeOfFreedom(type, fieldType, value));
-        return;
     }
 
     void Node::addDegreeOfFreedom(DOFType type, FieldType fieldType) {
@@ -87,7 +85,6 @@ namespace Discretization
             if (degreeOfFreedom->type() == type && degreeOfFreedom->fieldType() == fieldType)
                 throw std::invalid_argument("Trying to add a degree of freedom that already exists");
         _degreesOfFreedom->push_back(new DegreeOfFreedom(type, fieldType));
-        return;
     }
 
     void Node::removeDegreeOfFreedom(DOFType type, FieldType fieldType) {
@@ -95,9 +92,7 @@ namespace Discretization
             if (degreeOfFreedom->type() == type && degreeOfFreedom->fieldType() == fieldType) {
                 _degreesOfFreedom->remove(degreeOfFreedom);
                 delete degreeOfFreedom;
-                degreeOfFreedom = nullptr;
-                return;
-            }
+                degreeOfFreedom = nullptr;}
         }
         throw std::invalid_argument("Trying to remove a degree of freedom that does not exist");
     }

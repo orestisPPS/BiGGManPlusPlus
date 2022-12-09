@@ -73,17 +73,17 @@ build CMakeFiles/untitled.dir/PositioningInSpace/Coordinate.cpp.o: CXX_COMPILER_
   OBJECT_DIR = CMakeFiles/untitled.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled.dir/PositioningInSpace
 
-build CMakeFiles/untitled.dir/Discretization/Node.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/Discretization/Node.cpp || cmake_object_order_depends_target_untitled
-  DEP_FILE = CMakeFiles/untitled.dir/Discretization/Node.cpp.o.d
+build CMakeFiles/untitled.dir/Discretization/Node/Node.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/Discretization/Node/Node.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/Discretization/Node/Node.cpp.o.d
   FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
   OBJECT_DIR = CMakeFiles/untitled.dir
-  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/Discretization
+  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/Discretization/Node
 
-build CMakeFiles/untitled.dir/Discretization/DiscreteEntityId.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/Discretization/DiscreteEntityId.cpp || cmake_object_order_depends_target_untitled
-  DEP_FILE = CMakeFiles/untitled.dir/Discretization/DiscreteEntityId.cpp.o.d
+build CMakeFiles/untitled.dir/Discretization/Id/DiscreteEntityId.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/Discretization/Id/DiscreteEntityId.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/Discretization/Id/DiscreteEntityId.cpp.o.d
   FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
   OBJECT_DIR = CMakeFiles/untitled.dir
-  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/Discretization
+  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/Discretization/Id
 
 build CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/BoundaryConditions/BoundaryCondition.cpp || cmake_object_order_depends_target_untitled
   DEP_FILE = CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o.d
@@ -91,17 +91,17 @@ build CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o: CXX_CO
   OBJECT_DIR = CMakeFiles/untitled.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled.dir/BoundaryConditions
 
-build CMakeFiles/untitled.dir/PartialDifferentialEquations/DifferentialEquation.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/PartialDifferentialEquations/DifferentialEquation.cpp || cmake_object_order_depends_target_untitled
-  DEP_FILE = CMakeFiles/untitled.dir/PartialDifferentialEquations/DifferentialEquation.cpp.o.d
-  FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
-  OBJECT_DIR = CMakeFiles/untitled.dir
-  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/PartialDifferentialEquations
-
 build CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp || cmake_object_order_depends_target_untitled
   DEP_FILE = CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o.d
   FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
   OBJECT_DIR = CMakeFiles/untitled.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled.dir/PartialDifferentialEquations
+
+build CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o.d
+  FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
+  OBJECT_DIR = CMakeFiles/untitled.dir
+  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer
 
 
 # =============================================================================
@@ -111,7 +111,7 @@ build CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEP
 #############################################
 # Link the executable untitled
 
-build untitled: CXX_EXECUTABLE_LINKER__untitled_Debug CMakeFiles/untitled.dir/main.cpp.o CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o CMakeFiles/untitled.dir/Primitives/MatrixTest.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/Coordinate.cpp.o CMakeFiles/untitled.dir/Discretization/Node.cpp.o CMakeFiles/untitled.dir/Discretization/DiscreteEntityId.cpp.o CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/DifferentialEquation.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o
+build untitled: CXX_EXECUTABLE_LINKER__untitled_Debug CMakeFiles/untitled.dir/main.cpp.o CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o CMakeFiles/untitled.dir/Primitives/MatrixTest.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/Coordinate.cpp.o CMakeFiles/untitled.dir/Discretization/Node/Node.cpp.o CMakeFiles/untitled.dir/Discretization/Id/DiscreteEntityId.cpp.o CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o
   FLAGS = -fopenmp -g
   OBJECT_DIR = CMakeFiles/untitled.dir
   POST_BUILD = :

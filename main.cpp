@@ -4,12 +4,14 @@
 using namespace DegreesOfFreedom;
 //#include "PositioningInSpace/Coordinate.h"
 //using namespace PositioningInSpace;
-#include "BoundaryConditions/BoundaryCondition.h"
+#include "PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
+using namespace PartialDifferentialEquations;
+#include "Primitives/Matrix.h"
+using namespace Primitives;
 #include <functional>
 #include <vector>
 #include <list>
 #include <tuple>
-using namespace BoundaryConditions;
 int main() {
 
     auto firstDofBoi = new DegreeOfFreedom(DOFType::Temperature, FieldType::VectorComponent1, 1.0);
@@ -24,11 +26,9 @@ int main() {
     testVector->push_back(1.0);
     testVector->push_back(8.0);
 
-    BoundaryCondition *firstBCBOIIIIII;
-    firstBCBOIIIIII = new BoundaryCondition(firstBCBoi);
     
     std::cout << (*firstBCBoi)(*testVector) << std::endl;
     std::cout << "Hello, World!" << std::endl;
-    
-    
-}
+        
+    return 0;
+    }

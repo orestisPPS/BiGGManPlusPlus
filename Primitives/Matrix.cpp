@@ -2,7 +2,7 @@
 // Created by hal9000 on 11/26/22.
 //
 #include "Matrix.h"
-# include <omp.h>
+#include <omp.h>
 
 namespace Primitives {
 

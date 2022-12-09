@@ -3,7 +3,7 @@
 //
 
 #include "../Primitives/Matrix.h"
-#include "../Discretization/Node.h"
+#include "../Discretization/Node/Node.h"
 #include "iostream"
 #include "vector"
 #include "map"
@@ -25,6 +25,7 @@ namespace PartialDifferentialEquations {
                                        vector<double> *firstOrderCoefficients,
                                        double *zerothOrderCoefficient,
                                        double *sourceTerm, bool *isTransient);
+    
         SecondOrderLinearPDEProperties(Matrix<Matrix<double>> *secondOrderCoefficients,  
                                          vector<vector<double>> *firstOrderCoefficients,
                                         double *zerothOrderCoefficient,

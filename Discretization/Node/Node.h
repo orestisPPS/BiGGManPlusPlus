@@ -5,12 +5,12 @@
 #ifndef UNTITLED_NODE_H
 #define UNTITLED_NODE_H
 
-#include "DiscreteEntityId.h"
+#include "../Id/DiscreteEntityId.h"
 #include <map>
 #include <list>
-#include "../PositioningInSpace/Coordinate.h"
+#include "../../PositioningInSpace/Coordinate.h"
 using namespace PositioningInSpace;
-#include "../DegreesOfFreedom/DegreeOfFreedom.h"
+#include "../../DegreesOfFreedom/DegreeOfFreedom.h"
 using namespace DegreesOfFreedom;
 using namespace std;
 
@@ -24,7 +24,7 @@ namespace Dicretization
 
         ~Node();
 
-        DiscreteEntityId *id;
+        Discretization::DiscreteEntityId *id;
 
         //Returns the pointer to the coordinate with the given  type and direction
         Coordinate *coordinate(CoordinateType type, Direction direction);
@@ -43,7 +43,6 @@ namespace Dicretization
         void addDegreeOfFreedom(DOFType type, FieldType fieldType);
         // Removes and deallocates the degree of freedom of the given type and field from the node
         void removeDegreeOfFreedom(DOFType type, FieldType fieldType);
-
     private:
         list <Coordinate*> *_coordinates;
 

@@ -1,12 +1,15 @@
 # ninja log v5
-1	344	1669995358584795771	CMakeFiles/untitled.dir/Primitives/MatrixTest.cpp.o	5b4726fa7b854433
+1	230	1670544659680017765	CMakeFiles/untitled.dir/Primitives/MatrixTest.cpp.o	5b4726fa7b854433
 1	19	1669995358260795977	CMakeFiles/untitled.dir/PartialDifferentialEquations/DifferentialEquation.cpp.o	10af40e34a8b040f
 1	369	1669995358612795753	CMakeFiles/untitled.dir/PositioningInSpace/Coordinate.cpp.o	f6e6b935e05d6e66
-0	377	1670273964521261210	CMakeFiles/untitled.dir/main.cpp.o	cd7dd1504a41610a
-2	284	1669995358524795809	CMakeFiles/untitled.dir/Discretization/DiscreteEntityId.cpp.o	796c39d756ef9c54
-1	221	1670273964365261458	CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o	59183edc5ef66a2
+1	403	1670545001105104946	CMakeFiles/untitled.dir/main.cpp.o	cd7dd1504a41610a
+1	245	1670461664849929699	CMakeFiles/untitled.dir/Discretization/DiscreteEntityId.cpp.o	796c39d756ef9c54
+1	348	1670461664953929753	CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o	59183edc5ef66a2
 1	389	1669995358632795740	CMakeFiles/untitled.dir/Discretization/Node.cpp.o	3c7024ec6b7edd9b
-0	31	1670333187870022005	build.ninja	2e9672a16005c4d6
+0	28	1670548438049391629	build.ninja	7ab698399c2f7e2f
+1	257	1670544545044941023	CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o	d8d917deca9eeb13
 1	328	1669995358568795781	CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o	1db60319cbf44ee5
+1	231	1670528160394857647	CMakeFiles/untitled.dir/Discretization/Id/DiscreteEntityId.cpp.o	7b0f9afcbbdd41cf
 0	1	0	clean	18d5d745f114a7b6
-377	453	1670273964597261089	untitled	ea2a832250764b94
+403	491	1670545001193107277	untitled	22bb833b1c111e8d
+1	341	1670530488599525219	CMakeFiles/untitled.dir/Discretization/Node/Node.cpp.o	bd1fa1d14a5143eb

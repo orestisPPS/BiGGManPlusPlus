@@ -163,23 +163,23 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "Discretization/Node.cpp",
+			"path" : "Discretization/Node/Node.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "Discretization/Node.h",
+			"path" : "Discretization/Node/Node.h",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "Discretization/DiscreteEntityId.cpp",
+			"path" : "Discretization/Id/DiscreteEntityId.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "Discretization/DiscreteEntityId.h",
+			"path" : "Discretization/Id/DiscreteEntityId.h",
 			"sourceGroupIndex" : 1
 		},
 		{
@@ -196,23 +196,23 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "PartialDifferentialEquations/DifferentialEquation.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"path" : "PartialDifferentialEquations/DifferentialEquation.h",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
 			"path" : "PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"path" : "PartialDifferentialEquations/SecondOrderLinearPDEProperties.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.h",
 			"sourceGroupIndex" : 1
 		}
 	],

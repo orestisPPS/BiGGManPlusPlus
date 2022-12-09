@@ -5,10 +5,31 @@
 #ifndef UNTITLED_DIFFERENTIALEQUATION_H
 #define UNTITLED_DIFFERENTIALEQUATION_H
 
+#include "SecondOrderLinearPDEProperties.h"
+using namespace PartialDifferentialEquations;
+
 namespace PartialDifferentialEquations {
 
-    class DifferentialEquation {
-
+    enum PDEType{
+        SteadyStateLinearElasticity,
+        TransientLinearElasticity,
+        SteadyStateHeatTransfer,
+        TransientHeatTransfer,
+        SteadyStateMassTransfer,
+        TransientMassTransfer,
+        SteadyStateMomentumTransfer,
+        TransientMomentumTransfer,
+        SteadyStateConvectionDiffusionReaction,
+        TransientConvectionDiffusionReaction,
+        Laplace,
+        Poisson,
+        Wave
+    };
+    
+    class PartialDifferentialEquation {
+    public:
+        PartialDifferentialEquation();
+        ~PartialDifferentialEquation();
     };
 
 } // PartialDifferentialEquations
