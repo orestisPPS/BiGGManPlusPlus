@@ -1,0 +1,63 @@
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\graphicspath{ {/home/hal9000/code/ConvectionDiffusionMsolve/ResultsReport/Dynamic3DResultsReport/images/} }
+\usepackage{float}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+
+
+\title{Bigg Mann$++$ Documentation}
+\author{Ch. Orestis Papas}
+
+
+\begin{document}
+	\section{Partial Differential Equations}
+		The aim of this project is the computational solution of partial differential equations with focus in general mathematics or mechanics application. The user is free to choose from a variety of PDE types such as 
+		\begin{itemize}
+			\item Generalized Second Order Partial Differential Equation that can be applied to a domain with up to 4 Dimensions (any space combination of the orthonormal coordinate system (1-2-3) plus time.)
+			\item Generalized Transport Phenomena Equations
+			\begin{itemize}
+				\item Steady State / Transient Energy Transfer
+				\item Steady State / Transient Momentum Transfer
+				\item Steady State / Transient Mass Transfer
+				\item Steady State / Transient Transfer of any scalar or vector $\phi$ via the generalized Convection-Diffusion-Reaction Equation	
+			\end{itemize}
+		 	\item Steady State / Transient Linear Elasticity
+		 	\item Laplace Equation
+		 	\item Poisson Equation
+		 	\item Wave Equation		 	 
+		\end{itemize}
+	
+	
+	\subsection{Generalized Second Order Partial Differential Equation}
+	For a scalar or vector function $\phi = \phi(x_1, x_2, x_3,t)$ the general second order PDE will be of the form
+	\begin{equation} \label{generalPDE}
+		\sum_{i,j=1}^{4} A_{ij} \frac{\partial ^2 \phi}{\partial x_i \partial x_j} + \sum_{i=1}^{4} B_i \frac{\partial \phi}{\partial x_i }+ C \phi = D
+	\end{equation}
+	with $x_i = x_1,x_2,x_3,t$ being the 3 space dimensions plus the time direction. It should be noted that space is used in a more subtractive manner and can represent anything from physical space to frequencies or whatever the interest of the researcher is (from 1 up to 3 directions).
+	\begin{itemize}
+		\item $\boldsymbol{A} = Aij$ : The coefficients of the second order derivatives. In physics and mechanics applications they are asscosiated with the molecular mechanism of transportation called diffusion.
+		\begin{itemize}
+			\item $A_{ij}$ for $i,j<3$ are the coefficients of the second order partial derivatives at each space direction. 
+			
+			\begin{itemize}
+				\item When $A_{11}=A_{22}=A_{33}$ and $A_{ij}=A_{ji}$ the host medium is considered as isotropic meaning that it is symmetrical and homogeneous and has the same physical properties in all directions and it does not have any preferred direction of orientation. Examples of isotropic materials include most liquids and gases, as well as some solids such as glass and certain types of metals.
+				
+				\item When $A_{11} \neq A_{22} \neq A_{33}$ and $A_{ij}\neq A_{ji}$ the host medium is  anisotropic meaning that it is non-symmetrical and non-homogeneous. It does not have the same physical properties in all directions and it has preferred directions of orientation. Examples of anisotropic materials some metals and ceramics
+			\end{itemize}
+	
+			\item $A_{i4},A_{4j}$ are the coefficients of the second order partial derivatives with respect to time.
+			\begin{itemize}
+				\item When $A_{i4},A_{4j} \neq 0$ the equation is transient. 
+				\item When $A_{i4},A_{4j} = 0$ the equation is in steady state. 
+	
+\end{itemize}
+	\end{itemize}
+	
+				
+	
+\end{document}	

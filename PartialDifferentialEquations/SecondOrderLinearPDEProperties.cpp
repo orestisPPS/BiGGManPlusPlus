@@ -34,43 +34,15 @@ namespace PartialDifferentialEquations {
         _zeroDerivativeIsotropicProperties = zerothOrderCoefficient;
         _sourceProperties = sourceTerm;
         
-        _secondDerivativeFieldAnisotropicProperties = nullptr;
-        _firstDerivativeFieldAnisotropicProperties = nullptr;
-        _zeroDerivativeFieldAnisotropicProperties = nullptr;
         _secondDerivativeLocallyAnisotropicProperties = nullptr;
         _firstDerivativeLocallyAnisotropicProperties = nullptr;
         _zeroDerivativeLocallyAnisotropicProperties = nullptr;
         _sourceLocallyAnisotropicProperties = nullptr;
     }
     
-    SecondOrderLinearPDEProperties::SecondOrderLinearPDEProperties(Matrix<Matrix<double>> *secondOrderCoefficients,
-                                                                   vector<vector<double>> *firstOrderCoefficients,
-                                                                   double *zerothOrderCoefficient,
-                                                                   double *sourceTerm, bool *isTransient) {
-        /*if (secondOrderCoefficients->numberOfColumns() > 4 || secondOrderCoefficients->numberOfRows() > 4) */{
-
-
-            _type = PropertiesDistributionType::FieldAnisotropic;
-            _isTransient = isTransient;
-            _secondDerivativeFieldAnisotropicProperties = secondOrderCoefficients;
-            _firstDerivativeFieldAnisotropicProperties = firstOrderCoefficients;
-            _zeroDerivativeFieldAnisotropicProperties = zerothOrderCoefficient;
-            _sourceProperties = sourceTerm;
-
-            _secondDerivativeIsotropicProperties = nullptr;
-            _firstDerivativeIsotropicProperties = nullptr;
-            _zeroDerivativeIsotropicProperties = nullptr;
-            _secondDerivativeLocallyAnisotropicProperties = nullptr;
-            _firstDerivativeLocallyAnisotropicProperties = nullptr;
-            _zeroDerivativeLocallyAnisotropicProperties = nullptr;
-            _sourceLocallyAnisotropicProperties = nullptr;
-
-        }
-    }
-
     SecondOrderLinearPDEProperties::SecondOrderLinearPDEProperties(
-            map<int *, Matrix<Matrix<double>>> *secondOrderCoefficients,
-            map<int *, vector<vector<double>>> *firstOrderCoefficients,
+            map<int *, Matrix<double>> *secondOrderCoefficients,
+            map<int *, vector<double>> *firstOrderCoefficients,
             map<int *, double> *zerothOrderCoefficients,
             map<int *, double> *sourceTerms, bool * isTransient)
     {
@@ -84,9 +56,6 @@ namespace PartialDifferentialEquations {
         _secondDerivativeIsotropicProperties = nullptr;
         _firstDerivativeIsotropicProperties = nullptr;
         _zeroDerivativeIsotropicProperties = nullptr;
-        _secondDerivativeFieldAnisotropicProperties = nullptr;
-        _firstDerivativeFieldAnisotropicProperties = nullptr;
-        _zeroDerivativeFieldAnisotropicProperties = nullptr;
         _sourceProperties = nullptr;
     }
 
@@ -97,36 +66,30 @@ namespace PartialDifferentialEquations {
     template<class T>
     T *SecondOrderLinearPDEProperties::SecondOrderCoefficients() {
         switch (_type) {
-            case PropertiesDistributionType::Isotropic:
-                return _secondDerivativeIsotropicProperties;
-            case PropertiesDistributionType::FieldAnisotropic:
-                return _secondDerivativeFieldAnisotropicProperties;
             case PropertiesDistributionType::LocallyAnisotropic:
                 return _secondDerivativeLocallyAnisotropicProperties;
+            default:
+                return _secondDerivativeIsotropicProperties;
         }
     }
 
     template<class T>
     T *SecondOrderLinearPDEProperties::FirstOrderCoefficients() {
         switch (_type) {
-            case PropertiesDistributionType::Isotropic:
-                return _firstDerivativeIsotropicProperties;
-            case PropertiesDistributionType::FieldAnisotropic:
-                return _firstDerivativeFieldAnisotropicProperties;
             case PropertiesDistributionType::LocallyAnisotropic:
                 return _firstDerivativeLocallyAnisotropicProperties;
+            default:
+                return _firstDerivativeIsotropicProperties;
         }
     }
 
     template<class T>
     T *SecondOrderLinearPDEProperties::ZerothOrderCoefficient() {
         switch (_type) {
-            case PropertiesDistributionType::Isotropic:
-                return _zeroDerivativeIsotropicProperties;
-            case PropertiesDistributionType::FieldAnisotropic:
-                return _zeroDerivativeFieldAnisotropicProperties;
             case PropertiesDistributionType::LocallyAnisotropic:
                 return _zeroDerivativeLocallyAnisotropicProperties;
+            default:
+                return _zeroDerivativeIsotropicProperties;
         }
     }
 

@@ -11,16 +11,11 @@ using namespace PartialDifferentialEquations;
 namespace PartialDifferentialEquations {
 
     enum PDEType{
-        SteadyStateLinearElasticity,
-        TransientLinearElasticity,
-        SteadyStateHeatTransfer,
-        TransientHeatTransfer,
-        SteadyStateMassTransfer,
-        TransientMassTransfer,
-        SteadyStateMomentumTransfer,
-        TransientMomentumTransfer,
-        SteadyStateConvectionDiffusionReaction,
-        TransientConvectionDiffusionReaction,
+        GeneralizedSecondOrderLinear,
+        EnergyTransfer,
+        MassTransfer,
+        MomentumTransfer,
+        ConvectionDiffusionReaction,
         Laplace,
         Poisson,
         Wave
@@ -30,6 +25,8 @@ namespace PartialDifferentialEquations {
     public:
         PartialDifferentialEquation();
         ~PartialDifferentialEquation();
+        SecondOrderLinearPDEProperties *properties;
+        PDEType Type();
     };
 
 } // PartialDifferentialEquations

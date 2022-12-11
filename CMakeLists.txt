@@ -18,4 +18,4 @@ add_executable(untitled main.cpp
         BoundaryConditions/BoundaryCondition.cpp
         BoundaryConditions/BoundaryCondition.h
         PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp 
-        PartialDifferentialEquations/SecondOrderLinearPDEProperties.h PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.h)
+        PartialDifferentialEquations/SecondOrderLinearPDEProperties.h PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp PartialDifferentialEquations/HeatTransfer/EnergyTransferEquation.h)

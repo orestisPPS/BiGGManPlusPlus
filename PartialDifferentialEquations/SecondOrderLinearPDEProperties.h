@@ -25,14 +25,9 @@ namespace PartialDifferentialEquations {
                                        vector<double> *firstOrderCoefficients,
                                        double *zerothOrderCoefficient,
                                        double *sourceTerm, bool *isTransient);
-    
-        SecondOrderLinearPDEProperties(Matrix<Matrix<double>> *secondOrderCoefficients,  
-                                         vector<vector<double>> *firstOrderCoefficients,
-                                        double *zerothOrderCoefficient,
-                                        double *sourceTerm, bool *isTransient);
-        
-        SecondOrderLinearPDEProperties(map<int*, Matrix<Matrix<double>>> *secondOrderCoefficients,
-                                       map<int*, vector<vector<double>>> *firstOrderCoefficients,
+            
+        SecondOrderLinearPDEProperties(map<int*, Matrix<double>> *secondOrderCoefficients,
+                                       map<int*, vector<double>> *firstOrderCoefficients,
                                        map<int*, double> *zerothOrderCoefficients,
                                        map<int*, double> *sourceTerms, bool *isTransient);
         
@@ -62,13 +57,9 @@ namespace PartialDifferentialEquations {
         vector<double> *_firstDerivativeIsotropicProperties;
         double *_zeroDerivativeIsotropicProperties;
         double *_sourceProperties;
-        
-        Matrix<Matrix<double>> *_secondDerivativeFieldAnisotropicProperties;
-        vector<vector<double>> *_firstDerivativeFieldAnisotropicProperties;
-        double *_zeroDerivativeFieldAnisotropicProperties;;
-        
-        map<int*, Matrix<Matrix<double>>> *_secondDerivativeLocallyAnisotropicProperties;
-        map<int*, vector<vector<double>>> *_firstDerivativeLocallyAnisotropicProperties;
+                
+        map<int*, Matrix<double>> *_secondDerivativeLocallyAnisotropicProperties;
+        map<int*, vector<double>> *_firstDerivativeLocallyAnisotropicProperties;
         map<int*, double> *_zeroDerivativeLocallyAnisotropicProperties;
         map<int*, double> *_sourceLocallyAnisotropicProperties;
     };
