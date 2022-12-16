@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.10.25)  10 DEC 2022 21:10
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.10.25)  16 DEC 2022 02:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -403,52 +403,36 @@ LaTeX Info: Redefining \nameref on input line 17.
 \@outlinefile=\write3
 \openout3 = `pdes.out'.
 
+ [1
 
-
-! LaTeX Error: \begin{itemize} on input line 42 ended by \end{document}.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.63 \end{document}
-                   	
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-[1
-
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./pdes.aux)
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] (./pdes.aux)
 Package rerunfilecheck Info: File `pdes.out' has not changed.
-(rerunfilecheck)             Checksum: 981A803CF6525B4FF342F56ED53AF84F;541.
- )
-(\end occurred inside a group at level 1)
-
-### semi simple group (level 1) entered at line 42 (\begingroup)
-### bottom level 
+(rerunfilecheck)             Checksum: 19EEE8FD6DE69A393187B212E5DEFB67;1062.
+ ) 
 Here is how much of TeX's memory you used:
- 10324 strings out of 480247
- 162959 string characters out of 5896150
- 484277 words of memory out of 5000000
- 28146 multiletter control sequences out of 15000+600000
+ 10337 strings out of 480247
+ 163150 string characters out of 5896150
+ 485451 words of memory out of 5000000
+ 28152 multiletter control sequences out of 15000+600000
  474015 words of font info for 44 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 60i,6n,63p,429b,405s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/hal9000/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen
-/ec/tcrm1000.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx
-12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on pdes.pdf (1 page, 96381 bytes).
+ 60i,6n,63p,431b,340s stack positions out of 5000i,500n,10000p,200000b,80000s
+ </home/hal9000/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.6
+00pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb>
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/
+share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmsy10.pfb>
+Output written on pdes.pdf (2 pages, 131261 bytes).
 PDF statistics:
- 74 PDF objects out of 1000 (max. 8388607)
- 50 compressed objects within 1 object stream
- 5 named destinations out of 1000 (max. 500000)
- 17 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 107 PDF objects out of 1000 (max. 8388607)
+ 78 compressed objects within 1 object stream
+ 12 named destinations out of 1000 (max. 500000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -54,10 +54,46 @@
 			\begin{itemize}
 				\item When $A_{i4},A_{4j} \neq 0$ the equation is transient. 
 				\item When $A_{i4},A_{4j} = 0$ the equation is in steady state. 
-	
-\end{itemize}
+			\end{itemize}
+		\end{itemize}
 	\end{itemize}
+
+	\subsection{Transport / Conservation Laws}
 	
+				\noindent The general integral form of a Conservation Law is given by Raynold's Transport Theorem as follows:
+		\begin{equation} \label{generalLaw1}
+			\frac{d}{dt} \int_\Omega U d \Omega = -\oint_S \boldsymbol{F} \cdot \boldsymbol{n} dS +
+			\int_\Omega Q d\Omega
+		\end{equation}
+		
+		\noindent where $\Omega$ is the Control Volume (CV), $\boldsymbol{n}$ is the normal vector, $\boldsymbol{F}$ are the forces by the flux in and out of the CV from the boundaries (surface S) and Q is the source/sink term. By implementing Gauss's Theorem (Divergence Therorem) the surface integral of the fluxes can be transformed in a volume integral and \eqref{generalLaw1} can be written as follows:
+		
+		\begin{equation} \label{generalLaw2}
+			\frac{d}{dt} \int_\Omega U d \Omega = -\int_\Omega \boldsymbol{\nabla F} d \Omega +
+			\int_\Omega Q d\Omega
+		\end{equation}
+	
+		\noindent By transfering all parts of \eqref{generalLaw2} in the left hand side, the integrated quantity should be equal to zero, leading to the differential form of Raynold's Transport Theorem:
+		
+		\begin{equation} \label{generalLaw3}
+			\frac{d}{dt}  U  + \boldsymbol{\nabla \cdot F}  = Q 
+		\end{equation}
+	
+		\noindent It should be noted that the differential form is valid only under the assumption of continuus quantities. In the case of discontinous functions the integral form should be implemented.
+	
+			
+	
+			\subsubsection{Energy Transfer Equation}
+				Compressibility: A flow is considered as compressible if the pressure or temperature changes due to flow are large enough to cause signifficant density changes.
 				
-	
+				Mach Number = $\frac{V_{flow}}{V_{sound}}$
+				
+				Generally gases become compressed after $Ma>0.3$
+				\subsubsection{Deravation}
+				
+				Total Energy in Control Volume $=$ Internal Energy + Kinetic Energy
+				
+				\noindent Internal Energy : $\rho e dx_1 dx_2 dx_3$  [$\frac{J}{Kg}$]
+			
+				\noindent Internal Energy : $ \frac{1}{2} \rho e dx_1 dx_2 dx_3$  [$\frac{J}{Kg}$]	
 \end{document}	

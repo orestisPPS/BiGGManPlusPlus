@@ -23,10 +23,13 @@ namespace PartialDifferentialEquations {
     
     class PartialDifferentialEquation {
     public:
-        PartialDifferentialEquation();
+        PartialDifferentialEquation(PDEType type);
         ~PartialDifferentialEquation();
         SecondOrderLinearPDEProperties *properties;
         PDEType Type();
+        
+    private:
+        PDEType _type;
     };
 
 } // PartialDifferentialEquations

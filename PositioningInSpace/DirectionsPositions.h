@@ -43,5 +43,11 @@ namespace PositioningInSpace {
         BackBottom,
         BackBottomRight
     };
+
+    enum CoordinateSystem
+    {
+        Natural,
+        Parametric
+    }
 } // PositioningInSpace
 

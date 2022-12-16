@@ -21,10 +21,17 @@ namespace PartialDifferentialEquations {
         EnergyTransferEquation(double *density, double *specialHeatCapacity,
                                Matrix<double> *anisotropicThermalConductivity, vector<double> *flowVelocity,
                                double *reaction double *source);
-        EnergyTransferEquation(map<int*, Matrix<double>> localDensity, double *specialHeatCapacity,
+        EnergyTransferEquation(map<int*, Matrix<double>*> localDensity, double *specialHeatCapacity,
                                map<int*, Matrix<double>*> *locallyAnisotropicThermalConductivity, map<int*, vector<double>*> *localFlowVelocity,
                                map<int*,double*> *localReaction, map<int*,double*> *localSource);
         ~EnergyTransferEquation();
+        
+        SecondOrderLinearPDEProperties *properties;
+        
+        PDEType Type();
+        
+    private:
+        PDEType _type;
     };
 }
 #endif //UNTITLED_ENERGYTRANSFEREQUATION_H
