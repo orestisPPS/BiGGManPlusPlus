@@ -121,6 +121,18 @@ build CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshPreProcessor2D.cpp.o:
   OBJECT_DIR = CMakeFiles/untitled.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled.dir/StructuredMeshGeneration
 
+build CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshSpecs2D.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/StructuredMeshGeneration/MeshSpecs2D.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshSpecs2D.cpp.o.d
+  FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
+  OBJECT_DIR = CMakeFiles/untitled.dir
+  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/StructuredMeshGeneration
+
+build CMakeFiles/untitled.dir/Discretization/Mesh/Mesh.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/Discretization/Mesh/Mesh.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/Discretization/Mesh/Mesh.cpp.o.d
+  FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
+  OBJECT_DIR = CMakeFiles/untitled.dir
+  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/Discretization/Mesh
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target untitled
@@ -129,7 +141,7 @@ build CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshPreProcessor2D.cpp.o:
 #############################################
 # Link the executable untitled
 
-build untitled: CXX_EXECUTABLE_LINKER__untitled_Debug CMakeFiles/untitled.dir/main.cpp.o CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o CMakeFiles/untitled.dir/Primitives/MatrixTest.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/Coordinate.cpp.o CMakeFiles/untitled.dir/Discretization/Node/Node.cpp.o CMakeFiles/untitled.dir/Discretization/Id/DiscreteEntityId.cpp.o CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/SteadyStateMathematicalProblem.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/TransientMathematicalProblem.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshPreProcessor2D.cpp.o
+build untitled: CXX_EXECUTABLE_LINKER__untitled_Debug CMakeFiles/untitled.dir/main.cpp.o CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o CMakeFiles/untitled.dir/Primitives/MatrixTest.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/Coordinate.cpp.o CMakeFiles/untitled.dir/Discretization/Node/Node.cpp.o CMakeFiles/untitled.dir/Discretization/Id/DiscreteEntityId.cpp.o CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/SteadyStateMathematicalProblem.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/TransientMathematicalProblem.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshPreProcessor2D.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshSpecs2D.cpp.o CMakeFiles/untitled.dir/Discretization/Mesh/Mesh.cpp.o
   FLAGS = -fopenmp -g
   OBJECT_DIR = CMakeFiles/untitled.dir
   POST_BUILD = :

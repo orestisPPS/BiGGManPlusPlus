@@ -7,7 +7,7 @@
 #include "../Id/DiscreteEntityId.h"
 using namespace Discretization;
 
-namespace Dicretization
+namespace Discretization
 {
     Node::Node() {
         id = new DiscreteEntityId();

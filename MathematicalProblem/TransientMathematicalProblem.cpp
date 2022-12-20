@@ -12,7 +12,8 @@ namespace MathematicalProblem {
                                                                CoordinateSystem coordinateSystem) {
         pde = pde;
         boundaryConditions = bcs;
-        initialConditions = ic;
+        initialCondition = ic;
+        domainInitialConditions = nullptr;
         degreesOfFreedom = dof;
         coordinateSystem = coordinateSystem;
     }
@@ -24,6 +25,7 @@ namespace MathematicalProblem {
                                                                CoordinateSystem coordinateSystem) {
         pde = pde;
         boundaryConditions = bcs;
+        initialCondition = nullptr;
         domainInitialConditions = domainIC;
         degreesOfFreedom = dof;
         coordinateSystem = coordinateSystem;
@@ -32,7 +34,6 @@ namespace MathematicalProblem {
     TransientMathematicalProblem::~TransientMathematicalProblem() {
         delete pde;
         delete boundaryConditions;
-        delete initialConditions;
         delete domainInitialConditions;
         delete degreesOfFreedom;
     }

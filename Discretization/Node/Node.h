@@ -14,7 +14,7 @@ using namespace PositioningInSpace;
 using namespace DegreesOfFreedom;
 using namespace std;
 
-namespace Dicretization
+namespace Discretization
 {
     class Node {
 

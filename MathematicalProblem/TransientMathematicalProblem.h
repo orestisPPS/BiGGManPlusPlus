@@ -24,7 +24,7 @@ namespace MathematicalProblem {
         
         PartialDifferentialEquation *pde;
         map<Position,list<BoundaryConditions::BoundaryCondition*>> *boundaryConditions;
-        double* initialConditions;
+        double* initialCondition;
         map<int*,double>* domainInitialConditions;
         list<DegreeOfFreedom*> *degreesOfFreedom;
         CoordinateSystem coordinateSystem;
