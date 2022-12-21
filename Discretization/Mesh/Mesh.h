@@ -12,13 +12,13 @@ namespace Discretization {
 
     class Mesh {
     public:
-        Mesh(Matrix<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection);
+        Mesh(Array<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection);
 
         Mesh(vector<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection);
 
         ~Mesh();
         
-        static map<Direction, int> numberOfNodesPerDirection;
+        map<Direction, int> numberOfNodesPerDirection;
 
         map<Position, list<Node *>*> *boundaryNodes;
         
@@ -35,7 +35,7 @@ namespace Discretization {
         Node *node(int i, int j, int k);
     
     private:
-        Matrix<Node *> *_nodesMatrix;
+        Array<Node *> *_nodesMatrix;
         
         vector<Node *> *_nodesVector;
 

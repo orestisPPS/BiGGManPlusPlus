@@ -19,10 +19,10 @@ namespace PartialDifferentialEquations {
                                double *thermalConductivity, vector<double> *flowVelocity,
                                double *reaction double *source);
         EnergyTransferEquation(double *density, double *specialHeatCapacity,
-                               Matrix<double> *anisotropicThermalConductivity, vector<double> *flowVelocity,
+                               Array<double> *anisotropicThermalConductivity, vector<double> *flowVelocity,
                                double *reaction double *source);
-        EnergyTransferEquation(map<int*, Matrix<double>*> localDensity, double *specialHeatCapacity,
-                               map<int*, Matrix<double>*> *locallyAnisotropicThermalConductivity, map<int*, vector<double>*> *localFlowVelocity,
+        EnergyTransferEquation(map<int*, Array<double>*> localDensity, double *specialHeatCapacity,
+                               map<int*, Array<double>*> *locallyAnisotropicThermalConductivity, map<int*, vector<double>*> *localFlowVelocity,
                                map<int*,double*> *localReaction, map<int*,double*> *localSource);
         ~EnergyTransferEquation();
         

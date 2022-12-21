@@ -11,7 +11,7 @@ using namespace Primitives;
 
 namespace PartialDifferentialEquations {
     
-    SecondOrderLinearPDEProperties::SecondOrderLinearPDEProperties(Matrix<double> *secondOrderCoefficients,
+    SecondOrderLinearPDEProperties::SecondOrderLinearPDEProperties(Array<double> *secondOrderCoefficients,
                                                                    vector<double> *firstOrderCoefficients,
                                                                    double *zerothOrderCoefficient,
                                                                    double *sourceTerm, bool *isTransient) {
@@ -41,7 +41,7 @@ namespace PartialDifferentialEquations {
     }
     
     SecondOrderLinearPDEProperties::SecondOrderLinearPDEProperties(
-            map<int *, Matrix<double>> *secondOrderCoefficients,
+            map<int *, Array<double>> *secondOrderCoefficients,
             map<int *, vector<double>> *firstOrderCoefficients,
             map<int *, double> *zerothOrderCoefficients,
             map<int *, double> *sourceTerms, bool * isTransient)

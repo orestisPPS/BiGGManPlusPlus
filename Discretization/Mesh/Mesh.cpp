@@ -7,7 +7,7 @@ using namespace  Discretization;
 
 namespace Discretization {
     
-    Mesh::Mesh(Matrix<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection) {
+    Mesh::Mesh(Array<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection) {
         this->_nodesMatrix = nodes;
         _nodesVector = nullptr;
         numberOfNodesPerDirection = numberOfNodesPerDirection;
@@ -34,11 +34,10 @@ namespace Discretization {
     }
     
     int Mesh::TotalNodes() {
-        int totalNodes = 1;
-        for (auto &numberOfNodesPerDirection : numberOfNodesPerDirection) {
-            totalNodes *= numberOfNodesPerDirection.second;
-        }
-        return totalNodes;
+        if (_nodesMatrix != nullptr)
+            return nodeMap->size();
+        else
+            return 0;
     }
     
     int Mesh::MeshDimensions() {
@@ -46,19 +45,25 @@ namespace Discretization {
     }
     
     Node* Mesh::node(int i) {
+        if (_nodesVector != nullptr)
+            return _nodesVector->at(i);
+        else
+            "Node Not Found. You search for a 1D node in a" + to_string(MeshDimensions()) + "D mesh.";
 
     }
         
     
     Node* Mesh::node(int i, int j) {
-        return _nodesMatrix->element(i, j);
+        if (_nodesMatrix != nullptr)
+            return _nodesMatrix->element(i, j);
+        else
+            "Node Not Found. You search for a 2D node in a" + to_string(MeshDimensions()) + "D mesh.";
     }
     
     Node* Mesh::node(int i, int j, int k) {
         throw "Not implemented";
     }
-
-
+    
     map<Position, list<Node*>*> *Mesh::CreateBoundaries() {
         switch (MeshDimensions()) {
             case 1:

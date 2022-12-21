@@ -5,79 +5,113 @@
 
 #pragma once
 #include <iostream>
+#include <map>
 namespace Primitives {
 
     template<class T>
-    class Matrix {
+    class Array {
         public:
-            //Custom constructor that takes the size of the matrix 
+            //Custom constructor that takes the size of a 1D array 
             // and allocates the memory in the heap
-            Matrix(size_t rows, size_t  columns);
+            Array(size_t rows);
+            //Custom constructor that takes the size of a 2D array
+            // and allocates the memory in the heap
+            Array(size_t rows, size_t  columns);
+            //Custom constructor that takes the size of a 3D array
+            // and allocates the memory in the heap
+            Array(size_t rows, size_t  columns, size_t aisles);
             
             //Copy constructor
-            Matrix(const Matrix<T>& matrix);
+            Array(const Array<T>& matrix);
             
             //Destructor
-            ~Matrix();
+            ~Array();
             
-            //Number of Rows. Matrix size : Height
+            //Number of Rows. Array size : Height
             size_t numberOfRows();
             
-            //Number of Columns.Matrix size : Width
+            //Number of Columns.Array size : Width
             size_t numberOfColumns();
+            
+            //Number of Aisles. Array size : Depth
+            size_t numberOfAisles();
+            
+            //Returns the size or the array
+            size_t size();
+            
+            // Returns the value at the given row
+            T element(size_t row);
             
             // Returns the value at the given row and column
             T element(size_t row, size_t column);
             
+            // Returns the value at the given row, column and aisle
+            T element(size_t row, size_t column, size_t aisle);
+            
+            //Sets the value at the given row
+            void populateElement(size_t row, T value);
+            
             //Sets the value at the given row and column
             void populateElement(size_t row, size_t column, T value);
             
-            //Boolean defining if the matrix is square
+            //Sets the value at the given row, column and aisle
+            void populateElement(size_t row, size_t column, size_t aisle, T value);
+            
+            //Boolean defining if 2d array is square
             bool isSquare();
+            
+            //Boolean defining if the 3d array is cubic
+            bool isCubic();
+            
+            //Boolean defining if the matrix is a vector
+            bool isVector();
             
             //Boolean defining if the matrix is symmetric
             bool isSymmetric();
             
+            //Boolean defining if the matrix is diagonal
+            bool isDiagonal();
+            
             // Returns the pointer of the transpose of the matrix
-            Matrix<T> transpose();
+            Array<T> transpose();
             
             // Stores the transpose of the matrix in the given matrix
             void transposeIntoThis();
             
             // Overloaded assignment operator
-            Matrix<T>& operator = (const Matrix<T>& matrix);
+            Array<T>& operator = (const Array<T>& matrix);
             
             // Overloaded equality operator
-            bool operator == (const Matrix<T>& matrix);
+            bool operator == (const Array<T>& matrix);
             
             // Overloaded inequality operator
-            bool operator != (const Matrix<T>& matrix);
+            bool operator != (const Array<T>& matrix);
             
             // Overloaded operator for integer matrix addition
-            Matrix<int> operator + (const Matrix<int>& matrix);
+            Array<int> operator + (const Array<int>& matrix);
                        
             // Overloaded operator for double addition
-            Matrix<double> operator + (const Matrix<double>& matrix);
+            Array<double> operator + (const Array<double>& matrix);
             
         // Overloaded operator for integer matrix subtraction
-            Matrix<int> operator - (const Matrix<int>& matrix);
+            Array<int> operator - (const Array<int>& matrix);
             
             // Overloaded operator for double matrix subtraction
-            Matrix<double> operator - (const Matrix<double>& matrix);
+            Array<double> operator - (const Array<double>& matrix);
             
             // Overloaded operator for integer matrix multiplication
-            Matrix<int> operator * (const Matrix<int>& matrix);
+            Array<int> operator * (const Array<int>& matrix);
             
             // Overloaded operator for double matrix multiplication
-            Matrix<double> operator * (const Matrix<double>& matrix);
+            Array<double> operator * (const Array<double>& matrix);
             
-            void AddMatrixIntoThis(const Matrix<int>& matrix);
+            void AddMatrixIntoThis(const Array<int>& matrix);
             
-            void AddMatrixIntoThis(const Matrix<double>& matrix);
+            void AddMatrixIntoThis(const Array<double>& matrix);
 
-            void SubtractMatrixIntoThis(const Matrix<int>& matrix);
+            void SubtractMatrixIntoThis(const Array<int>& matrix);
             
-            void SubtractMatrixIntoThis(const Matrix<double>& matrix);
+            void SubtractMatrixIntoThis(const Array<double>& matrix);
             
             void HPCShitBoiiiii();
             
@@ -86,12 +120,18 @@ namespace Primitives {
     
         private:
             // The 1D array that stores the matrix. It is stored in the heap
-            T* _matrix;
-            //Number of Rows. Matrix size : Height
+            T* _array;
+            //Number of Rows. Array size : Height
             size_t _numberOfRows;
-            //Number of Columns.Matrix size : Width
+            //Number of Columns.Array size : Width
             size_t _numberOfColumns;
+            //Number of Aisles. Array size : Depth
+            size_t _numberOfAisles;
+            // Finds the index of the 1D array in the private memory efficient 1D array
+            size_t index(size_t row);            
             // Finds the index of the 2D array in the private memory efficient 1D array
             size_t index(size_t row, size_t column);
+            // Finds the index of the 3D array in the private memory efficient 1D array 
+            size_t index(size_t row, size_t column, size_t aisle);
         };
     } // LinearAlgebra

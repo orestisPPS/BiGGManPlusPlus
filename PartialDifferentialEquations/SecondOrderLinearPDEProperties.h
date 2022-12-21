@@ -21,12 +21,12 @@ namespace PartialDifferentialEquations {
     };
     class SecondOrderLinearPDEProperties {
     public :
-        SecondOrderLinearPDEProperties(Matrix<double> *secondOrderCoefficients,
+        SecondOrderLinearPDEProperties(Array<double> *secondOrderCoefficients,
                                        vector<double> *firstOrderCoefficients,
                                        double *zerothOrderCoefficient,
                                        double *sourceTerm, bool *isTransient);
             
-        SecondOrderLinearPDEProperties(map<int*, Matrix<double>> *secondOrderCoefficients,
+        SecondOrderLinearPDEProperties(map<int*, Array<double>> *secondOrderCoefficients,
                                        map<int*, vector<double>> *firstOrderCoefficients,
                                        map<int*, double> *zerothOrderCoefficients,
                                        map<int*, double> *sourceTerms, bool *isTransient);
@@ -53,12 +53,12 @@ namespace PartialDifferentialEquations {
         PropertiesDistributionType _type;
         bool *_isTransient;
         
-        Matrix<double> *_secondDerivativeIsotropicProperties;
+        Array<double> *_secondDerivativeIsotropicProperties;
         vector<double> *_firstDerivativeIsotropicProperties;
         double *_zeroDerivativeIsotropicProperties;
         double *_sourceProperties;
                 
-        map<int*, Matrix<double>> *_secondDerivativeLocallyAnisotropicProperties;
+        map<int*, Array<double>> *_secondDerivativeLocallyAnisotropicProperties;
         map<int*, vector<double>> *_firstDerivativeLocallyAnisotropicProperties;
         map<int*, double> *_zeroDerivativeLocallyAnisotropicProperties;
         map<int*, double> *_sourceLocallyAnisotropicProperties;
