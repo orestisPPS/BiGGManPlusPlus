@@ -121,6 +121,11 @@ namespace Primitives {
         return _numberOfRows == _numberOfColumns && _numberOfColumns == _numberOfAisles;
     }
     
+    template <class T>
+    bool isDiagonal() {
+        return false;
+    }
+    
     template<class T>
     bool Array<T>::isVector() {
         return _numberOfColumns == _numberOfAisles == 1;
@@ -208,8 +213,6 @@ namespace Primitives {
             return false;
         }
     }
-
-
     //-----------------------------------------
     //----- Overloaded addition operator-------
     //-----------------------------------------
