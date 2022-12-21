@@ -209,25 +209,18 @@ namespace Primitives {
         }
     }
 
+
     //-----------------------------------------
+    //----- Overloaded addition operator-------
     //-----------------------------------------
-    //-----------------------------------------
-    //-----------------------------------------
-    //-----------------------------------------
-    //-----------------------------------------
-    //-----------------------------------------
-    //-----------------------------------------
-    
-    
-    
     
     // Overloaded operator for integer matrix addition
     template<> Array<int> Array<int>::operator+(const Array<int> &matrix) {
         if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns || _numberOfAisles != matrix._numberOfAisles) {
             throw std::invalid_argument("Matrices are not of same size");
         }
-        auto result = new Array<int>(_numberOfRows, _numberOfColumns);
-        for (size_t i = 0; i < _numberOfRows * _numberOfColumns; i++) {
+        auto result = new Array<int>(_numberOfRows, _numberOfColumns, _numberOfAisles);
+        for (size_t i = 0; i < _numberOfRows * _numberOfColumns * _numberOfAisles; i++) {
             result->_array[i] = _array[i] + matrix._array[i];
         }
         return *result;
@@ -235,76 +228,80 @@ namespace Primitives {
 
     // Overloaded operator for double matrix addition
     template<> Array<double> Array<double>::operator+(const Array<double> &matrix) {
-        if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns) {
+        if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns|| _numberOfAisles != matrix._numberOfAisles) {
             throw std::invalid_argument("Array dimensions do not match");
         }
-        auto *result = new Array<double>(_numberOfRows, _numberOfColumns);
-        for (size_t i = 0; i < _numberOfRows * _numberOfColumns; i++) {
+        auto *result = new Array<double>(_numberOfRows, _numberOfColumns, _numberOfAisles);
+        for (size_t i = 0; i < _numberOfRows * _numberOfColumns * _numberOfAisles; i++) {
             result->_array[i] = _array[i] + matrix._array[i];
-        }
-        return *result;
-    }
-
-    // Overloaded operator for integer matrix subtraction
-    template<> Array<int> Array<int>::operator-(const Array<int> &matrix) {
-        if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns) {
-            throw std::invalid_argument("Array dimensions do not match");
-        }
-        auto *result = new Array<int>(_numberOfRows, _numberOfColumns);
-        for (size_t i = 0; i < _numberOfRows * _numberOfColumns; i++) {
-            result->_array[i] = _array[i] - matrix._array[i];
-        }
-        return *result;
-    }
-
-    // Overloaded operator for double matrix subtraction 
-    template<> Array<double> Array<double>::operator-(const Array<double> &matrix) {
-        if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns) {
-            throw std::invalid_argument("Array dimensions do not match");
-        }
-        auto *result = new Array<double>(_numberOfRows, _numberOfColumns);
-        for (size_t i = 0; i < _numberOfRows * _numberOfColumns; i++) {
-            result->_array[i] = _array[i] - matrix._array[i];
         }
         return *result;
     }
 
     // Adds an integer matrix into this matrix. Result stored in this matrix
     template<> void Array<int>::AddMatrixIntoThis(const Array<int> &matrix) {
-        if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns) {
+        if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns || _numberOfAisles != matrix._numberOfAisles) {
             throw std::invalid_argument("Array dimensions do not match");
         }
-        for (size_t i = 0; i < _numberOfRows * _numberOfColumns; i++) {
+        for (size_t i = 0; i < _numberOfRows * _numberOfColumns * _numberOfAisles; i++) {
             _array[i] = _array[i] + matrix._array[i];
         }
     }
 
-    // Adds an integer matrix into this matrix. Result stored in this matrix
+    // Adds a double matrix into this matrix. Result stored in this matrix
     template<> void Array<double>::AddMatrixIntoThis(const Array<double> &matrix) {
-        if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns) {
+        if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns || _numberOfAisles != matrix._numberOfAisles) {
             throw std::invalid_argument("Array dimensions do not match");
         }
-        for (size_t i = 0; i < _numberOfRows * _numberOfColumns; i++) {
+        for (size_t i = 0; i < _numberOfRows * _numberOfColumns * _numberOfAisles; i++) {
             _array[i] = _array[i] + matrix._array[i];
         }
+    }
+
+    //----------------------------------------
+    //---- Overloaded subtraction operator----
+    //----------------------------------------
+    
+    // Overloaded operator for integer matrix subtraction
+    template<> Array<int> Array<int>::operator-(const Array<int> &matrix) {
+        if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns || _numberOfAisles != matrix._numberOfAisles) {
+            throw std::invalid_argument("Matrices are not of same size");
+        }
+        auto result = new Array<int>(_numberOfRows, _numberOfColumns, _numberOfAisles);
+        for (size_t i = 0; i < _numberOfRows * _numberOfColumns * _numberOfAisles; i++) {
+            result->_array[i] = _array[i] + matrix._array[i];
+        }
+        return *result;
+    }
+
+    // Overloaded operator for integer matrix subtraction
+    template<> Array<double> Array<double>::operator-(const Array<double> &matrix) {
+        if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns|| _numberOfAisles != matrix._numberOfAisles) {
+            throw std::invalid_argument("Array dimensions do not match");
+        }
+        auto *result = new Array<double>(_numberOfRows, _numberOfColumns, _numberOfAisles);
+        for (size_t i = 0; i < _numberOfRows * _numberOfColumns * _numberOfAisles; i++) {
+            result->_array[i] = _array[i] + matrix._array[i];
+        }
+        return *result;
     }
     
     // Subtracts an integer matrix from this matrix. Result stored in this matrix
     template<> void Array<int>::SubtractMatrixIntoThis(const Array<int> &matrix) {
-        if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns) {
+        if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns || _numberOfAisles != matrix._numberOfAisles) {
             throw std::invalid_argument("Array dimensions do not match");
         }
-        for (size_t i = 0; i < _numberOfRows * _numberOfColumns; i++) {
+        for (size_t i = 0; i < _numberOfRows * _numberOfColumns * _numberOfAisles; i++) {
             _array[i] = _array[i] - matrix._array[i];
         }
     }
     
     // Subtracts a double matrix from this matrix. Result stored in this matrix
     template<> void Array<double>::SubtractMatrixIntoThis(const Array<double> &matrix) {
-        if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns) {
+        if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns || _numberOfAisles != matrix._numberOfAisles) {
             throw std::invalid_argument("Array dimensions do not match");
         }
-        for (size_t i = 0; i < _numberOfRows * _numberOfColumns; i++) {
+        for (size_t i = 0; i < _numberOfRows * _numberOfColumns * _numberOfAisles; i++) {
             _array[i] = _array[i] - matrix._array[i];
         }
     }
