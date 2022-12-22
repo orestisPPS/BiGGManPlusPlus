@@ -9,127 +9,81 @@ namespace StructuredMeshGenerator{
         _nn1 = numberOfNodes->at(Direction::One);
         _nn2 = numberOfNodes->at(Direction::Two);
         _nn3 = numberOfNodes->at(Direction::Three);
-        nodesMatrix = AllocateNodesMatrix();
-        CreateNodes();
+        CreateNodesArray();
         AssignGlobalId();
     }
     
-    Array<Node*> *NodeFactory :: AllocateNodesMatrix(){
-        if (_nn2 == 0 && _nn3 == 0)
-            return new Array<Node *>(_nn1);
-        else if (_nn3 == 0)
-            return new Array<Node *>(_nn1, _nn2);
-        else
-            return new Array<Node *>(_nn1, _nn2, _nn3);
-    }
-
-    void NodeFactory::CreateNodes() {
-        if ((_nn2 == 0 && _nn3 == 0) || (_nn1 == 0 && _nn2) || (_nn1 == 0 && _nn3))
-            Create1DBoundaryNodes();
-        else if (_nn1 == 0 && (_nn2 > 0 && _nn3 > 0) ||
-                (_nn2 == 0 && (_nn1 > 0 && _nn3 > 0) ||
-                (_nn3 == 0 && (_nn1 > 0 && _nn2 > 0))))
-            Create2DBoundaryNodes();
-        else
-            Create3DBoundaryNodes();
-    }
-
-    void NodeFactory::Create1DBoundaryNodes() {
-                
-        auto leftNode = AllocateBoundaryNode(0);
-        nodesMatrix->populateElement(0, leftNode);
-        
+    void NodeFactory :: CreateNodesArray(){
         if (_nn2 == 0 && _nn3 == 0){
-            auto rightNode = AllocateBoundaryNode(_nn1 - 1);
-            nodesMatrix->populateElement(_nn1 - 1, rightNode);
+            nodesMatrix = new Array<Node*>(_nn1);
+            Create1DBoundaryNodes(_nn1);
+            Create1DInternalNodes(_nn1);
         }
-        else if (_nn1 == 0 && _nn2 == 0){
-            auto rightNode = AllocateBoundaryNode(_nn3 - 1);
-            nodesMatrix->populateElement(_nn3 - 1, rightNode);
-        }
+
         else if (_nn1 == 0 && _nn3 == 0){
-            auto rightNode = AllocateBoundaryNode(_nn2 - 1);
-            nodesMatrix->populateElement(_nn2 - 1, rightNode);
+            nodesMatrix = new Array<Node*>(_nn2);
+            Create1DBoundaryNodes(_nn2);
+            Create1DInternalNodes(_nn2);
         }
-        else
-            throw "Two or more directions have non zero number of nodes.";
+
+        else if (_nn1 == 0 && _nn2 == 0){
+            nodesMatrix = new Array<Node*>(_nn3);
+            Create1DBoundaryNodes(_nn3);
+            Create1DInternalNodes(_nn3);
+        }
+
+        else if (_nn1 == 0){
+            nodesMatrix = new Array<Node*>(_nn2, _nn3);
+            Create2DBoundaryNodes(_nn2, _nn3);
+            Create2DInternalNodes(_nn2, _nn3);
+        }
+
+        else if (_nn2 == 0){
+            nodesMatrix = new Array<Node*>(_nn1, _nn3);
+            Create2DBoundaryNodes(_nn1, _nn3);
+            Create2DInternalNodes(_nn1, _nn3);
+        }
+
+        else if (_nn3 == 0){
+            nodesMatrix = new Array<Node*>(_nn1, _nn2);
+            Create2DBoundaryNodes(_nn1, _nn2);
+            Create2DInternalNodes(_nn1, _nn2);
+        }
+        else{
+            nodesMatrix = new Array<Node*>(_nn1, _nn2, _nn3);
+            Create3DBoundaryNodes();
+            Create3DInternalNodes();
+        }
+    }
+
+    void NodeFactory::Create1DBoundaryNodes(int position) {
+        nodesMatrix->populateElement(0, AllocateBoundaryNode(0));
+        nodesMatrix->populateElement(position - 1, AllocateBoundaryNode(position - 1));
     }
     
-    void NodeFactory::Create2DBoundaryNodes() {
-        if (_nn3 == 0){
-            auto boundaryId = 0;
-            //Bottom boundary nodes.
-            for (int i = 0; i < _nn1 ; ++i) {
-                nodesMatrix->populateElement(i, 0,  AllocateBoundaryNode(boundaryId));
-                boundaryId++;
-            }
-            //Right boundary nodes.
-            for (int i = 1; i < _nn2 ; ++i) {
-                nodesMatrix->populateElement(_nn1 - 1, i, AllocateBoundaryNode(boundaryId));
-                boundaryId++;
-            }
-            //Top boundary nodes.
-            for (int i = _nn1 - 2; i >= 0 ; --i) {
-                nodesMatrix->populateElement(i, _nn2 - 1, AllocateBoundaryNode(boundaryId));
-                boundaryId++;
-            }
-            //Left boundary nodes.
-            for (int i = _nn2 - 2; i >= 1 ; --i) {
-                nodesMatrix->populateElement(0, i, AllocateBoundaryNode(boundaryId));
-                boundaryId++;
-            }
-        }
+    void NodeFactory::Create2DBoundaryNodes(int index1, int index2) {
         
-        else if (_nn2 == 0){
-            auto boundaryId = 0;
-            //Bottom boundary nodes.
-            for (int i = 0; i < _nn1 ; ++i) {
-                nodesMatrix->populateElement(i, 0,  AllocateBoundaryNode(boundaryId));
-                boundaryId++;
-            }
-            //Right boundary nodes.
-            for (int i = 1; i < _nn3 ; ++i) {
-                nodesMatrix->populateElement(_nn1 - 1, i, AllocateBoundaryNode(boundaryId));
-                boundaryId++;
-            }
-            //Top boundary nodes.
-            for (int i = _nn1 - 2; i >= 0 ; --i) {
-                nodesMatrix->populateElement(i, _nn3 - 1, AllocateBoundaryNode(boundaryId));
-                boundaryId++;
-            }
-            //Left boundary nodes.
-            for (int i = _nn3 - 2; i >= 1 ; --i) {
-                nodesMatrix->populateElement(0, i, AllocateBoundaryNode(boundaryId));
-                boundaryId++;
-            }
+        auto boundaryId = 0;
+        //Bottom boundary nodes.
+        for (int i = 0; i < index1 ; ++i) {
+            nodesMatrix->populateElement(i, 0,  AllocateBoundaryNode(boundaryId));
+            boundaryId++;
         }
-            
-            else if (_nn1 == 0){
-                auto boundaryId = 0;
-                //Bottom boundary nodes.
-                for (int i = 0; i < _nn2 ; ++i) {
-                    nodesMatrix->populateElement(i, 0,  AllocateBoundaryNode(boundaryId));
-                    boundaryId++;
-                }
-                //Right boundary nodes.
-                for (int i = 1; i < _nn3 ; ++i) {
-                    nodesMatrix->populateElement(_nn2 - 1, i, AllocateBoundaryNode(boundaryId));
-                    boundaryId++;
-                }
-                //Top boundary nodes.
-                for (int i = _nn2 - 2; i >= 0 ; --i) {
-                    nodesMatrix->populateElement(i, _nn3 - 1, AllocateBoundaryNode(boundaryId));
-                    boundaryId++;
-                }
-                //Left boundary nodes.
-                for (int i = _nn3 - 2; i >= 1 ; --i) {
-                    nodesMatrix->populateElement(0, i, AllocateBoundaryNode(boundaryId));
-                    boundaryId++;
-                }
-            }
-            else
-                throw "Two or more directions have non zero number of nodes.";
-            
+        //Right boundary nodes.
+        for (int i = 1; i < index2 ; ++i) {
+            nodesMatrix->populateElement(index1 - 1, i, AllocateBoundaryNode(boundaryId));
+            boundaryId++;
+        }
+        //Top boundary nodes.
+        for (int i = index1 - 2; i >= 0 ; --i) {
+            nodesMatrix->populateElement(i, index2 - 1, AllocateBoundaryNode(boundaryId));
+            boundaryId++;
+        }
+        //Left boundary nodes.
+        for (int i = index2 - 2; i >= 1 ; --i) {
+            nodesMatrix->populateElement(0, i, AllocateBoundaryNode(boundaryId));
+            boundaryId++;
+        }         
     }
     
     void NodeFactory::Create3DBoundaryNodes() {
@@ -202,27 +156,18 @@ namespace StructuredMeshGenerator{
         return node;
     }
     
-    void NodeFactory::Create1DInternalNodes() {
-        auto iMax = 0;
-        if (_nn2 == 0 && _nn3 == 0)
-            iMax = _nn1;
-        else if (_nn1 == 0 && _nn3 == 0)
-            iMax = _nn2;
-        else if (_nn1 == 0 && _nn2 == 0)
-            iMax = _nn3;
-        else
-            throw "Two or more directions have non zero number of nodes.";
+    void NodeFactory::Create1DInternalNodes(int maxIndex) {
         auto internalId = 0;
-        for (int i = 1; i < iMax - 1; i++){
+        for (int i = 1; i < maxIndex - 1; i++){
             nodesMatrix->populateElement(i, AllocateInternalNode(internalId));
             internalId++;
         }
     }
     
-    void NodeFactory::Create2DInternalNodes() {
+    void NodeFactory::Create2DInternalNodes(int index1, int index2) {
         auto internalId = 0;
-        for (int i = 1; i < _nn1 - 1; i++){
-            for (int j = 1; j < _nn3 - 1; j++){
+        for (int i = 1; i < index1 - 1; i++){
+            for (int j = 1; j < index2 - 1; j++){
                 nodesMatrix->populateElement(i, j, AllocateInternalNode(internalId));
                 internalId++;
             }
@@ -247,11 +192,16 @@ namespace StructuredMeshGenerator{
         return node;
     }
     
-
-    
-
     void NodeFactory::AssignGlobalId() {
         auto id = 0;
+        for(int k = 0; k < _nn3; k++){
+            for(int j = 0; j < _nn2; j++){
+                for(int i = 0; i < _nn1; i++){
+                    *nodesMatrix->element(j, i, k)->id->global = id;
+                    id++;
+                }
+            }
+        }
         
     }
 

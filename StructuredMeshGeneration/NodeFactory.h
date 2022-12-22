@@ -22,19 +22,16 @@ namespace StructuredMeshGenerator {
         
         //Number of nodes at direction Three. (can be z, ζ, φ)
         int _nn3;
-        
-        //Allocates memory for nodes matrix with respect to number of nodes in each direction.
-        Array<Node*> *AllocateNodesMatrix();
-                
+                        
         //Assigns global id to each node.
         void AssignGlobalId();
         
         //Creates boundary nodes.
-        void CreateNodes();
+        void CreateNodesArray();
         
         //Creates boundary nodes for 1D mesh (nnOne > 0, nnTwo = 0, nnThree = 0)
         //RELATIVE : left node has id 0, right node has id nnOne - 1
-        void Create1DBoundaryNodes();
+        void Create1DBoundaryNodes(int position);
         
         //Creates boundary nodes for 2D mesh (nnOne > 0, nnTwo > 0, nnThree = 0),
         // with the following order in identification starting from (0,0):
@@ -43,7 +40,7 @@ namespace StructuredMeshGenerator {
         // v      ^
         // v      ^
         // ->->->->
-        void Create2DBoundaryNodes();
+        void Create2DBoundaryNodes(int index1, int index2);
         
         //Creates boundary nodes for 3D mesh (nnOne > 0, nnTwo > 0, nnThree > 0).
         // with the following order in identification starting from (0,0,0):
@@ -59,19 +56,18 @@ namespace StructuredMeshGenerator {
         //Allocates memory for boundary node.
         Node *AllocateBoundaryNode(int boundaryId);
         
-        
         //Creates internal nodes for 1D mesh (nnOne > 0, nnTwo = 0, nnThree = 0).
-        void Create1DInternalNodes();
+        void Create1DInternalNodes(int maxIndex);
         
         //Creates internal nodes for 2D mesh (nnOne > 0, nnTwo > 0, nnThree = 0).
-        void Create2DInternalNodes();
+        void Create2DInternalNodes(int index1, int index2);
         
         //Creates internal nodes for 3D mesh (nnOne > 0, nnTwo > 0, nnThree > 0).
         void Create3DInternalNodes();
 
         //Allocates memory for internal node.
         Node *AllocateInternalNode(int internalId);
-
+        
     };
     
 
