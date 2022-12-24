@@ -24,7 +24,7 @@ namespace BoundaryConditions {
         BoundaryCondition(function<double (vector<double>)> 
             *BCFunction);
 
-        BoundaryCondition(list<tuple<PositioningInSpace::Direction, function<double (vector<double>)>*>>
+        BoundaryCondition(list<tuple<Direction, function<double (vector<double>)>*>>
             *directionalBCFunction);
 
         ~BoundaryCondition();
@@ -36,7 +36,7 @@ namespace BoundaryConditions {
     private:
         function<double (vector<double>)> *_boundaryConditionFunction;
         
-        list<tuple<PositioningInSpace::Direction, function<double (vector<double>)>*>> *_directionalBoundaryConditionFunction;
+        list<tuple<Direction, function<double (vector<double>)>*>> *_directionalBoundaryConditionFunction;
     };
     
 } // BoundaryConditions

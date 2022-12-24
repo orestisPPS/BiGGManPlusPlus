@@ -1,8 +1,9 @@
-//
+ //
 // Created by hal9000 on 12/21/22.
 //
+#pragma once
 #include <vector>
-#include "../Primitives/Matrix.h"
+#include "../Primitives/Array.h"
 using namespace Primitives;
 #include "../Discretization/Node/Node.h"
 using namespace Discretization;
@@ -11,6 +12,7 @@ namespace StructuredMeshGenerator {
     class NodeFactory {
     public:
         NodeFactory(map<Direction, int> *nodesPerDirection);
+        NodeFactory(int nn1, int nn2, int nn3);
         Primitives::Array<Node *> *nodesMatrix;
         
     private:

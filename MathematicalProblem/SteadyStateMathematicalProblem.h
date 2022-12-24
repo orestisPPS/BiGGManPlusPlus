@@ -1,7 +1,7 @@
 //
 // Created by hal9000 on 12/17/22.
 //
-
+#pragma once
 #include "../PartialDifferentialEquations/PartialDifferentialEquation.h"
 #include "../BoundaryConditions/BoundaryCondition.h"
 

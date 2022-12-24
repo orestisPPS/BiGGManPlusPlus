@@ -1,7 +1,7 @@
 //
 // Created by hal9000 on 11/28/22.
 //
-#include "Matrix.h"
+#include "Array.h"
 #include "MatrixTest.h"
 using namespace Primitives;
 

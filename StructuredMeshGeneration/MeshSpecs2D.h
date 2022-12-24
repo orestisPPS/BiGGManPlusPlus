@@ -4,7 +4,7 @@
 
 #ifndef UNTITLED_MESHSPECS2D_H
 #define UNTITLED_MESHSPECS2D_H
-
+#pragma once
 namespace StructuredMeshGenerator {
     
     class MeshSpecs2D {

@@ -1,8 +1,9 @@
 //
 // Created by hal9000 on 11/25/22.
 //
-
+#pragma once
 namespace PositioningInSpace {
+    
     /// Directions of the simulation space.  Direction One can be x, ξ, r,
     /// Direction Two can be y, η, θ, Direction Three can be z, ζ, φ and
     /// Direction Time is the Time direction.
@@ -46,8 +47,8 @@ namespace PositioningInSpace {
 
     enum CoordinateSystem
     {
-        Natural,
-        Parametric
-    }
+        NaturalCoordinateSystem,
+        ParametricCoordinateSystem
+    };
 } // PositioningInSpace
 

@@ -12,6 +12,13 @@ namespace StructuredMeshGenerator{
         CreateNodesArray();
         AssignGlobalId();
     }
+    NodeFactory :: NodeFactory(int nn1, int nn2, int nn3){
+        _nn1 = nn1;
+        _nn2 = nn2;
+        _nn3 = nn3;
+        CreateNodesArray();
+        AssignGlobalId();
+    }
     
     void NodeFactory :: CreateNodesArray(){
         if (_nn2 == 0 && _nn3 == 0){

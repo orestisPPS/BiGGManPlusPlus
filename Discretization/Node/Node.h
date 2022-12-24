@@ -4,7 +4,7 @@
 
 #ifndef UNTITLED_NODE_H
 #define UNTITLED_NODE_H
-
+#pragma once
 #include "../Id/DiscreteEntityId.h"
 #include <map>
 #include <list>

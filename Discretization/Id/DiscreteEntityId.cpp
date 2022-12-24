@@ -15,11 +15,11 @@ namespace Discretization
     }
 
     DiscreteEntityId::~DiscreteEntityId() {
-        delete &global;
+        delete global;
         global = nullptr;
-        delete &boundary;
+        delete boundary;
         boundary = nullptr;
-        delete &internal;
+        delete internal;
         internal = nullptr;
     }
 }

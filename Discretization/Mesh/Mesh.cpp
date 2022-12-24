@@ -9,24 +9,14 @@ namespace Discretization {
     
     Mesh::Mesh(Array<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection) {
         this->_nodesMatrix = nodes;
-        _nodesVector = nullptr;
         numberOfNodesPerDirection = numberOfNodesPerDirection;
         boundaryNodes = CreateBoundaries();
+        //nodeMap = new map<>
     }
-    
-    Mesh::Mesh(vector<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection){
-        this->_nodesVector = nodes;
-        _nodesMatrix = nullptr;
-        numberOfNodesPerDirection = numberOfNodesPerDirection;
-        boundaryNodes = CreateBoundaries();
-        this->nodeMap = new map<int, Node *>();
-    }
-    
+        
     Mesh::~Mesh() {
         delete _nodesMatrix;
         _nodesMatrix = nullptr;
-        delete _nodesVector;
-        _nodesVector = nullptr;
         delete nodeMap;
         nodeMap = nullptr;
         delete boundaryNodes;
@@ -45,11 +35,10 @@ namespace Discretization {
     }
     
     Node* Mesh::node(int i) {
-        if (_nodesVector != nullptr)
-            return _nodesVector->at(i);
+        if (_nodesMatrix != nullptr)
+            return _nodesMatrix->element(i);
         else
-            "Node Not Found. You search for a 1D node in a" + to_string(MeshDimensions()) + "D mesh.";
-
+            throw runtime_error("Node Not Found. You search for a 1D node in a" + to_string(MeshDimensions()) + "D mesh.");
     }
         
     
@@ -57,26 +46,24 @@ namespace Discretization {
         if (_nodesMatrix != nullptr)
             return _nodesMatrix->element(i, j);
         else
-            "Node Not Found. You search for a 2D node in a" + to_string(MeshDimensions()) + "D mesh.";
-    }
+            throw runtime_error("Node Not Found. You search for a 2D node in a" + to_string(MeshDimensions()) + "D mesh.");
+        }
     
     Node* Mesh::node(int i, int j, int k) {
-        throw "Not implemented";
+        if (_nodesMatrix != nullptr)
+            return _nodesMatrix->element(i, j, k);
+        else
+            throw runtime_error("Node Not Found. You search for a 3D node in a" + to_string(MeshDimensions()) + "D mesh.");
     }
     
-    map<Position, list<Node*>*> *Mesh::CreateBoundaries() {
+    map<Position, list<Node*>*>* Mesh::CreateBoundaries() {
         switch (MeshDimensions()) {
             case 1:
-                Create1DBoundaries();
-                break;
+                return Create1DBoundaries();
             case 2:
-                Create2DBoundaries();
-                break;
-            case 3:
-                Create3DBoundaries();
-                break;
+                return Create2DBoundaries();
             default:
-                throw "Mesh dimensions should be 1, 2 or 3";
+                return Create3DBoundaries();
         }
     }
 
@@ -115,7 +102,7 @@ namespace Discretization {
     }
 
     map<Position, list<Node*>*> *Mesh::Create3DBoundaries() {
-        throw "Not implemented";
+        throw runtime_error ("Not implemented");
     }
     
     

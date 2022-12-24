@@ -1,8 +1,8 @@
 //
 // Created by hal9000 on 11/28/22.
 //
-#include "Matrix.h"
-#include "Matrix.cpp"
+#include "Array.h"
+#include "Array.cpp"
 #ifndef UNTITLED_MATRIXTEST_H
 #define UNTITLED_MATRIXTEST_H
 

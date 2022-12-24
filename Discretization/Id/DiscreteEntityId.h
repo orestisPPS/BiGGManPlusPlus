@@ -5,6 +5,7 @@
 #ifndef UNTITLED_DISCRETEENTITYID_H
 #define UNTITLED_DISCRETEENTITYID_H
 
+#pragma once
 
 namespace Discretization
 {

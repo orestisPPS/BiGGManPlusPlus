@@ -4,13 +4,14 @@
 
 #ifndef UNTITLED_COORDINATE_H
 #define UNTITLED_COORDINATE_H
-
+#pragma once
 #include <tuple>
 #include "DirectionsPositions.h"
 
+
 namespace PositioningInSpace{
-    enum CoordinateType
-    {
+    
+    enum CoordinateType{
         Natural,
         Parametric,
         Template
@@ -19,9 +20,9 @@ namespace PositioningInSpace{
     class Coordinate {
     public:
 
-        Coordinate(CoordinateType type, Direction direction);
+        Coordinate(CoordinateType type, Direction);
 
-        Coordinate(CoordinateType type, Direction direction, double value);
+        Coordinate(CoordinateType type, Direction, double value);
 
         ~Coordinate();
 

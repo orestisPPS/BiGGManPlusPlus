@@ -1,7 +1,7 @@
 //
 // Created by hal9000 on 12/2/22.
 //
-
+#pragma once
 #ifndef UNTITLED_DIFFERENTIALEQUATION_H
 #define UNTITLED_DIFFERENTIALEQUATION_H
 

@@ -1,8 +1,8 @@
 //
 // Created by hal9000 on 12/6/22.
 //
-
-#include "../Primitives/Matrix.h"
+#pragma once
+#include "../Primitives/Array.h"
 #include "../Discretization/Node/Node.h"
 #include "iostream"
 #include "vector"

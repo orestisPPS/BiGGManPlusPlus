@@ -15,8 +15,8 @@ namespace MathematicalProblem{
     }
 
     SteadyStateMathematicalProblem::~SteadyStateMathematicalProblem() {
-        delete pde;
+/*      delete pde;
         delete boundaryConditions;
-        delete degreesOfFreedom;
+        delete degreesOfFreedom;*/
     }
 }

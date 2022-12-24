@@ -5,7 +5,7 @@
 #include "EnergyTransferEquation.h"
 
 namespace PartialDifferentialEquations {
-    EnergyTransferEquation::EnergyTransferEquation(double *density, double *specialHeatCapacity,
+/*    EnergyTransferEquation::EnergyTransferEquation(double *density, double *specialHeatCapacity,
                                                    double *thermalConductivity, vector<double> *flowVelocity,
                                                    double *reaction) {
         _type = EnergyTransfer;
@@ -20,10 +20,6 @@ namespace PartialDifferentialEquations {
                 } 
 
             }
-            
-            
         }
-            
-        }
-    }
-} // 
+    }*/
+}

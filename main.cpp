@@ -6,7 +6,7 @@ using namespace DegreesOfFreedom;
 //using namespace PositioningInSpace;
 #include "PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
 using namespace PartialDifferentialEquations;
-#include "Primitives/Matrix.h"
+#include "Primitives/Array.h"
 using namespace Primitives;
 #include <functional>
 #include <vector>
@@ -17,7 +17,7 @@ int main() {
     auto firstDofBoi = new DegreeOfFreedom(DOFType::Temperature, FieldType::VectorComponent1, 1.0);
     //firstDofBoi->Print();
     
-    //auto firstCoordinateBoi = new Coordinate(CoordinateType::Natural, Direction::One, 1.0);
+    //auto firstCoordinateBoi = new Coordinate(CoordinateType::NaturalCoordinateSystem, Direction::One, 1.0);
     //firstCoordinateBoi->Print();
     
  
@@ -29,6 +29,7 @@ int main() {
     
     std::cout << (*firstBCBoi)(*testVector) << std::endl;
     std::cout << "Hello, World!" << std::endl;
-        
+       
+    
     return 0;
     }

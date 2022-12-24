@@ -17,5 +17,4 @@ namespace PartialDifferentialEquations {
         PDEType PartialDifferentialEquation::Type() {
             return _type;
         }
-    } // PartialDifferentialEquations
 } // PartialDifferentialEquations

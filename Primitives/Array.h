@@ -1,11 +1,10 @@
 //
 // Created by hal9000 on 11/25/22.
 //
-
-
 #pragma once
 #include <iostream>
 #include <map>
+#include <omp.h>
 namespace Primitives {
 
     template<class T>

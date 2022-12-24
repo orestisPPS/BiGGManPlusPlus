@@ -8,6 +8,8 @@ add_executable(untitled main.cpp
         DegreesOfFreedom/DegreeOfFreedom.cpp 
         DegreesOfFreedom/DegreeOfFreedom.h 
         Primitives/MatrixTest.cpp
+        Primitives/Array.h 
+        Primitives/Array.cpp 
         Primitives/MatrixTest.h 
         PositioningInSpace/Coordinate.cpp
         PositioningInSpace/Coordinate.h
@@ -18,4 +20,20 @@ add_executable(untitled main.cpp
         BoundaryConditions/BoundaryCondition.cpp
         BoundaryConditions/BoundaryCondition.h
         PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp 
-        PartialDifferentialEquations/SecondOrderLinearPDEProperties.h PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp PartialDifferentialEquations/HeatTransfer/EnergyTransferEquation.h MathematicalProblem/SteadyStateMathematicalProblem.cpp MathematicalProblem/SteadyStateMathematicalProblem.h MathematicalProblem/TransientMathematicalProblem.cpp MathematicalProblem/TransientMathematicalProblem.h StructuredMeshGeneration/MeshPreProcessor2D.cpp StructuredMeshGeneration/MeshPreProcessor2D.h StructuredMeshGeneration/MeshSpecs2D.cpp StructuredMeshGeneration/MeshSpecs2D.h Discretization/Mesh/Mesh.cpp Discretization/Mesh/Mesh.h StructuredMeshGeneration/NodeFactory.cpp StructuredMeshGeneration/NodeFactory.h)
+        PartialDifferentialEquations/SecondOrderLinearPDEProperties.h 
+        PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp
+        PartialDifferentialEquations/HeatTransfer/EnergyTransferEquation.h
+        MathematicalProblem/SteadyStateMathematicalProblem.cpp
+        MathematicalProblem/SteadyStateMathematicalProblem.h
+        MathematicalProblem/TransientMathematicalProblem.cpp
+        MathematicalProblem/TransientMathematicalProblem.h
+        StructuredMeshGeneration/MeshPreProcessor2D.cpp
+        StructuredMeshGeneration/MeshPreProcessor2D.h
+        StructuredMeshGeneration/MeshSpecs2D.cpp
+        StructuredMeshGeneration/MeshSpecs2D.h
+        Discretization/Mesh/Mesh.cpp
+        Discretization/Mesh/Mesh.h
+        StructuredMeshGeneration/NodeFactory.cpp
+        StructuredMeshGeneration/NodeFactory.h
+        StructuredMeshGeneration/MeshTest2D.cpp
+        StructuredMeshGeneration/MeshTest2D.h)
