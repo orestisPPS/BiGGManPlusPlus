@@ -30,12 +30,6 @@ namespace MathematicalProblem {
         degreesOfFreedom = dof;
         coordinateSystem = coordinateSystem;
     }
-    
-    TransientMathematicalProblem::~TransientMathematicalProblem() {
-        delete pde;
-        delete boundaryConditions;
-        delete domainInitialConditions;
-        delete degreesOfFreedom;
-    }
+
 
 }// MathematicalProblem

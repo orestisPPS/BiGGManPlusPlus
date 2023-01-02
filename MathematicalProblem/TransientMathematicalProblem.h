@@ -20,9 +20,7 @@ namespace MathematicalProblem {
                                      map<int*,double>* domainIC,
                                      list<DegreeOfFreedom*> *dof,
                                      CoordinateSystem coordinateSystem);
-        
-        ~TransientMathematicalProblem();
-        
+                
         PartialDifferentialEquation *pde;
         map<Position,list<BoundaryConditions::BoundaryCondition*>> *boundaryConditions;
         double* initialCondition;

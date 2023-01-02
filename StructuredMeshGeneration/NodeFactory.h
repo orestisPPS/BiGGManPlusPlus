@@ -2,9 +2,7 @@
 // Created by hal9000 on 12/21/22.
 //
 #pragma once
-#include <vector>
-#include "../Primitives/Array.h"
-using namespace Primitives;
+#include "/home/hal9000/code/BiGGMan++/Primitives/Array.h"
 #include "../Discretization/Node/Node.h"
 using namespace Discretization;
 namespace StructuredMeshGenerator {
@@ -12,7 +10,9 @@ namespace StructuredMeshGenerator {
     class NodeFactory {
     public:
         NodeFactory(map<Direction, int> *nodesPerDirection);
+        
         NodeFactory(int nn1, int nn2, int nn3);
+        
         Primitives::Array<Node *> *nodesMatrix;
         
     private:
@@ -26,14 +26,14 @@ namespace StructuredMeshGenerator {
         int _nn3;
                         
         //Assigns global id to each node.
-        void AssignGlobalId();
+        void AssignGlobalId() const;
         
         //Creates boundary nodes.
         void CreateNodesArray();
         
         //Creates boundary nodes for 1D mesh (nnOne > 0, nnTwo = 0, nnThree = 0)
         //RELATIVE : left node has id 0, right node has id nnOne - 1
-        void Create1DBoundaryNodes(int position);
+        void Create1DBoundaryNodes(int position) const;
         
         //Creates boundary nodes for 2D mesh (nnOne > 0, nnTwo > 0, nnThree = 0),
         // with the following order in identification starting from (0,0):
@@ -42,7 +42,7 @@ namespace StructuredMeshGenerator {
         // v      ^
         // v      ^
         // ->->->->
-        void Create2DBoundaryNodes(int index1, int index2);
+        void Create2DBoundaryNodes(int index1, int index2) const;
         
         //Creates boundary nodes for 3D mesh (nnOne > 0, nnTwo > 0, nnThree > 0).
         // with the following order in identification starting from (0,0,0):
@@ -53,22 +53,22 @@ namespace StructuredMeshGenerator {
         // v      ^
         // v      ^
         // ->->->->
-        void Create3DBoundaryNodes();
+        void Create3DBoundaryNodes() const;
         
         //Allocates memory for boundary node.
-        Node *AllocateBoundaryNode(int boundaryId);
+        static Node *AllocateBoundaryNode(int boundaryId);
         
         //Creates internal nodes for 1D mesh (nnOne > 0, nnTwo = 0, nnThree = 0).
-        void Create1DInternalNodes(int maxIndex);
+        void Create1DInternalNodes(int maxIndex) const;
         
         //Creates internal nodes for 2D mesh (nnOne > 0, nnTwo > 0, nnThree = 0).
-        void Create2DInternalNodes(int index1, int index2);
+        void Create2DInternalNodes(int index1, int index2) const;
         
         //Creates internal nodes for 3D mesh (nnOne > 0, nnTwo > 0, nnThree > 0).
-        void Create3DInternalNodes();
+        void Create3DInternalNodes() const;
 
         //Allocates memory for internal node.
-        Node *AllocateInternalNode(int internalId);
+        static Node *AllocateInternalNode(int internalId);
         
     };
     

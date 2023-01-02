@@ -5,22 +5,26 @@
 #include <iostream>
 #include <map>
 #include <omp.h>
-namespace Primitives {
 
+namespace Primitives {
     template<class T>
     class Array {
+        
         public:
             //Custom constructor that takes the size of a 1D array 
             // and allocates the memory in the heap
             Array(size_t rows);
             //Custom constructor that takes the size of a 2D array
             // and allocates the memory in the heap
+
             Array(size_t rows, size_t  columns);
             //Custom constructor that takes the size of a 3D array
             // and allocates the memory in the heap
+
             Array(size_t rows, size_t  columns, size_t aisles);
             
             //Copy constructor
+
             Array(const Array<T>& matrix);
             
             //Destructor
@@ -48,7 +52,7 @@ namespace Primitives {
             T element(size_t row, size_t column, size_t aisle);
             
             //Sets the value at the given row
-            void populateElement(size_t row, T value);
+            void populateElement(int row, T value);
             
             //Sets the value at the given row and column
             void populateElement(size_t row, size_t column, T value);
@@ -86,31 +90,20 @@ namespace Primitives {
             // Overloaded inequality operator
             bool operator != (const Array<T>& matrix);
             
-            // Overloaded operator for integer matrix addition
-            Array<int> operator + (const Array<int>& matrix);
-                       
-            // Overloaded operator for double addition
-            Array<double> operator + (const Array<double>& matrix);
-            
-        // Overloaded operator for integer matrix subtraction
-            Array<int> operator - (const Array<int>& matrix);
-            
-            // Overloaded operator for double matrix subtraction
-            Array<double> operator - (const Array<double>& matrix);
-            
-            // Overloaded operator for integer matrix multiplication
-            Array<int> operator * (const Array<int>& matrix);
-            
-            // Overloaded operator for double matrix multiplication
-            Array<double> operator * (const Array<double>& matrix);
-            
-            void AddMatrixIntoThis(const Array<int>& matrix);
-            
-            void AddMatrixIntoThis(const Array<double>& matrix);
+            // Overloaded operator for matrix addition
+            Array<T> operator + (const Array<T>& matrix);
 
-            void SubtractMatrixIntoThis(const Array<int>& matrix);
+            // Overloaded operator for matrix subtraction
+            Array<T> operator - (const Array<T>& matrix);
+    
+            // Overloaded operator for matrix multiplication
+            Array<T> operator * (const Array<T>& matrix);
+                        
+            void AddIntoThis(const Array<T>& matrix);
             
-            void SubtractMatrixIntoThis(const Array<double>& matrix);
+            void SubtractIntoThis(const Array<T>& matrix);
+            
+            void MultiplyIntoThis(const Array<T>& matrix);
             
             void HPCShitBoiiiii();
             
@@ -133,4 +126,5 @@ namespace Primitives {
             // Finds the index of the 3D array in the private memory efficient 1D array 
             size_t index(size_t row, size_t column, size_t aisle);
         };
-    } // LinearAlgebra
+    }
+    // LinearAlgebra

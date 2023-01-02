@@ -5,6 +5,7 @@
 #include "NodeFactory.h"
 
 namespace StructuredMeshGenerator{
+    
     NodeFactory :: NodeFactory(map<Direction, int> *numberOfNodes){
         _nn1 = numberOfNodes->at(Direction::One);
         _nn2 = numberOfNodes->at(Direction::Two);
@@ -12,6 +13,7 @@ namespace StructuredMeshGenerator{
         CreateNodesArray();
         AssignGlobalId();
     }
+    
     NodeFactory :: NodeFactory(int nn1, int nn2, int nn3){
         _nn1 = nn1;
         _nn2 = nn2;
@@ -22,53 +24,53 @@ namespace StructuredMeshGenerator{
     
     void NodeFactory :: CreateNodesArray(){
         if (_nn2 == 0 && _nn3 == 0){
-            nodesMatrix = new Array<Node*>(_nn1);
+            nodesMatrix = new Primitives::Array<Node*>(_nn1);
             Create1DBoundaryNodes(_nn1);
             Create1DInternalNodes(_nn1);
         }
 
         else if (_nn1 == 0 && _nn3 == 0){
-            nodesMatrix = new Array<Node*>(_nn2);
+            nodesMatrix = new Primitives::Array<Node*>(_nn2);
             Create1DBoundaryNodes(_nn2);
             Create1DInternalNodes(_nn2);
         }
 
         else if (_nn1 == 0 && _nn2 == 0){
-            nodesMatrix = new Array<Node*>(_nn3);
+            nodesMatrix = new Primitives::Array<Node*>(_nn3);
             Create1DBoundaryNodes(_nn3);
             Create1DInternalNodes(_nn3);
         }
 
         else if (_nn1 == 0){
-            nodesMatrix = new Array<Node*>(_nn2, _nn3);
+            nodesMatrix = new Primitives::Array<Node*>(_nn2, _nn3);
             Create2DBoundaryNodes(_nn2, _nn3);
             Create2DInternalNodes(_nn2, _nn3);
         }
 
         else if (_nn2 == 0){
-            nodesMatrix = new Array<Node*>(_nn1, _nn3);
+            nodesMatrix = new Primitives::Array<Node*>(_nn1, _nn3);
             Create2DBoundaryNodes(_nn1, _nn3);
             Create2DInternalNodes(_nn1, _nn3);
         }
 
         else if (_nn3 == 0){
-            nodesMatrix = new Array<Node*>(_nn1, _nn2);
+            nodesMatrix = new Primitives::Array<Node*>(_nn1, _nn2);
             Create2DBoundaryNodes(_nn1, _nn2);
             Create2DInternalNodes(_nn1, _nn2);
         }
         else{
-            nodesMatrix = new Array<Node*>(_nn1, _nn2, _nn3);
+            nodesMatrix = new Primitives::Array<Node*>(_nn1, _nn2, _nn3);
             Create3DBoundaryNodes();
             Create3DInternalNodes();
         }
     }
 
-    void NodeFactory::Create1DBoundaryNodes(int position) {
+    void NodeFactory::Create1DBoundaryNodes(int position) const {
         nodesMatrix->populateElement(0, AllocateBoundaryNode(0));
         nodesMatrix->populateElement(position - 1, AllocateBoundaryNode(position - 1));
     }
     
-    void NodeFactory::Create2DBoundaryNodes(int index1, int index2) {
+    void NodeFactory::Create2DBoundaryNodes(int index1, int index2) const {
         
         auto boundaryId = 0;
         //Bottom boundary nodes.
@@ -93,7 +95,7 @@ namespace StructuredMeshGenerator{
         }         
     }
     
-    void NodeFactory::Create3DBoundaryNodes() {
+    void NodeFactory::Create3DBoundaryNodes() const {
         auto boundaryId = 0;
         //FrontBottom boundary nodes.
         for (int i = 0; i < _nn1 ; ++i) {
@@ -163,7 +165,7 @@ namespace StructuredMeshGenerator{
         return node;
     }
     
-    void NodeFactory::Create1DInternalNodes(int maxIndex) {
+    void NodeFactory::Create1DInternalNodes(int maxIndex) const {
         auto internalId = 0;
         for (int i = 1; i < maxIndex - 1; i++){
             nodesMatrix->populateElement(i, AllocateInternalNode(internalId));
@@ -171,7 +173,7 @@ namespace StructuredMeshGenerator{
         }
     }
     
-    void NodeFactory::Create2DInternalNodes(int index1, int index2) {
+    void NodeFactory::Create2DInternalNodes(int index1, int index2) const {
         auto internalId = 0;
         for (int i = 1; i < index1 - 1; i++){
             for (int j = 1; j < index2 - 1; j++){
@@ -181,7 +183,7 @@ namespace StructuredMeshGenerator{
         }
     }
     
-    void NodeFactory::Create3DInternalNodes() {
+    void NodeFactory::Create3DInternalNodes() const {
         auto internalId = 0;
         for (int i = 1; i < _nn1 - 1; i++){
             for (int j = 1; j < _nn2 - 1; j++){
@@ -199,7 +201,7 @@ namespace StructuredMeshGenerator{
         return node;
     }
     
-    void NodeFactory::AssignGlobalId() {
+    void NodeFactory::AssignGlobalId() const {
         auto id = 0;
         for(int k = 0; k < _nn3; k++){
             for(int j = 0; j < _nn2; j++){

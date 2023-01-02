@@ -14,7 +14,6 @@ namespace StructuredMeshGenerator {
                     Node* node = nodeFactory.nodesMatrix->element(i, j);
                     cout <<"i : " << i << " j : " << j << " Node " << node->id ->global   << endl;
                 }
-                
             }
         }
     } // StructuredMeshGenerator

@@ -8,13 +8,20 @@ using namespace DegreesOfFreedom;
 using namespace PartialDifferentialEquations;
 #include "Primitives/Array.h"
 using namespace Primitives;
+#include "Discretization/Mesh/Mesh.h"
+//#include "StructuredMeshGeneration/MeshTest2D.h"
 #include <functional>
 #include <vector>
 #include <list>
 #include <tuple>
 int main() {
+    auto matrix = Array<double>(2, 2); 
 
-    auto firstDofBoi = new DegreeOfFreedom(DOFType::Temperature, FieldType::VectorComponent1, 1.0);
+    //auto meshTest = StructuredMeshGenerator::MeshTest2D();
+    return 0;
+}
+
+/*    auto firstDofBoi = new DegreeOfFreedom(DOFType::Temperature, FieldType::VectorComponent1, 1.0);
     //firstDofBoi->Print();
     
     //auto firstCoordinateBoi = new Coordinate(CoordinateType::NaturalCoordinateSystem, Direction::One, 1.0);
@@ -29,7 +36,6 @@ int main() {
     
     std::cout << (*firstBCBoi)(*testVector) << std::endl;
     std::cout << "Hello, World!" << std::endl;
-       
+       */
     
-    return 0;
-    }
+
