@@ -16,4 +16,5 @@ namespace StructuredMeshGenerator {
         this->templateShearX = templateShearX;
         this->templateShearY = templateShearY;
     }
+
 } // StructuredMeshGenerator

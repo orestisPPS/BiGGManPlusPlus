@@ -5,15 +5,15 @@
 
 #include "../Node/Node.h"
 #include<vector>
-#include "../../Primitives/Array.cpp"
+#include "../../Primitives/Array.h"
 using namespace Discretization;
-using namespace Primitives;
+using namespace LinearAlgebra;
 
 namespace Discretization {
 
     class Mesh {
     public:
-        Mesh(Primitives::Array<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection);
+        Mesh(Array<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection);
         
         ~Mesh();
         
@@ -34,7 +34,7 @@ namespace Discretization {
         Node *node(int i, int j, int k);
     
     private:
-        Primitives::Array<Node *> *_nodesMatrix;
+        Array<Node *> *_nodesMatrix;
         
         map<Position, list<Node*>*> *CreateBoundaries();
 

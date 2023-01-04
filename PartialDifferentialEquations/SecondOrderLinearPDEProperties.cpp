@@ -7,7 +7,7 @@
 #include "vector"
 #include "map"
 using namespace std;
-using namespace Primitives;
+using namespace LinearAlgebra;
 
 namespace PartialDifferentialEquations {
     

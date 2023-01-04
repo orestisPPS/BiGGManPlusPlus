@@ -7,17 +7,17 @@ using namespace DegreesOfFreedom;
 #include "PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
 using namespace PartialDifferentialEquations;
 #include "Primitives/Array.h"
-using namespace Primitives;
+using namespace LinearAlgebra;
 #include "Discretization/Mesh/Mesh.h"
-//#include "StructuredMeshGeneration/MeshTest2D.h"
+#include "StructuredMeshGeneration/MeshTest2D.h"
 #include <functional>
 #include <vector>
 #include <list>
 #include <tuple>
 int main() {
-    auto matrix = Array<double>(2, 2); 
+    //auto matrix = Array<double>(2, 2); 
 
-    //auto meshTest = StructuredMeshGenerator::MeshTest2D();
+    auto meshTest = StructuredMeshGenerator::MeshTest2D();
     return 0;
 }
 

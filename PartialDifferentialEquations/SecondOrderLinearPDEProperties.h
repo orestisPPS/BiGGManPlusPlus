@@ -8,8 +8,8 @@
 #include "vector"
 #include "map"
 using namespace std;
+using namespace LinearAlgebra;
 
-using namespace Primitives;
 using namespace Discretization;
 
 namespace PartialDifferentialEquations {

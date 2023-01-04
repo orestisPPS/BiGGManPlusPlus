@@ -9,7 +9,7 @@
 					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.23"
+						"string" : "3.24"
 					},
 					"projectIndex" : 0,
 					"source" : ".",
@@ -27,7 +27,7 @@
 					[
 						0
 					],
-					"name" : "untitled",
+					"name" : "TEST",
 					"targetIndexes" : 
 					[
 						0
@@ -38,9 +38,9 @@
 			[
 				{
 					"directoryIndex" : 0,
-					"id" : "untitled::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-untitled-Debug-40831d24bc7e458dd9aa.json",
-					"name" : "untitled",
+					"id" : "TEST::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-TEST-Debug-440a386cd66d70116c35.json",
+					"name" : "TEST",
 					"projectIndex" : 0
 				}
 			]
@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/hal9000/code/BiGGMan++/cmake-build-debug",
-		"source" : "/home/hal9000/code/BiGGMan++"
+		"build" : "/home/hal9000/code/BiGGMan++/TEST/cmake-build-debug",
+		"source" : "/home/hal9000/code/BiGGMan++/TEST"
 	},
 	"version" : 
 	{

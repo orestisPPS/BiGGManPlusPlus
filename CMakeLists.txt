@@ -8,8 +8,6 @@ add_executable(untitled main.cpp
         DegreesOfFreedom/DegreeOfFreedom.cpp 
         DegreesOfFreedom/DegreeOfFreedom.h 
         Primitives/MatrixTest.cpp
-        Primitives/Array.h 
-        Primitives/Array.cpp 
         Primitives/MatrixTest.h 
         PositioningInSpace/Coordinate.cpp
         PositioningInSpace/Coordinate.h
@@ -36,4 +34,4 @@ add_executable(untitled main.cpp
         StructuredMeshGeneration/NodeFactory.cpp
         StructuredMeshGeneration/NodeFactory.h
         StructuredMeshGeneration/MeshTest2D.cpp
-        StructuredMeshGeneration/MeshTest2D.h)
+        StructuredMeshGeneration/MeshTest2D.h Primitives/Array.h)
