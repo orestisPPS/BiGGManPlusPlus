@@ -11,6 +11,9 @@ namespace StructuredMeshGenerator{
         _nn2 = numberOfNodes->at(Direction::Two);
         _nn3 = numberOfNodes->at(Direction::Three);
         CreateNodesArray();
+        CreateNodesArray();
+        if (_nn3 == 0)
+            _nn3 = 1;
         AssignGlobalId();
     }
     
@@ -19,6 +22,8 @@ namespace StructuredMeshGenerator{
         _nn2 = nn2;
         _nn3 = nn3;
         CreateNodesArray();
+        if (_nn3 == 0)
+            _nn3 = 1;
         AssignGlobalId();
     }
     
@@ -164,7 +169,7 @@ namespace StructuredMeshGenerator{
 
     Node *NodeFactory::AllocateBoundaryNode(int boundaryId) {
         Node *node = new Node();
-        *node->id->global = boundaryId;
+        *node->id->boundary = boundaryId;
         return node;
     }
     
@@ -180,7 +185,8 @@ namespace StructuredMeshGenerator{
         auto internalId = 0;
         for (int i = 1; i < index1 - 1; i++){
             for (int j = 1; j < index2 - 1; j++){
-                nodesMatrix->populateElement(i, j, AllocateInternalNode(internalId));
+                nodesMatrix->populateElement(j, i, AllocateInternalNode(internalId));
+                //cout << "Internal node: " << *nodesMatrix->element(i,j)->id->global << endl;
                 internalId++;
             }
         }
@@ -191,7 +197,7 @@ namespace StructuredMeshGenerator{
         for (int i = 1; i < _nn1 - 1; i++){
             for (int j = 1; j < _nn2 - 1; j++){
                 for (int k = 1; k < _nn3 - 1; k++){
-                    nodesMatrix->populateElement(i, j, k, AllocateInternalNode(internalId));
+                    nodesMatrix->populateElement(k, j, i, AllocateInternalNode(internalId));
                     internalId++;
                 }
             }
@@ -200,25 +206,21 @@ namespace StructuredMeshGenerator{
     
     Node *NodeFactory::AllocateInternalNode(unsigned internalId) {
         Node *node = new Node();
-        *node->id->global = internalId;
+        *node->id->internal = internalId;
+        //cout << "Internal node id: " << *node->id->global << endl;
         return node;
     }
     
     void NodeFactory::AssignGlobalId() const {
-        auto id = 0;
+        unsigned id = 0;
         for(int k = 0; k < _nn3; k++){
             for(int j = 0; j < _nn2; j++){
                 for(int i = 0; i < _nn1; i++){
-                    *nodesMatrix->element(j, i, k)->id->global = id;
+                    *nodesMatrix->element(i,j,k)->id->global = id;
                     id++;
                 }
             }
         }
         
     }
-
-
-
-
-
 } // StructuredMeshGenerator

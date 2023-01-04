@@ -17,13 +17,13 @@ namespace Discretization
         ~DiscreteEntityId();
 
         //The global id of the entity
-        int *global;
+        unsigned *global;
 
         //The boundary id of the entity. If it is not a boundary entity, this is set to NaN
-        int *boundary;
+        unsigned *boundary;
 
         //The internal id of the entity. If it is not an internal entity, this is set to NaN
-        int *internal;
+        unsigned *internal;
     };
 }
 

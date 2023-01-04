@@ -14,7 +14,7 @@ namespace StructuredMeshGenerator {
         
         NodeFactory(unsigned nn1, unsigned nn2, unsigned nn3);
         
-        Array<Node *> *nodesMatrix;
+        Array<Node*> *nodesMatrix;
         
     private:
         //Number of nodes at direction One. (can be x, ξ, θ)

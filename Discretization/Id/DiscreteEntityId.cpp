@@ -9,9 +9,9 @@
 namespace Discretization
 {
     DiscreteEntityId::DiscreteEntityId() {
-        global = new int(std::numeric_limits<int>::quiet_NaN());
-        boundary = new int(std::numeric_limits<int>::quiet_NaN());
-        internal = new int(std::numeric_limits<int>::quiet_NaN());
+        global = new unsigned(std::numeric_limits<int>::quiet_NaN());
+        boundary = new unsigned(std::numeric_limits<int>::quiet_NaN());
+        internal = new unsigned(std::numeric_limits<int>::quiet_NaN());
     }
 
     DiscreteEntityId::~DiscreteEntityId() {

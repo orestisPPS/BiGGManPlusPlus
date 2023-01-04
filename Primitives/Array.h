@@ -3,6 +3,7 @@
 // Created by hal9000 on 1/2/23.
 //
 
+
 #ifndef UNTITLED_ARRAY_H
 #define UNTITLED_ARRAY_H
 
@@ -12,15 +13,6 @@ using namespace std;
 
 namespace LinearAlgebra {
 
-//
-// Created by hal9000 on 1/3/23.
-//
-#pragma once
-#ifndef TEST_ARRAY_H
-#define TEST_ARRAY_H
-#include <iostream>
-#include <vector>
-    using namespace std;
 
     template<typename T> class Array {
 
@@ -194,17 +186,17 @@ namespace LinearAlgebra {
         }
 
         // Returns the value at the given row
-        T element(unsigned row){
+        T& element(unsigned row){
             return _array[row];
         }
 
         // Returns the value at the given row and column
-        T element(unsigned row, unsigned column){
+        T& element(unsigned row, unsigned column){
             return _array[row * _numberOfColumns + column];
         }
 
         // Returns the value at the given row, column and aisle
-        T element(unsigned row, unsigned column, unsigned aisle){
+        T& element(unsigned row, unsigned column, unsigned aisle){
             return _array[row * _numberOfColumns * _numberOfAisles + column * _numberOfAisles + aisle];
         }
 
@@ -346,7 +338,7 @@ namespace LinearAlgebra {
 
         // Returns the pointer of the transpose of the matrix
         Array<T> *transpose(){
-            Array<T> *transpose = new Array<T>(_numberOfColumns, _numberOfRows);
+            auto *transpose = new Array<T>(_numberOfColumns, _numberOfRows);
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = 0; j < _numberOfColumns; ++j) {
                     transpose->populateElement(j, i, _array[i * _numberOfColumns + j]);
@@ -357,7 +349,7 @@ namespace LinearAlgebra {
 
         // Stores the transpose of the matrix in the given matrix
         void transposeIntoThis(){
-            Array<T> *transpose = new Array<T>(_numberOfColumns, _numberOfRows);
+            auto *transpose = new Array<T>(_numberOfColumns, _numberOfRows);
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = 0; j < _numberOfColumns; ++j) {
                     transpose->populateElement(j, i, _array[i * _numberOfColumns + j]);
@@ -413,7 +405,9 @@ namespace LinearAlgebra {
 
 
 
-        void HPCShitBoiiiii();
+        void HPCShitBoiiiii(){
+            throw "not implemented";
+        }
 
         // Prints the matrix in the console
         void print(){
@@ -435,10 +429,6 @@ namespace LinearAlgebra {
         //Number of Aisles. Array size : Depth
         unsigned _numberOfAisles;
     };
-
-//#include "Array.cpp"
-#endif //TEST_ARRAY_H
-
 
 } // Numerics
 
