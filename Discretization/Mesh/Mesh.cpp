@@ -7,9 +7,13 @@ using namespace  Discretization;
 
 namespace Discretization {
     
-    Mesh::Mesh(Array<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection) {
-        this->_nodesMatrix = nodes;
-        numberOfNodesPerDirection = numberOfNodesPerDirection;
+    Mesh::Mesh(Array<Node *> *nodes) {
+        _nodesMatrix = nodes;
+        numberOfNodesPerDirection = map<Direction, int>();
+        numberOfNodesPerDirection[Direction::One] = _nodesMatrix->numberOfColumns();
+        numberOfNodesPerDirection[Direction::Two] = _nodesMatrix->numberOfRows();
+        numberOfNodesPerDirection[Direction::Three] = _nodesMatrix->numberOfAisles();
+        
         boundaryNodes = CreateBoundaries();
         //nodeMap = new map<>
     }
@@ -31,7 +35,14 @@ namespace Discretization {
     }
     
     int Mesh::MeshDimensions() {
-        return numberOfNodesPerDirection.size();
+        if (numberOfNodesPerDirection[Direction::One] > 1 && numberOfNodesPerDirection[Direction::Two] > 1 && numberOfNodesPerDirection[Direction::Three] > 1)
+            return 3;
+        if (numberOfNodesPerDirection[Direction::One] == 1 && (numberOfNodesPerDirection[Direction::Two] > 1 || numberOfNodesPerDirection[Direction::Three] > 1) ||
+           (numberOfNodesPerDirection[Direction::Two] == 1 && (numberOfNodesPerDirection[Direction::One] > 1 || numberOfNodesPerDirection[Direction::Three] > 1)) ||
+           (numberOfNodesPerDirection[Direction::Three] == 1 && (numberOfNodesPerDirection[Direction::One] > 1 || numberOfNodesPerDirection[Direction::Two] > 1)))
+            return 2;
+        else
+            return 1;
     }
     
     Node* Mesh::node(int i) {

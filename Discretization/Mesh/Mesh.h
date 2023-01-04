@@ -13,7 +13,8 @@ namespace Discretization {
 
     class Mesh {
     public:
-        Mesh(Array<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection);
+        //Mesh(Array<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection);
+        Mesh(Array<Node *> *nodes);
         
         ~Mesh();
         
