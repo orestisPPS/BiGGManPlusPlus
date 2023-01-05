@@ -2,7 +2,7 @@
 // Created by hal9000 on 12/6/22.
 //
 #pragma once
-#include "../Primitives/Array.h"
+#include "../LinearAlgebra/Array.h"
 #include "../Discretization/Node/Node.h"
 #include "iostream"
 #include "vector"

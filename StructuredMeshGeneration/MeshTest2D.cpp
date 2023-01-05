@@ -3,13 +3,13 @@
 //
 
 #include "MeshTest2D.h"
-#include "MeshPreProcessor2D.h"
+#include "MeshPreProcessor.h"
 
 namespace StructuredMeshGenerator {
     
         MeshTest2D::MeshTest2D() {
-            MeshSpecs2D specs = MeshSpecs2D(5, 5, 1.0, 1.0, 0.0, 0.0, 0.0);
-            MeshPreProcessor2D preProcessor = MeshPreProcessor2D(specs);
+            MeshSpecs specs = MeshSpecs(5, 5, 1.0, 1.0, 0.0, 0.0, 0.0);
+            MeshPreProcessor preProcessor = MeshPreProcessor(specs);
             
 /*            NodeFactory nodeFactory = NodeFactory(specs.nnx, specs.nny, 0);
             for (int i = 0; i < specs.nnx; ++i) {

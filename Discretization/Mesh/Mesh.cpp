@@ -9,7 +9,7 @@ namespace Discretization {
     
     Mesh::Mesh(Array<Node *> *nodes) {
         _nodesMatrix = nodes;
-        numberOfNodesPerDirection = map<Direction, int>();
+        numberOfNodesPerDirection = map<Direction, unsigned>();
         numberOfNodesPerDirection[Direction::One] = _nodesMatrix->numberOfColumns();
         numberOfNodesPerDirection[Direction::Two] = _nodesMatrix->numberOfRows();
         numberOfNodesPerDirection[Direction::Three] = _nodesMatrix->numberOfAisles();
@@ -21,31 +21,24 @@ namespace Discretization {
     Mesh::~Mesh() {
         delete _nodesMatrix;
         _nodesMatrix = nullptr;
-        delete nodeMap;
-        nodeMap = nullptr;
+        delete spaceCharacteristics;
+        spaceCharacteristics = nullptr;
         delete boundaryNodes;
         boundaryNodes = nullptr;
     }
-    
-    int Mesh::TotalNodes() {
+
+    unsigned Mesh::TotalNodes() {
         if (_nodesMatrix != nullptr)
-            return nodeMap->size();
+            return _nodesMatrix->size();
         else
             return 0;
     }
-    
-    int Mesh::MeshDimensions() {
-        if (numberOfNodesPerDirection[Direction::One] > 1 && numberOfNodesPerDirection[Direction::Two] > 1 && numberOfNodesPerDirection[Direction::Three] > 1)
-            return 3;
-        if (numberOfNodesPerDirection[Direction::One] == 1 && (numberOfNodesPerDirection[Direction::Two] > 1 || numberOfNodesPerDirection[Direction::Three] > 1) ||
-           (numberOfNodesPerDirection[Direction::Two] == 1 && (numberOfNodesPerDirection[Direction::One] > 1 || numberOfNodesPerDirection[Direction::Three] > 1)) ||
-           (numberOfNodesPerDirection[Direction::Three] == 1 && (numberOfNodesPerDirection[Direction::One] > 1 || numberOfNodesPerDirection[Direction::Two] > 1)))
-            return 2;
-        else
-            return 1;
+
+    unsigned Mesh::MeshDimensions() {
+        return spaceCharacteristics.Dimensions;
     }
     
-    Node* Mesh::node(int i) {
+    Node* Mesh::node(unsigned i) {
         if (_nodesMatrix != nullptr)
             return _nodesMatrix->element(i);
         else
@@ -53,14 +46,14 @@ namespace Discretization {
     }
         
     
-    Node* Mesh::node(int i, int j) {
+    Node* Mesh::node(unsigned i, unsigned j) {
         if (_nodesMatrix != nullptr)
             return _nodesMatrix->element(i, j);
         else
             throw runtime_error("Node Not Found. You search for a 2D node in a" + to_string(MeshDimensions()) + "D mesh.");
         }
     
-    Node* Mesh::node(int i, int j, int k) {
+    Node* Mesh::node(unsigned i, unsigned j, unsigned k) {
         if (_nodesMatrix != nullptr)
             return _nodesMatrix->element(i, j, k);
         else

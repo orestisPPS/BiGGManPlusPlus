@@ -6,64 +6,53 @@
 
 namespace StructuredMeshGenerator{
     
-    NodeFactory :: NodeFactory(map<Direction, int> *numberOfNodes){
-        _nn1 = numberOfNodes->at(Direction::One);
-        _nn2 = numberOfNodes->at(Direction::Two);
-        _nn3 = numberOfNodes->at(Direction::Three);
+    NodeFactory :: NodeFactory(map<Direction, unsigned> &numberOfNodes, SpaceCharacteristics *spaceCharacteristics){
+        _nn1 = numberOfNodes.at(Direction::One);
+        _nn2 = numberOfNodes.at(Direction::Two);
+        _nn3 = numberOfNodes.at(Direction::Three);
         CreateNodesArray();
         CreateNodesArray();
-        if (_nn3 == 0)
-            _nn3 = 1;
         AssignGlobalId();
     }
     
-    NodeFactory :: NodeFactory(unsigned nn1, unsigned nn2, unsigned nn3){
-        _nn1 = nn1;
-        _nn2 = nn2;
-        _nn3 = nn3;
-        CreateNodesArray();
-        if (_nn3 == 0)
-            _nn3 = 1;
-        AssignGlobalId();
-    }
-    
-    void NodeFactory :: CreateNodesArray(){
-        if (_nn2 == 0 && _nn3 == 0){
+    void NodeFactory :: CreateNodesArray(SpaceCharacteristics &spaceCharacteristics){
+        if (spaceCharacteristics.physicalSpace == PhysicalSpace::One_axis){
             nodesMatrix = new Array<Node*>(_nn1);
             Create1DBoundaryNodes(_nn1);
             Create1DInternalNodes(_nn1);
         }
 
-        else if (_nn1 == 0 && _nn3 == 0){
+        else if (spaceCharacteristics.physicalSpace == PhysicalSpace::Two_axis){
             nodesMatrix = new Array<Node*>(_nn2);
             Create1DBoundaryNodes(_nn2);
             Create1DInternalNodes(_nn2);
         }
 
-        else if (_nn1 == 0 && _nn2 == 0){
+        else if (spaceCharacteristics.physicalSpace == PhysicalSpace::Three_axis){
             nodesMatrix = new Array<Node*>(_nn3);
             Create1DBoundaryNodes(_nn3);
             Create1DInternalNodes(_nn3);
         }
 
-        else if (_nn1 == 0){
+        else if (spaceCharacteristics.physicalSpace == PhysicalSpace::OneTwo_plane){
+            nodesMatrix = new Array<Node*>(_nn1, _nn2);
+            Create2DBoundaryNodes(_nn1, _nn2);
+            Create2DInternalNodes(_nn1, _nn2);
+        }
+
+        else if (spaceCharacteristics.physicalSpace == PhysicalSpace::TwoThree_plane){
             nodesMatrix = new Array<Node*>(_nn2, _nn3);
             Create2DBoundaryNodes(_nn2, _nn3);
             Create2DInternalNodes(_nn2, _nn3);
         }
 
-        else if (_nn2 == 0){
+        else if (spaceCharacteristics.physicalSpace == PhysicalSpace::OneThree_plane){
             nodesMatrix = new Array<Node*>(_nn1, _nn3);
             Create2DBoundaryNodes(_nn1, _nn3);
             Create2DInternalNodes(_nn1, _nn3);
         }
-
-        else if (_nn3 == 0){
-            nodesMatrix = new Array<Node*>(_nn1, _nn2);
-            Create2DBoundaryNodes(_nn1, _nn2);
-            Create2DInternalNodes(_nn1, _nn2);
-        }
-        else{
+        
+        else if (spaceCharacteristics.physicalSpace == PhysicalSpace::OneTwoThree_volume){
             nodesMatrix = new Array<Node*>(_nn1, _nn2, _nn3);
             Create3DBoundaryNodes();
             Create3DInternalNodes();
@@ -82,12 +71,12 @@ namespace StructuredMeshGenerator{
         
         auto boundaryId = 0;
         //Bottom boundary nodes.
-        for (int i = 0; i < index1 ; ++i) {
+        for (auto i = 0; i < index1 ; ++i) {
             nodesMatrix->populateElement(i, 0,  AllocateBoundaryNode(boundaryId));
             boundaryId++;
         }
         //Right boundary nodes.
-        for (int i = 1; i < index2 ; ++i) {
+        for (auto i = 1; i < index2 ; ++i) {
             nodesMatrix->populateElement(index1 - 1, i, AllocateBoundaryNode(boundaryId));
             boundaryId++;
         }
@@ -97,7 +86,7 @@ namespace StructuredMeshGenerator{
             boundaryId++;
         }
         //Left boundary nodes.
-        for (int i = index2 - 2; i >= 1 ; --i) {
+        for (auto i = index2 - 2; i >= 1 ; --i) {
             nodesMatrix->populateElement(0, i, AllocateBoundaryNode(boundaryId));
             boundaryId++;
         }         
@@ -121,12 +110,12 @@ namespace StructuredMeshGenerator{
             boundaryId++;
         }
         //FrontLeft boundary nodes.
-        for (int i = _nn2 - 2; i >= 1 ; --i) {
+        for (auto i = _nn2 - 2; i >= 1 ; --i) {
             nodesMatrix->populateElement(0, i, 0, AllocateBoundaryNode(boundaryId));
             boundaryId++;
         }
         //BackBottom boundary nodes.
-        for (int i = 0; i < _nn1 ; ++i) {
+        for (auto i = 0; i < _nn1 ; ++i) {
             nodesMatrix->populateElement(i, 0, _nn3 - 1, AllocateBoundaryNode(boundaryId));
             boundaryId++;
         }
@@ -141,27 +130,27 @@ namespace StructuredMeshGenerator{
             boundaryId++;
         }
         //BackLeft boundary nodes.
-        for (int i = _nn2 - 2; i >= 1 ; --i) {
+        for (auto i = _nn2 - 2; i >= 1 ; --i) {
             nodesMatrix->populateElement(0, i, _nn3 - 1, AllocateBoundaryNode(boundaryId));
             boundaryId++;
         }
         //BottomLeft boundary nodes.
-        for (int i = 1; i < _nn3 - 1 ; ++i) {
+        for (auto i = 1; i < _nn3 - 1 ; ++i) {
             nodesMatrix->populateElement(0, 0, i, AllocateBoundaryNode(boundaryId));
             boundaryId++;
         }
         //BottomRight boundary nodes.
-        for (int i = 1; i < _nn3 - 1 ; ++i) {
+        for (auto i = 1; i < _nn3 - 1 ; ++i) {
             nodesMatrix->populateElement(_nn1 - 1, 0, i, AllocateBoundaryNode(boundaryId));
             boundaryId++;
         }
         //TopLeft boundary nodes.
-        for (int i = 1; i < _nn3 - 1 ; ++i) {
+        for (auto i = 1; i < _nn3 - 1 ; ++i) {
             nodesMatrix->populateElement(0, _nn2 - 1, i, AllocateBoundaryNode(boundaryId));
             boundaryId++;
         }
         //TopRight boundary nodes.
-        for (int i = 1; i < _nn3 - 1 ; ++i) {
+        for (auto i = 1; i < _nn3 - 1 ; ++i) {
             nodesMatrix->populateElement(_nn1 - 1, _nn2 - 1, i, AllocateBoundaryNode(boundaryId));
             boundaryId++;
         }

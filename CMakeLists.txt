@@ -6,9 +6,9 @@ set(CMAKE_CXX_FLAGS -fopenmp)
 
 add_executable(untitled main.cpp
         DegreesOfFreedom/DegreeOfFreedom.cpp 
-        DegreesOfFreedom/DegreeOfFreedom.h 
-        Primitives/MatrixTest.cpp
-        Primitives/MatrixTest.h 
+        DegreesOfFreedom/DegreeOfFreedom.h
+        LinearAlgebra/MatrixTest.cpp
+        LinearAlgebra/MatrixTest.h 
         PositioningInSpace/Coordinate.cpp
         PositioningInSpace/Coordinate.h
         Discretization/Node/Node.cpp
@@ -26,12 +26,12 @@ add_executable(untitled main.cpp
         MathematicalProblem/TransientMathematicalProblem.cpp
         MathematicalProblem/TransientMathematicalProblem.h
         StructuredMeshGeneration/MeshPreProcessor2D.cpp
-        StructuredMeshGeneration/MeshPreProcessor2D.h
-        StructuredMeshGeneration/MeshSpecs2D.cpp
-        StructuredMeshGeneration/MeshSpecs2D.h
+        StructuredMeshGeneration/MeshPreProcessor.h
+        StructuredMeshGeneration/MeshSpecs.cpp
+        StructuredMeshGeneration/MeshSpecs.h
         Discretization/Mesh/Mesh.cpp
         Discretization/Mesh/Mesh.h
         StructuredMeshGeneration/NodeFactory.cpp
         StructuredMeshGeneration/NodeFactory.h
         StructuredMeshGeneration/MeshTest2D.cpp
-        StructuredMeshGeneration/MeshTest2D.h Primitives/Array.h)
+        StructuredMeshGeneration/MeshTest2D.h LinearAlgebra/Array.h PositioningInSpace/PhysicalSpaceCharacteristics.cpp PositioningInSpace/SpaceCharacteristics.h)

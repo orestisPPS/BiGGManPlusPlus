@@ -2,18 +2,17 @@
 // Created by hal9000 on 12/21/22.
 //
 #pragma once
-#include "/home/hal9000/code/BiGGMan++/Primitives/Array.h"
+#include "/home/hal9000/code/BiGGMan++/LinearAlgebra/Array.h"
 #include "../Discretization/Node/Node.h"
+#include "../PositioningInSpace/SpaceCharacteristics.h"
 using namespace Discretization;
 using namespace LinearAlgebra;
 namespace StructuredMeshGenerator {
 
     class NodeFactory {
     public:
-        NodeFactory(map<Direction, int> *nodesPerDirection);
-        
-        NodeFactory(unsigned nn1, unsigned nn2, unsigned nn3);
-        
+        NodeFactory(map<Direction, unsigned> &nodesPerDirection, SpaceCharacteristics *spaceCharacteristics);
+                
         Array<Node*> *nodesMatrix;
         
     private:
@@ -25,13 +24,14 @@ namespace StructuredMeshGenerator {
         
         //Number of nodes at direction Three. (can be z, ζ, φ)
         unsigned _nn3;
-                        
+
+        //Creates boundary nodes.
+        void CreateNodesArray(SpaceCharacteristics &spaceCharacteristics);
+        
         //Assigns global id to each node.
         void AssignGlobalId() const;
         
-        //Creates boundary nodes.
-        void CreateNodesArray();
-        
+       
         //Creates boundary nodes for 1D mesh (nnOne > 0, nnTwo = 0, nnThree = 0)
         //RELATIVE : left node has id 0, right node has id nnOne - 1
         void Create1DBoundaryNodes(unsigned position) const;

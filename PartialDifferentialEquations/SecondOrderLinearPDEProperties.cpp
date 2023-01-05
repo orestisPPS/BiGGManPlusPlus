@@ -2,7 +2,7 @@
 // Created by hal9000 on 12/6/22.
 //
 #include "SecondOrderLinearPDEProperties.h"
-#include "../Primitives/Array.h"
+#include "../LinearAlgebra/Array.h"
 #include "iostream"
 #include "vector"
 #include "map"

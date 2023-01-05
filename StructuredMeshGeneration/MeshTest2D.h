@@ -3,7 +3,7 @@
 //
 
 #include "NodeFactory.h"
-#include "MeshSpecs2D.h"
+#include "MeshSpecs.h"
 
 namespace StructuredMeshGenerator {
 

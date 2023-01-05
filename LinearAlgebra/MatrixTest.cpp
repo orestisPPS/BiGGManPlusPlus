@@ -4,7 +4,7 @@
 //
 #include "Array.h"
 #include "MatrixTest.h"
-using namespace Primitives;
+using namespace LinearAlgebra;
 
 
 MatrixTest::MatrixTest() {

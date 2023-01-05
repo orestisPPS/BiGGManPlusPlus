@@ -5,7 +5,9 @@
 
 #include "../Node/Node.h"
 #include<vector>
-#include "../../Primitives/Array.h"
+#include "../../LinearAlgebra/Array.h"
+#include "../../PositioningInSpace/SpaceCharacteristics.h"
+
 using namespace Discretization;
 using namespace LinearAlgebra;
 
@@ -18,21 +20,23 @@ namespace Discretization {
         
         ~Mesh();
         
-        map<Direction, int> numberOfNodesPerDirection;
+        SpaceCharacteristics *spaceCharacteristics;
+        
+        map<Direction, unsigned > numberOfNodesPerDirection;
 
         map<Position, list<Node *>*> *boundaryNodes;
         
-        map<int, Node *> *nodeMap;
+        unsigned TotalNodes();
 
-        int TotalNodes();
-
-        int MeshDimensions();
+        unsigned MeshDimensions();
         
-        Node *node(int i);
+        Node *node(unsigned i);
 
-        Node *node(int i, int j);
+        Node *node(unsigned i, unsigned j);
 
-        Node *node(int i, int j, int k);
+        Node *node(unsigned i, unsigned j, unsigned k);
+        
+        Node *nodeFromID(unsigned ID);
     
     private:
         Array<Node *> *_nodesMatrix;
