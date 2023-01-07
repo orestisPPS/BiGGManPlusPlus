@@ -45,7 +45,7 @@ namespace PositioningInSpace {
         BackBottomRight
     };
     
-    enum PhysicalSpace {
+    enum PhysicalSpaceEntities {
         //Axis 1. Can be x,ξ,θ
         One_axis,
         //Axis 2, Can be y,η,φ
@@ -60,6 +60,12 @@ namespace PositioningInSpace {
         TwoThree_plane,
         //The 3D physical space.
         OneTwoThree_volume
+    };
+    
+    enum Axis {
+        One,
+        Axis_2,
+        Axis_3
     };
     
     enum CoordinateSystem

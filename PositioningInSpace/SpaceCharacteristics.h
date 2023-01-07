@@ -13,7 +13,7 @@ namespace PositioningInSpace {
         public:
             explicit SpaceCharacteristics(std::map<PositioningInSpace::Direction, unsigned > &nodesPerDirection, CoordinateSystem coordinateSystem);
             unsigned Dimensions;
-            PhysicalSpace physicalSpace;
+            PhysicalSpaceEntities physicalSpace;
             CoordinateSystem coordinateSystem;
             
         private:

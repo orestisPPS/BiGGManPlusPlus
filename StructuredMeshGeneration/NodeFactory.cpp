@@ -16,43 +16,43 @@ namespace StructuredMeshGenerator{
     }
     
     void NodeFactory :: CreateNodesArray(SpaceCharacteristics &spaceCharacteristics){
-        if (spaceCharacteristics.physicalSpace == PhysicalSpace::One_axis){
+        if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::One_axis){
             nodesMatrix = new Array<Node*>(_nn1);
             Create1DBoundaryNodes(_nn1);
             Create1DInternalNodes(_nn1);
         }
 
-        else if (spaceCharacteristics.physicalSpace == PhysicalSpace::Two_axis){
+        else if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::Two_axis){
             nodesMatrix = new Array<Node*>(_nn2);
             Create1DBoundaryNodes(_nn2);
             Create1DInternalNodes(_nn2);
         }
 
-        else if (spaceCharacteristics.physicalSpace == PhysicalSpace::Three_axis){
+        else if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::Three_axis){
             nodesMatrix = new Array<Node*>(_nn3);
             Create1DBoundaryNodes(_nn3);
             Create1DInternalNodes(_nn3);
         }
 
-        else if (spaceCharacteristics.physicalSpace == PhysicalSpace::OneTwo_plane){
+        else if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::OneTwo_plane){
             nodesMatrix = new Array<Node*>(_nn1, _nn2);
             Create2DBoundaryNodes(_nn1, _nn2);
             Create2DInternalNodes(_nn1, _nn2);
         }
 
-        else if (spaceCharacteristics.physicalSpace == PhysicalSpace::TwoThree_plane){
+        else if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::TwoThree_plane){
             nodesMatrix = new Array<Node*>(_nn2, _nn3);
             Create2DBoundaryNodes(_nn2, _nn3);
             Create2DInternalNodes(_nn2, _nn3);
         }
 
-        else if (spaceCharacteristics.physicalSpace == PhysicalSpace::OneThree_plane){
+        else if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::OneThree_plane){
             nodesMatrix = new Array<Node*>(_nn1, _nn3);
             Create2DBoundaryNodes(_nn1, _nn3);
             Create2DInternalNodes(_nn1, _nn3);
         }
         
-        else if (spaceCharacteristics.physicalSpace == PhysicalSpace::OneTwoThree_volume){
+        else if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::OneTwoThree_volume){
             nodesMatrix = new Array<Node*>(_nn1, _nn2, _nn3);
             Create3DBoundaryNodes();
             Create3DInternalNodes();

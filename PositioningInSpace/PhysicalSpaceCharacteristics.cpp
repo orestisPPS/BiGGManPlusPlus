@@ -30,11 +30,11 @@ namespace PositioningInSpace {
         }
         
         void SpaceCharacteristics::CalculateDimensions() {
-            if (physicalSpace == PhysicalSpace::One_axis || physicalSpace == PhysicalSpace::Two_axis || physicalSpace == PhysicalSpace::Three_axis)
+            if (physicalSpace == PhysicalSpaceEntities::One_axis || physicalSpace == PhysicalSpaceEntities::Two_axis || physicalSpace == PhysicalSpaceEntities::Three_axis)
                 Dimensions = 1;
-            else if (physicalSpace == PhysicalSpace::OneTwo_plane || physicalSpace == PhysicalSpace::OneThree_plane || physicalSpace == PhysicalSpace::TwoThree_plane)
+            else if (physicalSpace == PhysicalSpaceEntities::OneTwo_plane || physicalSpace == PhysicalSpaceEntities::OneThree_plane || physicalSpace == PhysicalSpaceEntities::TwoThree_plane)
                 Dimensions = 2;
-            else if (physicalSpace == PhysicalSpace::OneTwoThree_volume)
+            else if (physicalSpace == PhysicalSpaceEntities::OneTwoThree_volume)
                 Dimensions = 3;
             else
                 throw std::invalid_argument("I'm sorry Dave, I'm afraid I can't do that");
@@ -47,21 +47,21 @@ namespace PositioningInSpace {
 
             //1D
             if (nn1 > 1 && nn2 == 1 && nn3 == 1)
-                physicalSpace = PhysicalSpace::One_axis;
+                physicalSpace = PhysicalSpaceEntities::One_axis;
             else if (nn1 == 1 && nn2 > 1 && nn3 == 1)
-                physicalSpace = PhysicalSpace::Two_axis;
+                physicalSpace = PhysicalSpaceEntities::Two_axis;
             else if (nn1 == 1 && nn2 == 1 && nn3 > 1)
-                physicalSpace = PhysicalSpace::Three_axis;
+                physicalSpace = PhysicalSpaceEntities::Three_axis;
             //2D
             else if (nn1 > 1 && nn2 > 1 && nn3 == 1)
-                physicalSpace = PhysicalSpace::OneTwo_plane;
+                physicalSpace = PhysicalSpaceEntities::OneTwo_plane;
             else if (nn1 > 1 && nn2 == 1 && nn3 > 1)
-                physicalSpace = PhysicalSpace::OneThree_plane;
+                physicalSpace = PhysicalSpaceEntities::OneThree_plane;
             else if (nn1 == 1 && nn2 > 1 && nn3 > 1)
-                physicalSpace = PhysicalSpace::TwoThree_plane;
+                physicalSpace = PhysicalSpaceEntities::TwoThree_plane;
             //3D
             else if (nn1 > 1 && nn2 > 1 && nn3 > 1)
-                physicalSpace = PhysicalSpace::OneTwoThree_volume;
+                physicalSpace = PhysicalSpaceEntities::OneTwoThree_volume;
             else
                 throw std::invalid_argument("I'm sorry Dave, I'm afraid I can't do that");
         }
