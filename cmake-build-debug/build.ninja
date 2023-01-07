@@ -151,6 +151,18 @@ build CMakeFiles/untitled.dir/PositioningInSpace/PhysicalSpaceCharacteristics.cp
   OBJECT_DIR = CMakeFiles/untitled.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled.dir/PositioningInSpace
 
+build CMakeFiles/untitled.dir/LinearAlgebra/TransformationTensors.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/LinearAlgebra/TransformationTensors.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/LinearAlgebra/TransformationTensors.cpp.o.d
+  FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
+  OBJECT_DIR = CMakeFiles/untitled.dir
+  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/LinearAlgebra
+
+build CMakeFiles/untitled.dir/Utility/Calculators.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/Utility/Calculators.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/Utility/Calculators.cpp.o.d
+  FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
+  OBJECT_DIR = CMakeFiles/untitled.dir
+  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/Utility
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target untitled
@@ -159,7 +171,7 @@ build CMakeFiles/untitled.dir/PositioningInSpace/PhysicalSpaceCharacteristics.cp
 #############################################
 # Link the executable untitled
 
-build untitled: CXX_EXECUTABLE_LINKER__untitled_Debug CMakeFiles/untitled.dir/main.cpp.o CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/MatrixTest.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/Coordinate.cpp.o CMakeFiles/untitled.dir/Discretization/Node/Node.cpp.o CMakeFiles/untitled.dir/Discretization/Id/DiscreteEntityId.cpp.o CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/SteadyStateMathematicalProblem.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/TransientMathematicalProblem.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshPreProcessor2D.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshSpecs.cpp.o CMakeFiles/untitled.dir/Discretization/Mesh/Mesh.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/NodeFactory.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshTest2D.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/PhysicalSpaceCharacteristics.cpp.o
+build untitled: CXX_EXECUTABLE_LINKER__untitled_Debug CMakeFiles/untitled.dir/main.cpp.o CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/MatrixTest.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/Coordinate.cpp.o CMakeFiles/untitled.dir/Discretization/Node/Node.cpp.o CMakeFiles/untitled.dir/Discretization/Id/DiscreteEntityId.cpp.o CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/SteadyStateMathematicalProblem.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/TransientMathematicalProblem.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshPreProcessor2D.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshSpecs.cpp.o CMakeFiles/untitled.dir/Discretization/Mesh/Mesh.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/NodeFactory.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshTest2D.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/PhysicalSpaceCharacteristics.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/TransformationTensors.cpp.o CMakeFiles/untitled.dir/Utility/Calculators.cpp.o
   FLAGS = -fopenmp -g
   OBJECT_DIR = CMakeFiles/untitled.dir
   POST_BUILD = :

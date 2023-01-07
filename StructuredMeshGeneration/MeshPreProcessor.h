@@ -18,12 +18,11 @@ namespace StructuredMeshGenerator {
         
     private:
         void InitiateMesh();
-        void AssignCoordinatesToNodes();
-        void Assign1DCoordinates();
-        void Assign2DCoordinates();
-        void Assign3DCoordinates();
+        void AssignCoordinates();
+        void Assign1DCoordinates(Direction direction1);
+        void Assign2DCoordinates(Direction direction1, Direction direction2);
+        void Assign3DCoordinates(Direction direction1, Direction direction2, Direction direction3);
         void CalculateMeshMetrics();
-
     };
 
 };

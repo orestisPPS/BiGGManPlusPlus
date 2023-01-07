@@ -9,6 +9,8 @@
 
 #include <iostream>
 #include <vector>
+#include <omp.h>
+
 using namespace std;
 
 namespace LinearAlgebra {
@@ -402,6 +404,38 @@ namespace LinearAlgebra {
             }
             return aisleVector;
         }
+        
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "openmp-use-default-none"
+        //If the vector size is bigger than 1000 the multiplication will be performed in parallel with OpenMP
+        vector<T> vectorMultiplication(vector<T> vector){
+            if (vector.size() == _numberOfColumns){
+                ::vector<T> resultVector;
+                if (vector.size() > 1000){
+                    #pragma omp parallel for
+                    for (int i = 0; i < _numberOfRows; ++i) {
+                        T result = 0;
+                        for (int j = 0; j < _numberOfColumns; ++j) {
+                            result += _array[i * _numberOfColumns + j] * vector[j];
+                        }
+                        resultVector.push_back(result);
+                    }    // NOLINT(openmp-use-default-none)
+                } else {
+                    for (int i = 0; i < _numberOfRows; ++i) {
+                        T result = 0;
+                        for (int j = 0; j < _numberOfColumns; ++j) {
+                            result += _array[i * _numberOfColumns + j] * vector[j];
+                        }
+                        resultVector.push_back(result);
+                    }
+                }
+                return resultVector;
+            }
+            return vector;
+        }
+#pragma clang diagnostic pop
+            
+        
 
 
 
