@@ -17,8 +17,8 @@ using namespace std;
 
 namespace LinearAlgebra {
 
-            //Source: https://en.wikipedia.org/wiki/Transformation_matrix#/media/File:2D_affine_transformation_matrix.svg
-
+            //Source1: https://en.wikipedia.org/wiki/Transformation_matrix#/media/File:2D_affine_transformation_matrix.svg
+            //Source2 :https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html
             // The transformation matrix that translates a vector in direction one by an input amount
             static Array<double> translationOneTensor(double translationOne) {
                 Array<double> translationOneTensor(3, 3);
