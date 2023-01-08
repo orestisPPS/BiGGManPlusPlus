@@ -7,6 +7,10 @@
 namespace LinearAlgebra {
     Transformations::Transformations() = default;
     
+    vector<double> Transformations::translate(vector<double> &vector, Direction direction, double distance) {
+        
+    }
+    
     vector<double> Transformations::_translate(vector<double> &vector, double translation1, double translation2, double translation3) {
         std::vector<double> result(vector.size());
         result[0] = vector[0] + translation1 * vector[2];

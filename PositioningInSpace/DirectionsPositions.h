@@ -62,12 +62,6 @@ namespace PositioningInSpace {
         OneTwoThree_volume
     };
     
-    enum Axis {
-        One,
-        Axis_2,
-        Axis_3
-    };
-    
     enum CoordinateSystem
     {
         Natural_Cartesian,

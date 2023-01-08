@@ -6,7 +6,6 @@ using namespace DegreesOfFreedom;
 //using namespace PositioningInSpace;
 #include "PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
 using namespace PartialDifferentialEquations;
-#include "Primitives/Array.h"
 using namespace LinearAlgebra;
 #include "Discretization/Mesh/Mesh.h"
 #include "StructuredMeshGeneration/MeshTest2D.h"

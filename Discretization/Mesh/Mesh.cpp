@@ -35,7 +35,7 @@ namespace Discretization {
     }
 
     unsigned Mesh::MeshDimensions() {
-        return spaceCharacteristics.Dimensions;
+        return spaceCharacteristics->Dimensions;
     }
     
     Node* Mesh::node(unsigned i) {

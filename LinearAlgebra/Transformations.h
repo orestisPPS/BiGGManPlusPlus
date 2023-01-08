@@ -20,24 +20,38 @@ namespace LinearAlgebra {
         //Source2 :https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html
         public:
             Transformations();
-            static Array<double> translate(vector<double> &vector, Direction direction, double distance);
-            static Array<double> translate(vector<double> &vector, Direction direction1, double distance1, Direction direction2, double distance2);
-            static Array<double> translate(vector<double> &vector, Direction direction1, double distance1, Direction direction2, double distance2, Direction direction3, double distance3);
+            //Translates a vector by an input amount in the given direction.
+            static vector<double> translate(vector<double> &vector, Direction direction, double distance);
+            //Translates a vector by an input amount in the given 2 directions.
+            static vector<double> translate(vector<double> &vector, Direction direction1, double distance1, Direction direction2, double distance2);
+            //Translates a vector by an input amount in the given 3 directions.
+            static vector<double> translate(vector<double> &vector, Direction direction1, double distance1, Direction direction2, double distance2, Direction direction3, double distance3);
             
-            static Array<double> scale(vector<double> &vector, Direction direction, double factor);
-            static Array<double> scale(vector<double> &vector, Direction direction1, double factor1, Direction direction2, double factor2);
-            static Array<double> scale(vector<double> &vector, Direction direction1, double factor1, Direction direction2, double factor2, Direction direction3, double factor3);
+            //Scales a vector by an input amount in the given direction.
+            static vector<double> scale(vector<double> &vector, Direction direction, double factor);
+            //Scales a vector by an input amount in the given 2 directions.
+            static vector<double> scale(vector<double> &vector, Direction direction1, double factor1, Direction direction2, double factor2);
+            //Scales a vector by an input amount in the given 3 directions.
+            static vector<double> scale(vector<double> &vector, Direction direction1, double factor1, Direction direction2, double factor2, Direction direction3, double factor3);
             
-            static Array<double> rotate(vector<double> &vector, Direction direction, double angle);
-            static Array<double> rotate(vector<double> &vector, Direction direction1, double angle1, Direction direction2, double angle2);
-            static Array<double> rotate(vector<double> &vector, Direction direction1, double angle1, Direction direction2, double angle2, Direction direction3, double angle3);
+            //Rotates a vector around the given axis by the given angle.
+            static vector<double> rotate(vector<double> &vector, Direction direction, double angle);
+            //Rotates a vector around the given 2 axes by the given angles.
+            static vector<double> rotate(vector<double> &vector, Direction direction1, double angle1, Direction direction2, double angle2);
+            //Rotates a vector around the 3 axes by the given angles.
+            static vector<double> rotate(vector<double> &vector, Direction direction1, double angle1, Direction direction2, double angle2, Direction direction3, double angle3);
             
+            //Shears a vector in the two available directions of the given plane
+            static vector<double> shear(vector<double> &vector, Direction direction, PhysicalSpaceEntities plane, double shear1, double shear2);
             
-            static Array<double> shear(vector<double> &vector, Direction direction, PhysicalSpaceEntities plane, double shear1, double shear2);
-            
-            static Array<double> reflect(vector<double> &vector, Direction axis);
-            static Array<double> reflect(vector<double> &vector, Direction axis1, Direction axis2);
-            static Array<double> reflect(vector<double> &vector, Direction axis1, Direction axis2, Direction axis3);
+            //Reflects a vector around the given axis.
+            static vector<double> reflect(vector<double> &vector, Direction axis);
+            //Reflects a vector around two given axes.
+            static vector<double> reflect(vector<double> &vector, Direction axis1, Direction axis2);
+            //Reflects a vector around three given axes.
+            static vector<double> reflect(vector<double> &vector, Direction axis1, Direction axis2, Direction axis3);
+            //Reflects a vector around the given plane.
+            static vector<double> reflect(vector<double> &vector, PhysicalSpaceEntities plane);
             
             
             
