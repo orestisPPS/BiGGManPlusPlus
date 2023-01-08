@@ -9,8 +9,10 @@
 #include <map>
 #include <list>
 #include "../../PositioningInSpace/Coordinate.h"
-using namespace PositioningInSpace;
+#include "../../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 #include "../../DegreesOfFreedom/DegreeOfFreedom.h"
+using namespace PositioningInSpace;
+
 using namespace DegreesOfFreedom;
 using namespace std;
 
@@ -25,6 +27,8 @@ namespace Discretization
         ~Node();
 
         Discretization::DiscreteEntityId *id;
+        
+        PhysicalSpaceEntity
 
         //Returns the pointer to the coordinate with the given  type and direction
         Coordinate *coordinate(CoordinateType type, Direction direction);

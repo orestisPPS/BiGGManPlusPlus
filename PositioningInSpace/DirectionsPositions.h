@@ -59,15 +59,11 @@ namespace PositioningInSpace {
         //The physical space defined by Axis 2 and Axis 3.
         TwoThree_plane,
         //The 3D physical space.
-        OneTwoThree_volume
+        OneTwoThree_volume,
+        //0D physical space. Enter the void.
+        NullSpace
     };
     
-    enum CoordinateSystem
-    {
-        Natural_Cartesian,
-        Natural_Cylindrical,
-        Natural_Spherical,
-        Parametric_Cartesian
-    };
+
 } // PositioningInSpace
 
