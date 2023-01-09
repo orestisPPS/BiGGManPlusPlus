@@ -8,7 +8,7 @@
 #include "../Id/DiscreteEntityId.h"
 #include <map>
 #include <list>
-#include "../../PositioningInSpace/Coordinate.h"
+#include "../../PositioningInSpace/CoordinateVector.h"
 #include "../../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 #include "../../DegreesOfFreedom/DegreeOfFreedom.h"
 using namespace PositioningInSpace;
@@ -22,15 +22,39 @@ namespace Discretization
 
     public:
 
-        Node();
+        Node(PhysicalSpaceEntity space);
+        Node(DiscreteEntityId id, vector<double> position, PhysicalSpaceEntity space);
 
-        ~Node();
-
-        Discretization::DiscreteEntityId *id;
+        Discretization::DiscreteEntityId id;
         
-        PhysicalSpaceEntity
+        PhysicalSpaceEntity space;
+                
+        //Returns the position vector of the Node in a vector with 3 components
+        vector<double> positionVector();
+        
+        //Returns a vector with the components of the position vector that exist
+        //in the input physical space entity. 
+        //The number of components is determined by the number of axes that define the input space. 
+        //If there is  no space entity preference use the other implementation.
+        vector<double> positionVector(PhysicalSpaceEntities physicalSpace);
+        
+        
+    private:
+        CoordinateVector _position;
+        //list <Coordinate*> *_coordinates;
+        
+        
+        list <DegreeOfFreedom*> *_degreesOfFreedom;
+    };
+}
 
-        //Returns the pointer to the coordinate with the given  type and direction
+
+
+
+#endif //UNTITLED_NODE_H
+
+
+/*        //Returns the pointer to the coordinate with the given  type and direction
         Coordinate *coordinate(CoordinateType type, Direction direction);
         // Adds a coordinate of the given type, direction and value to the node
         void addCoordinate(CoordinateType type, Direction direction, double value);
@@ -46,15 +70,4 @@ namespace Discretization
         // Adds a degree of freedom of the given type and field to the node
         void addDegreeOfFreedom(DOFType type, FieldType fieldType);
         // Removes and deallocates the degree of freedom of the given type and field from the node
-        void removeDegreeOfFreedom(DOFType type, FieldType fieldType);
-    private:
-        list <Coordinate*> *_coordinates;
-
-        list <DegreeOfFreedom*> *_degreesOfFreedom;
-    };
-}
-
-
-
-
-#endif //UNTITLED_NODE_H
+        void removeDegreeOfFreedom(DOFType type, FieldType fieldType);*/
