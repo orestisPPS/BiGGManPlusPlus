@@ -6,14 +6,14 @@
 #include "../Discretization/Mesh/Mesh.h"
 #include "../LinearAlgebra/Array.h"
 #include "NodeFactory.h"
-#include "../PositioningInSpace/SpaceCharacteristics.h"
+#include "../PositioningInSpace/PhysicalSpaceCharacteristics.h"
 namespace StructuredMeshGenerator {
     
     class MeshPreProcessor {
     public:
         MeshPreProcessor(MeshSpecs &meshSpecs);
         MeshSpecs &meshSpecs;
-        SpaceCharacteristics *spaceCharacteristics;
+        PhysicalSpaceCharacteristics *spaceCharacteristics;
         Mesh *mesh;
         
     private:

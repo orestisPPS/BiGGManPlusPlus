@@ -13,7 +13,7 @@ namespace PositioningInSpace {
      class PhysicalSpaceEntity {
      public:
          PhysicalSpaceEntity();
-         virtual PhysicalSpaceEntities type();
+         virtual const PhysicalSpaceEntities &type();
     };
 
 } // PositioningInSpace

@@ -23,7 +23,6 @@ namespace Discretization
     public:
 
         Node(PhysicalSpaceEntity space);
-        Node(DiscreteEntityId id, vector<double> position, PhysicalSpaceEntity space);
 
         Discretization::DiscreteEntityId id;
         
@@ -41,8 +40,6 @@ namespace Discretization
         
     private:
         CoordinateVector _position;
-        //list <Coordinate*> *_coordinates;
-        
         
         list <DegreeOfFreedom*> *_degreesOfFreedom;
     };

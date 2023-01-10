@@ -9,7 +9,7 @@ namespace PositioningInSpace {
 
     }
 
-    PhysicalSpaceEntities PhysicalSpaceEntity::type() {
+    const PhysicalSpaceEntities& PhysicalSpaceEntity::type() {
         return NullSpace;
     }
 } // PositioningInSpace

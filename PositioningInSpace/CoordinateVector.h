@@ -6,7 +6,7 @@
 #define UNTITLED_COORDINATEVECTOR_H
 
 #include <vector>
-#include "SpaceCharacteristics.h"
+#include "PhysicalSpaceCharacteristics.h"
 #include "PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 using namespace std;
 using namespace PositioningInSpace;
@@ -15,14 +15,12 @@ namespace PositioningInSpace {
 
     class CoordinateVector {
     public:
-        vector<double> getCoordinateVectorInEntity(PhysicalSpaceEntities &thisPhysicalSpace, PhysicalSpaceEntities &physicalSpace);
-        vector<double> getCoordinateVectorIn3D(PhysicalSpaceEntities &thisPhysicalSpace);
+        vector<double> getCoordinateVectorInEntity(const PhysicalSpaceEntities &thisPhysicalSpace, PhysicalSpaceEntities physicalSpace);
+        vector<double> getCoordinateVectorIn3D(const PhysicalSpaceEntities &thisPhysicalSpace);
         void setCoordinateVector(vector<double> coordinateVector, PhysicalSpaceEntities &physicalSpace);
         unsigned dimensions();
     private:
         vector<double> _positionVector;
-        
-        
     };
 
 } // PositioningInSpace

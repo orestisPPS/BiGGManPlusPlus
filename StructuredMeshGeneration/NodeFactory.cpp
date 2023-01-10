@@ -6,7 +6,7 @@
 
 namespace StructuredMeshGenerator{
     
-    NodeFactory :: NodeFactory(map<Direction, unsigned> &numberOfNodes, SpaceCharacteristics *spaceCharacteristics){
+    NodeFactory :: NodeFactory(map<Direction, unsigned> &numberOfNodes, PhysicalSpaceCharacteristics *spaceCharacteristics){
         _nn1 = numberOfNodes.at(Direction::One);
         _nn2 = numberOfNodes.at(Direction::Two);
         _nn3 = numberOfNodes.at(Direction::Three);
@@ -15,7 +15,7 @@ namespace StructuredMeshGenerator{
         AssignGlobalId();
     }
     
-    void NodeFactory :: CreateNodesArray(SpaceCharacteristics &spaceCharacteristics){
+    void NodeFactory :: CreateNodesArray(PhysicalSpaceCharacteristics &spaceCharacteristics){
         if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::One_axis){
             nodesMatrix = new Array<Node*>(_nn1);
             Create1DBoundaryNodes(_nn1);

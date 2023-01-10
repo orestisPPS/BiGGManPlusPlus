@@ -14,7 +14,7 @@ namespace PositioningInSpace {
                 _type = NullSpace;
         }
         //Returns the plane. OneTwoPlane [xy, ξη, rθ], OneThreePlane [xz etc. ], TwoThreePlane [yz etc.].
-        PhysicalSpaceEntities Plane::type() {
+        const PhysicalSpaceEntities& Plane::type() {
             return _type;
         }
         
@@ -27,7 +27,4 @@ namespace PositioningInSpace {
             else
                 return false;
         }
-    } // PositioningInSpace
-    
-        
 } // PositioningInSpace

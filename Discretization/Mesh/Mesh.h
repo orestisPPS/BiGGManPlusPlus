@@ -6,7 +6,7 @@
 #include "../Node/Node.h"
 #include<vector>
 #include "../../LinearAlgebra/Array.h"
-#include "../../PositioningInSpace/SpaceCharacteristics.h"
+#include "../../PositioningInSpace/PhysicalSpaceCharacteristics.h"
 
 using namespace Discretization;
 using namespace LinearAlgebra;
@@ -20,7 +20,7 @@ namespace Discretization {
         
         ~Mesh();
         
-        SpaceCharacteristics *spaceCharacteristics;
+        PhysicalSpaceCharacteristics *spaceCharacteristics;
         
         map<Direction, unsigned > numberOfNodesPerDirection;
 

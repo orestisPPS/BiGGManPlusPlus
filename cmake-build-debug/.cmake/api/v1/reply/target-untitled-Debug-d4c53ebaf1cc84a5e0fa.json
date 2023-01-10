@@ -355,7 +355,7 @@
 		},
 		{
 			"backtrace" : 1,
-			"path" : "PositioningInSpace/SpaceCharacteristics.h",
+			"path" : "PositioningInSpace/PhysicalSpaceCharacteristics.h",
 			"sourceGroupIndex" : 1
 		},
 		{
@@ -399,12 +399,12 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "PositioningInSpace/CoordinateSet.cpp",
+			"path" : "PositioningInSpace/CoordinateVector.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "PositioningInSpace/CoordinateSet.h",
+			"path" : "PositioningInSpace/CoordinateVector.h",
 			"sourceGroupIndex" : 1
 		},
 		{

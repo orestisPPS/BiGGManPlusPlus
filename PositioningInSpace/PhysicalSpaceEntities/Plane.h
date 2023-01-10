@@ -11,7 +11,7 @@ namespace PositioningInSpace {
         class Plane : PhysicalSpaceEntity {
         public:
             Plane(PhysicalSpaceEntities type);
-            PhysicalSpaceEntities  type() override;
+            const PhysicalSpaceEntities &type() override;
         private:
             PhysicalSpaceEntities _type;
             static bool _checkInput(PhysicalSpaceEntities type);

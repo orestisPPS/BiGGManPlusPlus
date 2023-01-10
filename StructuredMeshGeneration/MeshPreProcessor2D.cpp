@@ -7,7 +7,7 @@
 namespace StructuredMeshGenerator{
     
     MeshPreProcessor :: MeshPreProcessor(MeshSpecs &meshSpecs) : meshSpecs(meshSpecs){
-        spaceCharacteristics = new SpaceCharacteristics(meshSpecs.nodesPerDirection, CoordinateSystem::Parametric_Cartesian);
+        spaceCharacteristics = new PhysicalSpaceCharacteristics(meshSpecs.nodesPerDirection, CoordinateSystem::Parametric_Cartesian);
         InitiateMesh();
         mesh->spaceCharacteristics = spaceCharacteristics;
         AssignCoordinates();

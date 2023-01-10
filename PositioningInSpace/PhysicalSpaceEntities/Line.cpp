@@ -14,7 +14,7 @@ namespace PositioningInSpace {
     }
     
     //Returns the axis where the line is located.
-    PhysicalSpaceEntities Line::type() {
+    const PhysicalSpaceEntities& Line::type() {
         return _type;
     }
     

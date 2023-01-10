@@ -12,7 +12,7 @@ namespace PositioningInSpace {
     class Volume : PhysicalSpaceEntity {
     public:
         Volume(PhysicalSpaceEntities type);
-        PhysicalSpaceEntities  type() override;
+        const PhysicalSpaceEntities& type() override;
         
     private:
         PhysicalSpaceEntities _type;

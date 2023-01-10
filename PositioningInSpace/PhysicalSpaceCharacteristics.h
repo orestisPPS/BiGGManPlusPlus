@@ -2,16 +2,18 @@
 // Created by hal9000 on 1/5/23.
 //
 
-#ifndef UNTITLED_SPACECHARACTERISTICS_H
-#define UNTITLED_SPACECHARACTERISTICS_H
+#ifndef UNTITLED_PHYSICALSPACECHARACTERISTICS_H
+#define UNTITLED_PHYSICALSPACECHARACTERISTICS_H
 #include <map>
 #include <iostream>
 #include "DirectionsPositions.h"
+#include "CoordinateSystem.h"
+
 namespace PositioningInSpace {
 
-    class SpaceCharacteristics {
+    class PhysicalSpaceCharacteristics {
         public:
-            explicit SpaceCharacteristics(std::map<PositioningInSpace::Direction, unsigned > &nodesPerDirection, CoordinateSystem coordinateSystem);
+            explicit PhysicalSpaceCharacteristics(std::map<PositioningInSpace::Direction, unsigned > &nodesPerDirection, CoordinateSystem coordinateSystem);
             unsigned Dimensions;
             PhysicalSpaceEntities physicalSpace;
             CoordinateSystem coordinateSystem;
@@ -23,4 +25,4 @@ namespace PositioningInSpace {
         };
     }; // PositioningInSpace
 
-#endif //UNTITLED_SPACECHARACTERISTICS_H
+#endif //UNTITLED_PHYSICALSPACECHARACTERISTICS_H
