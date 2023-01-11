@@ -6,7 +6,6 @@
 #include "../Discretization/Mesh/Mesh.h"
 #include "../LinearAlgebra/Array.h"
 #include "NodeFactory.h"
-#include "../PositioningInSpace/PhysicalSpaceCharacteristics.h"
 namespace StructuredMeshGenerator {
     
     class MeshPreProcessor {

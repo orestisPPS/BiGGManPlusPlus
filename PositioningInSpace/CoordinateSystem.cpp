@@ -27,4 +27,11 @@ namespace PositioningInSpace {
         return _axes.size();
     }
     
+    PhysicalSpaceEntity CoordinateSystem::_findPhysicalSpace() {
+        switch (dimensions()) {
+            
+        }
+
+    }
+    
 } // PositioningInSpace

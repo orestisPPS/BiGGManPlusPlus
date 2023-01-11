@@ -4,6 +4,7 @@
 #pragma once
 #include "../PartialDifferentialEquations/PartialDifferentialEquation.h"
 #include "../BoundaryConditions/BoundaryCondition.h"
+#include "../PositioningInSpace/CoordinateSystem.h"
 
 namespace MathematicalProblem {
 

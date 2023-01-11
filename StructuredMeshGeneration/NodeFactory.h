@@ -4,14 +4,14 @@
 #pragma once
 #include "/home/hal9000/code/BiGGMan++/LinearAlgebra/Array.h"
 #include "../Discretization/Node/Node.h"
-#include "../PositioningInSpace/PhysicalSpaceCharacteristics.h"
+
 using namespace Discretization;
 using namespace LinearAlgebra;
 namespace StructuredMeshGenerator {
 
     class NodeFactory {
     public:
-        NodeFactory(map<Direction, unsigned> &nodesPerDirection, PhysicalSpaceCharacteristics *spaceCharacteristics);
+        NodeFactory(map<Direction, unsigned> &nodesPerDirection);
                 
         Array<Node*> *nodesMatrix;
         
@@ -26,7 +26,7 @@ namespace StructuredMeshGenerator {
         unsigned _nn3;
 
         //Creates boundary nodes.
-        void CreateNodesArray(PhysicalSpaceCharacteristics &spaceCharacteristics);
+        void CreateNodesArray();
         
         //Assigns global id to each node.
         void AssignGlobalId() const;

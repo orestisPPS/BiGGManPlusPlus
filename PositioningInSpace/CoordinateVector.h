@@ -6,7 +6,7 @@
 #define UNTITLED_COORDINATEVECTOR_H
 
 #include <vector>
-#include "PhysicalSpaceCharacteristics.h"
+#include <iostream>
 #include "PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 using namespace std;
 using namespace PositioningInSpace;

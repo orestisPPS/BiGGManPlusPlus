@@ -13,10 +13,10 @@ namespace PositioningInSpace {
 
     class PhysicalSpaceCharacteristics {
         public:
-            explicit PhysicalSpaceCharacteristics(std::map<PositioningInSpace::Direction, unsigned > &nodesPerDirection, CoordinateSystem coordinateSystem);
-            unsigned Dimensions;
+            explicit PhysicalSpaceCharacteristics(std::map<PositioningInSpace::Direction, unsigned > &nodesPerDirection);
+            unsigned _dimensions;
             PhysicalSpaceEntities physicalSpace;
-            CoordinateSystem coordinateSystem;
+            coordinateSystemType coordinateSystemType;
             
         private:
             static void CheckInput(std::map<PositioningInSpace::Direction, unsigned > &nodesPerDirection);
