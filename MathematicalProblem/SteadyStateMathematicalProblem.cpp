@@ -6,12 +6,13 @@
 namespace MathematicalProblem{
     
     SteadyStateMathematicalProblem::SteadyStateMathematicalProblem(PartialDifferentialEquation *pde,
-                                                                   map<Position, list<BoundaryConditions::BoundaryCondition *>> *bcs,
-                                                                   list<DegreeOfFreedom *> *dof, CoordinateSystem coordinateSystem) {
+                                                                   map<Position,list<BoundaryConditions::BoundaryCondition*>> *bcs,
+                                                                   list<DegreeOfFreedom*> *dof,
+                                                                   PhysicalSpaceEntity *space) {
         pde = pde;
         boundaryConditions = bcs;
         degreesOfFreedom = dof;
-        coordinateSystem = coordinateSystem;
+        this->space = space;
     }
 
     SteadyStateMathematicalProblem::~SteadyStateMathematicalProblem() {

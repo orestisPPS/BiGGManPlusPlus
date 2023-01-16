@@ -133,7 +133,6 @@ namespace PositioningInSpace{
     }
     
     vector<double> CoordinateVector::getCoordinateVectorIn3D(const PhysicalSpaceEntities &physicalSpace) {
-{}*.
         return getCoordinateVectorInEntity(physicalSpace, OneTwoThree_volume);
     }
     

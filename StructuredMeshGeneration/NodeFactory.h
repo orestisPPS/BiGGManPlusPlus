@@ -11,7 +11,7 @@ namespace StructuredMeshGenerator {
 
     class NodeFactory {
     public:
-        NodeFactory(map<Direction, unsigned> &nodesPerDirection);
+        NodeFactory(map<Direction, unsigned> &nodesPerDirection, PositioningInSpace::PhysicalSpaceEntity &space);
                 
         Array<Node*> *nodesMatrix;
         
@@ -25,6 +25,8 @@ namespace StructuredMeshGenerator {
         //Number of nodes at direction Three. (can be z, ζ, φ)
         unsigned _nn3;
 
+        static PositioningInSpace::PhysicalSpaceEntity &_space;
+        
         //Creates boundary nodes.
         void CreateNodesArray();
         

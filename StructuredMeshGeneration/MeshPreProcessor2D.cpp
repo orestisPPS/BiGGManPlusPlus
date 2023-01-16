@@ -6,17 +6,20 @@
 
 namespace StructuredMeshGenerator{
     
-    MeshPreProcessor :: MeshPreProcessor(MeshSpecs &meshSpecs) : meshSpecs(meshSpecs){
-        spaceCharacteristics = new PhysicalSpaceCharacteristics(meshSpecs.nodesPerDirection, CoordinateSystem::Parametric_Cartesian);
-        InitiateMesh();
-        mesh->spaceCharacteristics = spaceCharacteristics;
+    MeshPreProcessor :: MeshPreProcessor(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space){
+        InitiateMesh(meshSpecs, space);
+        AssignSpatialProperties(meshSpecs, space);
         AssignCoordinates();
        // CalculateMeshMetrics();
     }
 
-    void MeshPreProcessor::InitiateMesh() {
-        auto nodeFactory = NodeFactory(meshSpecs.nodesPerDirection, spaceCharacteristics);
-        mesh = new Mesh(nodeFactory.nodesMatrix);
+    void MeshPreProcessor::InitiateMesh(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) {
+        auto nodeFactory = NodeFactory(meshSpecs.nodesPerDirection, (PhysicalSpaceEntity &) space.type());
+        mesh = new Mesh(nodeFactory.nodesMatrix, &space);
+    }
+    
+    void MeshPreProcessor::AssignSpatialProperties(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) {
+        
     }
     
     void MeshPreProcessor::AssignCoordinates() {

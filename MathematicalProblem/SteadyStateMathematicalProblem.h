@@ -3,6 +3,7 @@
 //
 #pragma once
 #include "../PartialDifferentialEquations/PartialDifferentialEquation.h"
+#include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 #include "../BoundaryConditions/BoundaryCondition.h"
 
 namespace MathematicalProblem{
@@ -11,12 +12,12 @@ namespace MathematicalProblem{
         SteadyStateMathematicalProblem(PartialDifferentialEquation *pde,
                                        map<Position,list<BoundaryConditions::BoundaryCondition*>> *bcs,
                                        list<DegreeOfFreedom*> *dof,
-                                       CoordinateSystem coordinateSystem);
+                                       PhysicalSpaceEntity *space);
         ~SteadyStateMathematicalProblem();
         PartialDifferentialEquation *pde;
         map<Position,list<BoundaryConditions::BoundaryCondition*>> *boundaryConditions;
         list<DegreeOfFreedom*> *degreesOfFreedom;
-        CoordinateSystem _coordinateSystem;
+        PhysicalSpaceEntity *space;
     };
 }
 

@@ -34,7 +34,7 @@ namespace Discretization
         //Returns a vector with the components of the position vector that exist
         //in the input physical space entity. 
         //The number of components is determined by the number of axes that define the input space. 
-        //If there is  no space entity preference use the other implementation.
+        //Use the other implementation to get the vector in the space that the problem is defined in.
         vector<double> positionVector(PhysicalSpaceEntities physicalSpace);
         
         

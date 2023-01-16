@@ -3,10 +3,11 @@
 //
 
 #include "NodeFactory.h"
+#include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 
 namespace StructuredMeshGenerator{
     
-    NodeFactory :: NodeFactory(map<Direction, unsigned> &numberOfNodes, PhysicalSpaceCharacteristics *spaceCharacteristics){
+    NodeFactory :: NodeFactory(map<Direction, unsigned> &numberOfNodes, PositioningInSpace::PhysicalSpaceEntity &space){
         _nn1 = numberOfNodes.at(Direction::One);
         _nn2 = numberOfNodes.at(Direction::Two);
         _nn3 = numberOfNodes.at(Direction::Three);
@@ -15,44 +16,44 @@ namespace StructuredMeshGenerator{
         AssignGlobalId();
     }
     
-    void NodeFactory :: CreateNodesArray(PhysicalSpaceCharacteristics &spaceCharacteristics){
-        if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::One_axis){
+    void NodeFactory :: CreateNodesArray(){
+        if (_space.type() == PhysicalSpaceEntities::One_axis){
             nodesMatrix = new Array<Node*>(_nn1);
             Create1DBoundaryNodes(_nn1);
             Create1DInternalNodes(_nn1);
         }
 
-        else if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::Two_axis){
+        else if (_space.type() == PhysicalSpaceEntities::Two_axis){
             nodesMatrix = new Array<Node*>(_nn2);
             Create1DBoundaryNodes(_nn2);
             Create1DInternalNodes(_nn2);
         }
 
-        else if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::Three_axis){
+        else if (_space.type() == PhysicalSpaceEntities::Three_axis){
             nodesMatrix = new Array<Node*>(_nn3);
             Create1DBoundaryNodes(_nn3);
             Create1DInternalNodes(_nn3);
         }
 
-        else if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::OneTwo_plane){
+        else if (_space.type() == PhysicalSpaceEntities::OneTwo_plane){
             nodesMatrix = new Array<Node*>(_nn1, _nn2);
             Create2DBoundaryNodes(_nn1, _nn2);
             Create2DInternalNodes(_nn1, _nn2);
         }
 
-        else if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::TwoThree_plane){
+        else if (_space.type() == PhysicalSpaceEntities::TwoThree_plane){
             nodesMatrix = new Array<Node*>(_nn2, _nn3);
             Create2DBoundaryNodes(_nn2, _nn3);
             Create2DInternalNodes(_nn2, _nn3);
         }
 
-        else if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::OneThree_plane){
+        else if (_space.type() == PhysicalSpaceEntities::OneThree_plane){
             nodesMatrix = new Array<Node*>(_nn1, _nn3);
             Create2DBoundaryNodes(_nn1, _nn3);
             Create2DInternalNodes(_nn1, _nn3);
         }
         
-        else if (spaceCharacteristics.physicalSpace == PhysicalSpaceEntities::OneTwoThree_volume){
+        else if (_space.type() == PhysicalSpaceEntities::OneTwoThree_volume){
             nodesMatrix = new Array<Node*>(_nn1, _nn2, _nn3);
             Create3DBoundaryNodes();
             Create3DInternalNodes();
@@ -157,8 +158,8 @@ namespace StructuredMeshGenerator{
     }
 
     Node *NodeFactory::AllocateBoundaryNode(int boundaryId) {
-        Node *node = new Node();
-        *node->id->boundary = boundaryId;
+        Node *node = new Node(_space);
+        *node->id.boundary = boundaryId;
         return node;
     }
     
@@ -194,8 +195,8 @@ namespace StructuredMeshGenerator{
     }
     
     Node *NodeFactory::AllocateInternalNode(unsigned internalId) {
-        Node *node = new Node();
-        *node->id->internal = internalId;
+        Node *node = new Node(_space);
+        *node->id.internal = internalId;
         //cout << "Internal node id: " << *node->id->global << endl;
         return node;
     }
@@ -205,7 +206,7 @@ namespace StructuredMeshGenerator{
         for(int k = 0; k < _nn3; k++){
             for(int j = 0; j < _nn2; j++){
                 for(int i = 0; i < _nn1; i++){
-                    *nodesMatrix->element(i,j,k)->id->global = id;
+                    *nodesMatrix->element(i,j,k)->id.global = id;
                     id++;
                 }
             }

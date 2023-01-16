@@ -5,18 +5,18 @@
 #include "MeshSpecs.h"
 #include "../Discretization/Mesh/Mesh.h"
 #include "../LinearAlgebra/Array.h"
+#include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 #include "NodeFactory.h"
 namespace StructuredMeshGenerator {
     
     class MeshPreProcessor {
     public:
-        MeshPreProcessor(MeshSpecs &meshSpecs);
-        MeshSpecs &meshSpecs;
-        PhysicalSpaceCharacteristics *spaceCharacteristics;
+        MeshPreProcessor(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space);
         Mesh *mesh;
         
     private:
-        void InitiateMesh();
+        void InitiateMesh(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space);
+        void AssignSpatialProperties(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space);
         void AssignCoordinates();
         void Assign1DCoordinates(Direction direction1);
         void Assign2DCoordinates(Direction direction1, Direction direction2);

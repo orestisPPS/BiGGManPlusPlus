@@ -8,9 +8,7 @@ add_executable(untitled main.cpp
         DegreesOfFreedom/DegreeOfFreedom.cpp 
         DegreesOfFreedom/DegreeOfFreedom.h
         LinearAlgebra/MatrixTest.cpp
-        LinearAlgebra/MatrixTest.h 
-        PositioningInSpace/Coordinate.cpp
-        PositioningInSpace/Coordinate.h
+        LinearAlgebra/MatrixTest.h
         Discretization/Node/Node.cpp
         Discretization/Node/Node.h
         Discretization/Id/DiscreteEntityId.cpp
@@ -34,4 +32,4 @@ add_executable(untitled main.cpp
         StructuredMeshGeneration/NodeFactory.cpp
         StructuredMeshGeneration/NodeFactory.h
         StructuredMeshGeneration/MeshTest2D.cpp
-        StructuredMeshGeneration/MeshTest2D.h LinearAlgebra/Array.h PositioningInSpace/PhysicalSpaceCharacteristics.cpp PositioningInSpace/PhysicalSpaceCharacteristics.h LinearAlgebra/TransformationTensors.cpp LinearAlgebra/TransformationTensors.h Utility/Calculators.h LinearAlgebra/Transformations.cpp LinearAlgebra/Transformations.h PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.cpp PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h PositioningInSpace/CoordinateVector.cpp PositioningInSpace/CoordinateVector.h PositioningInSpace/PhysicalSpaceEntities/Plane.cpp PositioningInSpace/PhysicalSpaceEntities/Plane.h PositioningInSpace/PhysicalSpaceEntities/Line.cpp PositioningInSpace/PhysicalSpaceEntities/Line.h PositioningInSpace/PhysicalSpaceEntities/Volume.cpp PositioningInSpace/PhysicalSpaceEntities/Volume.h PositioningInSpace/CoordinateSystem.cpp PositioningInSpace/CoordinateSystem.h)
+        StructuredMeshGeneration/MeshTest2D.h LinearAlgebra/Array.h LinearAlgebra/TransformationTensors.cpp LinearAlgebra/TransformationTensors.h Utility/Calculators.h LinearAlgebra/Transformations.cpp LinearAlgebra/Transformations.h PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.cpp PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h PositioningInSpace/CoordinateVector.cpp PositioningInSpace/CoordinateVector.h PositioningInSpace/PhysicalSpaceEntities/Plane.cpp PositioningInSpace/PhysicalSpaceEntities/Plane.h PositioningInSpace/PhysicalSpaceEntities/Line.cpp PositioningInSpace/PhysicalSpaceEntities/Line.h PositioningInSpace/PhysicalSpaceEntities/Volume.cpp PositioningInSpace/PhysicalSpaceEntities/Volume.h)

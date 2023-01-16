@@ -14,17 +14,19 @@ namespace Discretization {
     class Mesh {
     public:
         //Mesh(Array<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection);
-        Mesh(Array<Node *> *nodes);
+        Mesh(Array<Node *> *nodes, PhysicalSpaceEntity* space);
         
         ~Mesh();
-                
+        
+        PhysicalSpaceEntity* space;
+        
         map<Direction, unsigned > numberOfNodesPerDirection;
 
         map<Position, list<Node *>*> *boundaryNodes;
         
         unsigned TotalNodes();
 
-        unsigned MeshDimensions();
+        unsigned dimensions();
         
         Node *node(unsigned i);
 
@@ -35,6 +37,9 @@ namespace Discretization {
         Node *nodeFromID(unsigned ID);
     
     private:
+        
+        unsigned _meshDimensions;
+        
         Array<Node *> *_nodesMatrix;
         
         map<Position, list<Node*>*> *CreateBoundaries();

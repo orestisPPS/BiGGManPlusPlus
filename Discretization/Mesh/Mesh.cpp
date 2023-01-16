@@ -7,8 +7,10 @@ using namespace  Discretization;
 
 namespace Discretization {
     
-    Mesh::Mesh(Array<Node *> *nodes) {
+    Mesh::Mesh(Array<Node *> *nodes, PhysicalSpaceEntity* space) {
         _nodesMatrix = nodes;
+        this->space = space;
+;
         numberOfNodesPerDirection = map<Direction, unsigned>();
         numberOfNodesPerDirection[Direction::One] = _nodesMatrix->numberOfColumns();
         numberOfNodesPerDirection[Direction::Two] = _nodesMatrix->numberOfRows();
@@ -21,8 +23,8 @@ namespace Discretization {
     Mesh::~Mesh() {
         delete _nodesMatrix;
         _nodesMatrix = nullptr;
-        delete spaceCharacteristics;
-        spaceCharacteristics = nullptr;
+        delete space;
+        space = nullptr;
         delete boundaryNodes;
         boundaryNodes = nullptr;
     }
@@ -34,8 +36,16 @@ namespace Discretization {
             return 0;
     }
 
-    unsigned Mesh::MeshDimensions() {
-        return spaceCharacteristics->Dimensions;
+    unsigned Mesh::dimensions() {
+        if (space->type() == PositioningInSpace::OneTwoThree_volume)
+            return 3;
+        else if (space->type() == PositioningInSpace::OneTwo_plane || space->type() == PositioningInSpace::TwoThree_plane || space->type() == PositioningInSpace::OneThree_plane)
+            return 2;
+        else if (space->type() == PositioningInSpace::One_axis || space->type() == PositioningInSpace::Two_axis || space->type() == PositioningInSpace::Three_axis)
+            return 1;
+        else
+            return 0;
+        }
     }
     
     Node* Mesh::node(unsigned i) {
