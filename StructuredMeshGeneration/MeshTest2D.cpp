@@ -8,8 +8,8 @@
 namespace StructuredMeshGenerator {
     
         MeshTest2D::MeshTest2D() {
-            MeshSpecs specs = MeshSpecs(5, 5, 1.0, 1.0, 0.0, 0.0, 0.0);
-            MeshPreProcessor preProcessor = MeshPreProcessor(specs);
+            //MeshSpecs specs = MeshSpecs(5, 5, 1.0, 1.0, 0.0, 0.0, 0.0);
+            //MeshPreProcessor preProcessor = MeshPreProcessor(specs);
             
 /*            NodeFactory nodeFactory = NodeFactory(specs.nnx, specs.nny, 0);
             for (int i = 0; i < specs.nnx; ++i) {

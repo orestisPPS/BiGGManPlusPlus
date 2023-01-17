@@ -10,6 +10,7 @@ namespace Discretization {
     Mesh::Mesh(Array<Node *> *nodes, PhysicalSpaceEntity* space) {
         _nodesMatrix = nodes;
         this->space = space;
+        _meshDimensions = _findMeshDimensions();
 ;
         numberOfNodesPerDirection = map<Direction, unsigned>();
         numberOfNodesPerDirection[Direction::One] = _nodesMatrix->numberOfColumns();
@@ -29,14 +30,14 @@ namespace Discretization {
         boundaryNodes = nullptr;
     }
 
-    unsigned Mesh::TotalNodes() {
+    unsigned Mesh::totalNodes() {
         if (_nodesMatrix != nullptr)
             return _nodesMatrix->size();
         else
             return 0;
     }
-
-    unsigned Mesh::dimensions() {
+    
+    unsigned Mesh::_findMeshDimensions() const {
         if (space->type() == PositioningInSpace::OneTwoThree_volume)
             return 3;
         else if (space->type() == PositioningInSpace::OneTwo_plane || space->type() == PositioningInSpace::TwoThree_plane || space->type() == PositioningInSpace::OneThree_plane)
@@ -45,14 +46,17 @@ namespace Discretization {
             return 1;
         else
             return 0;
-        }
+    }
+    
+    unsigned Mesh::dimensions() {
+        return _meshDimensions;
     }
     
     Node* Mesh::node(unsigned i) {
         if (_nodesMatrix != nullptr)
             return _nodesMatrix->element(i);
         else
-            throw runtime_error("Node Not Found. You search for a 1D node in a" + to_string(MeshDimensions()) + "D mesh.");
+            throw runtime_error("Node Not Found. You search for a 1D node in a" + to_string(dimensions()) + "D mesh.");
     }
         
     
@@ -60,18 +64,18 @@ namespace Discretization {
         if (_nodesMatrix != nullptr)
             return _nodesMatrix->element(i, j);
         else
-            throw runtime_error("Node Not Found. You search for a 2D node in a" + to_string(MeshDimensions()) + "D mesh.");
+            throw runtime_error("Node Not Found. You search for a 2D node in a" + to_string(dimensions()) + "D mesh.");
         }
     
     Node* Mesh::node(unsigned i, unsigned j, unsigned k) {
         if (_nodesMatrix != nullptr)
             return _nodesMatrix->element(i, j, k);
         else
-            throw runtime_error("Node Not Found. You search for a 3D node in a" + to_string(MeshDimensions()) + "D mesh.");
+            throw runtime_error("Node Not Found. You search for a 3D node in a" + to_string(dimensions()) + "D mesh.");
     }
     
     map<Position, list<Node*>*>* Mesh::CreateBoundaries() {
-        switch (MeshDimensions()) {
+        switch (dimensions()) {
             case 1:
                 return Create1DBoundaries();
             case 2:

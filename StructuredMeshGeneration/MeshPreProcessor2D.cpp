@@ -9,7 +9,7 @@ namespace StructuredMeshGenerator{
     MeshPreProcessor :: MeshPreProcessor(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space){
         InitiateMesh(meshSpecs, space);
         AssignSpatialProperties(meshSpecs, space);
-        AssignCoordinates();
+        AssignCoordinates(space);
        // CalculateMeshMetrics();
     }
 
@@ -18,17 +18,18 @@ namespace StructuredMeshGenerator{
         mesh = new Mesh(nodeFactory.nodesMatrix, &space);
     }
     
-    void MeshPreProcessor::AssignSpatialProperties(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) {
-        
+    void MeshPreProcessor::AssignSpatialProperties(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const {
+        mesh -> numberOfNodesPerDirection = meshSpecs.nodesPerDirection;
+        mesh -> space = &space;
     }
     
-    void MeshPreProcessor::AssignCoordinates() {
+    void MeshPreProcessor::AssignCoordinates(PhysicalSpaceEntity &space) {
         for (auto k = 0; k < mesh->numberOfNodesPerDirection.at(Direction::Three); ++k) {
             for (auto j = 0; j < mesh->numberOfNodesPerDirection.at(Direction::Two); ++j) {
                 for (auto i = 0; i < mesh->numberOfNodesPerDirection.at(Direction::One); ++i) {
-                    switch (spaceCharacteristics->physicalSpace) {
+                   /* switch (space->type()) {
                         case One_axis:
-                            mesh->node(i)->addCoordinate(PositioningInSpace::Natural, Direction::One);
+                            mesh->node(i).
                             break;
                         case Two_axis:
                             mesh->node(i)->addCoordinate(PositioningInSpace::Natural, Direction::Two);
@@ -53,21 +54,21 @@ namespace StructuredMeshGenerator{
                             mesh->node(i, j, k)->addCoordinate(PositioningInSpace::Natural, Direction::Two);
                             mesh->node(i, j, k)->addCoordinate(PositioningInSpace::Natural, Direction::Three);
                             break;
-                    }
+                    }*/
                 }
             }
         }
     }
             
     void MeshPreProcessor::Assign1DCoordinates(Direction direction1) {
-        for (auto i = 0; i < mesh->numberOfNodesPerDirection.at(direction1); ++i) {
+/*        for (auto i = 0; i < mesh->numberOfNodesPerDirection.at(direction1); ++i) {
             mesh->node(i)->addCoordinate(PositioningInSpace::Natural, direction1);
             mesh->node(i)->addCoordinate(PositioningInSpace::Parametric, direction1, i);
-        }
+        }*/
         
     }
     
-    void MeshPreProcessor::Assign2DCoordinates() {
+/*    void MeshPreProcessor::Assign2DCoordinates() {
         throw runtime_error("Not Implemented!");
     }
     
@@ -77,5 +78,5 @@ namespace StructuredMeshGenerator{
     
     void MeshPreProcessor::CalculateMeshMetrics() {
         throw runtime_error("Not Implemented!");
-    }
+    }*/
 }// StructuredMeshGenerator

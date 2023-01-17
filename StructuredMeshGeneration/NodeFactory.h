@@ -11,7 +11,7 @@ namespace StructuredMeshGenerator {
 
     class NodeFactory {
     public:
-        NodeFactory(map<Direction, unsigned> &nodesPerDirection, PositioningInSpace::PhysicalSpaceEntity &space);
+        NodeFactory(map<Direction, unsigned> &nodesPerDirection, PhysicalSpaceEntity &space);
                 
         Array<Node*> *nodesMatrix;
         
@@ -24,11 +24,9 @@ namespace StructuredMeshGenerator {
         
         //Number of nodes at direction Three. (can be z, ζ, φ)
         unsigned _nn3;
-
-        static PositioningInSpace::PhysicalSpaceEntity &_space;
         
         //Creates boundary nodes.
-        void CreateNodesArray();
+        void CreateNodesArray(PhysicalSpaceEntity &space);
         
         //Assigns global id to each node.
         void AssignGlobalId() const;
@@ -36,7 +34,7 @@ namespace StructuredMeshGenerator {
        
         //Creates boundary nodes for 1D mesh (nnOne > 0, nnTwo = 0, nnThree = 0)
         //RELATIVE : left node has id 0, right node has id nnOne - 1
-        void Create1DBoundaryNodes(unsigned position) const;
+        void Create1DBoundaryNodes(unsigned position, PhysicalSpaceEntity &space) const;
         
         //Creates boundary nodes for 2D mesh (nnOne > 0, nnTwo > 0, nnThree = 0),
         // with the following order in identification starting from (0,0):
@@ -45,7 +43,7 @@ namespace StructuredMeshGenerator {
         // v      ^
         // v      ^
         // ->->->->
-        void Create2DBoundaryNodes(unsigned index1, unsigned index2) const;
+        void Create2DBoundaryNodes(unsigned index1, unsigned index2, PhysicalSpaceEntity &space) const;
         
         //Creates boundary nodes for 3D mesh (nnOne > 0, nnTwo > 0, nnThree > 0).
         // with the following order in identification starting from (0,0,0):
@@ -56,22 +54,22 @@ namespace StructuredMeshGenerator {
         // v      ^
         // v      ^
         // ->->->->
-        void Create3DBoundaryNodes() const;
+        void Create3DBoundaryNodes(PhysicalSpaceEntity &space) const;
         
         //Allocates memory for boundary node.
-        static Node *AllocateBoundaryNode(int boundaryId);
+        static Node *AllocateBoundaryNode(int boundaryId, PhysicalSpaceEntity &space);
         
         //Creates internal nodes for 1D mesh (nnOne > 0, nnTwo = 0, nnThree = 0).
-        void Create1DInternalNodes(unsigned maxIndex) const;
+        void Create1DInternalNodes(unsigned maxIndex, PhysicalSpaceEntity &space) const;
         
         //Creates internal nodes for 2D mesh (nnOne > 0, nnTwo > 0, nnThree = 0).
-        void Create2DInternalNodes(unsigned index1, unsigned index2) const;
+        void Create2DInternalNodes(unsigned index1, unsigned index2, PhysicalSpaceEntity &space) const;
         
         //Creates internal nodes for 3D mesh (nnOne > 0, nnTwo > 0, nnThree > 0).
-        void Create3DInternalNodes() const;
+        void Create3DInternalNodes(PhysicalSpaceEntity &space) const;
 
         //Allocates memory for internal node.
-        static Node *AllocateInternalNode(unsigned internalId);
+        static Node *AllocateInternalNode(unsigned internalId, PhysicalSpaceEntity &space);
         
     };
     

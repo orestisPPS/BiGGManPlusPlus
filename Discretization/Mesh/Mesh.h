@@ -24,7 +24,7 @@ namespace Discretization {
 
         map<Position, list<Node *>*> *boundaryNodes;
         
-        unsigned TotalNodes();
+        unsigned totalNodes();
 
         unsigned dimensions();
         
@@ -39,6 +39,8 @@ namespace Discretization {
     private:
         
         unsigned _meshDimensions;
+        
+        unsigned _findMeshDimensions() const;
         
         Array<Node *> *_nodesMatrix;
         

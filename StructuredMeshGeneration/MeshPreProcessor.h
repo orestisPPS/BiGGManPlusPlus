@@ -16,8 +16,8 @@ namespace StructuredMeshGenerator {
         
     private:
         void InitiateMesh(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space);
-        void AssignSpatialProperties(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space);
-        void AssignCoordinates();
+        void AssignSpatialProperties(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const;
+        void AssignCoordinates(PhysicalSpaceEntity &space);
         void Assign1DCoordinates(Direction direction1);
         void Assign2DCoordinates(Direction direction1, Direction direction2);
         void Assign3DCoordinates(Direction direction1, Direction direction2, Direction direction3);
