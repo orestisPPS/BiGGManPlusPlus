@@ -27,19 +27,41 @@ namespace Discretization
         Discretization::DiscreteEntityId id;
         
         PhysicalSpaceEntity space;
-                
-        //Returns the position vector of the Node in a vector with 3 components
-        vector<double> positionVector();
         
-        //Returns a vector with the components of the position vector that exist
+        //Adds a coordinate set to the node coordinate vector map.
+        //The coordinates can be natural, parametric or templete.
+        void setPositionVector(vector<double> positionVector, CoordinateType type);
+        
+        //Removes the input coordinate set from the node coordinate vector map.
+        void removePositionVector(CoordinateType type);
+        
+        
+        //Returns the natural position vector of the Node in a vector with 3 components
+        vector<double> positionVector();
+
+        //Returns the input position vector of the Node in a vector with 3 components
+        vector<double> positionVector(CoordinateType type);
+        
+        //Returns a vector with the components of the natural position vector that exists
         //in the input physical space entity. 
         //The number of components is determined by the number of axes that define the input space. 
         //Use the other implementation to get the vector in the space that the problem is defined in.
         vector<double> positionVector(PhysicalSpaceEntities physicalSpace);
+
+        //Returns a vector with the components of the input position vector that exists
+        //in the input physical space entity. 
+        //The number of components is determined by the number of axes that define the input space. 
+        //Use the other implementation to get the vector in the space that the problem is defined in.
+        vector<double> positionVector(CoordinateType type, PhysicalSpaceEntities physicalSpace);
         
+        //Returns the number of components of the natural position vector
+        unsigned positionVectorDimensions();
+        
+        //Returns the number of components of the input position vector
+        unsigned positionVectorDimensions(CoordinateType type);
         
     private:
-        CoordinateVector _position;
+        map<CoordinateType, CoordinateVector> _position;
         
         list <DegreeOfFreedom*> *_degreesOfFreedom;
     };

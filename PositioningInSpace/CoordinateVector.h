@@ -12,15 +12,23 @@ using namespace std;
 using namespace PositioningInSpace;
 
 namespace PositioningInSpace {
-
+    
+    enum CoordinateType{
+        Natural,
+        Parametric,
+        Templete
+    };
+    
     class CoordinateVector {
     public:
+        CoordinateVector(vector<double> positionVector, PhysicalSpaceEntities physicalSpace);
         vector<double> getCoordinateVectorInEntity(const PhysicalSpaceEntities &thisPhysicalSpace, PhysicalSpaceEntities physicalSpace);
         vector<double> getCoordinateVectorIn3D(const PhysicalSpaceEntities &thisPhysicalSpace);
-        void setCoordinateVector(vector<double> coordinateVector, PhysicalSpaceEntities &physicalSpace);
         unsigned dimensions();
+        
     private:
         vector<double> _positionVector;
+        void _setCoordinateVector(const vector<double>& positionVector, PhysicalSpaceEntities &physicalSpace);
     };
 
 } // PositioningInSpace

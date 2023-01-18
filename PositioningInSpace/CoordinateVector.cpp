@@ -5,6 +5,11 @@
 #include "CoordinateVector.h"
 
 namespace PositioningInSpace{
+    
+    CoordinateVector::CoordinateVector(vector<double> positionVector, PhysicalSpaceEntities physicalSpace) {
+        _setCoordinateVector(positionVector, physicalSpace);
+    }
+    
     vector<double> CoordinateVector::getCoordinateVectorInEntity(const PhysicalSpaceEntities &thisPhysicalSpace,
                                                                 PhysicalSpaceEntities physicalSpace) {
         switch (thisPhysicalSpace) {
@@ -136,7 +141,7 @@ namespace PositioningInSpace{
         return getCoordinateVectorInEntity(physicalSpace, OneTwoThree_volume);
     }
     
-    void CoordinateVector::setCoordinateVector(vector<double> coordinateVector, PhysicalSpaceEntities &physicalSpace) {
+    void CoordinateVector::_setCoordinateVector(const vector<double>& coordinateVector, PhysicalSpaceEntities &physicalSpace) {
         if ((physicalSpace == OneTwoThree_volume && coordinateVector.size() == 3) ||
             (physicalSpace == OneTwo_plane || physicalSpace == TwoThree_plane || physicalSpace == OneThree_plane && coordinateVector.size() == 2) ||
             (physicalSpace == One_axis || physicalSpace == Two_axis || physicalSpace == Three_axis && coordinateVector.size() == 1))
@@ -148,5 +153,6 @@ namespace PositioningInSpace{
     unsigned CoordinateVector::dimensions() {
         return _positionVector.size();
     }
+    
     
 } // PositioningInSpace
