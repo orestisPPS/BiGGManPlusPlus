@@ -12,6 +12,7 @@
 #include "../PositioningInSpace/DirectionsPositions.h"
 using namespace PositioningInSpace;
 #include "../Utility/Calculators.h"
+#include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 
 namespace LinearAlgebra {
 
@@ -23,26 +24,49 @@ namespace LinearAlgebra {
 
             //Translates the input vector in the 3d space by an input amount in the given direction.
             //distance1,2,3 : Amount to translate in the direction of axis 1,2,3 respectively.
-            static vector<double> translate(vector<double> &vector, double &distance1, double &distance2, double &distance3);
+            static vector<double> &translate(vector<double> &vector, double &distance1, double &distance2, double &distance3);
+
+            //Translates the input vector in the input amount in the given direction.
+            //distance : Amount to translate.
+            //direction : Direction to translate in. (Axis1, Axis2, Axis3)
+            static vector<double> &translateInDirection(vector<double> &vector, double &distance, PhysicalSpaceEntities &direction);
             
             //Scales the input vector in the 3d space by an input amount in the given direction.
             //amount1,2,3 : Amount to scale in the direction of axis 1,2,3 respectively.
-            static vector<double> scale(vector<double> &vector, double &amount1, double &amount2, double &amount3);
+            static vector<double> &scale(vector<double> &vector, double &amount1, double &amount2, double &amount3);
+
+            //Translates the input vector in the input amount in the given direction.
+            //amount : Amount to scale.
+            //direction : Direction to translate in. (Axis1, Axis2, Axis3)
+            static vector<double> &scaleInDirection(vector<double> &vector, double &amount, PhysicalSpaceEntities &direction);
             
+
             //Rotates the input vector in the 3d space by an input angle [deg] around all three axis.
             //angle1,2,3 : Amount to rotate around axis 1,2,3 respectively.
-            static vector<double> rotate(vector<double> &vector, double &angle1, double &angle2, double &angle3);
+            static vector<double> &rotate(vector<double> &vector, double &angle1, double &angle2, double &angle3);
 
+            //Rotates the input vector around the input axis by the given angle.
+            //angle : Angle to rotate.
+            //Axis : Axis to rotate around. (Axis1, Axis2, Axis3)
+            static vector<double> &rotateAroundAxis(vector<double> &vector, double &angle, PhysicalSpaceEntities &axis);
+            
             //Shears the input vector in the 3d space by an input angle in the given plane.
             //angle12,13,23 : Amount to shear in the 12,23,13 planes respectively.
-            static vector<double> shear(vector<double> &vector, double &angle12, double &angle23, double &angle13);
+            static vector<double> &shear(vector<double> &vector, double &angle12, double &angle23, double &angle13);
 
+
+            //Shears the input vector in the input plane by the given angles.
+            //angle1 : First angle to shear.
+            //angle1 : Second angle to shear.
+            //plane : plane to shear on. (plane12, plane23, plane 13)
+            static vector<double> &shearPlane(vector<double> &vector, double &angle1, double &angle2, PhysicalSpaceEntities &plane);
+            
             //Reflects the input vector in the 3d space.
             //Axis1,2,3 : true if the vector should be reflected in the direction of axis 1,2,3 respectively. false otherwise.
-            static vector<double> reflect(vector<double> &vector, bool &axis1, bool &axis2, bool &axis3);
+            static vector<double> &reflect(vector<double> &vector, bool &axis1, bool &axis2, bool &axis3);
             
             //Reflects the input vector around the given plane.
-            static vector<double> reflect(vector<double> &vector, PhysicalSpaceEntities plane);
+            static vector<double> &reflect(vector<double> &vector, PhysicalSpaceEntities &plane);
             
             
         private:

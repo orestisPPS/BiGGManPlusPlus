@@ -86,6 +86,7 @@ namespace StructuredMeshGenerator{
                 auto templateCoord = {static_cast<double>(i) * meshSpecs.templateStepOne,
                                       static_cast<double>(j) * meshSpecs.templateStepTwo};
 
+                templateCoord = Transformations::Rotate(templateCoord, meshSpecs.templateRotation);
                 
                 mesh->node(i, j)->setPositionVector({static_cast<double>(i) * meshSpecs.templateStepOne,
                                                                  static_cast<double>(j) * meshSpecs.templateStepTwo}, Template);
