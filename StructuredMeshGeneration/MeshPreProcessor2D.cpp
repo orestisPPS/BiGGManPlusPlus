@@ -27,45 +27,73 @@ namespace StructuredMeshGenerator{
         for (auto k = 0; k < mesh->numberOfNodesPerDirection.at(Direction::Three); ++k) {
             for (auto j = 0; j < mesh->numberOfNodesPerDirection.at(Direction::Two); ++j) {
                 for (auto i = 0; i < mesh->numberOfNodesPerDirection.at(Direction::One); ++i) {
-                   /* switch (space->type()) {
+                    switch (space.type()) {
                         case One_axis:
-                            mesh->node(i).
                             break;
                         case Two_axis:
-                            mesh->node(i)->addCoordinate(PositioningInSpace::Natural, Direction::Two);
                             break;
                         case Three_axis:
-                            mesh->node(i)->addCoordinate(PositioningInSpace::Natural, Direction::Three);
                             break;
                         case OneTwo_plane:
-                            mesh->node(i, j)->addCoordinate(PositioningInSpace::Natural, Direction::One);
-                            mesh->node(i, j)->addCoordinate(PositioningInSpace::Natural, Direction::Two);
+; 
                             break;
                         case OneThree_plane:
-                            mesh->node(i, k)->addCoordinate(PositioningInSpace::Natural, Direction::One);
-                            mesh->node(i, k)->addCoordinate(PositioningInSpace::Natural, Direction::Three);
-                            break;
+                            
                         case TwoThree_plane:
-                            mesh->node(j, k)->addCoordinate(PositioningInSpace::Natural, Direction::Two);
-                            mesh->node(j, k)->addCoordinate(PositioningInSpace::Natural, Direction::Three);
+                 
                             break;
                         case OneTwoThree_volume:
-                            mesh->node(i, j, k)->addCoordinate(PositioningInSpace::Natural, Direction::One);
-                            mesh->node(i, j, k)->addCoordinate(PositioningInSpace::Natural, Direction::Two);
-                            mesh->node(i, j, k)->addCoordinate(PositioningInSpace::Natural, Direction::Three);
+                          
                             break;
-                    }*/
+                    }
                 }
             }
         }
     }
             
-    void MeshPreProcessor::Assign1DCoordinates(Direction direction1) {
-/*        for (auto i = 0; i < mesh->numberOfNodesPerDirection.at(direction1); ++i) {
-            mesh->node(i)->addCoordinate(PositioningInSpace::Natural, direction1);
-            mesh->node(i)->addCoordinate(PositioningInSpace::Parametric, direction1, i);
-        }*/
-        
+    void MeshPreProcessor::Assign1DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) {
+        auto direction = Direction::One;
+        if (space.type() == Two_axis)
+            direction = Direction::Two;
+        else if (space.type() == Three_axis)
+            direction = Direction::Three;
+
+        for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(direction); ++i) {
+            mesh->node(i)->setPositionVector(Natural);
+            mesh->node(i)->setPositionVector({static_cast<double>(i)}, Parametric);
+            mesh->node(i)->setPositionVector({static_cast<double>(i) * meshSpecs.templateStepOne}, Template);
+        }
+    }
+    
+    void MeshPreProcessor::Assign2DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) {
+        auto direction1 = Direction::One;
+        auto direction2 = Direction::Two;
+        if (space.type() == OneTwo_plane) {
+            direction1 = Direction::One;
+            direction2 = Direction::Two;
+        } else if (space.type() == OneThree_plane) {
+            direction1 = Direction::One;
+            direction2 = Direction::Three;
+        } else if (space.type() == TwoThree_plane) {
+            direction1 = Direction::Two;
+            direction2 = Direction::Three;
+        }
+        for (unsigned j = 0; j < mesh->numberOfNodesPerDirection.at(direction2); ++j) {
+            for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(direction1); ++i) {
+                mesh->node(i, j)->setPositionVector(Natural);
+                mesh->node(i, j)->setPositionVector({static_cast<double>(i), static_cast<double>(j)}, Parametric);
+                
+                auto templateCoord = {static_cast<double>(i) * meshSpecs.templateStepOne,
+                                      static_cast<double>(j) * meshSpecs.templateStepTwo};
+
+                
+                mesh->node(i, j)->setPositionVector({static_cast<double>(i) * meshSpecs.templateStepOne,
+                                                                 static_cast<double>(j) * meshSpecs.templateStepTwo}, Template);
+                
+                mesh->node(i, j)->positionVector(Template);
+            }
+        }
+    }
     }
     
 /*    void MeshPreProcessor::Assign2DCoordinates() {

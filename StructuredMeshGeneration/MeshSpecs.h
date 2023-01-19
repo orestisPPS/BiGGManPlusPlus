@@ -15,9 +15,7 @@ namespace StructuredMeshGenerator {
     class MeshSpecs {
     public :
         MeshSpecs(map<Direction, unsigned> &nodesPerDirection,
-                  double templateStepOne,
-                  double templateRotAngle,
-                  double templateShearOne);
+                  double templateStepOne);
         
         MeshSpecs(map<Direction, unsigned> &nodesPerDirection,
                   double templateStepOne, double templateStepTwo,

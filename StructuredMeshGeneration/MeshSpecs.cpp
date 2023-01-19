@@ -7,15 +7,13 @@
 namespace StructuredMeshGenerator {
     
         MeshSpecs::MeshSpecs(map<Direction, unsigned> &nodesPerDirection,
-                            double templateStepOne,
-                            double templateRotAngle,
-                            double templateShearOne) {
+                            double templateStepOne) {
             this->nodesPerDirection = nodesPerDirection;
             this->templateStepOne = templateStepOne;
             this->templateStepTwo = 0;
             this->templateStepThree = 0;
-            this->templateRotAngle = templateRotAngle;
-            this->templateShearOne = templateShearOne;
+            this->templateRotAngle = 0;
+            this->templateShearOne = 0;
             this->templateShearTwo = 0;
             this->templateShearThree = 0;
         }

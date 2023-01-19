@@ -5,6 +5,7 @@
 #include "MeshSpecs.h"
 #include "../Discretization/Mesh/Mesh.h"
 #include "../LinearAlgebra/Array.h"
+#include "../LinearAlgebra/Transformations.h"
 #include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 #include "NodeFactory.h"
 namespace StructuredMeshGenerator {
@@ -18,8 +19,8 @@ namespace StructuredMeshGenerator {
         void InitiateMesh(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space);
         void AssignSpatialProperties(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const;
         void AssignCoordinates(PhysicalSpaceEntity &space);
-        void Assign1DCoordinates(Direction direction1);
-        void Assign2DCoordinates(Direction direction1, Direction direction2);
+        void Assign1DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space);
+        void Assign2DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space);
         void Assign3DCoordinates(Direction direction1, Direction direction2, Direction direction3);
         void CalculateMeshMetrics();
     };

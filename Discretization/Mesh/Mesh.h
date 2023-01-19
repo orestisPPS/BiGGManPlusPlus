@@ -26,7 +26,7 @@ namespace Discretization {
         
         unsigned totalNodes();
 
-        unsigned dimensions();
+        unsigned dimensions() const;
         
         Node *node(unsigned i);
 

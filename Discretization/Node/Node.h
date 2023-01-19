@@ -22,15 +22,34 @@ namespace Discretization
 
     public:
 
-        Node(PhysicalSpaceEntity space);
+        explicit Node(PhysicalSpaceEntity space);
 
         Discretization::DiscreteEntityId id;
         
         PhysicalSpaceEntity space;
         
-        //Adds a coordinate set to the node coordinate vector map.
-        //The coordinates can be natural, parametric or templete.
+
+        //Adds the input coordinate set type into the node coordinate vector map.
+        //Initiated with input vector.
         void setPositionVector(vector<double> positionVector, CoordinateType type);
+
+
+        //Adds a Natural coordinate set the node coordinate vector map.
+        //Initiated with input vector.
+        void setPositionVector(vector<double> positionVector);
+
+        //Adds a coordinate set the node coordinate vector map.
+        //The coordinates can be natural, parametric or template.
+        //Initiated with NaN values.
+        void setPositionVector(CoordinateType type);
+
+        //Replaces the coordinate set of the input type with the input coordinate vector.
+        //The coordinates can be natural, parametric or template.
+        void changePositionVector(vector<double> positionVector, CoordinateType type);
+
+        //Replaces the Natural Coordinate set of the input type with the input coordinate vector.
+        //The coordinates can be natural, parametric or template.
+        void changePositionVector(vector<double> positionVector);
         
         //Removes the input coordinate set from the node coordinate vector map.
         void removePositionVector(CoordinateType type);
@@ -73,14 +92,7 @@ namespace Discretization
 #endif //UNTITLED_NODE_H
 
 
-/*        //Returns the pointer to the coordinate with the given  type and direction
-        Coordinate *coordinate(CoordinateType type, Direction direction);
-        // Adds a coordinate of the given type, direction and value to the node
-        void addCoordinate(CoordinateType type, Direction direction, double value);
-        // Adds a coordinate of the given type and direction to the node
-        void addCoordinate(CoordinateType type, Direction direction);
-        // Removes and deallocates the coordinate of the given type and direction from the node
-        void removeCoordinate(CoordinateType type, Direction direction);
+/*        
 
         //Returns the pointer of the degree of freedom of the given type and field
         DegreeOfFreedom *degreeOfFreedom(DOFType type, FieldType fieldType);

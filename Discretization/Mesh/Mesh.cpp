@@ -11,7 +11,6 @@ namespace Discretization {
         _nodesMatrix = nodes;
         this->space = space;
         _meshDimensions = _findMeshDimensions();
-;
         numberOfNodesPerDirection = map<Direction, unsigned>();
         numberOfNodesPerDirection[Direction::One] = _nodesMatrix->numberOfColumns();
         numberOfNodesPerDirection[Direction::Two] = _nodesMatrix->numberOfRows();
@@ -48,7 +47,7 @@ namespace Discretization {
             return 0;
     }
     
-    unsigned Mesh::dimensions() {
+    unsigned Mesh::dimensions() const {
         return _meshDimensions;
     }
     
