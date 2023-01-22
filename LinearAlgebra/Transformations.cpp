@@ -30,7 +30,7 @@ namespace LinearAlgebra {
         return vector;
     }
     
-    vector<double>& Transformations::scaleInDirection(vector<double> &vector, double &amount, PhysicalSpaceEntities &direction) {
+    vector<double>& Transformations::scaleInDirection(vector<double> &vector, double &amount, const PhysicalSpaceEntities &direction) {
         if (direction == One_axis)
             vector = _scale(vector, amount, 1, 1);
         else if (direction == Two_axis)
@@ -49,7 +49,7 @@ namespace LinearAlgebra {
         return vector;
     }
     
-    vector<double>& Transformations::rotateAroundAxis(vector<double> &vector, double &angle, PhysicalSpaceEntities &axis) {
+    vector<double>& Transformations::rotateAroundAxis(vector<double> &vector, double &angle, const PhysicalSpaceEntities &axis) {
         if (axis == One_axis)
             vector = _rotateAroundAxis1(vector, angle);
         else if (axis == Two_axis)
@@ -68,7 +68,7 @@ namespace LinearAlgebra {
         return vector;
     }
     
-vector<double>& Transformations::shearPlane(vector<double> &vector, double &angle1, double &angle2, PhysicalSpaceEntities &plane) {
+vector<double>& Transformations::shearInPlane(vector<double> &vector, double &angle1, double &angle2, const PhysicalSpaceEntities &plane) {
         if (plane == OneTwo_plane)
             vector = _shearPlane12(vector, angle1, angle2);
         else if (plane == OneThree_plane)
@@ -85,7 +85,7 @@ vector<double>& Transformations::shearPlane(vector<double> &vector, double &angl
         return vector;
     }
 
-    vector<double>& Transformations::reflect(vector<double> &vector, PhysicalSpaceEntities &plane){
+    vector<double>& Transformations::reflect(vector<double> &vector,  const PhysicalSpaceEntities &plane){
         throw runtime_error("Not implemented");
         return vector;
     }

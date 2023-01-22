@@ -20,13 +20,14 @@ namespace Discretization {
         
         PhysicalSpaceEntity* space;
         
+        //map<Direction, unsigned > *numberOfNodesPerDirection;
         map<Direction, unsigned > numberOfNodesPerDirection;
 
-        map<Position, list<Node *>*> *boundaryNodes;
-        
-        unsigned totalNodes();
+        map<Position, list<Node*>*> *boundaryNodes;
 
-        unsigned dimensions() const;
+        const unsigned &totalNodes() const;
+
+        const unsigned &dimensions() const;
         
         Node *node(unsigned i);
 
@@ -35,12 +36,18 @@ namespace Discretization {
         Node *node(unsigned i, unsigned j, unsigned k);
         
         Node *nodeFromID(unsigned ID);
+        
+        //Gets called by the mesh preprocessor to initiate space, numberOfNodesPerDirection, and dimensions
+        void getSpatialProperties(map<Direction, unsigned> numberOfNodesPerDirection, PhysicalSpaceEntity space,
+                                  unsigned dimensions, unsigned totalNodes);
     
     private:
         
-        unsigned _meshDimensions;
+        unsigned _dimensions;
         
-        unsigned _findMeshDimensions() const;
+        unsigned _totalNodes;
+        
+        bool _isInitialized;
         
         Array<Node *> *_nodesMatrix;
         

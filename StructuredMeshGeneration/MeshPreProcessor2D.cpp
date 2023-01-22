@@ -7,51 +7,34 @@
 namespace StructuredMeshGenerator{
     
     MeshPreProcessor :: MeshPreProcessor(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space){
-        InitiateMesh(meshSpecs, space);
+        mesh = InitiateMesh(meshSpecs, space);
         AssignSpatialProperties(meshSpecs, space);
-        AssignCoordinates(space);
+        AssignCoordinates(meshSpecs, space);
        // CalculateMeshMetrics();
     }
 
-    void MeshPreProcessor::InitiateMesh(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) {
+    Mesh* MeshPreProcessor::InitiateMesh(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) {
         auto nodeFactory = NodeFactory(meshSpecs.nodesPerDirection, (PhysicalSpaceEntity &) space.type());
-        mesh = new Mesh(nodeFactory.nodesMatrix, &space);
+        return new Mesh(nodeFactory.nodesMatrix, &space);
     }
     
     void MeshPreProcessor::AssignSpatialProperties(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const {
-        mesh -> numberOfNodesPerDirection = meshSpecs.nodesPerDirection;
-        mesh -> space = &space;
+        mesh->getSpatialProperties(meshSpecs.nodesPerDirection, space, meshSpecs.dimensions, meshSpecs.nodesPerDirection[One] * meshSpecs.nodesPerDirection[Two] * meshSpecs.nodesPerDirection[Three]);
     }
     
-    void MeshPreProcessor::AssignCoordinates(PhysicalSpaceEntity &space) {
-        for (auto k = 0; k < mesh->numberOfNodesPerDirection.at(Direction::Three); ++k) {
-            for (auto j = 0; j < mesh->numberOfNodesPerDirection.at(Direction::Two); ++j) {
-                for (auto i = 0; i < mesh->numberOfNodesPerDirection.at(Direction::One); ++i) {
-                    switch (space.type()) {
-                        case One_axis:
-                            break;
-                        case Two_axis:
-                            break;
-                        case Three_axis:
-                            break;
-                        case OneTwo_plane:
-; 
-                            break;
-                        case OneThree_plane:
-                            
-                        case TwoThree_plane:
-                 
-                            break;
-                        case OneTwoThree_volume:
-                          
-                            break;
-                    }
-                }
-            }
+    void MeshPreProcessor::AssignCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) {
+        if (space.type() == One_axis || space.type() == Two_axis || space.type() == Three_axis) {
+            Assign1DCoordinates(meshSpecs, space);
+        }
+        else if (space.type() == OneTwo_plane || space.type() == TwoThree_plane || space.type() == OneThree_plane) {
+            Assign2DCoordinates(meshSpecs, space);
+        }
+        else if (space.type() == OneTwoThree_volume) {
+            Assign3DCoordinates(meshSpecs, space);
         }
     }
-            
-    void MeshPreProcessor::Assign1DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) {
+    
+    void MeshPreProcessor::Assign1DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const {
         auto direction = Direction::One;
         if (space.type() == Two_axis)
             direction = Direction::Two;
@@ -65,7 +48,7 @@ namespace StructuredMeshGenerator{
         }
     }
     
-    void MeshPreProcessor::Assign2DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) {
+    void MeshPreProcessor::Assign2DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const {
         auto direction1 = Direction::One;
         auto direction2 = Direction::Two;
         if (space.type() == OneTwo_plane) {
@@ -80,32 +63,44 @@ namespace StructuredMeshGenerator{
         }
         for (unsigned j = 0; j < mesh->numberOfNodesPerDirection.at(direction2); ++j) {
             for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(direction1); ++i) {
+                
+                // Natural coordinates
                 mesh->node(i, j)->setPositionVector(Natural);
+                // Parametric coordinates
                 mesh->node(i, j)->setPositionVector({static_cast<double>(i), static_cast<double>(j)}, Parametric);
-                
-                auto templateCoord = {static_cast<double>(i) * meshSpecs.templateStepOne,
-                                      static_cast<double>(j) * meshSpecs.templateStepTwo};
-
-                templateCoord = Transformations::Rotate(templateCoord, meshSpecs.templateRotation);
-                
-                mesh->node(i, j)->setPositionVector({static_cast<double>(i) * meshSpecs.templateStepOne,
-                                                                 static_cast<double>(j) * meshSpecs.templateStepTwo}, Template);
-                
-                mesh->node(i, j)->positionVector(Template);
-            }
+                // Template coordinates
+                vector<double> templateCoord = {static_cast<double>(i) * meshSpecs.templateStepOne,
+                                                static_cast<double>(j) * meshSpecs.templateStepTwo};
+                // Rotate 
+                templateCoord = Transformations::rotateAroundAxis(templateCoord, meshSpecs.templateRotAngleOne, space.type());
+                // Shear
+                templateCoord = Transformations::shearInPlane(templateCoord, meshSpecs.templateShearOne,meshSpecs.templateShearTwo, space.type());
+            }   
         }
     }
-    }
     
-/*    void MeshPreProcessor::Assign2DCoordinates() {
-        throw runtime_error("Not Implemented!");
-    }
-    
-    void MeshPreProcessor::Assign3DCoordinates() {
-        throw runtime_error("Not Implemented!");
+    void MeshPreProcessor::Assign3DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const {
+        for (unsigned k = 0; k < mesh->numberOfNodesPerDirection.at(Three); ++k) {
+            for (unsigned j = 0; j < mesh->numberOfNodesPerDirection.at(Two); ++j) {
+                for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
+                    // Natural coordinates
+                    mesh->node(i, j, k)->setPositionVector(Natural);
+                    // Parametric coordinates
+                    mesh->node(i, j, k)->setPositionVector({static_cast<double>(i), static_cast<double>(j), static_cast<double>(k)}, Parametric);
+                    // Template coordinates
+                    vector<double> templateCoord = {static_cast<double>(i) * meshSpecs.templateStepOne,
+                                                    static_cast<double>(j) * meshSpecs.templateStepTwo,
+                                                    static_cast<double>(k) * meshSpecs.templateStepThree};
+                    // Rotate 
+                    templateCoord = Transformations::rotateAroundAxis(templateCoord, meshSpecs.templateRotAngleOne, space.type());
+                    // Shear
+                    templateCoord = Transformations::shearInPlane(templateCoord, meshSpecs.templateShearOne,meshSpecs.templateShearTwo, space.type());
+                }
+            }
+        }
     }
     
     void MeshPreProcessor::CalculateMeshMetrics() {
         throw runtime_error("Not Implemented!");
-    }*/
+    }
 }// StructuredMeshGenerator

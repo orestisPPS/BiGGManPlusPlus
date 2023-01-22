@@ -24,12 +24,13 @@ namespace StructuredMeshGenerator {
         
         MeshSpecs(map<Direction, unsigned> &nodesPerDirection,
                   double templateStepOne, double templateStepTwo, double templateStepThree,
-                  double templateRotAngle,
+                  double templateRotAngleOne, double templateRotAngleTwo, double templateRotAngleThree,
                   double templateShearOne, double templateShearTwo, double templateShearThree);
         
+        unsigned dimensions;
         map<Direction, unsigned> nodesPerDirection;
         double templateStepOne, templateStepTwo, templateStepThree,
-               templateRotAngle,
+               templateRotAngleOne, templateRotAngleTwo, templateRotAngleThree,
                templateShearOne, templateShearTwo, templateShearThree;
         };
     };
