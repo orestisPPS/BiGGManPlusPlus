@@ -5,11 +5,8 @@
 #include "PhysicalSpaceEntity.h"
 
 namespace PositioningInSpace {
-    PhysicalSpaceEntity::PhysicalSpaceEntity() {
-
-    }
-
-    const PhysicalSpaceEntities& PhysicalSpaceEntity::type() {
-        return NullSpace;
-    }
+        const PhysicalSpaceEntities  &PhysicalSpaceEntity::type() {
+            return _type;
+        }
+    
 } // PositioningInSpace

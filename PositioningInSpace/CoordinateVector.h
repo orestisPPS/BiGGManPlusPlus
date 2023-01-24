@@ -22,16 +22,16 @@ namespace PositioningInSpace {
     
     class CoordinateVector {
     public:
-        CoordinateVector(vector<double> positionVector, PhysicalSpaceEntities physicalSpace);
-        CoordinateVector(PhysicalSpaceEntities physicalSpace);
+        CoordinateVector(vector<double> positionVector, const PhysicalSpaceEntities &physicalSpace);
+        CoordinateVector(const PhysicalSpaceEntities &physicalSpace);
         
         //Initializes the CoordinateVector with the input vector of doubles in the input physical space
-        void setCoordinateVector(const vector<double>& positionVector, PhysicalSpaceEntities physicalSpace);
+        void setCoordinateVector(const vector<double>& positionVector, const PhysicalSpaceEntities &physicalSpace);
         
         //Initializes a coordinate vector with NaN values in the input physical space
-        void setCoordinateVector(PhysicalSpaceEntities &physicalSpace);
+        void setCoordinateVector(const PhysicalSpaceEntities &physicalSpace);
         
-        vector<double> getCoordinateVectorInEntity(const PhysicalSpaceEntities &thisPhysicalSpace, PhysicalSpaceEntities physicalSpace);
+        vector<double> getCoordinateVectorInEntity(const PhysicalSpaceEntities &thisPhysicalSpace, const PhysicalSpaceEntities &physicalSpace);
         vector<double> getCoordinateVectorIn3D(const PhysicalSpaceEntities &thisPhysicalSpace);
 
         unsigned dimensions();

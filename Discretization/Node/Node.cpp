@@ -4,25 +4,22 @@
 
 #include <iostream>
 #include <list>
+#include <utility>
 #include "Node.h"
 #include "../Id/DiscreteEntityId.h"
 using namespace Discretization;
 
 namespace Discretization {
     Node::Node(PhysicalSpaceEntity spaceEntity) {
-        space = spaceEntity;
+        space = std::move(spaceEntity);
     }
 
     void Node::setPositionVector(vector<double> positionVector, CoordinateType type) {
-        auto coordinateVector =
-                _position.insert(pair<CoordinateType, CoordinateVector>
-                                         (type, CoordinateVector(std::move(positionVector), space.type())));
+        _position.insert(pair<CoordinateType, CoordinateVector>(type, CoordinateVector(std::move(positionVector), space.type())));
     }
 
     void Node::setPositionVector(CoordinateType type) {
-        auto coordinateVector =
-                _position.insert(pair<CoordinateType, CoordinateVector>
-                                         (type, CoordinateVector(space.type())));
+        _position.insert(pair<CoordinateType, CoordinateVector>(type, CoordinateVector(space.type())));
     }
 
     void Node::setPositionVector(vector<double> positionVector) {

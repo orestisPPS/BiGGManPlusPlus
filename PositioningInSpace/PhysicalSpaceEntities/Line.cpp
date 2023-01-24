@@ -6,16 +6,16 @@
 
 namespace PositioningInSpace {
     // One-dimensional space entity (line).
-    Line::Line(PhysicalSpaceEntities type) : PhysicalSpaceEntity() {
-        if (_checkInput(type))
-            _type = type;
+    Line::Line(PhysicalSpaceEntities lineType) : PhysicalSpaceEntity() {
+        if (_checkInput(lineType))
+            this->_type = lineType;
         else
-            _type = NullSpace;
+            this->_type = NullSpace;
     }
     
     //Returns the axis where the line is located.
     const PhysicalSpaceEntities& Line::type() {
-        return _type;
+        return this->_type;
     }
     
     //Checks if the input is a valid Physical space entity. Should be : One_axis [x,r,ξ], Two_axis[y,θ,η], Three_axis.[z,φ,ζ]. 

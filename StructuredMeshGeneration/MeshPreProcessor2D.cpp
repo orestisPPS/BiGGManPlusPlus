@@ -14,7 +14,7 @@ namespace StructuredMeshGenerator{
     }
 
     Mesh* MeshPreProcessor::InitiateMesh(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) {
-        auto nodeFactory = NodeFactory(meshSpecs.nodesPerDirection, (PhysicalSpaceEntity &) space.type());
+        auto nodeFactory = NodeFactory(meshSpecs.nodesPerDirection, (PhysicalSpaceEntity &) space);
         return new Mesh(nodeFactory.nodesMatrix, &space);
     }
     

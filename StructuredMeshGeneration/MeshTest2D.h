@@ -3,6 +3,8 @@
 //
 
 #include "NodeFactory.h"
+#include "MeshPreProcessor.h"
+#include "../PositioningInSpace/PhysicalSpaceEntities/Plane.h"
 #include "MeshSpecs.h"
 
 namespace StructuredMeshGenerator {

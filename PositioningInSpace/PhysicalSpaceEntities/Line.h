@@ -9,12 +9,12 @@
 
 namespace PositioningInSpace {
 
-    class Line : PhysicalSpaceEntity {
+    class Line : public PhysicalSpaceEntity {
     public:
-        Line(PhysicalSpaceEntities type);
+        explicit Line(PhysicalSpaceEntities lineType);
         const PhysicalSpaceEntities  &type() override;
     private:
-        PhysicalSpaceEntities _type;
+        PhysicalSpaceEntities _type ;
         static bool _checkInput(PhysicalSpaceEntities type);
     };
 

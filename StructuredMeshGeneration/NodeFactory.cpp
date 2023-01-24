@@ -4,9 +4,6 @@
 
 #include "NodeFactory.h"
 
-#include <utility>
-#include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
-
 namespace StructuredMeshGenerator{
     
     NodeFactory :: NodeFactory(map<Direction, unsigned> &numberOfNodes, PhysicalSpaceEntity &space){
@@ -18,43 +15,43 @@ namespace StructuredMeshGenerator{
     }
     
     void NodeFactory :: CreateNodesArray(PhysicalSpaceEntity &space){
-        if (space.type() == PhysicalSpaceEntities::One_axis){
+        if (space.type() == One_axis){
             nodesMatrix = new Array<Node*>(_nn1);
             Create1DBoundaryNodes(_nn1, space);
             Create1DInternalNodes(_nn1, space);
         }
 
-        else if (space.type() == PhysicalSpaceEntities::Two_axis){
+        else if (space.type()==Two_axis){
             nodesMatrix = new Array<Node*>(_nn2);
             Create1DBoundaryNodes(_nn2, space);
             Create1DInternalNodes(_nn2, space);
         }
 
-        else if (space.type() == PhysicalSpaceEntities::Three_axis){
+        else if (space.type()==Three_axis){
             nodesMatrix = new Array<Node*>(_nn3);
             Create1DBoundaryNodes(_nn3, space);
             Create1DInternalNodes(_nn3, space);
         }
 
-        else if (space.type() == PhysicalSpaceEntities::OneTwo_plane){
+        else if (space.type()==OneTwo_plane){
             nodesMatrix = new Array<Node*>(_nn1, _nn2);
             Create2DBoundaryNodes(_nn1, _nn2, space);
             Create2DInternalNodes(_nn1, _nn2, space);
         }
 
-        else if (space.type() == PhysicalSpaceEntities::TwoThree_plane){
+        else if (space.type()==TwoThree_plane){
             nodesMatrix = new Array<Node*>(_nn2, _nn3);
             Create2DBoundaryNodes(_nn2, _nn3, space);
             Create2DInternalNodes(_nn2, _nn3, space);
         }
 
-        else if (space.type() == PhysicalSpaceEntities::OneThree_plane){
+        else if (space.type()==OneThree_plane){
             nodesMatrix = new Array<Node*>(_nn1, _nn3);
             Create2DBoundaryNodes(_nn1, _nn3, space);
             Create2DInternalNodes(_nn1, _nn3, space);
         }
         
-        else if (space.type() == PhysicalSpaceEntities::OneTwoThree_volume){
+        else if (space.type()==OneTwoThree_volume){
             nodesMatrix = new Array<Node*>(_nn1, _nn2, _nn3);
             Create3DBoundaryNodes(space);
             Create3DInternalNodes(space);
@@ -160,6 +157,7 @@ namespace StructuredMeshGenerator{
     }
 
     Node *NodeFactory::AllocateBoundaryNode(int boundaryId, PhysicalSpaceEntity &space) {
+        
         Node *node = new Node(space);
         *node->id.boundary = boundaryId;
         return node;

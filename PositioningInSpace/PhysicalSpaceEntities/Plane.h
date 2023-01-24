@@ -8,7 +8,7 @@
 #include "PhysicalSpaceEntity.h"
 
 namespace PositioningInSpace {
-        class Plane : PhysicalSpaceEntity {
+        class Plane : public PhysicalSpaceEntity {
         public:
             Plane(PhysicalSpaceEntities type);
             const PhysicalSpaceEntities &type() override;

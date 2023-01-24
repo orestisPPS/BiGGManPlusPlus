@@ -7,15 +7,15 @@
 namespace PositioningInSpace {
         
         // Two-dimensional space entity (plane).
-        Plane::Plane(PhysicalSpaceEntities type) : PhysicalSpaceEntity() {
-            if (_checkInput(type))
-                _type = type;
+        Plane::Plane(PhysicalSpaceEntities planeType) : PhysicalSpaceEntity() {
+            if (_checkInput(planeType))
+                this->_type = planeType;
             else
-                _type = NullSpace;
+                this->_type = NullSpace;
         }
         //Returns the plane. OneTwoPlane [xy, ξη, rθ], OneThreePlane [xz etc. ], TwoThreePlane [yz etc.].
         const PhysicalSpaceEntities& Plane::type() {
-            return _type;
+            return this->_type;
         }
         
         //Checks if the input is a valid Physical space entity. Should be : OneTwoPlane [xy, ξη, rθ], OneThreePlane [xz etc. ], TwoThreePlane [yz etc.].

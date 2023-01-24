@@ -3,22 +3,20 @@
 //
 
 #include "MeshTest2D.h"
-#include "MeshPreProcessor.h"
+
 
 namespace StructuredMeshGenerator {
     
         MeshTest2D::MeshTest2D() {
-            //MeshSpecs specs = MeshSpecs(5, 5, 1.0, 1.0, 0.0, 0.0, 0.0);
-            //MeshPreProcessor preProcessor = MeshPreProcessor(specs);
+            map<Direction, unsigned> numberOfNodes;
+            numberOfNodes[Direction::One] = 5;
+            numberOfNodes[Direction::Two] = 5;
+            numberOfNodes[Direction::Three] = 1;    
+            MeshSpecs specs = MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
+            Plane space = Plane(PositioningInSpace::OneTwo_plane);
+            auto mesh = MeshPreProcessor(specs, space).mesh;
+            cout << "MTSTK GMS" << endl;
             
-/*            NodeFactory nodeFactory = NodeFactory(specs.nnx, specs.nny, 0);
-            for (int i = 0; i < specs.nnx; ++i) {
-                for (int j = 0; j < specs.nny; ++j) {
-                    Node *node = nodeFactory.nodesMatrix->element(i, j);
-                    cout << "i : " << i << " j : " << j << " gl: " << *node->id->global
-                         << " b: " << *node->id->boundary
-                         << " in: " << *node->id->internal << endl;
-                }
-            }*/
+            
         }
     } // StructuredMeshGenerator

@@ -86,8 +86,8 @@ namespace Discretization {
                 return Create1DBoundaries();
             case 2:
                 return Create2DBoundaries();
-            default:
-                return Create3DBoundaries();
+            //default:
+                //return Create3DBoundaries();
         }
     }
 

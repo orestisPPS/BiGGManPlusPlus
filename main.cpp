@@ -30,13 +30,13 @@ int main() {
     matrix.print();
     matrix = matrix2 - matrix2;
     matrix.print();
-    
-    
+
+    auto meshTest = StructuredMeshGenerator::MeshTest2D();
     
     //cout << matrix.size() << endl;
     //cout << matrix.vectorElement(4) << endl;
 /*    auto matrix3 = matrix + matrix2;
-    auto meshTest = StructuredMeshGenerator::MeshTest2D();
+    
     return 0;*/
 }
 

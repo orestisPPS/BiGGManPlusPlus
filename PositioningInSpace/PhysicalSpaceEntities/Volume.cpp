@@ -6,15 +6,15 @@
 
 namespace PositioningInSpace {
     // Three-dimensional space entity (plane).
-    Volume::Volume(PhysicalSpaceEntities type) : PhysicalSpaceEntity() {
-        if (_checkInput(type))
-            _type = type;
+    Volume::Volume(PhysicalSpaceEntities volumeType) : PhysicalSpaceEntity() {
+        if (_checkInput(volumeType))
+            this->_type = volumeType;
         else
-            _type = NullSpace;
+            this->_type = NullSpace;
     }
 
     const PhysicalSpaceEntities& Volume::type() {
-        return _type;
+        return this->_type;
     }
 
     bool Volume::_checkInput(PhysicalSpaceEntities type) {
