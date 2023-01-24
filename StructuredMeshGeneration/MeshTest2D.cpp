@@ -13,8 +13,8 @@ namespace StructuredMeshGenerator {
             numberOfNodes[Direction::Two] = 5;
             numberOfNodes[Direction::Three] = 1;    
             MeshSpecs specs = MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
-            Plane space = Plane(PositioningInSpace::OneTwo_plane);
-            auto mesh = MeshPreProcessor(specs, space).mesh;
+            auto space = (PositioningInSpace::OneTwo_plane);
+            auto mesh = MeshPreProcessor(specs, reinterpret_cast<PhysicalSpaceEntity &>(space)).mesh;
             cout << "MTSTK GMS" << endl;
             
             

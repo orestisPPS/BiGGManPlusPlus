@@ -10,8 +10,8 @@
 using namespace Discretization;
 
 namespace Discretization {
-    Node::Node(PhysicalSpaceEntity spaceEntity) {
-        space = std::move(spaceEntity);
+    Node::Node(PhysicalSpaceEntity physicalSpace) : space(std::move(physicalSpace)) {
+        id = DiscreteEntityId();
     }
 
     void Node::setPositionVector(vector<double> positionVector, CoordinateType type) {
@@ -49,11 +49,11 @@ namespace Discretization {
         return _position.at(type).getCoordinateVectorIn3D(space.type());
     }
 
-    vector<double> Node::positionVector(PhysicalSpaceEntities physicalSpace) {
+    vector<double> Node::positionVector(SpaceEntityType physicalSpace) {
         return _position.at(CoordinateType::Natural).getCoordinateVectorInEntity(space.type(), physicalSpace);
     }
 
-    vector<double> Node::positionVector(CoordinateType type, PhysicalSpaceEntities physicalSpace) {
+    vector<double> Node::positionVector(CoordinateType type, SpaceEntityType physicalSpace) {
         return _position.at(type).getCoordinateVectorInEntity(space.type(), physicalSpace);
     }
 

@@ -32,4 +32,17 @@ add_executable(untitled main.cpp
         StructuredMeshGeneration/NodeFactory.cpp
         StructuredMeshGeneration/NodeFactory.h
         StructuredMeshGeneration/MeshTest2D.cpp
-        StructuredMeshGeneration/MeshTest2D.h LinearAlgebra/Array.h LinearAlgebra/TransformationTensors.h Utility/Calculators.h LinearAlgebra/Transformations.cpp LinearAlgebra/Transformations.h PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.cpp PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h PositioningInSpace/CoordinateVector.cpp PositioningInSpace/CoordinateVector.h PositioningInSpace/PhysicalSpaceEntities/Plane.cpp PositioningInSpace/PhysicalSpaceEntities/Plane.h PositioningInSpace/PhysicalSpaceEntities/Line.cpp PositioningInSpace/PhysicalSpaceEntities/Line.h PositioningInSpace/PhysicalSpaceEntities/Volume.cpp PositioningInSpace/PhysicalSpaceEntities/Volume.h PositioningInSpace/CoordinateVector.cpp Discretization/Node/NodeNeighbourFinder.cpp Discretization/Node/NodeNeighbourFinder.h)
+        StructuredMeshGeneration/MeshTest2D.h
+        LinearAlgebra/Array.h
+        LinearAlgebra/TransformationTensors.h 
+        Utility/Calculators.h
+        LinearAlgebra/Transformations.cpp
+        LinearAlgebra/Transformations.h
+        PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.cpp
+        PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h
+        PositioningInSpace/CoordinateVector.cpp
+        PositioningInSpace/CoordinateVector.h
+        Discretization/Node/NodeNeighbourFinder.cpp
+        Discretization/Node/NodeNeighbourFinder.h)
+        
+        

@@ -3,7 +3,6 @@
 //
 #pragma once
 #include "../PartialDifferentialEquations/PartialDifferentialEquation.h"
-#include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 #include "../BoundaryConditions/BoundaryCondition.h"
 
 namespace MathematicalProblem{

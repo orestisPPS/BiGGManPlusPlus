@@ -9,6 +9,7 @@
 #include <iostream>
 #include <limits>
 #include "PhysicalSpaceEntities/PhysicalSpaceEntity.h"
+
 using namespace std;
 using namespace PositioningInSpace;
 
@@ -22,17 +23,17 @@ namespace PositioningInSpace {
     
     class CoordinateVector {
     public:
-        CoordinateVector(vector<double> positionVector, const PhysicalSpaceEntities &physicalSpace);
-        CoordinateVector(const PhysicalSpaceEntities &physicalSpace);
+        CoordinateVector(vector<double> positionVector, const SpaceEntityType &physicalSpace);
+        CoordinateVector(const SpaceEntityType &physicalSpace);
         
         //Initializes the CoordinateVector with the input vector of doubles in the input physical space
-        void setCoordinateVector(const vector<double>& positionVector, const PhysicalSpaceEntities &physicalSpace);
+        void setCoordinateVector(const vector<double>& positionVector, const SpaceEntityType &physicalSpace);
         
         //Initializes a coordinate vector with NaN values in the input physical space
-        void setCoordinateVector(const PhysicalSpaceEntities &physicalSpace);
+        void setCoordinateVector(const SpaceEntityType &physicalSpace);
         
-        vector<double> getCoordinateVectorInEntity(const PhysicalSpaceEntities &thisPhysicalSpace, const PhysicalSpaceEntities &physicalSpace);
-        vector<double> getCoordinateVectorIn3D(const PhysicalSpaceEntities &thisPhysicalSpace);
+        vector<double> getCoordinateVectorInEntity(const SpaceEntityType &thisPhysicalSpace, const SpaceEntityType &physicalSpace);
+        vector<double> getCoordinateVectorIn3D(const SpaceEntityType &thisPhysicalSpace);
 
         unsigned dimensions();
         

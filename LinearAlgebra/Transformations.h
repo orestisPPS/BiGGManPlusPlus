@@ -29,7 +29,7 @@ namespace LinearAlgebra {
             //Translates the input vector in the input amount in the given direction.
             //distance : Amount to translate.
             //direction : Direction to translate in. (Axis1, Axis2, Axis3)
-            static vector<double> &translateInDirection(vector<double> &vector, double &distance, PhysicalSpaceEntities &direction);
+            static vector<double> &translateInDirection(vector<double> &vector, double &distance, SpaceEntityType &direction);
             
             //Scales the input vector in the 3d space by an input amount in the given direction.
             //amount1,2,3 : Amount to scale in the direction of axis 1,2,3 respectively.
@@ -38,7 +38,7 @@ namespace LinearAlgebra {
             //Translates the input vector in the input amount in the given direction.
             //amount : Amount to scale.
             //direction : Direction to translate in. (Axis1, Axis2, Axis3)
-            static vector<double> &scaleInDirection(vector<double> &vector, double &amount, const PhysicalSpaceEntities &direction);
+            static vector<double> &scaleInDirection(vector<double> &vector, double &amount, const SpaceEntityType &direction);
             
 
             //Rotates the input vector in the 3d space by an input angle [deg] around all three axis.
@@ -48,7 +48,7 @@ namespace LinearAlgebra {
             //Rotates the input vector around the input axis by the given angle.
             //angle : Angle to rotate.
             //Axis : Axis to rotate around. (Axis1, Axis2, Axis3)
-            static vector<double> &rotateAroundAxis(vector<double> &vector, double &angle, const PhysicalSpaceEntities &axis);
+            static vector<double> &rotateAroundAxis(vector<double> &vector, double &angle, const SpaceEntityType &axis);
             
             //Shears the input vector in the 3d space by an input angle in the given plane.
             //angle12,13,23 : Amount to shear in the 12,23,13 planes respectively.
@@ -59,14 +59,14 @@ namespace LinearAlgebra {
             //angle1 : First angle to shear.
             //angle1 : Second angle to shear.
             //plane : plane to shear on. (plane12, plane23, plane 13)
-            static vector<double> &shearInPlane(vector<double> &vector, double &angle1, double &angle2, const PhysicalSpaceEntities &plane);
+            static vector<double> &shearInPlane(vector<double> &vector, double &angle1, double &angle2, const SpaceEntityType &plane);
             
             //Reflects the input vector in the 3d space.
             //Axis1,2,3 : true if the vector should be reflected in the direction of axis 1,2,3 respectively. false otherwise.
             static vector<double> &reflect(vector<double> &vector, bool &axis1, bool &axis2, bool &axis3);
             
             //Reflects the input vector around the given plane.
-            static vector<double> &reflect(vector<double> &vector, const PhysicalSpaceEntities &plane);
+            static vector<double> &reflect(vector<double> &vector, const SpaceEntityType &plane);
             
             
         private:

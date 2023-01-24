@@ -9,7 +9,6 @@
 #include <map>
 #include <list>
 #include "../../PositioningInSpace/CoordinateVector.h"
-#include "../../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 #include "../../DegreesOfFreedom/DegreeOfFreedom.h"
 using namespace PositioningInSpace;
 
@@ -22,7 +21,7 @@ namespace Discretization
 
     public:
 
-        explicit Node(PhysicalSpaceEntity space);
+        explicit Node(PhysicalSpaceEntity physicalSpace);
 
         Discretization::DiscreteEntityId id;
         
@@ -65,13 +64,13 @@ namespace Discretization
         //in the input physical space entity. 
         //The number of components is determined by the number of axes that define the input space. 
         //Use the other implementation to get the vector in the space that the problem is defined in.
-        vector<double> positionVector(PhysicalSpaceEntities physicalSpace);
+        vector<double> positionVector(SpaceEntityType physicalSpace);
 
         //Returns a vector with the components of the input position vector that exists
         //in the input physical space entity. 
         //The number of components is determined by the number of axes that define the input space. 
         //Use the other implementation to get the vector in the space that the problem is defined in.
-        vector<double> positionVector(CoordinateType type, PhysicalSpaceEntities physicalSpace);
+        vector<double> positionVector(CoordinateType type, SpaceEntityType physicalSpace);
         
         //Returns the number of components of the natural position vector
         unsigned positionVectorDimensions();

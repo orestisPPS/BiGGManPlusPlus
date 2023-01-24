@@ -4,10 +4,10 @@
 #pragma once
 #include "/home/hal9000/code/BiGGMan++/LinearAlgebra/Array.h"
 #include <utility>
-#include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 #include "../Discretization/Node/Node.h"
+#include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 
-using namespace Discretization;
+ using namespace Discretization;
 using namespace LinearAlgebra;
 namespace StructuredMeshGenerator {
 
