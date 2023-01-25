@@ -174,8 +174,8 @@ namespace StructuredMeshGenerator{
     
     void NodeFactory::Create2DInternalNodes(unsigned index1, unsigned index2, PhysicalSpaceEntity &space) const {
         auto internalId = 0;
-        for (int i = 1; i < index1 - 1; i++){
-            for (int j = 1; j < index2 - 1; j++){
+        for (int j = 1; j < index2 - 1; j++){
+            for (int i = 1; i < index1 - 1; i++){
                 (*nodesMatrix)(i, j) = AllocateInternalNode(internalId, space);
                 cout << "Internal node " << internalId << " created." << endl;
                 internalId++;
@@ -185,9 +185,9 @@ namespace StructuredMeshGenerator{
     
     void NodeFactory::Create3DInternalNodes(PhysicalSpaceEntity &space) const {
         auto internalId = 0;
-        for (int i = 1; i < _nn1 - 1; i++){
+        for (int i = 1; i < _nn3 - 1; i++){
             for (int j = 1; j < _nn2 - 1; j++){
-                for (int k = 1; k < _nn3 - 1; k++){
+                for (int k = 1; k < _nn1 - 1; k++){
                     (*nodesMatrix)(i, j, k) = AllocateInternalNode(internalId, space);
                     internalId++;
                 }
