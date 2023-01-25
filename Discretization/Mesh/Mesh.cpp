@@ -80,12 +80,33 @@ namespace Discretization {
             throw runtime_error("What the fuck are you doing? Initializing a mesh twice?");
     }
     
+/*    void Mesh::printMesh() {
+        if (dimensions() == 1){
+            cout<<"Dimensions : 1"<<endl;
+            cout<<"Number of Nodes : " << totalNodes()<<endl;
+            for (int i = 0; i < totalNodes(); ++i) {
+                cout<<"i = "<< i << " : Global id : "<<  node(i)->id.global << " : Boundary id : "<<  node(i)->id.boundary << " : Internal id : "<<  node(i)->id.internal;
+            }
+        }
+        else if(dimensions() == 3)
+
+
+        
+        
+        
+        
+    }*/
+    
+    
+    
+    
     map<Position, list<Node*>*>* Mesh::CreateBoundaries() {
         switch (dimensions()) {
             case 1:
                 return Create1DBoundaries();
             case 2:
                 return Create2DBoundaries();
+                
             //default:
                 //return Create3DBoundaries();
         }

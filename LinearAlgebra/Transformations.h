@@ -50,6 +50,9 @@ namespace LinearAlgebra {
             //Axis : Axis to rotate around. (Axis1, Axis2, Axis3)
             static vector<double> &rotateAroundAxis(vector<double> &vector, double &angle, const SpaceEntityType &axis);
             
+            //Rotates the input vector by the given angle given the plane it is positioned.
+            static vector<double> &rotatePlane(vector<double> &vector, double &angle, const SpaceEntityType &plane);
+            
             //Shears the input vector in the 3d space by an input angle in the given plane.
             //angle12,13,23 : Amount to shear in the 12,23,13 planes respectively.
             static vector<double> &shear(vector<double> &vector, double &angle12, double &angle23, double &angle13);

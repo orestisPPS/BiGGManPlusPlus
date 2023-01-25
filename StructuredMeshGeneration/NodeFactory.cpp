@@ -177,7 +177,7 @@ namespace StructuredMeshGenerator{
         for (int i = 1; i < index1 - 1; i++){
             for (int j = 1; j < index2 - 1; j++){
                 (*nodesMatrix)(i, j) = AllocateInternalNode(internalId, space);
-                //cout << "Internal node: " << *nodesMatrix->element(i,j)->id->global << endl;
+                cout << "Internal node " << internalId << " created." << endl;
                 internalId++;
             }
         }

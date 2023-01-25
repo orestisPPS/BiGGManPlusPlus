@@ -72,7 +72,7 @@ namespace StructuredMeshGenerator{
                 vector<double> templateCoord = {static_cast<double>(i) * meshSpecs.templateStepOne,
                                                 static_cast<double>(j) * meshSpecs.templateStepTwo};
                 // Rotate 
-                templateCoord = Transformations::rotateAroundAxis(templateCoord, meshSpecs.templateRotAngleOne, space.type());
+                templateCoord = Transformations::rotatePlane(templateCoord, meshSpecs.templateRotAngleOne, space.type());
                 // Shear
                 templateCoord = Transformations::shearInPlane(templateCoord, meshSpecs.templateShearOne,meshSpecs.templateShearTwo, space.type());
             }   
@@ -92,7 +92,7 @@ namespace StructuredMeshGenerator{
                                                     static_cast<double>(j) * meshSpecs.templateStepTwo,
                                                     static_cast<double>(k) * meshSpecs.templateStepThree};
                     // Rotate 
-                    templateCoord = Transformations::rotateAroundAxis(templateCoord, meshSpecs.templateRotAngleOne, space.type());
+                    templateCoord = Transformations::rotatePlane(templateCoord, meshSpecs.templateRotAngleOne, space.type());
                     // Shear
                     templateCoord = Transformations::shearInPlane(templateCoord, meshSpecs.templateShearOne,meshSpecs.templateShearTwo, space.type());
                 }

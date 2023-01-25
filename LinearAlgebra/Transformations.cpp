@@ -61,6 +61,18 @@ namespace LinearAlgebra {
         return vector;
     }
     
+    vector<double>& Transformations::rotatePlane(vector<double> &vector, double &angle, const SpaceEntityType &plane) {
+        if (plane == OneTwo_plane)
+            vector = _rotateAroundAxis3(vector, angle);
+        else if (plane == OneThree_plane)
+            vector = _rotateAroundAxis2(vector, angle);
+        else if (plane == TwoThree_plane)
+            vector = _rotateAroundAxis1(vector, angle);
+        else
+            throw invalid_argument("Input SpaceEntityType should be OneTwo_plane, OneThree_plane or TwoThree_plane.");
+        return vector;
+    }
+    
     vector<double>& Transformations::shear(vector<double> &vector, double &angle12, double &angle23, double &angle13){
         vector = _shearPlane12(vector, angle12, angle13);
         vector = _shearPlane13(vector, angle12, angle13);
