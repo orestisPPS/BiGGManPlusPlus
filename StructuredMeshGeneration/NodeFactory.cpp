@@ -160,6 +160,7 @@ namespace StructuredMeshGenerator{
         
         Node *node = new Node(space);
         *node->id.boundary = boundaryId;
+        cout << "Boundary node " << boundaryId << " created." << endl;
         return node;
     }
     
