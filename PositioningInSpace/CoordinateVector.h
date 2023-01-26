@@ -27,10 +27,9 @@ namespace PositioningInSpace {
         CoordinateVector(const SpaceEntityType &physicalSpace);
         
         //Initializes the CoordinateVector with the input vector of doubles in the input physical space
-        void setCoordinateVector(const vector<double>& positionVector, const SpaceEntityType &physicalSpace);
-        
+        static vector<double> setCoordinateVector(const vector<double>& positionVector, const SpaceEntityType &physicalSpace);
         //Initializes a coordinate vector with NaN values in the input physical space
-        void setCoordinateVector(const SpaceEntityType &physicalSpace);
+        static vector<double> setCoordinateVector(const SpaceEntityType &physicalSpace);
         
         vector<double> getCoordinateVectorInEntity(const SpaceEntityType &thisPhysicalSpace, const SpaceEntityType &physicalSpace);
         vector<double> getCoordinateVectorIn3D(const SpaceEntityType &thisPhysicalSpace);

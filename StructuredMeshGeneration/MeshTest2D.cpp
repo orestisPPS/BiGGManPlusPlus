@@ -9,10 +9,10 @@ namespace StructuredMeshGenerator {
     
         MeshTest2D::MeshTest2D() {
             map<Direction, unsigned> numberOfNodes;
-            numberOfNodes[Direction::One] = 5;
-            numberOfNodes[Direction::Two] = 5;
-            numberOfNodes[Direction::Three] = 1;    
-            MeshSpecs specs = MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
+            numberOfNodes[Direction::One] = 3;
+            numberOfNodes[Direction::Two] = 3;
+            numberOfNodes[Direction::Three] = 0;    
+            MeshSpecs specs = MeshSpecs(numberOfNodes, 0.5, 1, 2, 0, 0);
             auto space = (PositioningInSpace::OneTwo_plane);
             auto mesh = MeshPreProcessor(specs, reinterpret_cast<PhysicalSpaceEntity &>(space)).mesh;
             
@@ -22,7 +22,9 @@ namespace StructuredMeshGenerator {
                     cout << "Global id: " << *(mesh->node(i,j)->id.global) << endl;
                     cout << "Boundary id: " << *(mesh->node(i,j)->id.boundary) << endl;
                     cout << "Internal id: " << *(mesh->node(i,j)->id.internal) << endl;
+                    cout << "Template Coordinates: " << mesh->node(i,j)->positionVector().at(Template)<<endl;
                     cout << "-------------" << endl;
+                    
                 }
             }
             

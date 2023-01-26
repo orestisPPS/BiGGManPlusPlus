@@ -11,7 +11,7 @@ using namespace Discretization;
 
 namespace Discretization {
     Node::Node(PhysicalSpaceEntity physicalSpace)
-            : space(std::move(physicalSpace)), id(DiscreteEntityId()) { }
+            : space(std::move(physicalSpace)), id(DiscreteEntityId()), _position() { }
 
     void Node::setPositionVector(vector<double> positionVector, CoordinateType type) {
         _position.insert(pair<CoordinateType, CoordinateVector>(type, CoordinateVector(std::move(positionVector), space.type())));

@@ -6,13 +6,11 @@
 
 namespace PositioningInSpace{
     
-    CoordinateVector::CoordinateVector(vector<double> positionVector, const SpaceEntityType &physicalSpace) {
-        setCoordinateVector(positionVector, physicalSpace);
-    }
+    CoordinateVector::CoordinateVector(vector<double> positionVector, const SpaceEntityType &physicalSpace):
+    _positionVector(setCoordinateVector(positionVector, physicalSpace)) { }
     
-    CoordinateVector::CoordinateVector(const SpaceEntityType &physicalSpace) {
-        setCoordinateVector(physicalSpace);
-    }
+    CoordinateVector::CoordinateVector(const SpaceEntityType &physicalSpace) : 
+    _positionVector(setCoordinateVector(physicalSpace)) { }
     
     vector<double> CoordinateVector::getCoordinateVectorInEntity(const SpaceEntityType &thisPhysicalSpace,
                                                                  const SpaceEntityType &physicalSpace) {
@@ -145,27 +143,25 @@ namespace PositioningInSpace{
         return getCoordinateVectorInEntity(physicalSpace, OneTwoThree_volume);
     }
     
-    void CoordinateVector::setCoordinateVector(const vector<double>& coordinateVector, const SpaceEntityType &physicalSpace) {
+    vector<double> CoordinateVector::setCoordinateVector(const vector<double>& coordinateVector, const SpaceEntityType &physicalSpace) {
         if ((physicalSpace == OneTwoThree_volume && coordinateVector.size() == 3) ||
             (physicalSpace == OneTwo_plane || physicalSpace == TwoThree_plane || physicalSpace == OneThree_plane && coordinateVector.size() == 2) ||
             (physicalSpace == One_axis || physicalSpace == Two_axis || physicalSpace == Three_axis && coordinateVector.size() == 1))
-            _positionVector = coordinateVector;
+            return coordinateVector;
         else
             throw invalid_argument("Input position vector does not match the physical space dimensions.");
     }
 
-    void CoordinateVector::setCoordinateVector(const SpaceEntityType &physicalSpace) {
+    vector<double> CoordinateVector::setCoordinateVector(const SpaceEntityType &physicalSpace) {
         if (physicalSpace == OneTwoThree_volume)
-            _positionVector = {numeric_limits<double>::quiet_NaN(), numeric_limits<double>::quiet_NaN() , numeric_limits<double>::quiet_NaN()};
+            return {numeric_limits<double>::quiet_NaN(), numeric_limits<double>::quiet_NaN() , numeric_limits<double>::quiet_NaN()};
         else if (physicalSpace == OneTwo_plane || physicalSpace == TwoThree_plane || physicalSpace == OneThree_plane)
-            _positionVector = {numeric_limits<double>::quiet_NaN(), numeric_limits<double>::quiet_NaN()};
+            return {numeric_limits<double>::quiet_NaN(), numeric_limits<double>::quiet_NaN()};
         else if (physicalSpace == One_axis || physicalSpace == Two_axis || physicalSpace == Three_axis)
-            _positionVector = {numeric_limits<double>::quiet_NaN()};
+            return {numeric_limits<double>::quiet_NaN()};
     }
     
     unsigned CoordinateVector::dimensions() {
         return _positionVector.size();
     }
-    
-    
 } // PositioningInSpace

@@ -75,6 +75,8 @@ namespace StructuredMeshGenerator{
                 templateCoord = Transformations::rotatePlane(templateCoord, meshSpecs.templateRotAngleOne, space.type());
                 // Shear
                 templateCoord = Transformations::shearInPlane(templateCoord, meshSpecs.templateShearOne,meshSpecs.templateShearTwo, space.type());
+                
+                mesh->node(i, j)->setPositionVector(templateCoord, Template);
             }   
         }
     }
