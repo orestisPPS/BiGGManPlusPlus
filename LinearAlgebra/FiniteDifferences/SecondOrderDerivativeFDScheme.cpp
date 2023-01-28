@@ -55,7 +55,7 @@ namespace LinearAlgebra {
             coefficients[-6] = 137;
             return {coefficients, 180, 2};
         }
-    
+            
         tuple<map<int,double>, double, int> SecondOrderDerivativeFDScheme:: Forward1() {
             map<int,double> coefficients;
             coefficients[0] = 1;
@@ -119,7 +119,7 @@ namespace LinearAlgebra {
             map<int,double> coefficients;
             coefficients[-2] = 1;
             coefficients[-1] = -16;
-            coefficients[0] = 30;
+            coefficients[0] = -30;
             coefficients[1] = 16;
             coefficients[2] = -1;
             return {coefficients, 12, 2};

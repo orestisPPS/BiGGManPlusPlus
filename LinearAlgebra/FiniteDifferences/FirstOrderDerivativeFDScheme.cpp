@@ -2,7 +2,7 @@
 // Created by hal9000 on 1/28/23.
 //
 
-#include "FirstOrderFDScheme.h"
+#include "FirstOrderDerivativeFDScheme.h"
 
 namespace LinearAlgebra {
     

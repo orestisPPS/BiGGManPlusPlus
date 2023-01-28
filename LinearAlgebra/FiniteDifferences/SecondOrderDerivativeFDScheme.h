@@ -81,6 +81,18 @@ public:
         // double : step coefficient
         // int : step power
         static tuple<map<int,double>, double, int> Backward6();
+
+
+        //Second Derivative Forward Finite Difference Scheme of order 1
+        //Number of forward points: 2
+        //Error: O(h)
+        //Output :  tuple<map<int,double, double, int>:
+        // map<int,double> : map of the coefficients of the scheme.
+        //                    Key : 0 for central, -i for ith backward point, +i for ith forward point
+        //                    Value : coefficient
+        // double : step coefficient
+        // int : step power
+        static tuple<map<int,double>, double, int> Forward1();
         
         //Second Derivative Forward Finite Difference Scheme of order 2
         //Number of forward points: 3
