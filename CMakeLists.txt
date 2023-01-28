@@ -43,6 +43,12 @@ add_executable(untitled main.cpp
         PositioningInSpace/CoordinateVector.cpp
         PositioningInSpace/CoordinateVector.h
         Discretization/Node/NodeNeighbourFinder.cpp
-        Discretization/Node/NodeNeighbourFinder.h LinearAlgebra/FiniteDifferences/FirstOrderFDScheme.cpp LinearAlgebra/FiniteDifferences/FirstOrderFDScheme.h LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.cpp LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.h)
+        Discretization/Node/NodeNeighbourFinder.h
+        LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDScheme.cpp
+        LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDScheme.h
+        LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.cpp
+        LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.h 
+        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.cpp
+        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.h LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h)
         
         

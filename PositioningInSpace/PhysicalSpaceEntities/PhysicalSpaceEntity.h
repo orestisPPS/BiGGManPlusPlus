@@ -5,8 +5,10 @@
 #ifndef UNTITLED_PHYSICALSPACEENTITY_H
 #define UNTITLED_PHYSICALSPACEENTITY_H
 
+#include <list>
 #include "../DirectionsPositions.h"
 using namespace PositioningInSpace;
+using namespace std;
 
 namespace PositioningInSpace {
 
@@ -33,7 +35,12 @@ namespace PositioningInSpace {
     class PhysicalSpaceEntity {
      public:
         explicit PhysicalSpaceEntity(SpaceEntityType physicalSpace); 
+        //Returns the type of the physical space
         const SpaceEntityType& type();
+        
+        //Returns the list of directions that define the physical space (axis1, axis2, axis3, time)
+        list<Direction> directions();
+        
         //Copy constructor
         PhysicalSpaceEntity(const PhysicalSpaceEntity& other);
         //Move constructor

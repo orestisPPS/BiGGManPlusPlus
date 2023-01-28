@@ -7,11 +7,13 @@
 
 #include <tuple>
 #include <map>
+#include "FDScheme.h"
+
 using namespace std;
 
 namespace LinearAlgebra {
 
-    class SecondOrderDerivativeFDScheme {
+    class SecondOrderDerivativeFDScheme : public FDScheme {
 public:
         SecondOrderDerivativeFDScheme();
         

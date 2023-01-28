@@ -163,14 +163,26 @@ build CMakeFiles/untitled.dir/Discretization/Node/NodeNeighbourFinder.cpp.o: CXX
   OBJECT_DIR = CMakeFiles/untitled.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled.dir/Discretization/Node
 
-build CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FirstOrderFDSchemes.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FirstOrderFDSchemes.cpp || cmake_object_order_depends_target_untitled
-  DEP_FILE = CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FirstOrderFDSchemes.cpp.o.d
+build CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDScheme.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDScheme.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDScheme.cpp.o.d
   FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
   OBJECT_DIR = CMakeFiles/untitled.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences
 
-build CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDSchemes.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDSchemes.cpp || cmake_object_order_depends_target_untitled
-  DEP_FILE = CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDSchemes.cpp.o.d
+build CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.cpp.o.d
+  FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
+  OBJECT_DIR = CMakeFiles/untitled.dir
+  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences
+
+build CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.cpp.o.d
+  FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
+  OBJECT_DIR = CMakeFiles/untitled.dir
+  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences
+
+build CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp.o.d
   FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
   OBJECT_DIR = CMakeFiles/untitled.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences
@@ -183,7 +195,7 @@ build CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/SecondOrderDerivat
 #############################################
 # Link the executable untitled
 
-build untitled: CXX_EXECUTABLE_LINKER__untitled_Debug CMakeFiles/untitled.dir/main.cpp.o CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/MatrixTest.cpp.o CMakeFiles/untitled.dir/Discretization/Node/Node.cpp.o CMakeFiles/untitled.dir/Discretization/Id/DiscreteEntityId.cpp.o CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/SteadyStateMathematicalProblem.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/TransientMathematicalProblem.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshPreProcessor2D.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshSpecs.cpp.o CMakeFiles/untitled.dir/Discretization/Mesh/Mesh.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/NodeFactory.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshTest2D.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/Transformations.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/CoordinateVector.cpp.o CMakeFiles/untitled.dir/Discretization/Node/NodeNeighbourFinder.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FirstOrderFDSchemes.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDSchemes.cpp.o
+build untitled: CXX_EXECUTABLE_LINKER__untitled_Debug CMakeFiles/untitled.dir/main.cpp.o CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/MatrixTest.cpp.o CMakeFiles/untitled.dir/Discretization/Node/Node.cpp.o CMakeFiles/untitled.dir/Discretization/Id/DiscreteEntityId.cpp.o CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/SteadyStateMathematicalProblem.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/TransientMathematicalProblem.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshPreProcessor2D.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshSpecs.cpp.o CMakeFiles/untitled.dir/Discretization/Mesh/Mesh.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/NodeFactory.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshTest2D.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/Transformations.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/CoordinateVector.cpp.o CMakeFiles/untitled.dir/Discretization/Node/NodeNeighbourFinder.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDScheme.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp.o
   FLAGS = -fopenmp -g
   OBJECT_DIR = CMakeFiles/untitled.dir
   POST_BUILD = :

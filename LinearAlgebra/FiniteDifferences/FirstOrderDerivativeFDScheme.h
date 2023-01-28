@@ -7,11 +7,13 @@
 
 #include <map>
 #include <tuple>
+#include "FDScheme.h"
+
 using namespace std;
 
 namespace LinearAlgebra {
     //A class containing all the first order finite difference schemes up to Fifth order accuracy
-    class FirstOrderDerivativeFDScheme {
+    class FirstOrderDerivativeFDScheme : public FDScheme {
     public:
         FirstOrderDerivativeFDScheme();
         
