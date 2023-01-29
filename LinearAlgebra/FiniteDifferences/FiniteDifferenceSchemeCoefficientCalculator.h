@@ -20,7 +20,9 @@ namespace LinearAlgebra {
         FiniteDifferenceSchemeCoefficientCalculator(FDSchemeSpecs &schemeSpecs);
     private:
         static void correlateSpaceAndSchemeSpecs(FDSchemeSpecs &schemeSpecs);
-        bool IsSpaceAndSchemeSpecsCorelated(FDSchemeSpecs &schemeSpecs);
+        list<list<Position>> get1DPositionsAtDirection(Direction direction);
+        list<list<Position>> get2DPositionsAtDirection(Direction direction);
+        list<list<Position>> get3DPositionsAtDirection(Direction direction);
     };
 
 } // LinearAlgebra

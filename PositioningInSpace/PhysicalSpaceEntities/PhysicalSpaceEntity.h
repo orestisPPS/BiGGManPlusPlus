@@ -38,7 +38,7 @@ namespace PositioningInSpace {
         //Returns the type of the physical space
         const SpaceEntityType& type();
         
-        //Returns the list of directions that define the physical space (axis1, axis2, axis3, time)
+        //Returns the list of directions that define the space where the node exists (axis1, axis2, axis3, time)
         list<Direction> directions();
         
         //Copy constructor

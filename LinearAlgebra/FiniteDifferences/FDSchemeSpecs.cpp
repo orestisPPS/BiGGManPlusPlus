@@ -44,6 +44,15 @@ namespace LinearAlgebra {
                     cout<<"WARNING! The order of the scheme is not consistent across all spatial directions."<<endl;
             }
         }
+/*
+        if (schemeTypeAndOrderAtDirection.count(Time) == 0 && schemeTypeAndOrderAtDirection.size() != space.directions().size() )
+            throw std::invalid_argument("The number of directions in the scheme is not equal to the number of directions in the space");
+*/
+        for (auto &direction : space.directions()) {
+            if (schemeTypeAndOrderAtDirection.count(direction) == 0)
+                throw std::invalid_argument("Direction " + to_string(direction) + " is not defined in the scheme");
+        }
+        
     }
     
     
