@@ -12,12 +12,27 @@ namespace LinearAlgebra {
     }
     
     void FiniteDifferenceSchemeCoefficientCalculator::correlateSpaceAndSchemeSpecs(FDSchemeSpecs &schemeSpecs) {
-        for (auto spaceDirection : schemeSpecs.space.directions()) {
-            if (schemeSpecs.schemeTypeAndOrderAtDirection.find(spaceDirection) == schemeSpecs.schemeTypeAndOrderAtDirection.end()) {
 
-            }
-        }
     }
+    
+    map<Position,int> FiniteDifferenceSchemeCoefficientCalculator::NormalNeighboursSigns(){
+        map<Position,int> neighbourSigns = { {Top, 1}, {Bottom, -1},
+                                             {Left, -1}, {Right, 1},
+                                             {Front, 1}, {Back, -1}};
+        return neighbourSigns;    
+    }
+    
+    map<Position,tuple<int,int>> FiniteDifferenceSchemeCoefficientCalculator::DiagonalNeigboursSigns(){
+        map<Position,tuple<int,int>> neighbourSigns = { {TopLeft, {-1,1}}, {TopRight, {1,1}},
+                                                       {BottomLeft, {-1,-1}}, {BottomRight, {1,-1}},
+                                                       {FrontTopLeft, {-1,1}}, {FrontTopRight, {1,1}},
+                                                       {FrontBottomLeft, {-1,-1}}, {FrontBottomRight, {1,-1}},
+                                                       {BackTopLeft, {-1,1}}, {BackTopRight, {1,1}},
+                                                       {BackBottomLeft, {-1,-1}}, {BackBottomRight, {1,-1}}};
+        return neighbourSigns;
+    }
+                                            
+        
 
     list<list<Position>> FiniteDifferenceSchemeCoefficientCalculator::get1DPositionsAtDirection(Direction direction) {
         list<list<Position>> positions = {{Left}, {Right}};

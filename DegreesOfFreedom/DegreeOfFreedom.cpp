@@ -7,47 +7,34 @@
 #include "limits"
 
 namespace DegreesOfFreedom{
-    DegreeOfFreedom::DegreeOfFreedom(DOFType dofType, FieldType fieldType) {
-        _dofType = dofType;
-        _fieldType = fieldType;
-        _value = new double(std::numeric_limits<double>::quiet_NaN());
+    DegreeOfFreedom::DegreeOfFreedom(DOFType dofType) :
+    _dofType(dofType),
+    _value(std::numeric_limits<double>::quiet_NaN()),
+    id(){
     }
+    
 
-    DegreeOfFreedom::DegreeOfFreedom(DOFType dofType, FieldType fieldType, double value) {
-        _dofType = dofType;
-        _fieldType = fieldType;
-        _value = new double(value);
+    DegreeOfFreedom::DegreeOfFreedom(DOFType dofType, double value) : _dofType(dofType), _value(value), id() {
     }
-
-    DegreeOfFreedom::~DegreeOfFreedom() {
-        delete _value;
-        _value = nullptr;
-    }
-
-    DOFType DegreeOfFreedom::type() {
+    
+    DOFType const &DegreeOfFreedom::type() {
         return _dofType;
     }
+    
 
-    FieldType DegreeOfFreedom::fieldType() {
-        return _fieldType;
-    }
-
-    double DegreeOfFreedom::value() {
-        return *_value;
+    double DegreeOfFreedom::value() const {
+        return _value;
     }
 
     void DegreeOfFreedom::setValue(double value) {
-        *_value = value;
+        _value = value;
     }
 
     bool DegreeOfFreedom::operator==(const DegreeOfFreedom &dof) {
-        switch (*_value != std::numeric_limits<double> ::quiet_NaN()) {
-            case true:
-                return _dofType == dof._dofType && _fieldType == dof._fieldType && *_value == *dof._value;
-            case false:
-                return _dofType == dof._dofType && _fieldType == dof._fieldType;
+        if (value() != numeric_limits<double>::quiet_NaN()) {
+            return _dofType == dof._dofType && _value == dof._value;
         }
-        return false;
+        return _dofType == dof._dofType;
     }
 
     bool DegreeOfFreedom::operator!=(const DegreeOfFreedom &dof) {
@@ -55,7 +42,7 @@ namespace DegreesOfFreedom{
     }
 
     void DegreeOfFreedom::Print() {
-        std::cout << "DOFType: " << _dofType << " FieldType: " << _fieldType << " Value: " << *_value <<  std::endl;
+        std::cout << "DOFType: " << _dofType << " Value: " << _value <<  std::endl;
     }
 }
 

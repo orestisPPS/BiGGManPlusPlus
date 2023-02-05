@@ -21,13 +21,10 @@ namespace Discretization
 
     public:
 
-        explicit Node(PhysicalSpaceEntity physicalSpace);
+        explicit Node();
 
         Discretization::DiscreteEntityId id;
-        
-        PhysicalSpaceEntity space;
-        
-
+                
         //Adds the input coordinate set type into the node coordinate vector map.
         //Initiated with input vector.
         void setPositionVector(vector<double> positionVector, CoordinateType type);

@@ -10,15 +10,14 @@
 using namespace Discretization;
 
 namespace Discretization {
-    Node::Node(PhysicalSpaceEntity physicalSpace)
-            : space(std::move(physicalSpace)), id(DiscreteEntityId()), _position() { }
+    Node::Node() : id(DiscreteEntityId()), _position() { }
 
     void Node::setPositionVector(vector<double> positionVector, CoordinateType type) {
         _position.insert(pair<CoordinateType, CoordinateVector>(type, CoordinateVector(std::move(positionVector), space.type())));
     }
 
     void Node::setPositionVector(CoordinateType type) {
-        _position.insert(pair<CoordinateType, CoordinateVector>(type, CoordinateVector(space.type())));
+        _position.insert(pair<CoordinateType, CoordinateVector>(type, CoordinateVector())));
     }
 
     void Node::setPositionVector(vector<double> positionVector) {

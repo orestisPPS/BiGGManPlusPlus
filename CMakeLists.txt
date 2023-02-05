@@ -49,6 +49,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.cpp
         LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.h 
         LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.cpp
-        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.h LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h)
+        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.h LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.h)
         
         

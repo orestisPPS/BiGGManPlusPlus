@@ -13,21 +13,9 @@ using namespace std;
 namespace PositioningInSpace {
 
     enum SpaceEntityType {
-        //Axis 1. Can be x,ξ,θ
-        One_axis,
-        //Axis 2, Can be y,η,φ
-        Two_axis,
-        //Axis_3, Can be z,ζ,r
-        Three_axis,
-        //The physical space defined by Axis 1 and Axis 2.
-        OneTwo_plane,
-        //The physical space defined by Axis 1 and Axis 3.
-        OneThree_plane,
-        //The physical space defined by Axis 2 and Axis 3.
-        TwoThree_plane,
-        //The 3D physical space.
-        OneTwoThree_volume,
-        //0D physical space. Enter the void.
+        Axis,
+        Plane,
+        Volume,
         NullSpace
     };
 

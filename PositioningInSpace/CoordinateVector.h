@@ -23,22 +23,27 @@ namespace PositioningInSpace {
     
     class CoordinateVector {
     public:
-        CoordinateVector(vector<double> positionVector, const SpaceEntityType &physicalSpace);
-        CoordinateVector(const SpaceEntityType &physicalSpace);
+        //Initializes the CoordinateVector with the input vector
+        explicit CoordinateVector(vector<double> positionVector);
         
-        //Initializes the CoordinateVector with the input vector of doubles in the input physical space
-        static vector<double> setCoordinateVector(const vector<double>& positionVector, const SpaceEntityType &physicalSpace);
-        //Initializes a coordinate vector with NaN values in the input physical space
-        static vector<double> setCoordinateVector(const SpaceEntityType &physicalSpace);
+        //Initializes the CoordinateVector with the input physical space with NaN values
+        explicit CoordinateVector(const SpaceEntityType &physicalSpace);
+                
+        //Initializes the CoordinateVector with the input vector
+        void setCoordinateVector(vector<double> positionVector);
         
-        vector<double> getCoordinateVectorInEntity(const SpaceEntityType &thisPhysicalSpace, const SpaceEntityType &physicalSpace);
-        vector<double> getCoordinateVectorIn3D(const SpaceEntityType &thisPhysicalSpace);
-
+        //Returns a constant reference of the coordinate vector
+        vector<double> *getCoordinateVector();
+        
+        //Returns the number of dimensions of the coordinate vector
         unsigned dimensions();
         
     private:
-        vector<double> _positionVector;
+        vector<double>* _positionVector;
 
+        //Initializes the coordinate vector according to the input physical space with NaN values
+        static vector<double> initializeWithNaN(const SpaceEntityType &physicalSpace);
+        
     };
 
 } // PositioningInSpace
