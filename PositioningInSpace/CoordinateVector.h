@@ -28,8 +28,12 @@ namespace PositioningInSpace {
         
         //Initializes the CoordinateVector with the input physical space with NaN values
         explicit CoordinateVector(const SpaceEntityType &physicalSpace);
-                
-        //Initializes the CoordinateVector with the input vector
+
+        double& operator()(unsigned i);
+        
+        const double& operator()(unsigned i) const;
+
+        //Sets _positionVector equal to the input vector
         void setCoordinateVector(vector<double> positionVector);
         
         //Returns a constant reference of the coordinate vector

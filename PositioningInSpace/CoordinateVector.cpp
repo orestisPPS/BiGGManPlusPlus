@@ -16,6 +16,19 @@ namespace PositioningInSpace {
         _positionVector = new vector<double>(std::move(initializeWithNaN(physicalSpace)));
     }
     
+    double& CoordinateVector::operator()(unsigned i) {
+        if (i >= _positionVector->size())
+            throw invalid_argument("The input index must be less than the number of dimensions");
+        return _positionVector->at(i);
+    }
+    
+    const double& CoordinateVector::operator()(unsigned i) const {
+        if (i >= _positionVector->size())
+            throw invalid_argument("The input index must be less than the number of dimensions");
+        return _positionVector->at(i);
+    }    
+    
+    
     //Initializes the coordinate vector according to the input physical space with NaN values
     vector<double> CoordinateVector::initializeWithNaN(const SpaceEntityType &physicalSpace) {
         vector<double> positionVector;
@@ -39,12 +52,11 @@ namespace PositioningInSpace {
     
     //Initializes the CoordinateVector with the input vector
     void CoordinateVector::setCoordinateVector(vector<double> positionVector) {
-        if ( dimensions() != positionVector.size() ) {
+        if ( dimensions() != positionVector.size() )
             throw invalid_argument("The input vector must have the same number of dimensions as the CoordinateVector");
-        }
-        for (int i = 0; i < dimensions(); ++i) {
+            
+        for (int i = 0; i < dimensions(); ++i)
             (*_positionVector)[i] = positionVector[i];
-        }
     }
     
     //Returns the coordinate vector
