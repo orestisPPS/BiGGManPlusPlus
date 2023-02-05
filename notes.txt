@@ -1,0 +1,12 @@
+1)Insert Boundary Values To Nodes
+  i.Check Boundary Conditions Class
+ ii.Create DOF at nodes with the same logic as coordinates
+iii.Create BoundaryCreator Class for 2D
+
+2)Create Finite Difference implementation with input error order (up to 4?)
+
+3)Calculate metrix
+
+4)Search for gnuplot addon
+
+5)Create Simulation Class
