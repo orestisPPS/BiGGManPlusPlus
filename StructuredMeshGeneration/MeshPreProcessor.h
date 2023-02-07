@@ -23,6 +23,7 @@ namespace StructuredMeshGenerator {
         void Assign2DCoordinates(MeshSpecs &meshSpecs) const;
         void Assign3DCoordinates(MeshSpecs &meshSpecs) const;
         void CalculateMeshMetrics();
+        SpaceEntityType calculateSpaceEntityType(MeshSpecs &meshSpecs) const;
     };
 
 };

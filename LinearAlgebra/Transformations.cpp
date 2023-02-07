@@ -12,15 +12,15 @@ namespace LinearAlgebra {
         return vector;
     }
     
-    vector<double>& Transformations::translateInDirection(vector<double> &vector, double &distance, SpaceEntityType &direction) {
-        if (direction == One_axis)
+    vector<double>& Transformations::translateInDirection(vector<double> &vector, double &distance, Direction &direction) {
+        if (direction == One)
             vector = _translate(vector, distance, 0, 0);
-        else if (direction == Two_axis)
+        else if (direction == Two)
             vector = _translate(vector, 0, distance, 0);
-        else if (direction == Three_axis)
+        else if (direction == Three)
             vector = _translate(vector, 0, 0, distance);
         else 
-            throw invalid_argument("Input SpaceEntityType should be One_axis, Two_axis or Three_axis.");
+            throw invalid_argument("Input SpaceEntityType should be One, Two or Three.");
         return vector;
     }
     
@@ -30,15 +30,15 @@ namespace LinearAlgebra {
         return vector;
     }
     
-    vector<double>& Transformations::scaleInDirection(vector<double> &vector, double &amount, const SpaceEntityType &direction) {
-        if (direction == One_axis)
+    vector<double>& Transformations::scaleInDirection(vector<double> &vector, double &amount, const Direction &direction) {
+        if (direction == One)
             vector = _scale(vector, amount, 1, 1);
-        else if (direction == Two_axis)
+        else if (direction == Two)
             vector = _scale(vector, 1, amount, 1);
-        else if (direction == Three_axis)
+        else if (direction == Three)
             vector = _scale(vector, 1, 1, amount);
         else
-            throw invalid_argument("Input SpaceEntityType should be One_axis, Two_axis or Three_axis.");
+            throw invalid_argument("Input SpaceEntityType should be One_axis, Two or Three.");
         return vector;
     }
     
@@ -49,29 +49,18 @@ namespace LinearAlgebra {
         return vector;
     }
     
-    vector<double>& Transformations::rotateAroundAxis(vector<double> &vector, double &angle, const SpaceEntityType &axis) {
-        if (axis == One_axis)
+    vector<double>& Transformations::rotateAroundAxis(vector<double> &vector, double &angle, const Direction &axis) {
+        if (axis == One)
             vector = _rotateAroundAxis1(vector, angle);
-        else if (axis == Two_axis)
+        else if (axis == Two)
             vector = _rotateAroundAxis2(vector, angle);
-        else if (axis == Three_axis)
+        else if (axis == Three)
             vector = _rotateAroundAxis3(vector, angle);
         else
-            throw invalid_argument("Input SpaceEntityType should be One_axis, Two_axis or Three_axis.");
+            throw invalid_argument("Input SpaceEntityType should be One_axis, Two or Three_axis.");
         return vector;
     }
     
-    vector<double>& Transformations::rotatePlane(vector<double> &vector, double &angle, const SpaceEntityType &plane) {
-        if (plane == OneTwo_plane)
-            vector = _rotateAroundAxis3(vector, angle);
-        else if (plane == OneThree_plane)
-            vector = _rotateAroundAxis2(vector, angle);
-        else if (plane == TwoThree_plane)
-            vector = _rotateAroundAxis1(vector, angle);
-        else
-            throw invalid_argument("Input SpaceEntityType should be OneTwo_plane, OneThree_plane or TwoThree_plane.");
-        return vector;
-    }
     
     vector<double>& Transformations::shear(vector<double> &vector, double &angle12, double &angle23, double &angle13){
         vector = _shearPlane12(vector, angle12, angle13);
@@ -80,24 +69,19 @@ namespace LinearAlgebra {
         return vector;
     }
     
-vector<double>& Transformations::shearInPlane(vector<double> &vector, double &angle1, double &angle2, const SpaceEntityType &plane) {
-        if (plane == OneTwo_plane)
-            vector = _shearPlane12(vector, angle1, angle2);
-        else if (plane == OneThree_plane)
-            vector = _shearPlane13(vector, angle1, angle2);
-        else if (plane == TwoThree_plane)
-            vector = _shearPlane23(vector, angle1, angle2);
-        else
-            throw invalid_argument("Input SpaceEntityType should be OneTwo_plane, OneThree_plane or TwoThree_plane.");
-        return vector;
-    }
     
     vector<double>& Transformations::reflect(vector<double> &vector, bool &axis1, bool &axis2, bool &axis3){
         throw runtime_error("Not implemented");
         return vector;
     }
 
-    vector<double>& Transformations::reflect(vector<double> &vector,  const SpaceEntityType &plane){
+    vector<double>& Transformations::reflectAboutAxis(vector<double> &vector, Direction &axis){
+        throw runtime_error("Not implemented");
+        return vector;
+    }
+
+    vector<double>& Transformations::reflectAboutPlane(vector<double> &vector, Direction &direction1,
+                                                       Direction &direction2) {
         throw runtime_error("Not implemented");
         return vector;
     }

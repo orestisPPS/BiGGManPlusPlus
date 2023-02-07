@@ -19,16 +19,24 @@ namespace StructuredMeshGenerator{
     }
     
     void MeshPreProcessor::AssignSpatialProperties(MeshSpecs &meshSpecs) const {
-        mesh->getSpatialProperties(meshSpecs.nodesPerDirection, meshSpecs.dimensions, meshSpecs.nodesPerDirection[One] * meshSpecs.nodesPerDirection[Two] * meshSpecs.nodesPerDirection[Three]);
+        mesh->getSpatialProperties(meshSpecs.nodesPerDirection,
+                                   meshSpecs.dimensions,
+                                   meshSpecs.nodesPerDirection[One] * meshSpecs.nodesPerDirection[Two] * meshSpecs.nodesPerDirection[Three],
+                                   calculateSpaceEntityType(meshSpecs));
     }
     
     void MeshPreProcessor::AssignCoordinates(MeshSpecs &meshSpecs) {
-        if (mesh->space() == Axis)
+        auto space = calculateSpaceEntityType(meshSpecs);
+        if (space == Axis) {
             Assign1DCoordinates(meshSpecs);
-        else if (mesh->space() == Plane)
+        } else if (space == Plane) {
             Assign2DCoordinates(meshSpecs);
-        else if (mesh->space() == Volume)
+        } else if (space == PositioningInSpace::Volume) {
             Assign3DCoordinates(meshSpecs);
+        }
+        else {
+            throw std::invalid_argument("Invalid space entity type");
+        }
     }
     
     void MeshPreProcessor::Assign1DCoordinates(MeshSpecs &meshSpecs) const {
@@ -40,20 +48,8 @@ namespace StructuredMeshGenerator{
     }
     
     void MeshPreProcessor::Assign2DCoordinates(MeshSpecs &meshSpecs) const {
-        auto direction1 = Direction::One;
-        auto direction2 = Direction::Two;
-        if (space.type() == OneTwo_plane) {
-            direction1 = Direction::One;
-            direction2 = Direction::Two;
-        } else if (space.type() == OneThree_plane) {
-            direction1 = Direction::One;
-            direction2 = Direction::Three;
-        } else if (space.type() == TwoThree_plane) {
-            direction1 = Direction::Two;
-            direction2 = Direction::Three;
-        }
-        for (unsigned j = 0; j < mesh->numberOfNodesPerDirection.at(direction2); ++j) {
-            for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(direction1); ++i) {
+        for (unsigned j = 0; j < mesh->numberOfNodesPerDirection.at(Two); ++j) {
+            for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
                 
                 // Natural coordinates
                 mesh->node(i, j)->setPositionVector(Natural);
@@ -91,6 +87,20 @@ namespace StructuredMeshGenerator{
                 }
             }
         }
+    }
+    
+    SpaceEntityType MeshPreProcessor::calculateSpaceEntityType(MeshSpecs &meshSpecs) const {
+        auto space = NullSpace;
+        if (meshSpecs.nodesPerDirection[Two]== 0 && meshSpecs.nodesPerDirection[Three] == 0){
+            space = Axis;
+        } else if (meshSpecs.nodesPerDirection[Three] == 0){
+            space = Plane;
+        } else {
+            space = Volume;
+        }
+        return space;
+        }
+
     }
     
     void MeshPreProcessor::CalculateMeshMetrics() {

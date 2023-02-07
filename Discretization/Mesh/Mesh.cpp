@@ -71,13 +71,14 @@ namespace Discretization {
             throw runtime_error("Node Not Found. You search for a 3D node in a" + to_string(dimensions()) + "D mesh.");
     }
     
-    void Mesh::getSpatialProperties(map<Direction, unsigned> numberOfNodesPerDirection, unsigned dimensions, unsigned totalNodes) {
+    void Mesh::getSpatialProperties(map<Direction, unsigned> numberOfNodesPerDirection, unsigned dimensions, unsigned totalNodes, SpaceEntityType space) {
         if (!_isInitialized) {
             ///CHHANGES HERE
             /// WAKE UP GREEK MAN!!!
             this->numberOfNodesPerDirection = std::move(numberOfNodesPerDirection);
             _dimensions = dimensions;
             _totalNodes = totalNodes;
+            _space = space;
             _isInitialized = true;
         }
         else

@@ -23,7 +23,7 @@ add_executable(untitled main.cpp
         MathematicalProblem/SteadyStateMathematicalProblem.h
         MathematicalProblem/TransientMathematicalProblem.cpp
         MathematicalProblem/TransientMathematicalProblem.h
-        StructuredMeshGeneration/MeshPreProcessor2D.cpp
+        StructuredMeshGeneration/MeshPreProcessor.cpp
         StructuredMeshGeneration/MeshPreProcessor.h
         StructuredMeshGeneration/MeshSpecs.cpp
         StructuredMeshGeneration/MeshSpecs.h

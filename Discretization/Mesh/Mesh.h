@@ -38,7 +38,7 @@ namespace Discretization {
         Node *nodeFromID(unsigned ID);
         
         //Gets called by the mesh preprocessor to initiate space, numberOfNodesPerDirection, and dimensions
-        void getSpatialProperties(map<Direction, unsigned> numberOfNodesPerDirection, unsigned dimensions, unsigned totalNodes);
+        void getSpatialProperties(map<Direction, unsigned> numberOfNodesPerDirection, unsigned dimensions, unsigned totalNodes, SpaceEntityType space);
         
         void printMesh();
     
