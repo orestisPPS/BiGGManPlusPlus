@@ -12,16 +12,16 @@ namespace StructuredMeshGenerator {
     
     class MeshPreProcessor {
     public:
-        MeshPreProcessor(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space);
+        MeshPreProcessor(MeshSpecs &meshSpecs);
         Mesh *mesh;
         
     private:
-        static Mesh* InitiateMesh(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space);
-        void AssignSpatialProperties(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const;
-        void AssignCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space);
-        void Assign1DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const;
-        void Assign2DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const;
-        void Assign3DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const;
+        static Mesh* InitiateMesh(MeshSpecs &meshSpecs);
+        void AssignSpatialProperties(MeshSpecs &meshSpecs) const;
+        void AssignCoordinates(MeshSpecs &meshSpecs);
+        void Assign1DCoordinates(MeshSpecs &meshSpecs) const;
+        void Assign2DCoordinates(MeshSpecs &meshSpecs) const;
+        void Assign3DCoordinates(MeshSpecs &meshSpecs) const;
         void CalculateMeshMetrics();
     };
 

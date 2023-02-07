@@ -29,6 +29,9 @@ namespace Discretization {
         //Adds a Natural coordinate set the node coordinate vector map.
         //Initiated with input vector.
         void addPositionVector(vector<double> positionVector);
+        
+        //Adds a coordinate set the node coordinate vector map.
+        void addPositionVector(CoordinateType type);
 
         //Adds a coordinate set the node coordinate vector map.
         //The coordinates can be natural, parametric or template.
@@ -57,6 +60,7 @@ namespace Discretization {
 
         //Returns the number of components of the input position vector
         unsigned size(CoordinateType type);
+        
     private:
         map<CoordinateType, CoordinateVector> _positionVectors;
     };

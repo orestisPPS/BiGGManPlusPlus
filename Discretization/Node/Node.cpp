@@ -10,9 +10,8 @@
 using namespace Discretization;
 
 namespace Discretization {
-    Node::Node() : id(DiscreteEntityId()), _position() { }
-
-  
+    Node::Node() : id(DiscreteEntityId()), coordinates() { }
+    
 }// Discretization
     
 

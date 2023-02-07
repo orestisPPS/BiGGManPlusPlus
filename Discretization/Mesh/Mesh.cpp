@@ -9,9 +9,8 @@ using namespace  Discretization;
 
 namespace Discretization {
     
-    Mesh::Mesh(Array<Node *> *nodes, PhysicalSpaceEntity* space) {
+    Mesh::Mesh(Array<Node *> *nodes) {
         _nodesMatrix = nodes;
-        this->space = space;
         numberOfNodesPerDirection = map<Direction, unsigned>();
         numberOfNodesPerDirection[Direction::One] = _nodesMatrix->numberOfColumns();
         numberOfNodesPerDirection[Direction::Two] = _nodesMatrix->numberOfRows();
@@ -24,12 +23,19 @@ namespace Discretization {
     Mesh::~Mesh() {
         delete _nodesMatrix;
         _nodesMatrix = nullptr;
-        delete space;
-        space = nullptr;
         delete boundaryNodes;
         boundaryNodes = nullptr;
     }
-
+    const SpaceEntityType& Mesh::space() {
+        if (numberOfNodesPerDirection[Direction::One] > 1 && numberOfNodesPerDirection[Direction::Two] > 1 && numberOfNodesPerDirection[Direction::Three] > 1)
+            return Volume;
+        else if (numberOfNodesPerDirection[Direction::One] > 1 && numberOfNodesPerDirection[Direction::Two] > 1)
+            return Plane;
+        else if (numberOfNodesPerDirection[Direction::One] > 1)
+            return Axis;
+        else
+            throw runtime_error("Mesh has no nodes");
+    }
     const unsigned& Mesh::totalNodes() const {
         if (_nodesMatrix != nullptr)
             return _totalNodes;
@@ -65,13 +71,11 @@ namespace Discretization {
             throw runtime_error("Node Not Found. You search for a 3D node in a" + to_string(dimensions()) + "D mesh.");
     }
     
-    void Mesh::getSpatialProperties(map<Direction, unsigned> numberOfNodesPerDirection, PhysicalSpaceEntity space, unsigned dimensions, unsigned totalNodes) {
+    void Mesh::getSpatialProperties(map<Direction, unsigned> numberOfNodesPerDirection, unsigned dimensions, unsigned totalNodes) {
         if (!_isInitialized) {
             ///CHHANGES HERE
             /// WAKE UP GREEK MAN!!!
             this->numberOfNodesPerDirection = std::move(numberOfNodesPerDirection);
-            //this->numberOfNodesPerDirection = &numberOfNodesPerDirection;
-            this->space = &space;
             _dimensions = dimensions;
             _totalNodes = totalNodes;
             _isInitialized = true;

@@ -14,11 +14,11 @@ namespace Discretization {
     class Mesh {
     public:
         //Mesh(Array<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection);
-        Mesh(Array<Node *> *nodes, PhysicalSpaceEntity* space);
+        Mesh(Array<Node *> *nodes);
         
         ~Mesh();
-        
-        PhysicalSpaceEntity* space;
+
+        const SpaceEntityType& space();
         
         //map<Direction, unsigned > *numberOfNodesPerDirection;
         map<Direction, unsigned > numberOfNodesPerDirection;
@@ -38,12 +38,13 @@ namespace Discretization {
         Node *nodeFromID(unsigned ID);
         
         //Gets called by the mesh preprocessor to initiate space, numberOfNodesPerDirection, and dimensions
-        void getSpatialProperties(map<Direction, unsigned> numberOfNodesPerDirection, PhysicalSpaceEntity space,
-                                  unsigned dimensions, unsigned totalNodes);
+        void getSpatialProperties(map<Direction, unsigned> numberOfNodesPerDirection, unsigned dimensions, unsigned totalNodes);
         
         void printMesh();
     
     private:
+        
+        SpaceEntityType _space;
         
         unsigned _dimensions;
         

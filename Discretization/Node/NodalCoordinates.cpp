@@ -37,6 +37,11 @@ namespace Discretization {
         _positionVectors.insert(pair<CoordinateType, CoordinateVector>(CoordinateType::Natural, CoordinateVector(positionVector)));
     }
     
+    void NodalCoordinates::addPositionVector(CoordinateType type) {
+        _positionVectors.insert(pair<CoordinateType, CoordinateVector>(type, CoordinateVector()));
+    }
+    }
+    
     //Adds a coordinate set the node coordinate vector map.
     //The coordinates can be natural, parametric or template.
     //Initiated with NaN values.
@@ -61,5 +66,25 @@ namespace Discretization {
         _positionVectors.erase(type);
     }
     
+    //Returns the natural position vector of the Node 
+    const vector<double>& NodalCoordinates::positionVector() {
+        return *( _positionVectors.at(CoordinateType::Natural).getCoordinateVector());
+    }
+    
+    //Returns the input position vector of the Node 
+    const vector<double>& NodalCoordinates::positionVector(CoordinateType type) {
+        return *( _positionVectors.at(type).getCoordinateVector());
+    }
+    
+    //Size of the natural position vector
+    unsigned NodalCoordinates::size() {
+    return  _positionVectors.at(CoordinateType::Natural).dimensions();
+    }
+    
+    //Size of the input position vector
+    unsigned NodalCoordinates::size(CoordinateType type) {
+        return  _positionVectors.at(type).dimensions();
+    }
+        
     //Returns the natural position
 } // Discretization

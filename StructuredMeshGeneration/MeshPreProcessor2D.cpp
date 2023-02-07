@@ -6,49 +6,40 @@
 
 namespace StructuredMeshGenerator{
     
-    MeshPreProcessor :: MeshPreProcessor(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space){
-        mesh = InitiateMesh(meshSpecs, space);
-        AssignSpatialProperties(meshSpecs, space);
-        AssignCoordinates(meshSpecs, space);
+    MeshPreProcessor :: MeshPreProcessor(MeshSpecs &meshSpecs){
+        mesh = InitiateMesh(meshSpecs);
+        AssignSpatialProperties(meshSpecs);
+        AssignCoordinates(meshSpecs);
        // CalculateMeshMetrics();
     }
 
-    Mesh* MeshPreProcessor::InitiateMesh(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) {
-        auto nodeFactory = NodeFactory(meshSpecs.nodesPerDirection, (PhysicalSpaceEntity &) space);
-        return new Mesh(nodeFactory.nodesMatrix, &space);
+    Mesh* MeshPreProcessor::InitiateMesh(MeshSpecs &meshSpecs) {
+        auto nodeFactory = NodeFactory(meshSpecs.nodesPerDirection);
+        return new Mesh(nodeFactory.nodesMatrix);
     }
     
-    void MeshPreProcessor::AssignSpatialProperties(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const {
-        mesh->getSpatialProperties(meshSpecs.nodesPerDirection, space, meshSpecs.dimensions, meshSpecs.nodesPerDirection[One] * meshSpecs.nodesPerDirection[Two] * meshSpecs.nodesPerDirection[Three]);
+    void MeshPreProcessor::AssignSpatialProperties(MeshSpecs &meshSpecs) const {
+        mesh->getSpatialProperties(meshSpecs.nodesPerDirection, meshSpecs.dimensions, meshSpecs.nodesPerDirection[One] * meshSpecs.nodesPerDirection[Two] * meshSpecs.nodesPerDirection[Three]);
     }
     
-    void MeshPreProcessor::AssignCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) {
-        if (space.type() == One_axis || space.type() == Two_axis || space.type() == Three_axis) {
-            Assign1DCoordinates(meshSpecs, space);
-        }
-        else if (space.type() == OneTwo_plane || space.type() == TwoThree_plane || space.type() == OneThree_plane) {
-            Assign2DCoordinates(meshSpecs, space);
-        }
-        else if (space.type() == OneTwoThree_volume) {
-            Assign3DCoordinates(meshSpecs, space);
-        }
+    void MeshPreProcessor::AssignCoordinates(MeshSpecs &meshSpecs) {
+        if (mesh->space() == Axis)
+            Assign1DCoordinates(meshSpecs);
+        else if (mesh->space() == Plane)
+            Assign2DCoordinates(meshSpecs);
+        else if (mesh->space() == Volume)
+            Assign3DCoordinates(meshSpecs);
     }
     
-    void MeshPreProcessor::Assign1DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const {
-        auto direction = Direction::One;
-        if (space.type() == Two_axis)
-            direction = Direction::Two;
-        else if (space.type() == Three_axis)
-            direction = Direction::Three;
-
-        for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(direction); ++i) {
-            mesh->node(i)->setPositionVector(Natural);
-            mesh->node(i)->setPositionVector({static_cast<double>(i)}, Parametric);
-            mesh->node(i)->setPositionVector({static_cast<double>(i) * meshSpecs.templateStepOne}, Template);
+    void MeshPreProcessor::Assign1DCoordinates(MeshSpecs &meshSpecs) const {
+        for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
+            mesh->node(i)->coordinates.addPositionVector
+            mesh->node(i)->coordinates.setPositionVector({static_cast<double>(i)}, Parametric);
+            mesh->node(i)->coordinates.setPositionVector({static_cast<double>(i) * meshSpecs.templateStepOne}, Template);
         }
     }
     
-    void MeshPreProcessor::Assign2DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const {
+    void MeshPreProcessor::Assign2DCoordinates(MeshSpecs &meshSpecs) const {
         auto direction1 = Direction::One;
         auto direction2 = Direction::Two;
         if (space.type() == OneTwo_plane) {
@@ -81,7 +72,7 @@ namespace StructuredMeshGenerator{
         }
     }
     
-    void MeshPreProcessor::Assign3DCoordinates(MeshSpecs &meshSpecs, PhysicalSpaceEntity &space) const {
+    void MeshPreProcessor::Assign3DCoordinates(MeshSpecs &meshSpecs) const {
         for (unsigned k = 0; k < mesh->numberOfNodesPerDirection.at(Three); ++k) {
             for (unsigned j = 0; j < mesh->numberOfNodesPerDirection.at(Two); ++j) {
                 for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
