@@ -18,90 +18,92 @@ namespace LinearAlgebra {
 
     class Transformations {
         //Source1: https://en.wikipedia.org/wiki/Transformation_matrix#/media/File:2D_affine_transformation_matrix.svg
-        //Source2 :https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html
+        //Source2 :https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialighTransformationMatrices.html
         public:
             Transformations();
-
-            //Translates the input vector in the 3d space by an input amount in the given direction.
-            //distance1,2,3 : Amount to translate in the direction of axis 1,2,3 respectively.
-            static vector<double> &translate(vector<double> &vector, double &distance1, double &distance2, double &distance3);
-
-            //Translates the input vector in the input amount in the given direction.
-            //distance : Amount to translate.
-            //direction : Direction to translate in. (Axis1, Axis2, Axis3)
-            static vector<double> &translateInDirection(vector<double> &vector, double &distance, Direction &direction);
             
-            //Scales the input vector in the 3d space by an input amount in the given direction.
-            //amount1,2,3 : Amount to scale in the direction of axis 1,2,3 respectively.
-            static vector<double> &scale(vector<double> &vector, double &amount1, double &amount2, double &amount3);
-
-            //Translates the input vector in the input amount in the given direction.
-            //amount : Amount to scale.
-            //direction : Direction to translate in. (Axis1, Axis2, Axis3)
-            static vector<double> &scaleInDirection(vector<double> &vector, double &amount, const Direction &direction);
+            //Translates the input vector in the 1d space.
+            //distance1 : Amount to translate vector in axis 1.
+            static void translate(vector<double> &vector, double distance1);
             
-
+            //Translates the input vector in the 2d space.
+            //distance1,2 : Amount to translate vector in the 1-2 plane.
+            static void translate(vector<double> &vector, double distance1, double distance2);
+            
+            //Translates the input vector in the 3d space.
+            //distance1,2,3 : Amount to translate vector in the 1-2-3 volume.
+            static void translate(vector<double> &vector, double distance1, double distance2, double distance3);
+            
+            //Scales the input vector in the 1d space.
+            //amount1 : Amount to scale vector in axis 1.
+            static void scale(vector<double> &vector, double amount1);
+            
+            //Scales the input vector in the 2d space.
+            //amount1,2 : Amount to scale vector in the 1-2 plane.
+            static void scale(vector<double> &vector, double amount1, double amount2);
+            
+            //Scales the input vector in the 3d space.
+            //amount1,2,3 : Amount to scale vector in the 1-2-3 volume.
+            static void scale(vector<double> &vector, double amount1, double amount2, double amount3);
+            
+            //Rotates the 2D input vector around the axis normal to the plane it lies.
+            //angle : Angle to rotate.
+            static void rotate(vector<double> &vector, double angle);
+                        
             //Rotates the input vector in the 3d space by an input angle [deg] around all three axis.
             //angle1,2,3 : Amount to rotate around axis 1,2,3 respectively.
-            static vector<double> &rotate(vector<double> &vector, double &angle1, double &angle2, double &angle3);
-
-            //Rotates the input vector around the input axis by the given angle.
-            //angle : Angle to rotate.
-            //Axis : Axis to rotate around. (Axis1, Axis2, Axis3)
-            static vector<double> &rotateAroundAxis(vector<double> &vector, double &angle, const Direction &axis);
+            static void rotate(vector<double> &vector, double angle1, double angle2, double angle3);
+            
+            //Shears the input vector in the 2d space in the plane it lies.
+            //angle12 : First angle to shear in the 1 - 2 plane.
+            //angle21 : Second angle to shear in the 1 - 2 plane.
+            static void shear(vector<double> &vector, double angle12, double angle21);
             
             //Shears the input vector in the 3d space by an input angle in the given plane.
             //angle12,13,23 : Amount to shear in the 12,23,13 planes respectively.
-            static vector<double> &shear(vector<double> &vector, double &angle12, double &angle23, double &angle13);
+            static void shear(vector<double> &vector, double angle12, double angle21,
+                                                      double angle13, double angle31,
+                                                      double angle23, double angle32);
                         
             //Reflects the input vector in the 3d space.
             //Axis1,2,3 : true if the vector should be reflected in the direction of axis 1,2,3 respectively. false otherwise.
-            static vector<double> &reflect(vector<double> &vector, bool &axis1, bool &axis2, bool &axis3);
+            static void reflect(vector<double> &vector, bool &axis1, bool &axis2, bool &axis3);
             
             //Reflects the input vector around the given plane.
-            static vector<double> &reflectAboutAxis(vector<double> &vector, Direction &axis);
+            static void reflectAboutAxis(vector<double> &vector, Direction &axis);
             
             //Reflects the input vector around the given plane.
-            static vector<double> &reflectAboutPlane(vector<double> &vector, Direction &direction1, Direction &direction2);
+            static void reflectAboutPlane(vector<double> &vector, Direction &direction1, Direction &direction2);
             
             
         private:
-            //private property that translates a vector with 3 components at all 3 directions.
-            static vector<double> _translate(vector<double> &vector, double translation1, double translation2, double translation3);
-            //private property that scales a vector[3] at all 3 directions.
-            static vector<double> _scale(vector<double> &vector, double scale1, double scale2, double scale3);
             //Rotates the given array by the given angle[o] around axis 1.
-            static vector<double> _rotateAroundAxis1(vector<double> &vector, double angle);
+            static void _rotateAroundAxis1(vector<double> &vector, double angle);
             //Rotates the given array by the given angle[o] around axis 2.
-            static vector<double> _rotateAroundAxis2(vector<double> &vector, double angle);
+            static void _rotateAroundAxis2(vector<double> &vector, double angle);
             //Rotates the given array by the given angle[o] around axis 3.
-            static vector<double> _rotateAroundAxis3(vector<double> &vector, double angle);
+            static void _rotateAroundAxis3(vector<double> &vector, double angle);
             //Shears the given array by the given angles[o] in direction 1 and 2 in the 1-2 plane.
-            static vector<double> _shearPlane12(vector<double> &vector, double angle1, double angle2);
+            static void _shearPlane12(vector<double> &vector, double angle1, double angle2);
             //Shears the given array by the given angles[o] in direction 1 and 3 in the 1-3 plane.
-            static vector<double> _shearPlane13(vector<double> &vector, double angle1, double angle3);
+            static void _shearPlane13(vector<double> &vector, double angle1, double angle3);
             //Shears the given array by the given angles[o] in direction 2 and 3 in the 2-3 plane.
-            static vector<double> _shearPlane23(vector<double> &vector, double angle2, double angle3);
+            static void _shearPlane23(vector<double> &vector, double angle2, double angle3);
             //Reflects the given array about axis1.
-            static vector<double> _reflectAboutAxis1(vector<double> &vector);
+            static void _reflectAboutAxis1(vector<double> &vector);
             //Reflects the given array about axis2.
-            static vector<double> _reflectAboutAxis2(vector<double> &vector);
+            static void _reflectAboutAxis2(vector<double> &vector);
             //Reflects the given array about axis3.
-            static vector<double> _reflectAboutAxis3(vector<double> &vector);
+            static void _reflectAboutAxis3(vector<double> &vector);
             //Reflects the given array about the 1-2 plane.
-            static vector<double> _reflectAboutPlane12(vector<double> &vector);
+            static void _reflectAboutPlane12(vector<double> &vector);
             //Reflects the given array about the 1-3 plane.
-            static vector<double> _reflectAboutPlane13(vector<double> &vector);
+            static void _reflectAboutPlane13(vector<double> &vector);
             //Reflects the given array about the 2-3 plane.
-            static vector<double> _reflectAboutPlane23(vector<double> &vector);
+            static void _reflectAboutPlane23(vector<double> &vector);
             //Reflects the given array about the origin.
-            static vector<double> _reflectAboutOrigin(vector<double> &vector);
+            static void _reflectAboutOrigin(vector<double> &vector);
             
-            
-            
-            
-            
-
     };
 
 } // LinearAlgebra

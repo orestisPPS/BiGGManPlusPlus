@@ -41,7 +41,7 @@ namespace StructuredMeshGenerator{
     
     void MeshPreProcessor::Assign1DCoordinates(MeshSpecs &meshSpecs) const {
         for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
-            mesh->node(i)->coordinates.addPositionVector
+            mesh->node(i)->coordinates.addPositionVector({static_cast<double>(i)}, Natural
             mesh->node(i)->coordinates.setPositionVector({static_cast<double>(i)}, Parametric);
             mesh->node(i)->coordinates.setPositionVector({static_cast<double>(i) * meshSpecs.templateStepOne}, Template);
         }
@@ -62,6 +62,8 @@ namespace StructuredMeshGenerator{
                 templateCoord = Transformations::rotatePlane(templateCoord, meshSpecs.templateRotAngleOne, space.type());
                 // Shear
                 templateCoord = Transformations::shearInPlane(templateCoord, meshSpecs.templateShearOne,meshSpecs.templateShearTwo, space.type());
+                
+                templateCoord = Transformations::translate(templateCoord, 1);
                 
                 mesh->node(i, j)->setPositionVector(templateCoord, Template);
             }   
