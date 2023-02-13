@@ -16,12 +16,12 @@ namespace StructuredMeshGenerator {
         Mesh *mesh;
         
     private:
-        static Mesh* InitiateMesh(MeshSpecs &meshSpecs);
-        void AssignSpatialProperties(MeshSpecs &meshSpecs) const;
-        void AssignCoordinates(MeshSpecs &meshSpecs);
-        void Assign1DCoordinates(MeshSpecs &meshSpecs) const;
-        void Assign2DCoordinates(MeshSpecs &meshSpecs) const;
-        void Assign3DCoordinates(MeshSpecs &meshSpecs) const;
+        static Mesh* initiateMesh(MeshSpecs &meshSpecs);
+        void assignSpatialProperties(MeshSpecs &meshSpecs) const;
+        void assignCoordinates(MeshSpecs &meshSpecs);
+        void assign1DCoordinates(MeshSpecs &meshSpecs) const;
+        void assign2DCoordinates(MeshSpecs &meshSpecs) const;
+        void assign3DCoordinates(MeshSpecs &meshSpecs) const;
         void CalculateMeshMetrics();
         static SpaceEntityType calculateSpaceEntityType(MeshSpecs &meshSpecs) ;
     };

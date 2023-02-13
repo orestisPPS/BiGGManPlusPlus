@@ -58,9 +58,18 @@ namespace Discretization {
         return *( _positionVectors.at(CoordinateType::Natural).getCoordinateVector());
     }
     
+    const vector<double>* NodalCoordinates::positionVectorPtr() {
+        return _positionVectors.at(CoordinateType::Natural).getCoordinateVector();
+    }
+        
     //Returns the input position vector of the Node 
     const vector<double>& NodalCoordinates::positionVector(CoordinateType type) {
         return *( _positionVectors.at(type).getCoordinateVector());
+    }
+    
+    //Returns a pointer to the input position vector of the Node
+    const vector<double>* NodalCoordinates::positionVectorPtr(CoordinateType type) {
+        return _positionVectors.at(type).getCoordinateVector();
     }
     
     //Size of the natural position vector

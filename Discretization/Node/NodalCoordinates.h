@@ -40,11 +40,17 @@ namespace Discretization {
         //Removes the input coordinate set from the node coordinate vector map.
         void removePositionVector(CoordinateType type);        
         
-        //Returns the natural position vector of the Node in a vector with 3 components
+        //Returns the natural position vector of the Node
         const vector<double>& positionVector();
+        
+        //Returns a pointer to the natural position vector of the Node
+        const vector<double>* positionVectorPtr();
 
-        //Returns the input position vector of the Node in a vector with 3 components
+        //Returns the input position vector of the Node
         const vector<double>& positionVector(CoordinateType type);
+        
+        //Returns a pointer to the input position vector of the Node
+        const vector<double>* positionVectorPtr(CoordinateType type);
         
         //Returns the number of components of the natural position vector
         unsigned size();
