@@ -8,6 +8,10 @@
 
 namespace PositioningInSpace {
     
+    CoordinateVector::CoordinateVector(){
+        _positionVector = new vector<double>(std::move(initializeWithNaN(Axis)));
+    }
+    
     CoordinateVector::CoordinateVector(vector<double> positionVector){
         _positionVector = new vector<double>(std::move(positionVector));
     }

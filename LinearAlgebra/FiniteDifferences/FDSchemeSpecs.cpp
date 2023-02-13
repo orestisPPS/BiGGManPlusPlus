@@ -9,13 +9,13 @@
 namespace LinearAlgebra {
     
     FDSchemeSpecs::FDSchemeSpecs(map<Direction,tuple<FiniteDifferenceSchemeType, int>> schemeTypeAndOrderAtDirection,
-                                 PhysicalSpaceEntity &space) :
+                                 SpaceEntityType &space) :
     schemeTypeAndOrderAtDirection(std::move(schemeTypeAndOrderAtDirection)),
     space(space) {
         checkInput();
     }
     
-    bool FDSchemeSpecs::checkInput() {
+    void FDSchemeSpecs::checkInput() {
         //Check if the order of the scheme is between the supported values (1,2,3,4,5)
         for (auto &direction : schemeTypeAndOrderAtDirection) {
             if (get<1>(direction.second) < 1 || get<1>(direction.second) > 5)
@@ -44,16 +44,6 @@ namespace LinearAlgebra {
                     cout<<"WARNING! The order of the scheme is not consistent across all spatial directions."<<endl;
             }
         }
-/*
-        if (schemeTypeAndOrderAtDirection.count(Time) == 0 && schemeTypeAndOrderAtDirection.size() != space.directions().size() )
-            throw std::invalid_argument("The number of directions in the scheme is not equal to the number of directions in the space");
-*/
-        for (auto &direction : space.directions()) {
-            if (schemeTypeAndOrderAtDirection.count(direction) == 0)
-                throw std::invalid_argument("Direction " + to_string(direction) + " is not defined in the scheme");
-        }
-        
     }
-    
     
 } // LinearAlgebra

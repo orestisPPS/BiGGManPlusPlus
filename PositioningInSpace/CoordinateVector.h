@@ -23,6 +23,10 @@ namespace PositioningInSpace {
     
     class CoordinateVector {
     public:
+        
+        //Initializes a 1x1 CoordinateVector with NaN values
+        CoordinateVector();
+        
         //Initializes the CoordinateVector with the input vector
         explicit CoordinateVector(vector<double> positionVector);
         

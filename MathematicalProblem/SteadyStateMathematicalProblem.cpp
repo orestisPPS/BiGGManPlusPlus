@@ -8,7 +8,7 @@ namespace MathematicalProblem{
     SteadyStateMathematicalProblem::SteadyStateMathematicalProblem(PartialDifferentialEquation *pde,
                                                                    map<Position,list<BoundaryConditions::BoundaryCondition*>> *bcs,
                                                                    list<DegreeOfFreedom*> *dof,
-                                                                   PhysicalSpaceEntity *space) {
+                                                                   SpaceEntityType *space) {
         pde = pde;
         boundaryConditions = bcs;
         degreesOfFreedom = dof;

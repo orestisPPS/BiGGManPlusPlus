@@ -23,12 +23,12 @@ namespace LinearAlgebra {
     class FDSchemeSpecs {
     public:
         FDSchemeSpecs(map<Direction,tuple<FiniteDifferenceSchemeType, int>> schemeTypeAndOrderAtDirection,
-                      PhysicalSpaceEntity &space);
+                      SpaceEntityType &space);
         
         map<Direction, tuple<FiniteDifferenceSchemeType, int>> schemeTypeAndOrderAtDirection;
-        PhysicalSpaceEntity &space;
+        SpaceEntityType &space;
     private:
-        bool checkInput();
+        void checkInput();
     };
 
 } // LinearAlgebra

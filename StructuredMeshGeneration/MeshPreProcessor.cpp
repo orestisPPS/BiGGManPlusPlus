@@ -1,3 +1,4 @@
+/*
 //
 // Created by hal9000 on 12/17/22.
 //
@@ -41,7 +42,7 @@ namespace StructuredMeshGenerator{
     
     void MeshPreProcessor::Assign1DCoordinates(MeshSpecs &meshSpecs) const {
         for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
-            mesh->node(i)->coordinates.addPositionVector({static_cast<double>(i)}, Natural
+            mesh->node(i)->coordinates.addPositionVector({static_cast<double>(i)}, Natural);
             mesh->node(i)->coordinates.setPositionVector({static_cast<double>(i)}, Parametric);
             mesh->node(i)->coordinates.setPositionVector({static_cast<double>(i) * meshSpecs.templateStepOne}, Template);
         }
@@ -108,4 +109,4 @@ namespace StructuredMeshGenerator{
     void MeshPreProcessor::CalculateMeshMetrics() {
         throw runtime_error("Not Implemented!");
     }
-}// StructuredMeshGenerator
+}// StructuredMeshGenerator*/

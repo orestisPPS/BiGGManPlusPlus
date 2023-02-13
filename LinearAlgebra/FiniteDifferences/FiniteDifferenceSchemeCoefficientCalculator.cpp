@@ -8,7 +8,7 @@
 namespace LinearAlgebra {
     
     FiniteDifferenceSchemeCoefficientCalculator::FiniteDifferenceSchemeCoefficientCalculator(FDSchemeSpecs &schemeSpecs) {
-        correlateSpaceAndSchemeSpecs();
+        correlateSpaceAndSchemeSpecs(schemeSpecs);
     }
     
     void FiniteDifferenceSchemeCoefficientCalculator::correlateSpaceAndSchemeSpecs(FDSchemeSpecs &schemeSpecs) {

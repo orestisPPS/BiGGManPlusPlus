@@ -38,7 +38,6 @@ add_executable(untitled main.cpp
         Utility/Calculators.h
         LinearAlgebra/Transformations.cpp
         LinearAlgebra/Transformations.h
-        PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.cpp
         PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h
         PositioningInSpace/CoordinateVector.cpp
         PositioningInSpace/CoordinateVector.h
@@ -49,6 +48,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.cpp
         LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.h 
         LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.cpp
-        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.h LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.h Discretization/Node/NodalCoordinates.h Discretization/Node/NodalCoordinates.cpp)
+        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.h LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.h Discretization/Node/NodalCoordinates.h Discretization/Node/NodalCoordinates.cpp DegreesOfFreedom/DegreeOfFreedomID.cpp)
         
         

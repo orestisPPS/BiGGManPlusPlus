@@ -7,17 +7,13 @@
 
 #include <map>
 #include "../../PositioningInSpace/CoordinateVector.h"
-
+#include "../../PositioningInSpace/DirectionsPositions.h"
 namespace Discretization {
 
     class NodalCoordinates {
     public:
         NodalCoordinates();
         
-        double& operator()(unsigned i);
-        
-        double& operator()(CoordinateType type, unsigned i);
-
         const double& operator()(unsigned i) const;
         
         const double& operator()(CoordinateType type, unsigned i) const;
@@ -32,19 +28,14 @@ namespace Discretization {
         
         //Adds a coordinate set the node coordinate vector map.
         void addPositionVector(CoordinateType type);
-
-        //Adds a coordinate set the node coordinate vector map.
-        //The coordinates can be natural, parametric or template.
-        //Initiated with NaN values.
-        void setPositionVector(CoordinateType type);
-
+        
         //Replaces the coordinate set of the input type with the input coordinate vector.
         //The coordinates can be natural, parametric or template.
-        void changePositionVector(vector<double> positionVector, CoordinateType type);
+        void setPositionVector(vector<double> positionVector, CoordinateType type);
 
         //Replaces the Natural Coordinate set of the input type with the input coordinate vector.
         //The coordinates can be natural, parametric or template.
-        void changePositionVector(vector<double> positionVector);
+        void setPositionVector(vector<double> positionVector);
 
         //Removes the input coordinate set from the node coordinate vector map.
         void removePositionVector(CoordinateType type);        

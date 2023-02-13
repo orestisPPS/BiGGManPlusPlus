@@ -11,7 +11,7 @@ namespace MathematicalProblem {
                                                                        map<Position,list<BoundaryConditions::BoundaryCondition*>> *bcs,
                                                                        map<int*,double>* domainIC,
                                                                        list<DegreeOfFreedom*> *dof,
-                                                                       PhysicalSpaceEntity *space){
+                                                                       SpaceEntityType *space){
         pde = pde;
         boundaryConditions = bcs;
         initialCondition = nullptr;

@@ -11,12 +11,12 @@ namespace MathematicalProblem{
         SteadyStateMathematicalProblem(PartialDifferentialEquation *pde,
                                        map<Position,list<BoundaryConditions::BoundaryCondition*>> *bcs,
                                        list<DegreeOfFreedom*> *dof,
-                                       PhysicalSpaceEntity *space);
+                                       SpaceEntityType *space);
         ~SteadyStateMathematicalProblem();
         PartialDifferentialEquation *pde;
         map<Position,list<BoundaryConditions::BoundaryCondition*>> *boundaryConditions;
         list<DegreeOfFreedom*> *degreesOfFreedom;
-        PhysicalSpaceEntity *space;
+        SpaceEntityType *space;
     };
 }
 

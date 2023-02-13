@@ -13,14 +13,14 @@ namespace MathematicalProblem {
                                      map<Position,list<BoundaryConditions::BoundaryCondition*>> *bcs,
                                      map<int*,double>* domainIC,
                                      list<DegreeOfFreedom*> *dof,
-                                     PhysicalSpaceEntity *space);
+                                     SpaceEntityType *space);
                 
         PartialDifferentialEquation *pde;
         map<Position,list<BoundaryConditions::BoundaryCondition*>> *boundaryConditions;
         double* initialCondition;
         map<int*,double>* domainInitialConditions;
         list<DegreeOfFreedom*> *degreesOfFreedom;
-        PhysicalSpaceEntity *space;
+        SpaceEntityType *space;
     };
 
 };
