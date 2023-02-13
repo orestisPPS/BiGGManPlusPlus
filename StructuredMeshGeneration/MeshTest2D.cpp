@@ -9,13 +9,13 @@ namespace StructuredMeshGenerator {
     
         MeshTest2D::MeshTest2D() {
             map<Direction, unsigned> numberOfNodes;
-            numberOfNodes[Direction::One] = 100;
-            numberOfNodes[Direction::Two] = 10;
+            numberOfNodes[Direction::One] = 5;
+            numberOfNodes[Direction::Two] = 5;
             MeshSpecs specs = MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
             auto space = (PositioningInSpace::Plane);
             auto mesh = MeshPreProcessor(specs).mesh;
             
-            for(int j = 0; j < mesh->numberOfNodesPerDirection.at(Direction::Two); j++){
+/*            for(int j = 0; j < mesh->numberOfNodesPerDirection.at(Direction::Two); j++){
                 for(int i = 0; i < mesh->numberOfNodesPerDirection.at(Direction::One); i++){
                     cout << "(i,j): (" << i <<" " << j << ")" <<  endl;
                     cout << "Global id: " << *(mesh->node(i,j)->id.global) << endl;
@@ -33,7 +33,7 @@ namespace StructuredMeshGenerator {
                     cout << "-------------" << endl;
                     
                 }
-            }
+            }*/
             
             cout << "MTSTK GMS" << endl;
             

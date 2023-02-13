@@ -33,10 +33,7 @@ namespace StructuredMeshGenerator {
         //Creates boundary nodes.
         void CreateNodesArray(SpaceEntityType space);
         
-        //Assigns global id to each node.
-        void AssignGlobalId() const;
-        
-       
+               
         //Creates boundary nodes for 1D mesh (nnOne > 0, nnTwo = 0, nnThree = 0)
         //RELATIVE : left node has id 0, right node has id nnOne - 1
         void Create1DBoundaryNodes(unsigned position) const;
@@ -60,7 +57,7 @@ namespace StructuredMeshGenerator {
         // v      ^
         // ->->->->
         void Create3DBoundaryNodes() const;
-        
+                
         //Allocates memory for boundary node.
         static Node *AllocateBoundaryNode(int boundaryId);
         
@@ -76,6 +73,14 @@ namespace StructuredMeshGenerator {
         //Allocates memory for internal node.
         static Node *AllocateInternalNode(unsigned internalId);
         
+        //Assigns global id to the nodes of a 1D mesh.        
+        void Assign1DGlobalId() const;
+        
+        //Assigns global id to the nodes of a 2D mesh.
+        void Assign2DGlobalId() const;
+        
+        //Assigns global id to the nodes of a 3D mesh.
+        void Assign3DGlobalId() const;
     };
     
 

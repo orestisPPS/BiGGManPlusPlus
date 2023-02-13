@@ -13,14 +13,13 @@ namespace StructuredMeshGenerator{
 
         auto space = FindSpaceEntityType();
         CreateNodesArray(space);
-        AssignGlobalId();
     }
     
     SpaceEntityType NodeFactory::FindSpaceEntityType() const  {
         auto space = NullSpace;
-        if (_nn2 == 0 && _nn3 == 0){
+        if (_nn2 == 1 && _nn3 == 1){
             space = Axis;
-        } else if (_nn3 == 0){
+        } else if (_nn3 == 1){
             space = Plane;
         } else {
             space = Volume;
@@ -34,16 +33,19 @@ namespace StructuredMeshGenerator{
                 nodesMatrix = new Array<Node*>(_nn1, 1);
                 Create1DBoundaryNodes(_nn1);
                 Create1DInternalNodes(_nn1);
+                Assign1DGlobalId();
                 break;
             case SpaceEntityType::Plane:
                 nodesMatrix = new Array<Node*>(_nn1, _nn2);
                 Create2DBoundaryNodes(_nn1, _nn2);
                 Create2DInternalNodes(_nn1, _nn2);
+                Assign2DGlobalId();
                 break;
             case SpaceEntityType::Volume:
                 nodesMatrix = new Array<Node*>(_nn1, _nn2, _nn3);
                 Create3DBoundaryNodes();
                 Create3DInternalNodes();
+                Assign3DGlobalId();
                 break;
             default:
                 throw runtime_error("Invalid space type");
@@ -194,16 +196,34 @@ namespace StructuredMeshGenerator{
         return node;
     }
     
-    void NodeFactory::AssignGlobalId() const {
-        unsigned id = 0;
-        for(int k = 0; k < _nn3; k++){
-            for(int j = 0; j < _nn2; j++){
-                for(int i = 0; i < _nn1; i++){
+    void NodeFactory::Assign1DGlobalId() const {
+        for (int i = 0; i < _nn1; i++){
+            (*nodesMatrix)(i)->id.global = new unsigned(i);
+        }
+    }
+    
+    void NodeFactory::Assign2DGlobalId() const {
+        auto id = 0;
+        for (int j = 0; j < _nn2; j++){
+            for (int i = 0; i < _nn1; i++){
+                //(*nodesMatrix)(i, j)->id.global = new unsigned(i + j * _nn1);
+                (*nodesMatrix)(i, j)->id.global = new unsigned(id);
+                id++;
+            }
+        }
+    }
+    
+    void NodeFactory::Assign3DGlobalId() const {
+        auto id = 0;
+        for (int k = 0; k < _nn3; k++){
+            for (int j = 0; j < _nn2; j++){
+                for (int i = 0; i < _nn1; i++){
+                    //(*nodesMatrix)(i, j, k)->id.global = new unsigned(i + j * _nn1 + k * _nn1 * _nn2);
                     (*nodesMatrix)(i, j, k)->id.global = new unsigned(id);
                     id++;
                 }
             }
         }
-        
     }
+
 } // StructuredMeshGenerator

@@ -31,11 +31,8 @@ namespace StructuredMeshGenerator{
             Assign1DCoordinates(meshSpecs);
         } else if (space == Plane) {
             Assign2DCoordinates(meshSpecs);
-        } else if (space == PositioningInSpace::Volume) {
+        } else {
             Assign3DCoordinates(meshSpecs);
-        }
-        else {
-            throw std::invalid_argument("Invalid space entity type");
         }
     }
     
@@ -92,9 +89,9 @@ namespace StructuredMeshGenerator{
     
     SpaceEntityType MeshPreProcessor::calculateSpaceEntityType(MeshSpecs &meshSpecs) {
         auto space = NullSpace;
-        if (meshSpecs.nodesPerDirection[Two]== 0 && meshSpecs.nodesPerDirection[Three] == 0){
+        if (meshSpecs.nodesPerDirection[Two]== 1 && meshSpecs.nodesPerDirection[Three] == 1){
             space = Axis;
-        } else if (meshSpecs.nodesPerDirection[Three] == 0){
+        } else if (meshSpecs.nodesPerDirection[Three] == 1){
             space = Plane;
         } else {
             space = Volume;
@@ -103,7 +100,4 @@ namespace StructuredMeshGenerator{
     }
 
 }// StructuredMeshGenerator
-/*    
-    void MeshPreProcessor::CalculateMeshMetrics() {
-        throw runtime_error("Not Implemented!");
-    }*/
+
