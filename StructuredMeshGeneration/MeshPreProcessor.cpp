@@ -1,4 +1,3 @@
-/*
 //
 // Created by hal9000 on 12/17/22.
 //
@@ -42,7 +41,7 @@ namespace StructuredMeshGenerator{
     
     void MeshPreProcessor::Assign1DCoordinates(MeshSpecs &meshSpecs) const {
         for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
-            mesh->node(i)->coordinates.addPositionVector({static_cast<double>(i)}, Natural);
+            mesh->node(i)->coordinates.addPositionVector(Natural);
             mesh->node(i)->coordinates.setPositionVector({static_cast<double>(i)}, Parametric);
             mesh->node(i)->coordinates.setPositionVector({static_cast<double>(i) * meshSpecs.templateStepOne}, Template);
         }
@@ -53,20 +52,18 @@ namespace StructuredMeshGenerator{
             for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
                 
                 // Natural coordinates
-                mesh->node(i, j)->setPositionVector(Natural);
+                mesh->node(i, j)->coordinates.addPositionVector(Natural);
                 // Parametric coordinates
-                mesh->node(i, j)->setPositionVector({static_cast<double>(i), static_cast<double>(j)}, Parametric);
+                mesh->node(i, j)->coordinates.addPositionVector({static_cast<double>(i), static_cast<double>(j)}, Parametric);
                 // Template coordinates
                 vector<double> templateCoord = {static_cast<double>(i) * meshSpecs.templateStepOne,
                                                 static_cast<double>(j) * meshSpecs.templateStepTwo};
                 // Rotate 
-                templateCoord = Transformations::rotatePlane(templateCoord, meshSpecs.templateRotAngleOne, space.type());
+                Transformations::rotate(templateCoord, meshSpecs.templateRotAngleOne);
                 // Shear
-                templateCoord = Transformations::shearInPlane(templateCoord, meshSpecs.templateShearOne,meshSpecs.templateShearTwo, space.type());
-                
-                templateCoord = Transformations::translate(templateCoord, 1);
-                
-                mesh->node(i, j)->setPositionVector(templateCoord, Template);
+                Transformations::shear(templateCoord, meshSpecs.templateShearOne,meshSpecs.templateShearTwo);
+
+                mesh->node(i, j)->coordinates.setPositionVector(templateCoord, Template);
             }   
         }
     }
@@ -76,23 +73,24 @@ namespace StructuredMeshGenerator{
             for (unsigned j = 0; j < mesh->numberOfNodesPerDirection.at(Two); ++j) {
                 for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
                     // Natural coordinates
-                    mesh->node(i, j, k)->setPositionVector(Natural);
+                    mesh->node(i, j, k)->coordinates.addPositionVector(Natural);
                     // Parametric coordinates
-                    mesh->node(i, j, k)->setPositionVector({static_cast<double>(i), static_cast<double>(j), static_cast<double>(k)}, Parametric);
+                    mesh->node(i, j, k)->coordinates.addPositionVector(
+                            {static_cast<double>(i), static_cast<double>(j), static_cast<double>(k)}, Parametric);
                     // Template coordinates
                     vector<double> templateCoord = {static_cast<double>(i) * meshSpecs.templateStepOne,
                                                     static_cast<double>(j) * meshSpecs.templateStepTwo,
                                                     static_cast<double>(k) * meshSpecs.templateStepThree};
                     // Rotate 
-                    templateCoord = Transformations::rotatePlane(templateCoord, meshSpecs.templateRotAngleOne, space.type());
+                    Transformations::rotate(templateCoord, meshSpecs.templateRotAngleOne);
                     // Shear
-                    templateCoord = Transformations::shearInPlane(templateCoord, meshSpecs.templateShearOne,meshSpecs.templateShearTwo, space.type());
+                    Transformations::shear(templateCoord, meshSpecs.templateShearOne,meshSpecs.templateShearTwo);
                 }
             }
         }
     }
     
-    SpaceEntityType MeshPreProcessor::calculateSpaceEntityType(MeshSpecs &meshSpecs) const {
+    SpaceEntityType MeshPreProcessor::calculateSpaceEntityType(MeshSpecs &meshSpecs) {
         auto space = NullSpace;
         if (meshSpecs.nodesPerDirection[Two]== 0 && meshSpecs.nodesPerDirection[Three] == 0){
             space = Axis;
@@ -102,11 +100,10 @@ namespace StructuredMeshGenerator{
             space = Volume;
         }
         return space;
-        }
-
     }
-    
+
+}// StructuredMeshGenerator
+/*    
     void MeshPreProcessor::CalculateMeshMetrics() {
         throw runtime_error("Not Implemented!");
-    }
-}// StructuredMeshGenerator*/
+    }*/

@@ -9,6 +9,8 @@ namespace StructuredMeshGenerator {
         MeshSpecs::MeshSpecs(map<Direction, unsigned> &nodesPerDirection,
                             double templateStepOne) {
             this->nodesPerDirection = nodesPerDirection;
+            nodesPerDirection[Direction::Two] = 1;
+            nodesPerDirection[Direction::Three] = 1;
             this->templateStepOne = templateStepOne;
             this->templateStepTwo = 0;
             this->templateStepThree = 0;
@@ -26,6 +28,7 @@ namespace StructuredMeshGenerator {
                             double templateRotAngle,
                             double templateShearOne, double templateShearTwo) {
             this->nodesPerDirection = nodesPerDirection;
+            nodesPerDirection[Direction::Three] = 1;
             this->templateStepOne = templateStepOne;
             this->templateStepTwo = templateStepTwo;
             this->templateStepThree = 0;
