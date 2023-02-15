@@ -21,20 +21,20 @@ namespace BoundaryConditions {
         //    
         //    std::cout << (*firstBCBoi)(*testVector) << std::endl;
         
-        BoundaryCondition(function<double (vector<double>)> BCFunction);
+        explicit BoundaryCondition(function<double (vector<double>*)> BCFunction);
 
-        BoundaryCondition(map<Direction, function<double (vector<double>)>> directionalBCFunction);
-
-        ~BoundaryCondition();
+        explicit BoundaryCondition(map<Direction, function<double (vector<double>*)>> directionalBCFunction);
         
         double valueAt(vector<double> *coordinates);
         
         double valueAt(Direction direction, vector<double> *coordinates);
 
     private:
-        function<double (vector<double>)> _boundaryConditionFunction;
+        function<double (vector<double>*)> _boundaryConditionFunction;
 
-        map<Direction, function<double (vector<double>)>> _directionalBoundaryConditionFunction;
+        map<Direction, function<double (vector<double>*)>> _directionalBoundaryConditionFunction;
+        
+        void _checkDirectionalBoundaryConditionFunction();
     };
     
 } // BoundaryConditions
