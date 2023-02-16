@@ -1,34 +1,30 @@
 //
-// Created by hal9000 on 11/29/22.
+// Created by hal9000 on 2/16/23.
 //
-
+#include <stdexcept>
 #include "BoundaryCondition.h"
-#include <limits>
-#include <iostream>
-#include <utility>
 
 namespace BoundaryConditions {
-    
-    BoundaryCondition::BoundaryCondition(function<double(vector<double>*)> BCFunction) : 
-    _boundaryConditionFunction(std::move(BCFunction)){
+    BoundaryCondition::BoundaryCondition(function<double(vector<double>*)> BCFunction) :
+            _boundaryConditionFunction(std::move(BCFunction)){
     }
-    
+
     BoundaryCondition::BoundaryCondition(map<Direction, function<double(vector<double>*)>> directionalBCFunction) :
-    _directionalBoundaryConditionFunction(std::move(directionalBCFunction)) {
+            _directionalBoundaryConditionFunction(std::move(directionalBCFunction)) {
+        _checkDirectionalBoundaryConditionFunction();
     }
-    
+
     double BoundaryCondition::valueAt(vector<double> *x) {
         if (x == nullptr)
-            throw std::invalid_argument("Input is a null pointer.");
-        
+            throw std::invalid_argument("Coordinates cannot be null.");
         else
             return _boundaryConditionFunction(x);
     }
-    
+
     double BoundaryCondition::valueAt(Direction direction, vector<double> *x) {
         return _directionalBoundaryConditionFunction.at(direction)(x);
-    }   
-    
+    }
+
     void BoundaryCondition::_checkDirectionalBoundaryConditionFunction() {
         if (_directionalBoundaryConditionFunction.empty()) {
             throw std::invalid_argument("At least one direction must be specified for a directional boundary condition.");

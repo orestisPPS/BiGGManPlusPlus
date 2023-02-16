@@ -12,9 +12,7 @@ add_executable(untitled main.cpp
         Discretization/Node/Node.cpp
         Discretization/Node/Node.h
         Discretization/Id/DiscreteEntityId.cpp
-        Discretization/Id/DiscreteEntityId.h 
-        BoundaryConditions/BoundaryCondition.cpp
-        BoundaryConditions/BoundaryCondition.h
+        Discretization/Id/DiscreteEntityId.h
         PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp 
         PartialDifferentialEquations/SecondOrderLinearPDEProperties.h 
         PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp
@@ -48,6 +46,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.cpp
         LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.h 
         LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.cpp
-        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.h LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.h Discretization/Node/NodalCoordinates.h Discretization/Node/NodalCoordinates.cpp DegreesOfFreedom/DegreeOfFreedomID.cpp)
+        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.h LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.h Discretization/Node/NodalCoordinates.h Discretization/Node/NodalCoordinates.cpp DegreesOfFreedom/DegreeOfFreedomID.cpp FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.cpp Analysis/DiscretizePDEProperties.h BoundaryConditions/BoundaryConditionSet.h BoundaryConditions/BoundaryConditionSet.cpp BoundaryConditions/BoundaryCondition.cpp)
         
         
