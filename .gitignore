@@ -1,0 +1,41 @@
+# Compiled Object files
+*.o
+*.obj
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Executables
+*.exe
+*.out
+*.app
+
+# CMake build directory
+build/
+
+# Clion IDE files
+.idea/
+*.iml
+
+# Compiled binary files
+/bin/
+
+# Compiled libraries
+/lib/
+
+# Build files for Visual Studio
+*.sln
+*.suo
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
+# Build files for Xcode
+*.xcodeproj/
+*.xcworkspace/
+
+# Miscellaneous
+*.DS_Store
+Thumbs.db
