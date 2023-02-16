@@ -10,23 +10,17 @@ namespace MathematicalProblem {
     class TransientMathematicalProblem {
     public:
         TransientMathematicalProblem(PartialDifferentialEquation *pde,
-                                      map<Position,list<BoundaryConditions::BoundaryCondition*>> *bcs,
-                                      double* ic,
-                                      list<DegreeOfFreedom*> *dof,
-                                      CoordinateSystem coordinateSystem);
-
-        TransientMathematicalProblem(PartialDifferentialEquation *pde,
                                      map<Position,list<BoundaryConditions::BoundaryCondition*>> *bcs,
                                      map<int*,double>* domainIC,
                                      list<DegreeOfFreedom*> *dof,
-                                     CoordinateSystem coordinateSystem);
+                                     SpaceEntityType *space);
                 
         PartialDifferentialEquation *pde;
         map<Position,list<BoundaryConditions::BoundaryCondition*>> *boundaryConditions;
         double* initialCondition;
         map<int*,double>* domainInitialConditions;
         list<DegreeOfFreedom*> *degreesOfFreedom;
-        CoordinateSystem coordinateSystem;
+        SpaceEntityType *space;
     };
 
 };

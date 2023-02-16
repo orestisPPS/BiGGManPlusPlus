@@ -9,32 +9,21 @@ using namespace PartialDifferentialEquations;
 using namespace LinearAlgebra;
 #include "Discretization/Mesh/Mesh.h"
 #include "StructuredMeshGeneration/MeshTest2D.h"
+#include "BoundaryConditions/BoundaryConditionSet.h"
 #include <functional>
 #include <vector>
 #include <list>
 #include <tuple>
 int main() {
-    //auto matrix = Array<double>(2, 2); 
 
-    auto meshTest = StructuredMeshGenerator::MeshTest2D();
-    return 0;
+    //auto bcSetTest = new BoundaryConditions::BoundaryConditionSet();
+    
+    
+    cout << "MTSTK GMS" << endl;
+
 }
 
-/*    auto firstDofBoi = new DegreeOfFreedom(DOFType::Temperature, FieldType::VectorComponent1, 1.0);
-    //firstDofBoi->Print();
-    
-    //auto firstCoordinateBoi = new Coordinate(CoordinateType::NaturalCoordinateSystem, Direction::One, 1.0);
-    //firstCoordinateBoi->Print();
-    
- 
-    auto firstBCBoi = new std::function<double(vector<double>)>([](vector<double> x){return x[0] + x[1];});
-    auto testVector = new vector<double>();
-    testVector->push_back(1.0);
-    testVector->push_back(8.0);
 
-    
-    std::cout << (*firstBCBoi)(*testVector) << std::endl;
-    std::cout << "Hello, World!" << std::endl;
-       */
+
     
 

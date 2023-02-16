@@ -6,56 +6,59 @@
 #define UNTITLED_DEGREEOFFREEDOM_H
 
 #include <tuple>
+#include "DegreeOfFreedomID.h"
 using namespace std;
 
 
 namespace DegreesOfFreedom{
     enum DOFType {
-        X,
-        Y,
-        Z,
+        Position1,
+        Position2,
+        Position3,
         Temperature,
-        Pressure,
-        Displacement,
-        Rotation,
-        Velocity,
-        UnknownVariable
+        Pressure1,
+        Pressure2,
+        Pressure3,
+        Displacement1,
+        Displacement2,
+        Displacement3,
+        Rotation1,
+        Rotation2,
+        Rotation3,
+        Velocity1,
+        Velocity2,
+        Velocity3,
+        UnknownScalarVariable,
+        UnknownVectorFieldVariableComponent1,
+        UnknownVectorFieldVariableComponent2,
+        UnknownVectorFieldVariableComponent3,
     };
-
-    enum FieldType {
-        Scalar,
-        VectorComponent1,
-        VectorComponent2,
-        VectorComponent3,
-    };
+    
 
     class DegreeOfFreedom {
     public:
 
-        DegreeOfFreedom(DOFType dofType, FieldType fieldType);
+        explicit DegreeOfFreedom(DOFType dofType);
 
-        DegreeOfFreedom(DOFType dofType, FieldType fieldType, double value);
-
-        ~DegreeOfFreedom();
-
-        DOFType type();
-
-        FieldType fieldType();
-
-        double value();
-
-        void setValue(double value);
-
+        DegreeOfFreedom(DOFType dofType, double value);
+        
         bool operator == (const DegreeOfFreedom& dof);
 
         bool operator != (const DegreeOfFreedom& dof);
+        
+        DegreeOfFreedomID id;
+        
+        DOFType const &type();
+        
+        double value() const;
 
+        void setValue(double value);
+        
         void Print();
 
     private:
         DOFType _dofType;
-        FieldType _fieldType;
-        double *_value;
+        double _value;
     };
 }
 

@@ -8,15 +8,11 @@ add_executable(untitled main.cpp
         DegreesOfFreedom/DegreeOfFreedom.cpp 
         DegreesOfFreedom/DegreeOfFreedom.h
         LinearAlgebra/MatrixTest.cpp
-        LinearAlgebra/MatrixTest.h 
-        PositioningInSpace/Coordinate.cpp
-        PositioningInSpace/Coordinate.h
+        LinearAlgebra/MatrixTest.h
         Discretization/Node/Node.cpp
         Discretization/Node/Node.h
         Discretization/Id/DiscreteEntityId.cpp
-        Discretization/Id/DiscreteEntityId.h 
-        BoundaryConditions/BoundaryCondition.cpp
-        BoundaryConditions/BoundaryCondition.h
+        Discretization/Id/DiscreteEntityId.h
         PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp 
         PartialDifferentialEquations/SecondOrderLinearPDEProperties.h 
         PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp
@@ -25,7 +21,7 @@ add_executable(untitled main.cpp
         MathematicalProblem/SteadyStateMathematicalProblem.h
         MathematicalProblem/TransientMathematicalProblem.cpp
         MathematicalProblem/TransientMathematicalProblem.h
-        StructuredMeshGeneration/MeshPreProcessor2D.cpp
+        StructuredMeshGeneration/MeshPreProcessor.cpp
         StructuredMeshGeneration/MeshPreProcessor.h
         StructuredMeshGeneration/MeshSpecs.cpp
         StructuredMeshGeneration/MeshSpecs.h
@@ -34,4 +30,22 @@ add_executable(untitled main.cpp
         StructuredMeshGeneration/NodeFactory.cpp
         StructuredMeshGeneration/NodeFactory.h
         StructuredMeshGeneration/MeshTest2D.cpp
-        StructuredMeshGeneration/MeshTest2D.h LinearAlgebra/Array.h PositioningInSpace/PhysicalSpaceCharacteristics.cpp PositioningInSpace/SpaceCharacteristics.h LinearAlgebra/TransformationTensors.cpp LinearAlgebra/TransformationTensors.h Utility/Calculators.h LinearAlgebra/Transformations.cpp LinearAlgebra/Transformations.h)
+        StructuredMeshGeneration/MeshTest2D.h
+        LinearAlgebra/Array.h
+        LinearAlgebra/TransformationTensors.h 
+        Utility/Calculators.h
+        LinearAlgebra/Transformations.cpp
+        LinearAlgebra/Transformations.h
+        PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h
+        PositioningInSpace/CoordinateVector.cpp
+        PositioningInSpace/CoordinateVector.h
+        Discretization/Node/NodeNeighbourFinder.cpp
+        Discretization/Node/NodeNeighbourFinder.h
+        LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDScheme.cpp
+        LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDScheme.h
+        LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.cpp
+        LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.h 
+        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.cpp
+        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.h LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.h Discretization/Node/NodalCoordinates.h Discretization/Node/NodalCoordinates.cpp DegreesOfFreedom/DegreeOfFreedomID.cpp FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.cpp Analysis/DiscretizePDEProperties.h BoundaryConditions/BoundaryConditionSet.h BoundaryConditions/BoundaryConditionSet.cpp BoundaryConditions/BoundaryCondition.cpp)
+        
+        

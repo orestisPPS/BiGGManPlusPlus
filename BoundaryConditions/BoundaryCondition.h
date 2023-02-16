@@ -1,44 +1,36 @@
 //
-// Created by hal9000 on 11/29/22.
+// Created by hal9000 on 2/16/23.
 //
+
+#ifndef UNTITLED_BOUNDARYCONDITION_H
+#define UNTITLED_BOUNDARYCONDITION_H
 
 #include <vector>
 #include <map>
 #include <functional>
-#include <list>
 #include "../PositioningInSpace/DirectionsPositions.h"
 using namespace PositioningInSpace;
 using namespace std;
+ 
 namespace BoundaryConditions {
 
     class BoundaryCondition {
     public:
-        
-        // auto firstBCBoi = new std::function<double(vector<double>)>([](vector<double> x){return x[0] + x[1];});
-        //    auto testVector = new vector<double>();
-        //    testVector->push_back(1.0);
-        //    testVector->push_back(8.0);
-        //    
-        //    std::cout << (*firstBCBoi)(*testVector) << std::endl;
-        
-        BoundaryCondition(function<double (vector<double>)> 
-            *BCFunction);
+        explicit BoundaryCondition(function<double (vector<double>*)> BCFunction);
 
-        BoundaryCondition(list<tuple<Direction, function<double (vector<double>)>*>>
-            *directionalBCFunction);
+        explicit BoundaryCondition(map<Direction, function<double (vector<double>*)>> directionalBCFunction);
 
-        ~BoundaryCondition();
-        
-        double valueAt(vector<double> &x);
-        
-        double valueAt(Direction direction, vector<double> &x);
+        double valueAt(vector<double> *coordinates);
+
+        double valueAt(Direction direction, vector<double> *coordinates);
 
     private:
-        function<double (vector<double>)> *_boundaryConditionFunction;
-        
-        list<tuple<Direction, function<double (vector<double>)>*>> *_directionalBoundaryConditionFunction;
+        function<double (vector<double>*)> _boundaryConditionFunction;
+
+        map<Direction, function<double (vector<double>*)>> _directionalBoundaryConditionFunction;
+
+        void _checkDirectionalBoundaryConditionFunction();
     };
-    
 } // BoundaryConditions
 
-
+#endif //UNTITLED_BOUNDARYCONDITION_H

@@ -12,7 +12,7 @@ namespace Discretization
     class DiscreteEntityId {
     public:
 
-        DiscreteEntityId();
+        explicit DiscreteEntityId();
 
         ~DiscreteEntityId();
 
