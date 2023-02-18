@@ -12,13 +12,27 @@ namespace DegreesOfFreedom {
         Fixed,
         Free
     };
-    
+
     class DegreeOfFreedomID {
     public:
-        DegreeOfFreedomID();
-        unsigned int _id;
-        ConstraintType _constraintType;
+        DegreeOfFreedomID(ConstraintType type, unsigned int id);
+        
+        ~DegreeOfFreedomID();
+        
+        bool operator == (const DegreeOfFreedomID& dof) const;
+
+        bool operator != (const DegreeOfFreedomID& dof) const;
+        
+        //Pointer to the id of the degree of freedom
+        unsigned int* id;
+
+        //Constant reference to an enum that indicates whether the degree of freedom is
+        // fixed (Dirichlet BC), flux (Neumann BC), or free.
+        const ConstraintType& constraintType();
+        
     private:
+        //Enum to indicate whether the degree of freedom is fixed (Dirichlet BC), flux (Neumann BC), or free. 
+        ConstraintType _constraintType;
 
     };
     
