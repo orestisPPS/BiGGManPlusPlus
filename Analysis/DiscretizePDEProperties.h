@@ -12,17 +12,15 @@ namespace Analysis {
 
     class DiscretizePDEProperties {
     public:
-        DiscretizePDEProperties(Mesh *mesh,
-                                map<Position,list<BoundaryConditions::BoundaryCondition*>*> *boundaryConditions,
-                                list<DegreeOfFreedom*> *degreesOfFreedom);
+        DiscretizePDEProperties();
     private:
         Mesh *mesh;
         map<Position,list<BoundaryConditions::BoundaryCondition*>*> *boundaryConditions;
         list<DegreeOfFreedom*> *degreesOfFreedom;
         
-
+        list
     };
 
-} // Analysis
+} // DOFInitializer
 
 #endif //UNTITLED_DISCRETIZEPDEPROPERTIES_H
