@@ -5,4 +5,4 @@
 #include "DiscretizePDEProperties.h"
 
 namespace Analysis {
-} // Analysis
+} // DOFInitializer

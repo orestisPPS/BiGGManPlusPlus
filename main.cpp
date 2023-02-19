@@ -9,18 +9,18 @@ using namespace PartialDifferentialEquations;
 using namespace LinearAlgebra;
 #include "Discretization/Mesh/Mesh.h"
 #include "StructuredMeshGeneration/MeshTest2D.h"
-#include "BoundaryConditions/BoundaryConditionSet.h"
+#include "BoundaryConditions/DomainBoundaryConditions.h"
 #include <functional>
 #include <vector>
 #include <list>
 #include <tuple>
 int main() {
 
-    //auto bcSetTest = new BoundaryConditions::BoundaryConditionSet();
+    auto bcSetTest = new BoundaryConditions::DomainBoundaryConditions(Axis);
     
     
     cout << "MTSTK GMS" << endl;
-
+    
 }
 
 
