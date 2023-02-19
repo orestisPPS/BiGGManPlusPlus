@@ -4,18 +4,19 @@
 #pragma once
 #include "../PartialDifferentialEquations/PartialDifferentialEquation.h"
 #include "../BoundaryConditions/DomainBoundaryConditions.h"
+#include "../DegreesOfFreedom/DegreeOfFreedomTypes.h"
 
 namespace MathematicalProblem{
     class SteadyStateMathematicalProblem {
     public:
         SteadyStateMathematicalProblem(PartialDifferentialEquation* pde,
                                        DomainBoundaryConditions* bcs,
-                                       list<DegreeOfFreedom* >* dof, SpaceEntityType space);
+                                       struct Field_DOFType, SpaceEntityType space);
 
         ~SteadyStateMathematicalProblem();
         PartialDifferentialEquation* pde;
         DomainBoundaryConditions* boundaryConditions;
-        list<DegreeOfFreedom*>* degreesOfFreedom;
+        struct DegreesOfFreedom::Field_DOFType degreesOfFreedom;
         SpaceEntityType space;
     
     private:
