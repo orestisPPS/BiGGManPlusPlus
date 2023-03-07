@@ -12,15 +12,14 @@ namespace Analysis {
 
     class DOFInitializer {
     public:
-        DOFInitializer(Mesh *mesh,
-                       DomainBoundaryConditions *domainBoundaryConditions,
-                       list<DegreeOfFreedom*> *degreesOfFreedom);
-
-    list<DegreeOfFreedom*> *freeDegreesOfFreedom;
-    list<DegreeOfFreedom*> *boundaryDegreesOfFreedom;
-    list<DegreeOfFreedom*> *fixedDegreesOfFreedom;
-    list<DegreeOfFreedom*> *degreesOfFreedom;
+        DOFInitializer(Mesh *mesh,DomainBoundaryConditions *domainBoundaryConditions,struct Field_DOFType *degreesOfFreedom);
+        list<DegreeOfFreedom*> *freeDegreesOfFreedom;
+        list<DegreeOfFreedom*> *boundedDegreesOfFreedom;
+        list<DegreeOfFreedom*> *fluxDegreesOfFreedom;
         
+    private:
+        void addDOFToInternalNodes(Mesh *mesh, list<DOFType*>* degreesOfFreedom );
+        void addDOFToBoundaryNodes(Mesh *mesh, list<DOFType*>* degreesOfFreedom );
     };
 
 } // DOFInitializer

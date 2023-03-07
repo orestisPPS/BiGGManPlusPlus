@@ -28,10 +28,12 @@ namespace Discretization
         Discretization::DiscreteEntityId id;
                 
         NodalCoordinates coordinates;
+
+        vector <DegreeOfFreedom*> *_degreesOfFreedom;
         
     private:
                
-        list <DegreeOfFreedom*> *_degreesOfFreedom;
+
     };
 }
 

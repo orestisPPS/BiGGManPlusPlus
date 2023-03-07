@@ -15,7 +15,7 @@ namespace DegreesOfFreedom {
 
     class DegreeOfFreedomID {
     public:
-        DegreeOfFreedomID(ConstraintType type, unsigned int id);
+        explicit DegreeOfFreedomID(ConstraintType type);
         
         ~DegreeOfFreedomID();
         

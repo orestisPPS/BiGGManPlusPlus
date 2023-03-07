@@ -11,7 +11,7 @@ namespace MathematicalProblem{
     public:
         SteadyStateMathematicalProblem(PartialDifferentialEquation* pde,
                                        DomainBoundaryConditions* bcs,
-                                       struct Field_DOFType, SpaceEntityType space);
+                                       struct Field_DOFType* dofs);
 
         ~SteadyStateMathematicalProblem();
         PartialDifferentialEquation* pde;

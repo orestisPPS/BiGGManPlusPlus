@@ -10,6 +10,7 @@ using namespace LinearAlgebra;
 #include "Discretization/Mesh/Mesh.h"
 #include "StructuredMeshGeneration/MeshTest2D.h"
 #include "BoundaryConditions/DomainBoundaryConditions.h"
+#include "DegreesOfFreedom/DegreeOfFreedomTypes.h"
 #include <functional>
 #include <vector>
 #include <list>
@@ -17,7 +18,6 @@ using namespace LinearAlgebra;
 int main() {
 
     auto bcSetTest = new BoundaryConditions::DomainBoundaryConditions(Axis);
-    
     
     cout << "MTSTK GMS" << endl;
     

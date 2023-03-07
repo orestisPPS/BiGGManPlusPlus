@@ -9,3 +9,8 @@
 4)Search for gnuplot addon
 
 5)Create Simulation Class
+
+6) About node -> dof transformation. Search all domain boundaries nodes and the corresponding boundary conditions. Then, create a new dof for each no
+    if it is dirichlet assign the value to the dof else assign the dof to the free nodes list.
+    Then iterate over all the internal nodes and assign their dofs to the free nodes list.
+    Finally organize the list of the free dofs with respect to the node global id.

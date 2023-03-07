@@ -6,7 +6,9 @@
 
 namespace DegreesOfFreedom {
     
-    DegreeOfFreedomID::DegreeOfFreedomID(ConstraintType type, unsigned int id) : _constraintType(type), id(new unsigned int(id)) { }
+    DegreeOfFreedomID::DegreeOfFreedomID(ConstraintType type) : _constraintType(type){
+        id = new unsigned int;
+    }
     
     DegreeOfFreedomID::~DegreeOfFreedomID() {
         delete id;

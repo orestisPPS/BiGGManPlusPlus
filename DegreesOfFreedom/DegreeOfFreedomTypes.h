@@ -7,6 +7,7 @@
 
 #include <map>
 #include <list>
+#include <vector>
 #include "DegreeOfFreedom.h"
 
 
@@ -37,154 +38,163 @@ namespace DegreesOfFreedom {
     };
     
     struct Field_DOFType{
-        enum class components;
-        unsigned int numberOfComponents;
+        public:
+            std::vector<DOFType*>* DegreesOfFreedom;
+            void deallocate(){
+                for (auto dof : *DegreesOfFreedom){
+                    delete dof;
+                    dof = nullptr;
+                }
+                delete DegreesOfFreedom;
+                DegreesOfFreedom = nullptr;
+            }
     };
     
     // Contains the u component of the [1x1] displacement vector field
     struct DisplacementVectorField1D_DOFType : public Field_DOFType {
-        enum class components {
-            Displacement1 = static_cast<int>(DOFType::Displacement1),
-        };
-        DisplacementVectorField1D_DOFType() : Field_DOFType{1} {
-        //TODO: Add a check to make sure that the number of components is 1    
+        DisplacementVectorField1D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(1);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::Displacement1);
         }
     };
 
     // Contains the u and v components of the [2x1] displacement vector field
     // And the θ rotation (around axis 3)
     struct DisplacementVectorField2D_DOFType : public Field_DOFType {
-        enum class components {
-            Displacement1 = static_cast<int>(DOFType::Displacement1),
-            Displacement2 = static_cast<int>(DOFType::Displacement2),
-            Rotation1 = static_cast<int>(DOFType::Rotation1),
-        };
-        DisplacementVectorField2D_DOFType() : Field_DOFType{3} {
+        DisplacementVectorField2D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(3);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::Displacement1);
+            DegreesOfFreedom->at(1) =new DOFType(DOFType::Displacement2);
+            DegreesOfFreedom->at(2) =new DOFType(DOFType::Rotation1);
         }
     };
 
     // Contains the u, v, and w components of the [3x1] displacement vector field
     // And the θ, ϕ, and ψ rotations (around axis 3, 2, and 1 respectively)
     struct DisplacementVectorField3D_DOFType : public Field_DOFType {
-        enum class components {
-            Displacement1 = static_cast<int>(DOFType::Displacement1),
-            Displacement2 = static_cast<int>(DOFType::Displacement2),
-            Displacement3 = static_cast<int>(DOFType::Displacement3),
-            Rotation1 = static_cast<int>(DOFType::Rotation1),
-            Rotation2 = static_cast<int>(DOFType::Rotation2),
-            Rotation3 = static_cast<int>(DOFType::Rotation3),
-        };
-        DisplacementVectorField3D_DOFType() : Field_DOFType{6} {
+        DisplacementVectorField3D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(6);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::Displacement1);
+            DegreesOfFreedom->at(1) =new DOFType(DOFType::Displacement2);
+            DegreesOfFreedom->at(2) =new DOFType(DOFType::Displacement3);
+            DegreesOfFreedom->at(3) =new DOFType(DOFType::Rotation1);
+            DegreesOfFreedom->at(4) =new DOFType(DOFType::Rotation2);
+            DegreesOfFreedom->at(5) =new DOFType(DOFType::Rotation3);
         }
     };
     
 
     // Contains the scalar temperature T
     struct TemperatureScalar_DOFType : public Field_DOFType {
-        enum class components {
-            Temperature = static_cast<int>(DOFType::Temperature),
-        };
-        TemperatureScalar_DOFType() : Field_DOFType{1} {
+        TemperatureScalar_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(1);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::Temperature);
         }
     };
 
     // Contains the u component of the [1x1] velocity vector field
     struct VelocityVectorField1D_DOFType : public Field_DOFType {
-        enum class components {
-            Velocity1 = static_cast<int>(DOFType::Velocity1),
-        };
-        VelocityVectorField1D_DOFType() : Field_DOFType{1} {
+        VelocityVectorField1D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(1);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::Velocity1);
         }
     };
 
     // Contains the u and v components of the [2x1] velocity vector field
     struct VelocityVectorField2D_DOFType : public Field_DOFType {
-        enum class components {
-            Velocity1 = static_cast<int>(DOFType::Velocity1),
-            Velocity2 = static_cast<int>(DOFType::Velocity2),
-        };
-        VelocityVectorField2D_DOFType() : Field_DOFType{2} {
+        VelocityVectorField2D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(2);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::Velocity1);
+            DegreesOfFreedom->at(1) =new DOFType(DOFType::Velocity2);
         }
     };
     
     // Contains the u, v, and w components of the [3x1] velocity vector field
     struct VelocityVectorField3D_DOFType : public Field_DOFType {
-        enum class components {
-            Velocity1 = static_cast<int>(DOFType::Velocity1),
-            Velocity2 = static_cast<int>(DOFType::Velocity2),
-            Velocity3 = static_cast<int>(DOFType::Velocity3),
-        };
-        VelocityVectorField3D_DOFType() : Field_DOFType{3} {
+        VelocityVectorField3D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(3);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::Velocity1);
+            DegreesOfFreedom->at(1) =new DOFType(DOFType::Velocity2);
+            DegreesOfFreedom->at(2) =new DOFType(DOFType::Velocity3);
         }
     };
 
 
     // Contains the p1 component of the [1x1] pressure vector field
     struct PressureVectorField1D_DOFType : public Field_DOFType {
-        enum class components {
-            Pressure1 = static_cast<int>(DOFType::Pressure1),
-        };
-        PressureVectorField1D_DOFType() : Field_DOFType{1} {
+        PressureVectorField1D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(1);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::Pressure1);
         }
     };
 
     // Contains the p1 and p2 components of the [2x1] pressure vector field
     struct PressureVectorField2D_DOFType : public Field_DOFType {
-        enum class components {
-            Pressure1 = static_cast<int>(DOFType::Pressure1),
-            Pressure2 = static_cast<int>(DOFType::Pressure2),
-        };
-        PressureVectorField2D_DOFType() : Field_DOFType{2} {
+        PressureVectorField2D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(2);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::Pressure1);
+            DegreesOfFreedom->at(1) =new DOFType(DOFType::Pressure2);
         }
     };
 
     // Contains the p1, p2, and p3 components of the [3x1] pressure vector field
     struct PressureVectorField3D_DOFType : public Field_DOFType {
-        enum class components {
-            Pressure1 = static_cast<int>(DOFType::Pressure1),
-            Pressure2 = static_cast<int>(DOFType::Pressure2),
-            Pressure3 = static_cast<int>(DOFType::Pressure3),
-        };
-        PressureVectorField3D_DOFType() : Field_DOFType{3} {
+        PressureVectorField3D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(3);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::Pressure1);
+            DegreesOfFreedom->at(1) =new DOFType(DOFType::Pressure2);
+            DegreesOfFreedom->at(2) =new DOFType(DOFType::Pressure3);
         }
     };
 
     // Contains the scalar unknown variable
     struct UnknownScalar_DOFType : public Field_DOFType {
-        enum class components {
-            UnknownScalarVariable = static_cast<int>(DOFType::UnknownScalarVariable),
-        };
-        UnknownScalar_DOFType() : Field_DOFType{1} {
+        UnknownScalar_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(1);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::UnknownScalarVariable);
         }
     };
 
     // Contains the u component of the [1x1] unknown vector field
     struct UnknownVectorField1D_DOFType : public Field_DOFType {
-        enum class components {
-            UnknownVectorFieldVariableComponent1 = static_cast<int>(DOFType::UnknownVectorFieldVariableComponent1),
-        };
-        UnknownVectorField1D_DOFType() : Field_DOFType{1} {
+        UnknownVectorField1D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(1);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::UnknownVectorFieldVariableComponent1);
         }
     };
 
     // Contains the u and v components of the [2x1] unknown vector field
     struct UnknownVectorField2D_DOFType : public Field_DOFType {
-        enum class components {
-            UnknownVectorFieldVariableComponent1 = static_cast<int>(DOFType::UnknownVectorFieldVariableComponent1),
-            UnknownVectorFieldVariableComponent2 = static_cast<int>(DOFType::UnknownVectorFieldVariableComponent2),
-        };
-        UnknownVectorField2D_DOFType() : Field_DOFType{2} {
+        UnknownVectorField2D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(2);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::UnknownVectorFieldVariableComponent1);
+            DegreesOfFreedom->at(1) =new DOFType(DOFType::UnknownVectorFieldVariableComponent2);
         }
     };
 
     // Contains the u, v, and w components of the [3x1] unknown vector field
     struct UnknownVectorField3D_DOFType : public Field_DOFType {
-        enum class components {
-            UnknownVectorFieldVariableComponent1 = static_cast<int>(DOFType::UnknownVectorFieldVariableComponent1),
-            UnknownVectorFieldVariableComponent2 = static_cast<int>(DOFType::UnknownVectorFieldVariableComponent2),
-            UnknownVectorFieldVariableComponent3 = static_cast<int>(DOFType::UnknownVectorFieldVariableComponent3),
-        };
-        UnknownVectorField3D_DOFType() : Field_DOFType{3} {
+        UnknownVectorField3D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(3);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::UnknownVectorFieldVariableComponent1);
+            DegreesOfFreedom->at(1) =new DOFType(DOFType::UnknownVectorFieldVariableComponent2);
+            DegreesOfFreedom->at(2) =new DOFType(DOFType::UnknownVectorFieldVariableComponent3);
+        }
+    };
+    // Coupled thermo-mechanical field
+    // Contains the u, v, and w components of the [3x1] displacement vector,
+    // the θ, ϕ, and ψ rotations (around axis 3, 2, and 1 respectively),
+    // and the scalar temperature T
+    struct DisplacementVectorField3DTemperature_DOFType : public Field_DOFType {
+        DisplacementVectorField3DTemperature_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(7);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::Displacement1);
+            DegreesOfFreedom->at(1) =new DOFType(DOFType::Displacement2);
+            DegreesOfFreedom->at(2) =new DOFType(DOFType::Displacement3);
+            DegreesOfFreedom->at(3) =new DOFType(DOFType::Rotation1);
+            DegreesOfFreedom->at(4) =new DOFType(DOFType::Rotation2);
+            DegreesOfFreedom->at(5) =new DOFType(DOFType::Rotation3);
+            DegreesOfFreedom->at(6) =new DOFType(DOFType::Temperature);
         }
     };
     
