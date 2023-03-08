@@ -40,6 +40,7 @@ namespace DegreesOfFreedom {
     struct Field_DOFType{
         public:
             std::vector<DOFType*>* DegreesOfFreedom;
+            
             void deallocate(){
                 for (auto dof : *DegreesOfFreedom){
                     delete dof;

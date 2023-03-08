@@ -12,15 +12,13 @@ namespace MathematicalProblem {
         TransientMathematicalProblem(PartialDifferentialEquation *pde,
                                      map<Position,list<BoundaryConditions::BoundaryCondition*>> *bcs,
                                      map<int*,double>* domainIC,
-                                     list<DegreeOfFreedom*> *dof,
-                                     SpaceEntityType *space);
+                                     struct Field_DOFType *degreesOfFreedom);
                 
         PartialDifferentialEquation *pde;
         map<Position,list<BoundaryConditions::BoundaryCondition*>> *boundaryConditions;
         double* initialCondition;
         map<int*,double>* domainInitialConditions;
-        list<DegreeOfFreedom*> *degreesOfFreedom;
-        SpaceEntityType *space;
+        struct Field_DOFType *degreesOfFreedom
     };
 
 };

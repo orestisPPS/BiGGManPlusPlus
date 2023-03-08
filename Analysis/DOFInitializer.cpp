@@ -6,45 +6,47 @@
 
 namespace Analysis {
     
-    DOFInitializer::DOFInitializer(Mesh *mesh,
-                                   DomainBoundaryConditions *domainBoundaryConditions,
-                                   struct Field_DOFType degreesOfFreedom){
+    DOFInitializer::DOFInitializer(Mesh* mesh,DomainBoundaryConditions* domainBoundaryConditions, Field_DOFType* degreesOfFreedom) {
         freeDegreesOfFreedom = new list<DegreeOfFreedom*>();
         boundedDegreesOfFreedom = new list<DegreeOfFreedom*>();
         fluxDegreesOfFreedom = new list<DegreeOfFreedom*>();
-        
-        auto dofStruct = new struct DisplacementVectorField3D_DOFType();
-        auto lol = dofStruct->DegreesOfFreedom->at(0);
-        dofStruct->deallocate();
-        
-        auto lel = new list<DOFType*> {lol};
-        addDOFToInternalNodes(mesh, lel);
-        
-        void lil(Mesh *mesh, list<DOFType*> degreesOfFreedom );
+        totalDegreesOfFreedom = new list<DegreeOfFreedom*>();
+        initiateInternalNodeDOFs(mesh, degreesOfFreedom);
+        initiateBoundaryNodeDOFs(mesh, degreesOfFreedom, domainBoundaryConditions);
     }
     
-    void DOFInitializer::addDOFToInternalNodes(Mesh *mesh, list<DOFType*>* degreesOfFreedom ){
-        for (int i = 0; i < degreesOfFreedom.size(); ++i) {
-            for (int k = 0; k < mesh->numberOfNodesPerDirection[PositioningInSpace::Three]; ++k) {
-                for (int j = 0; j < mesh->numberOfNodesPerDirection[PositioningInSpace::Two]; ++j) {
-                    for (int l = 0; l < mesh->numberOfNodesPerDirection[PositioningInSpace::One]; ++l) {
-                        switch (mesh->space()) {
-                            case Axis:
-                                break;  
-                                
-                            case Plane:
-                                break;
-                            
-                            case Volume:
-                                break;
-                            
-                        }
+    void DOFInitializer::initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType *degreesOfFreedom) {
+        
+        //March through the mesh nodes
+        for (int k = 1; k < mesh->numberOfNodesPerDirection[PositioningInSpace::Three] - 1; k++)
+            for (int j = 1; j < mesh->numberOfNodesPerDirection[PositioningInSpace::Two] - 1; j++)
+                for (int i = 1; i < mesh->numberOfNodesPerDirection[PositioningInSpace::One] - 1; i++) {
+                    
+                    //March through the degrees of freedom
+                    for (int l = 0; l < degreesOfFreedom->DegreesOfFreedom->size(); ++l) {
+                       auto nodePtr = mesh->node(i, j, k);
+                       //dereference the pointer to the DOFType
+                       
+                          //auto dofTypePtr = degreesOfFreedom->DegreesOfFreedom->at(l);    
+
                     }
+
+                            
+                        
                 }
-                
-            }
-        }
+
+                    
+                    //
     }
+
+    void DOFInitializer::initiateBoundaryNodeDOFs(Mesh *mesh, Field_DOFType *degreesOfFreedom,
+                                                  DomainBoundaryConditions *domainBoundaryConditions) {
+
+    }
+        
+}
+    
+
 
     
     

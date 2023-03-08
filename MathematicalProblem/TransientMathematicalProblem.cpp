@@ -7,18 +7,14 @@
 namespace MathematicalProblem {
     
     
-    TransientMathematicalProblem :: TransientMathematicalProblem(PartialDifferentialEquation *pde,
-                                                                       map<Position,list<BoundaryConditions::BoundaryCondition*>> *bcs,
-                                                                       map<int*,double>* domainIC,
-                                                                       list<DegreeOfFreedom*> *dof,
-                                                                       SpaceEntityType *space){
-        pde = pde;
-        boundaryConditions = bcs;
-        initialCondition = nullptr;
-        domainInitialConditions = domainIC;
-        degreesOfFreedom = dof;
-        this->space = space;
-    }
+    TransientMathematicalProblem :: TransientMathematicalProblem(
+            PartialDifferentialEquation *pde,
+            map<Position,list<BoundaryConditions::BoundaryCondition*>> *bcs,map<int*,double>* domainIC,
+            struct Field_DOFType *degreesOfFreedom) :
+                                pde(pde), boundaryConditions(bcs),
+                                initialCondition(nullptr),
+                                domainInitialConditions(domainIC),
+                                degreesOfFreedom(degreesOfFreedom) { }
 
 
 }// MathematicalProblem

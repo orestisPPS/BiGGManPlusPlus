@@ -11,17 +11,12 @@ namespace MathematicalProblem{
     public:
         SteadyStateMathematicalProblem(PartialDifferentialEquation* pde,
                                        DomainBoundaryConditions* bcs,
-                                       struct Field_DOFType* dofs);
+                                       struct Field_DOFType* degreesOfFreedom);
 
         ~SteadyStateMathematicalProblem();
         PartialDifferentialEquation* pde;
         DomainBoundaryConditions* boundaryConditions;
-        struct DegreesOfFreedom::Field_DOFType degreesOfFreedom;
-        SpaceEntityType space;
-    
-    private:
-        void checkDegreesOfFreedom() const;
-        void checkSpaceEntityType() const;
+        Field_DOFType *degreesOfFreedom;
     };
     
 }

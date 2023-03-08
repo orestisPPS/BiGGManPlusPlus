@@ -7,11 +7,9 @@ namespace MathematicalProblem{
     
     SteadyStateMathematicalProblem::SteadyStateMathematicalProblem(PartialDifferentialEquation* pde,
                                                                    DomainBoundaryConditions* bcs,
-                                                                   list<DegreeOfFreedom*>* dof,
-                                                                   SpaceEntityType space)
-    : pde(pde), boundaryConditions(bcs), degreesOfFreedom(dof), space(space){
-        checkDegreesOfFreedom();
-        checkSpaceEntityType();
+                                                                   struct Field_DOFType *degreesOfFreedom)
+    : pde(pde), boundaryConditions(bcs), degreesOfFreedom(degreesOfFreedom){
+
     }
 
     SteadyStateMathematicalProblem::~SteadyStateMathematicalProblem() {
@@ -22,15 +20,5 @@ namespace MathematicalProblem{
         boundaryConditions = nullptr;
         degreesOfFreedom = nullptr;
     }
-        
-    void SteadyStateMathematicalProblem::checkDegreesOfFreedom() const {
-        //TODO : Implement this method
-    }
     
-    void SteadyStateMathematicalProblem::checkSpaceEntityType() const {
-        if (space == PositioningInSpace::NullSpace){
-            throw invalid_argument("The void inside you cannot be solved. Like this PDE you try to solve on a"
-                                   "null space.");
-        }
-    }
 }
