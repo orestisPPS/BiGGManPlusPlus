@@ -18,7 +18,7 @@ namespace MathematicalProblem {
         map<Position,list<BoundaryConditions::BoundaryCondition*>> *boundaryConditions;
         double* initialCondition;
         map<int*,double>* domainInitialConditions;
-        struct Field_DOFType *degreesOfFreedom
+        struct Field_DOFType *degreesOfFreedom;
     };
 
 };
