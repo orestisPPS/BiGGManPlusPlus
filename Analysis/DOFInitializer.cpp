@@ -43,5 +43,4 @@ namespace Analysis {
                                                   DomainBoundaryConditions *domainBoundaryConditions) {
 
     }
-    
-} // DOFInitializer
+}

@@ -7,7 +7,7 @@
 
 namespace DegreesOfFreedom{
 
-    DegreeOfFreedom::DegreeOfFreedom(DOFType dofType, Node* parentNode, bool isConstrained) :
+    DegreeOfFreedom::DegreeOfFreedom(DOFType* dofType, Node* parentNode, bool isConstrained) :
             _dofType(dofType), parentNode(parentNode) ,_value(numeric_limits<double>::quiet_NaN()) {
         if (isConstrained)
             id = new DegreeOfFreedomID(ConstraintType::Fixed);
@@ -16,7 +16,7 @@ namespace DegreesOfFreedom{
             
     }
 
-    DegreeOfFreedom::DegreeOfFreedom(DOFType dofType, double value, Node* parentNode, bool isConstrained) :
+    DegreeOfFreedom::DegreeOfFreedom(DOFType* dofType, double value, Node* parentNode, bool isConstrained) :
             _dofType(dofType), _value(value) , parentNode(parentNode) {
         if (isConstrained)
             id = new DegreeOfFreedomID(ConstraintType::Fixed);
@@ -42,8 +42,8 @@ namespace DegreesOfFreedom{
         return !(*this == dof);
     }
 
-    DOFType DegreeOfFreedom::type() {
-        return _dofType;
+    DOFType const &DegreeOfFreedom::type() {
+        return *(_dofType);
     }
 
 
