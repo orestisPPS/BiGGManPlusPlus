@@ -7,11 +7,11 @@
 
 #include <tuple>
 #include <iostream>
-#include "limits"
 #include "DegreeOfFreedomID.h"
 #include "DegreeOfFreedomTypes.h"
 #include "../Discretization/Node/Node.h"
 using namespace Discretization;
+using namespace DegreesOfFreedom;
 
 using namespace std;
 using namespace DegreesOfFreedom;
@@ -23,11 +23,11 @@ namespace DegreesOfFreedom{
         public:
             //Use this constructor when the degree of freedom is not fixed. DOFs with constraint type free or flux
             // will be initialized with a value of NaN.
-            DegreeOfFreedom(DOFType* dofType, Node* parentNode, bool isConstrained);
+            DegreeOfFreedom(DegreesOfFreedom::DOFType dofType, Node* parentNode, bool isConstrained);
     
             //Use this constructor when the degree of freedom is fixed. Only DOFs with constraint type fixed
             // can be initialized with this constructor.
-            DegreeOfFreedom(DOFType* dofType, double value, Node* parentNode, bool isConstrained);
+            DegreeOfFreedom(DegreesOfFreedom::DOFType dofType, double value, Node* parentNode, bool isConstrained);
     
             ~DegreeOfFreedom();
     
@@ -44,7 +44,7 @@ namespace DegreesOfFreedom{
     
             //Constant reference to an enum that indicates the type of degree of freedom
             //Scalar (Temperature, concentration, etc.) or Vector component (Displacement1, Velocity1, etc.)
-            DOFType const &type();
+            DOFType type();
     
             double value() const;
     
@@ -53,7 +53,7 @@ namespace DegreesOfFreedom{
             void Print();
     
         private:
-            DOFType* _dofType;
+            DOFType _dofType;
     
             double _value;
     };

@@ -16,9 +16,7 @@ namespace Analysis {
     private:
         Mesh *mesh;
         map<Position,list<BoundaryConditions::BoundaryCondition*>*> *boundaryConditions;
-        list<DegreeOfFreedom*> *degreesOfFreedom;
-        
-        list
+        //list<DegreeOfFreedom*> *degreesOfFreedom;
     };
 
 } // DOFInitializer

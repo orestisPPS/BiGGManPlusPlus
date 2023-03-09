@@ -5,16 +5,12 @@
 #ifndef UNTITLED_DEGREEOFFREEDOMTYPES_H
 #define UNTITLED_DEGREEOFFREEDOMTYPES_H
 
-#include <map>
-#include <list>
 #include <vector>
-#include "DegreeOfFreedom.h"
-
 
 
 namespace DegreesOfFreedom {
 
-    enum class DOFType {
+    enum DOFType {
         Position1,
         Position2,
         Position3,
