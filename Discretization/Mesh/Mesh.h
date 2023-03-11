@@ -11,62 +11,54 @@ using namespace LinearAlgebra;
 
 namespace Discretization {
 
-    class Mesh {
-    public:
+     class Mesh {
+     
+     public:
         //Mesh(Array<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection);
-        Mesh(Array<Node *> *nodes);
+        Mesh();
         
-        ~Mesh();
-
-        const SpaceEntityType& space();
-        
+        virtual ~Mesh();
+                
         //map<Direction, unsigned > *numberOfNodesPerDirection;
         map<Direction, unsigned > numberOfNodesPerDirection;
 
         map<Position, vector<Node*>*>* boundaryNodes;
         
         vector<Node*>* internalNodes;
-
-        const unsigned &totalNodes() const;
-
-        const unsigned &dimensions() const;
         
-        Node *node(unsigned i);
+        bool isInitialized;
 
-        Node *node(unsigned i, unsigned j);
+        //---------------Implemented parent class methods--------------
+        
+        unsigned totalNodes();
+        
+        Node* nodeFromID(unsigned ID);
+        
+        //-----------------Virtual parent class methods-----------------  
 
-        Node *node(unsigned i, unsigned j, unsigned k);
+        virtual unsigned dimensions();
         
-        Node *nodeFromID(unsigned ID);
-        
-        //Gets called by the mesh preprocessor to initiate space, numberOfNodesPerDirection, and dimensions
-        void getSpatialProperties(map<Direction, unsigned> numberOfNodesPerDirection, unsigned dimensions, unsigned totalNodes, SpaceEntityType space);
-        
-        void printMesh();
+        virtual SpaceEntityType space();
+
+        virtual Node* node(unsigned i);
     
-    private:
+        virtual Node* node(unsigned i, unsigned j);
+    
+        virtual Node* node(unsigned i, unsigned j, unsigned k);
         
-        SpaceEntityType _space;
+        virtual void printMesh();
         
-        unsigned _dimensions;
+
         
-        unsigned _totalNodes;
+     protected:
+         Array<Node *> *_nodesMatrix;
+         
+         
+         //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
+         virtual map<Position, vector<Node*>*> *addDBoundaryNodesToMap();
         
-        bool _isInitialized;
-        
-        Array<Node *> *_nodesMatrix;
-        
-        //Adds the boundary nodes of the 1D mesh to a map pointer of enum Position and vector pointers of node pointers
-        map<Position, vector<Node*>*> *add1DBoundaryNodesToMap();
-        
-        //Adds the boundary nodes of the 2D mesh to a map pointer of enum Position and vector pointers of node pointers
-        map<Position, vector<Node*>*> *add2DBoundaryNodesToMap();
-        
-        //Adds the boundary nodes of the 3D mesh to a map pointer of enum Position and vector pointers of node pointers
-        map<Position, vector<Node*>*> *add3DBoundaryNodesToMap();
-        
-        //Adds the internal nodes of the mesh to a vector pointer of node pointers
-        vector<Node*>* addInternalNodesToVector();
+         //Adds the internal nodes of the mesh to a vector pointer of node pointers
+         virtual vector<Node*>* addInternalNodesToVector();
         
     };
 }

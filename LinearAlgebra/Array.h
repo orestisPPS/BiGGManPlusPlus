@@ -114,6 +114,15 @@ namespace LinearAlgebra {
         const T& operator()(unsigned i, unsigned j, unsigned k) const {
             return _array[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k];
         }
+        
+        //->at operator
+        // Allows to set the elements of the matrix and returns a reference to the element at position (i)
+        T& at(unsigned i) {
+            if (i >= size()){
+                throw out_of_range("Index out of range");
+            }
+            return _array[i];
+        }
 
         // Overloaded assignment operator
         Array<T>& operator = (const Array<T>& matrix){

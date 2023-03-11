@@ -9,12 +9,9 @@ using namespace  Discretization;
 
 namespace Discretization {
     
-    Mesh::Mesh(Array<Node *> *nodes) {
+    Mesh::Mesh() {
         _nodesMatrix = nodes;
-        numberOfNodesPerDirection = map<Direction, unsigned>();
-        numberOfNodesPerDirection[Direction::One] = _nodesMatrix->numberOfColumns();
-        numberOfNodesPerDirection[Direction::Two] = _nodesMatrix->numberOfRows();
-        numberOfNodesPerDirection[Direction::Three] = _nodesMatrix->numberOfAisles();
+
         
         boundaryNodes = listBoundaryNodes1D();
         //nodeMap = new map<>
@@ -26,106 +23,37 @@ namespace Discretization {
         delete boundaryNodes;
         boundaryNodes = nullptr;
     }
-    const SpaceEntityType& Mesh::space() {
-        if (numberOfNodesPerDirection[Direction::One] > 1 && numberOfNodesPerDirection[Direction::Two] > 1 && numberOfNodesPerDirection[Direction::Three] > 1)
-            return Volume;
-        else if (numberOfNodesPerDirection[Direction::One] > 1 && numberOfNodesPerDirection[Direction::Two] > 1)
-            return Plane;
-        else if (numberOfNodesPerDirection[Direction::One] > 1)
-            return Axis;
-        else
-            throw runtime_error("Mesh has no nodes");
-    }
-    const unsigned& Mesh::totalNodes() const {
-        if (_nodesMatrix != nullptr)
-            return _totalNodes;
+        
+    unsigned Mesh::totalNodes() {
+        if (isInitialized)
+            return _nodesMatrix->size();
         else
             throw std::runtime_error("Mesh has not been initialized");
     }
     
-    const unsigned& Mesh::dimensions() const  {
-        if (_nodesMatrix != nullptr)
-            return _dimensions;
+    Node* Mesh::nodeFromID(unsigned ID) {
+        if (isInitialized)
+            return _nodesMatrix->at(ID);
         else
             throw std::runtime_error("Mesh has not been initialized");
     }
     
-    Node* Mesh::node(unsigned i) {
-        if (_nodesMatrix != nullptr)
-            return (*_nodesMatrix)(i);
-        else
-            throw runtime_error("Node Not Found. You search for a 1D node in a" + to_string(dimensions()) + "D mesh.");
-    }
-            
-    Node* Mesh::node(unsigned i, unsigned j) {
-        if (_nodesMatrix != nullptr)
-            return (*_nodesMatrix)(i, j);
-        else
-            throw runtime_error("Node Not Found. You search for a 2D node in a" + to_string(dimensions()) + "D mesh.");
-        }
+    unsigned Mesh::dimensions(){ }
     
-    Node* Mesh::node(unsigned i, unsigned j, unsigned k) {
-        if (_nodesMatrix != nullptr)
-            return (*_nodesMatrix)(i, j, k);
-        else
-            throw runtime_error("Node Not Found. You search for a 3D node in a" + to_string(dimensions()) + "D mesh.");
-    }
+    SpaceEntityType Mesh::space() { }
     
-    void Mesh::getSpatialProperties(map<Direction, unsigned> numberOfNodesPerDirection, unsigned dimensions, unsigned totalNodes, SpaceEntityType space) {
-        if (!_isInitialized) {
-            ///CHANGES HERE
-            /// WAKE UP GREEK MAN!!!
-            this->numberOfNodesPerDirection = std::move(numberOfNodesPerDirection);
-            _dimensions = dimensions;
-            _totalNodes = totalNodes;
-            _space = space;
-            _isInitialized = true;
-        }
-        else
-            throw runtime_error("What the fuck are you doing? Initializing a mesh twice?");
-    }
+    Node* Mesh::node(unsigned i) { }
     
-/*    void Mesh::printMesh() {
-        if (dimensions() == 1){
-            cout<<"Dimensions : 1"<<endl;
-            cout<<"Number of Nodes : " << totalNodes()<<endl;
-            for (int i = 0; i < totalNodes(); ++i) {
-                cout<<"i = "<< i << " : Global id : "<<  node(i)->id.global << " : Boundary id : "<<  node(i)->id.boundary << " : Internal id : "<<  node(i)->id.internal;
-            }
-        }
-        else if(dimensions() == 3)
+    Node* Mesh::node(unsigned i, unsigned j) { }
+    
+    Node* Mesh::node(unsigned i, unsigned j, unsigned k) { }
 
-
-        
-        
-        
-        
-    }*/
+    void Mesh::printMesh() { }
     
+    map<Position, vector<Node*>*> *Mesh::addDBoundaryNodesToMap() { }
     
+    vector<Node*>* Mesh::addInternalNodesToVector() { }
     
-    
-    map<Position, list<Node*>*>* Mesh::listBoundaryNodes1D() {
-        switch (dimensions()) {
-            case 1:
-                return listBoundaryNodes2D();
-            case 2:
-                return listBoundaryNodes3D();
-                
-            //default:
-                //return listBoundaryNodes();
-        }
-    }
-
-    map<Position, list<Node*>*> *Mesh::listBoundaryNodes2D() {
-        auto boundaries = new map<Position, list<Node*>*>();
-        auto leftBoundary = new list<Node*>();
-        auto rightBoundary = new list<Node*>();
-        rightBoundary->push_back(Mesh::node(0));
-        leftBoundary->push_back(Mesh::node(Mesh::numberOfNodesPerDirection[Direction::One] - 1));
-        boundaries->insert( pair<Position, list<Node*>*>(Position::Left, leftBoundary));
-        return boundaries;   
-    }
     
     map<Position, list<Node*>*> *Mesh::listBoundaryNodes3D() {
         auto boundaries = new map<Position, list<Node*>*>();
@@ -151,18 +79,6 @@ namespace Discretization {
         return boundaries;
     }
 
-    map<Position, list<Node*>*> *Mesh::listBoundaryNodes() {
-        throw runtime_error ("Not implemented");
-    }
-    
-    Node* Mesh::nodeFromID(unsigned int ID) {
-/*        if (dimensions() == 1)
-            return node(ID);
-        else if (dimensions() == 2)
-            
-        else*/
-    }
-    
     
     
     
