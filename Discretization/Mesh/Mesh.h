@@ -34,6 +34,7 @@ namespace Discretization {
         
         Node* nodeFromID(unsigned ID);
         
+        
         //-----------------Virtual parent class methods-----------------  
 
         virtual unsigned dimensions();
@@ -51,14 +52,20 @@ namespace Discretization {
 
         
      protected:
-         Array<Node *> *_nodesMatrix;
-         
-         
+        Array<Node *> *_nodesMatrix;
+        
+        void initialize();
+                  
          //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
-         virtual map<Position, vector<Node*>*> *addDBoundaryNodesToMap();
+        virtual map<Position, vector<Node*>*> *addDBoundaryNodesToMap();
         
          //Adds the internal nodes of the mesh to a vector pointer of node pointers
-         virtual vector<Node*>* addInternalNodesToVector();
-        
+        virtual vector<Node*>* addInternalNodesToVector();
+
+         void categorizeNodes();
+         
+         void createNumberOfNodesPerDirectionMap();
+         
+         void cleanMeshDataStructures();
     };
 }

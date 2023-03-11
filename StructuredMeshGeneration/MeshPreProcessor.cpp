@@ -8,22 +8,25 @@ namespace StructuredMeshGenerator{
     
     MeshPreProcessor :: MeshPreProcessor(MeshSpecs &meshSpecs){
         mesh = initiateMesh(meshSpecs);
-        assignSpatialProperties(meshSpecs);
         assignCoordinates(meshSpecs);
        // CalculateMeshMetrics();
     }
 
     Mesh* MeshPreProcessor::initiateMesh(MeshSpecs &meshSpecs) {
         auto nodeFactory = NodeFactory(meshSpecs.nodesPerDirection);
-        return new Mesh(nodeFactory.nodesMatrix);
+        auto space = calculateSpaceEntityType(meshSpecs);
+        switch (space) {
+            case Axis:
+                return new Mesh1D(nodeFactory.nodesMatrix);
+            case Plane:
+                return new Mesh2D(nodeFactory.nodesMatrix);
+            case Volume:
+                return new Mesh3D(nodeFactory.nodesMatrix);
+            default:
+                throw runtime_error("Invalid space type");
+        }
     }
-    
-    void MeshPreProcessor::assignSpatialProperties(MeshSpecs &meshSpecs) const {
-        mesh->getSpatialProperties(meshSpecs.nodesPerDirection,
-                                   meshSpecs.dimensions,
-                                   meshSpecs.nodesPerDirection[One] * meshSpecs.nodesPerDirection[Two] * meshSpecs.nodesPerDirection[Three],
-                                   calculateSpaceEntityType(meshSpecs));
-    }
+
     
     void MeshPreProcessor::assignCoordinates(MeshSpecs &meshSpecs) {
         switch (calculateSpaceEntityType(meshSpecs)) {

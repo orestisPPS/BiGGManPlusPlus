@@ -6,17 +6,22 @@
 
 namespace Discretization {
     
-    Mesh1D::Mesh1D(Array<Node *> *nodes) : Mesh() {
+    Mesh1D::Mesh1D(Array<Node *> *nodes) : Mesh(){
         this->_nodesMatrix = nodes;
-        numberOfNodesPerDirection = map<Direction, unsigned>();
-        numberOfNodesPerDirection[Direction::One] = _nodesMatrix->numberOfColumns();
-        numberOfNodesPerDirection[Direction::Two] = _nodesMatrix->numberOfRows();
-        numberOfNodesPerDirection[Direction::Three] = _nodesMatrix->numberOfAisles();
+        initialize();
     }
     
     Mesh1D::~Mesh1D() {
-        //Throw not implemented exception
-        throw runtime_error("Not implemented");
+        //Deallocate all node pointers of the mesh
+        for (int i = 0; i < numberOfNodesPerDirection[One] ; ++i) {
+            delete (*_nodesMatrix)(i);
+            (*_nodesMatrix)(i) = nullptr;
+        }
+        delete _nodesMatrix;
+        _nodesMatrix = nullptr;
+        
+        cleanMeshDataStructures();
+        
     }
     
     unsigned Mesh1D::dimensions() {
@@ -76,5 +81,6 @@ namespace Discretization {
         }
         return internalNodes;
     }
+    
     
 } // Discretization

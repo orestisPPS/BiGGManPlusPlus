@@ -32,19 +32,75 @@ namespace Discretization {
             throw std::runtime_error("Mesh has not been initialized");
     }
     
-    unsigned Mesh::dimensions(){ }
+
     
-    SpaceEntityType Mesh::space() { }
+    unsigned Mesh::dimensions(){ return 0;}
     
-    Node* Mesh::node(unsigned i) { }
+    SpaceEntityType Mesh::space() {
+        return NullSpace;
+    }
+    Node* Mesh::node(unsigned i) {
+        return nullptr;
+     }
     
-    Node* Mesh::node(unsigned i, unsigned j) { }
+    Node* Mesh::node(unsigned i, unsigned j) {
+        return nullptr;
+    }
     
-    Node* Mesh::node(unsigned i, unsigned j, unsigned k) { }
+    Node* Mesh::node(unsigned i, unsigned j, unsigned k) {
+        return nullptr;
+    }
 
     void Mesh::printMesh() { }
     
-    map<Position, vector<Node*>*> *Mesh::addDBoundaryNodesToMap() { }
+    void Mesh::initialize() {
+        isInitialized = true;
+        createNumberOfNodesPerDirectionMap();
+        categorizeNodes();
+    }
     
-    vector<Node*>* Mesh::addInternalNodesToVector() { }    
+    map<Position, vector<Node*>*>* Mesh::addDBoundaryNodesToMap() {
+        return nullptr;
+    }
+    
+    vector<Node*>* Mesh::addInternalNodesToVector() {
+        return nullptr;
+    }    
+    
+    
+    void createNumberOfNodesPerDirectionMap() { }
+
+    void Mesh::categorizeNodes() {
+        if (isInitialized) {
+            boundaryNodes = addDBoundaryNodesToMap();
+            internalNodes = addInternalNodesToVector();
+        }
+        else
+            throw std::runtime_error("Mesh has not been initialized");
+    }
+    
+    void Mesh::createNumberOfNodesPerDirectionMap() {
+        if (isInitialized) {
+            numberOfNodesPerDirection = map<Direction, unsigned>();
+            numberOfNodesPerDirection[One] = _nodesMatrix->numberOfColumns();
+            numberOfNodesPerDirection[Two] = _nodesMatrix->numberOfRows();
+            numberOfNodesPerDirection[Three] = _nodesMatrix->numberOfAisles();
+        }
+        else
+            throw std::runtime_error("Mesh has not been initialized");
+    }
+    
+    void Mesh::cleanMeshDataStructures() {
+        //search all boundaryNodes map and deallocate all vector pointer values
+        for (auto &boundary : *boundaryNodes) {
+            delete boundary.second;
+            boundary.second = nullptr;
+        }
+        delete boundaryNodes;
+        boundaryNodes = nullptr;
+
+        //Deallocate internalNodes vector
+        delete internalNodes;
+        internalNodes = nullptr;
+    }
 } // Discretization

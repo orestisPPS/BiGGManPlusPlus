@@ -8,13 +8,21 @@ namespace Discretization {
     
         Mesh2D::Mesh2D(Array<Node *> *nodes) : Mesh() {
             this->_nodesMatrix = nodes;
-            numberOfNodesPerDirection = map<Direction, unsigned>();
-            numberOfNodesPerDirection[One] = _nodesMatrix->numberOfColumns();
-            numberOfNodesPerDirection[Two] = _nodesMatrix->numberOfRows();
-            numberOfNodesPerDirection[Three] = _nodesMatrix->numberOfAisles();
+            initialize();      
         }
     
-        Mesh2D::~Mesh2D() { }
+        Mesh2D::~Mesh2D() {
+            //Deallocate all node pointers of the mesh
+            for (int i = 0; i < numberOfNodesPerDirection[One] ; ++i)
+                for (int j = 0; j < numberOfNodesPerDirection[Two] ; ++j){
+                delete (*_nodesMatrix)(i, j);
+                (*_nodesMatrix)(i, j) = nullptr;
+            }
+            delete _nodesMatrix;
+            _nodesMatrix = nullptr;
+            
+            cleanMeshDataStructures();
+        }
     
         unsigned Mesh2D::dimensions() {
             return 2;
@@ -61,8 +69,8 @@ namespace Discretization {
             auto *leftBoundaryNodes = new vector<Node*>(numberOfNodesPerDirection[Two]);
             auto *rightBoundaryNodes = new vector<Node*>(numberOfNodesPerDirection[Two]);
             for (int i = 0 ; i < numberOfNodesPerDirection[Two] ; i++) {
-                (*leftBoundaryNodes)[i] = (*_nodesMatrix)(0, numberOfNodesPerDirection[Two] - 1 - i);
-                (*rightBoundaryNodes)[i] = (*_nodesMatrix)(numberOfNodesPerDirection[Two] - 1, i);
+                (*leftBoundaryNodes)[i] = (*_nodesMatrix)(0, i);
+                (*rightBoundaryNodes)[i] = (*_nodesMatrix)(numberOfNodesPerDirection[One] - 1, i);
             }
             boundaryNodes->insert( pair<Position, vector<Node*>*>(Position::Left, leftBoundaryNodes));
             boundaryNodes->insert( pair<Position, vector<Node*>*>(Position::Right, rightBoundaryNodes));
@@ -71,20 +79,22 @@ namespace Discretization {
             auto *topBoundaryNodes = new vector<Node*>(numberOfNodesPerDirection[One]);
             for (int i = 0 ; i < numberOfNodesPerDirection[One] ; i++) {
                 (*bottomBoundaryNodes)[i] = (*_nodesMatrix)(i, 0);
-                (*topBoundaryNodes)[i] = (*_nodesMatrix)(numberOfNodesPerDirection[One] - 1 - i, numberOfNodesPerDirection[Two] - 1);
+                (*topBoundaryNodes)[i] = (*_nodesMatrix)(i, numberOfNodesPerDirection[Two] - 1);
             }
+            boundaryNodes->insert( pair<Position, vector<Node*>*>(Position::Bottom, bottomBoundaryNodes));
+            boundaryNodes->insert( pair<Position, vector<Node*>*>(Position::Top, topBoundaryNodes));
             
             return boundaryNodes;
         }
         
         vector<Node*>* Mesh2D::addInternalNodesToVector() {
-            auto boundaryNodes = new vector<Node*>();
-            
+            auto internalNodes = new vector<Node*>();
             for (int j = 1; j < numberOfNodesPerDirection[Two] - 1; j++){
                 for (int i = 1; i < numberOfNodesPerDirection[One] ; ++i) {
-                    boundaryNodes->push_back((*_nodesMatrix)(i, j));
+                    internalNodes->push_back((*_nodesMatrix)(i, j));
                 }
             }
+            return internalNodes;
         }
 } // 
 
