@@ -7,7 +7,7 @@
 
 namespace DegreesOfFreedom{
 
-    DegreeOfFreedom::DegreeOfFreedom(DOFType* dofType, Node* parentNode, bool isConstrained) :
+    DegreeOfFreedom::DegreeOfFreedom(DOFType* dofType, unsigned* parentNode, bool isConstrained) :
             _dofType(dofType), parentNode(parentNode) ,_value(numeric_limits<double>::quiet_NaN()) {
         if (isConstrained)
             id = new DegreeOfFreedomID(ConstraintType::Fixed);
@@ -16,12 +16,12 @@ namespace DegreesOfFreedom{
             
     }
 
-    DegreeOfFreedom::DegreeOfFreedom(DOFType* dofType, double value, Node* parentNode, bool isConstrained) :
+    DegreeOfFreedom::DegreeOfFreedom(DOFType* dofType, double value, unsigned* parentNode, bool isConstrained) :
             _dofType(dofType), _value(value) , parentNode(parentNode) {
         if (isConstrained)
             id = new DegreeOfFreedomID(ConstraintType::Fixed);
         else
-            throw invalid_argument("A DOF with a value must be constrained");
+            throw invalid_argument("A DOF with a prescribed value must be constrained");
     }
     
     DegreeOfFreedom::~DegreeOfFreedom() {
@@ -31,16 +31,16 @@ namespace DegreesOfFreedom{
         parentNode = nullptr;
     }
 
-    bool DegreeOfFreedom::operator==(const DegreeOfFreedom &dof) {
+/*    bool DegreeOfFreedom::operator==(const DegreeOfFreedom &dof) {
         return *id == *dof.id &&
                _dofType == dof._dofType &&
                _value == dof._value &&
                *parentNode->id.global == *dof.parentNode->id.global;
-    }
+    }*/
 
-    bool DegreeOfFreedom::operator!=(const DegreeOfFreedom &dof) {
+/*    bool DegreeOfFreedom::operator!=(const DegreeOfFreedom &dof) {
         return !(*this == dof);
-    }
+    }*/
 
     DOFType const &DegreeOfFreedom::type() {
         return *(_dofType);

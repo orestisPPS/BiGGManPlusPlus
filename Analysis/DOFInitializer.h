@@ -20,7 +20,7 @@ namespace Analysis {
         list<DegreeOfFreedom*> *totalDegreesOfFreedom;
         
     private:
-        void initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType* degreesOfFreedom);
+        void initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType* degreesOfFreedom) const;
         void initiateBoundaryNodeDOFs(Mesh *mesh, Field_DOFType* degreesOfFreedom,DomainBoundaryConditions *domainBoundaryConditions);
         
         

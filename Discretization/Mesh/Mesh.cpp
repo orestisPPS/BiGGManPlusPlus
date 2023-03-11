@@ -16,7 +16,7 @@ namespace Discretization {
         numberOfNodesPerDirection[Direction::Two] = _nodesMatrix->numberOfRows();
         numberOfNodesPerDirection[Direction::Three] = _nodesMatrix->numberOfAisles();
         
-        boundaryNodes = CreateBoundaries();
+        boundaryNodes = listBoundaryNodes1D();
         //nodeMap = new map<>
     }
         
@@ -73,7 +73,7 @@ namespace Discretization {
     
     void Mesh::getSpatialProperties(map<Direction, unsigned> numberOfNodesPerDirection, unsigned dimensions, unsigned totalNodes, SpaceEntityType space) {
         if (!_isInitialized) {
-            ///CHHANGES HERE
+            ///CHANGES HERE
             /// WAKE UP GREEK MAN!!!
             this->numberOfNodesPerDirection = std::move(numberOfNodesPerDirection);
             _dimensions = dimensions;
@@ -105,19 +105,19 @@ namespace Discretization {
     
     
     
-    map<Position, list<Node*>*>* Mesh::CreateBoundaries() {
+    map<Position, list<Node*>*>* Mesh::listBoundaryNodes1D() {
         switch (dimensions()) {
             case 1:
-                return Create1DBoundaries();
+                return listBoundaryNodes2D();
             case 2:
-                return Create2DBoundaries();
+                return listBoundaryNodes3D();
                 
             //default:
-                //return Create3DBoundaries();
+                //return listBoundaryNodes();
         }
     }
 
-    map<Position, list<Node*>*> *Mesh::Create1DBoundaries() {
+    map<Position, list<Node*>*> *Mesh::listBoundaryNodes2D() {
         auto boundaries = new map<Position, list<Node*>*>();
         auto leftBoundary = new list<Node*>();
         auto rightBoundary = new list<Node*>();
@@ -127,7 +127,7 @@ namespace Discretization {
         return boundaries;   
     }
     
-    map<Position, list<Node*>*> *Mesh::Create2DBoundaries() {
+    map<Position, list<Node*>*> *Mesh::listBoundaryNodes3D() {
         auto boundaries = new map<Position, list<Node*>*>();
         
         auto leftBoundary = new list<Node*>();
@@ -151,7 +151,7 @@ namespace Discretization {
         return boundaries;
     }
 
-    map<Position, list<Node*>*> *Mesh::Create3DBoundaries() {
+    map<Position, list<Node*>*> *Mesh::listBoundaryNodes() {
         throw runtime_error ("Not implemented");
     }
     
