@@ -9,13 +9,7 @@ using namespace  Discretization;
 
 namespace Discretization {
     
-    Mesh::Mesh() {
-        _nodesMatrix = nodes;
-
-        
-        boundaryNodes = listBoundaryNodes1D();
-        //nodeMap = new map<>
-    }
+    Mesh::Mesh() { }
         
     Mesh::~Mesh() {
         delete _nodesMatrix;
@@ -52,35 +46,5 @@ namespace Discretization {
     
     map<Position, vector<Node*>*> *Mesh::addDBoundaryNodesToMap() { }
     
-    vector<Node*>* Mesh::addInternalNodesToVector() { }
-    
-    
-    map<Position, list<Node*>*> *Mesh::listBoundaryNodes3D() {
-        auto boundaries = new map<Position, list<Node*>*>();
-        
-        auto leftBoundary = new list<Node*>();
-        auto rightBoundary = new list<Node*>();
-        for (int i = 0; i < Mesh::numberOfNodesPerDirection[Direction::Two]; i++) {
-            leftBoundary->push_back(Mesh::node(0, numberOfNodesPerDirection[Direction::One] - 1 - i));
-            rightBoundary->push_back(Mesh::node(Mesh::numberOfNodesPerDirection[Direction::One] - 1, i));
-        }
-        boundaries->insert( pair<Position, list<Node*>*>(Position::Left, leftBoundary));
-        boundaries->insert( pair<Position, list<Node*>*>(Position::Right, rightBoundary));
-        
-        auto topBoundary = new list<Node*>();
-        auto bottomBoundary = new list<Node*>();
-        for (int i = 0; i < Mesh::numberOfNodesPerDirection[Direction::One]; i++) {
-            bottomBoundary->push_back(Mesh::node(i, 0));
-            topBoundary->push_back(Mesh::node(numberOfNodesPerDirection[Direction::One] - 1 - i, Mesh::numberOfNodesPerDirection[Direction::Two] - 1));
-        }
-        boundaries->insert( pair<Position, list<Node*>*>(Position::Top, topBoundary));
-        boundaries->insert( pair<Position, list<Node*>*>(Position::Bottom, bottomBoundary));
-        
-        return boundaries;
-    }
-
-    
-    
-    
-    
+    vector<Node*>* Mesh::addInternalNodesToVector() { }    
 } // Discretization

@@ -61,8 +61,8 @@ namespace Discretization {
     
     map<Position, vector<Node*>*> *Mesh1D::addDBoundaryNodesToMap() {
         auto boundaries = new map<Position, vector<Node*>*>();
-        auto leftBoundary = new vector<Node*>();
-        auto rightBoundary = new vector<Node*>();
+        auto leftBoundary = new vector<Node*>(1);
+        auto rightBoundary = new vector<Node*>(1);
         leftBoundary->push_back(Mesh::node(0));
         rightBoundary->push_back(Mesh::node(Mesh::numberOfNodesPerDirection[Direction::One] - 1));
         boundaries->insert( pair<Position, vector<Node*>*>(Position::Left, leftBoundary));
