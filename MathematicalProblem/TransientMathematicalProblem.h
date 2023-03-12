@@ -4,20 +4,26 @@
 #pragma once
 #include "../PartialDifferentialEquations/PartialDifferentialEquation.h"
 #include "../BoundaryConditions/BoundaryCondition.h"
+#include "MathematicalProblem.h"
 
 namespace MathematicalProblem {
 
-    class TransientMathematicalProblem {
+    class TransientMathematicalProblem : public MathematicalProblem{
+        
     public:
+        
         TransientMathematicalProblem(PartialDifferentialEquation *pde,
-                                     map<Position,list<BoundaryConditions::BoundaryCondition*>> *bcs,
-                                     map<int*,double>* domainIC,
+                                     DomainBoundaryConditions* bcs, map<int*,double>* domainIC,
                                      struct Field_DOFType *degreesOfFreedom);
-                
+        
         PartialDifferentialEquation *pde;
-        map<Position,list<BoundaryConditions::BoundaryCondition*>> *boundaryConditions;
+        
+        DomainBoundaryConditions* boundaryConditions;
+        
         double* initialCondition;
+        
         map<int*,double>* domainInitialConditions;
+        
         struct Field_DOFType *degreesOfFreedom;
     };
 

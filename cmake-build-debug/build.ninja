@@ -205,12 +205,6 @@ build CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o: CXX_CO
   OBJECT_DIR = CMakeFiles/untitled.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled.dir/BoundaryConditions
 
-build CMakeFiles/untitled.dir/Analysis/DiscretizePDEProperties.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/Analysis/DiscretizePDEProperties.cpp || cmake_object_order_depends_target_untitled
-  DEP_FILE = CMakeFiles/untitled.dir/Analysis/DiscretizePDEProperties.cpp.o.d
-  FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
-  OBJECT_DIR = CMakeFiles/untitled.dir
-  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/Analysis
-
 build CMakeFiles/untitled.dir/Analysis/DOFInitializer.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/Analysis/DOFInitializer.cpp || cmake_object_order_depends_target_untitled
   DEP_FILE = CMakeFiles/untitled.dir/Analysis/DOFInitializer.cpp.o.d
   FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
@@ -241,6 +235,24 @@ build CMakeFiles/untitled.dir/Discretization/Mesh/Mesh3D.cpp.o: CXX_COMPILER__un
   OBJECT_DIR = CMakeFiles/untitled.dir
   OBJECT_FILE_DIR = CMakeFiles/untitled.dir/Discretization/Mesh
 
+build CMakeFiles/untitled.dir/Analysis/AnalysisDegreesOfFreedom.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/Analysis/AnalysisDegreesOfFreedom.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/Analysis/AnalysisDegreesOfFreedom.cpp.o.d
+  FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
+  OBJECT_DIR = CMakeFiles/untitled.dir
+  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/Analysis
+
+build CMakeFiles/untitled.dir/Analysis/Analysis.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/Analysis/Analysis.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/Analysis/Analysis.cpp.o.d
+  FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
+  OBJECT_DIR = CMakeFiles/untitled.dir
+  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/Analysis
+
+build CMakeFiles/untitled.dir/MathematicalProblem/MathematicalProblem.cpp.o: CXX_COMPILER__untitled_Debug /home/hal9000/code/BiGGMan++/MathematicalProblem/MathematicalProblem.cpp || cmake_object_order_depends_target_untitled
+  DEP_FILE = CMakeFiles/untitled.dir/MathematicalProblem/MathematicalProblem.cpp.o.d
+  FLAGS = -fopenmp -g -fdiagnostics-color=always -std=gnu++14
+  OBJECT_DIR = CMakeFiles/untitled.dir
+  OBJECT_FILE_DIR = CMakeFiles/untitled.dir/MathematicalProblem
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target untitled
@@ -249,7 +261,7 @@ build CMakeFiles/untitled.dir/Discretization/Mesh/Mesh3D.cpp.o: CXX_COMPILER__un
 #############################################
 # Link the executable untitled
 
-build untitled: CXX_EXECUTABLE_LINKER__untitled_Debug CMakeFiles/untitled.dir/main.cpp.o CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/MatrixTest.cpp.o CMakeFiles/untitled.dir/Discretization/Node/Node.cpp.o CMakeFiles/untitled.dir/Discretization/Id/DiscreteEntityId.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/SteadyStateMathematicalProblem.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/TransientMathematicalProblem.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshPreProcessor.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshSpecs.cpp.o CMakeFiles/untitled.dir/Discretization/Mesh/Mesh.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/NodeFactory.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshTest2D.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/Transformations.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/CoordinateVector.cpp.o CMakeFiles/untitled.dir/Discretization/Node/NodeNeighbourFinder.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDScheme.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp.o CMakeFiles/untitled.dir/Discretization/Node/NodalCoordinates.cpp.o CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedomID.cpp.o CMakeFiles/untitled.dir/FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.cpp.o CMakeFiles/untitled.dir/BoundaryConditions/DomainBoundaryConditions.cpp.o CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o CMakeFiles/untitled.dir/Analysis/DiscretizePDEProperties.cpp.o CMakeFiles/untitled.dir/Analysis/DOFInitializer.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/PartialDifferentialEquation.cpp.o CMakeFiles/untitled.dir/Discretization/Mesh/Mesh1D.cpp.o CMakeFiles/untitled.dir/Discretization/Mesh/Mesh2D.cpp.o CMakeFiles/untitled.dir/Discretization/Mesh/Mesh3D.cpp.o
+build untitled: CXX_EXECUTABLE_LINKER__untitled_Debug CMakeFiles/untitled.dir/main.cpp.o CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/MatrixTest.cpp.o CMakeFiles/untitled.dir/Discretization/Node/Node.cpp.o CMakeFiles/untitled.dir/Discretization/Id/DiscreteEntityId.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/SteadyStateMathematicalProblem.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/TransientMathematicalProblem.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshPreProcessor.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshSpecs.cpp.o CMakeFiles/untitled.dir/Discretization/Mesh/Mesh.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/NodeFactory.cpp.o CMakeFiles/untitled.dir/StructuredMeshGeneration/MeshTest2D.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/Transformations.cpp.o CMakeFiles/untitled.dir/PositioningInSpace/CoordinateVector.cpp.o CMakeFiles/untitled.dir/Discretization/Node/NodeNeighbourFinder.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDScheme.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.cpp.o CMakeFiles/untitled.dir/LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp.o CMakeFiles/untitled.dir/Discretization/Node/NodalCoordinates.cpp.o CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedomID.cpp.o CMakeFiles/untitled.dir/FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.cpp.o CMakeFiles/untitled.dir/BoundaryConditions/DomainBoundaryConditions.cpp.o CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o CMakeFiles/untitled.dir/Analysis/DOFInitializer.cpp.o CMakeFiles/untitled.dir/PartialDifferentialEquations/PartialDifferentialEquation.cpp.o CMakeFiles/untitled.dir/Discretization/Mesh/Mesh1D.cpp.o CMakeFiles/untitled.dir/Discretization/Mesh/Mesh2D.cpp.o CMakeFiles/untitled.dir/Discretization/Mesh/Mesh3D.cpp.o CMakeFiles/untitled.dir/Analysis/AnalysisDegreesOfFreedom.cpp.o CMakeFiles/untitled.dir/Analysis/Analysis.cpp.o CMakeFiles/untitled.dir/MathematicalProblem/MathematicalProblem.cpp.o
   FLAGS = -fopenmp -g
   OBJECT_DIR = CMakeFiles/untitled.dir
   POST_BUILD = :

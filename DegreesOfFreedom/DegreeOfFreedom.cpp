@@ -27,8 +27,10 @@ namespace DegreesOfFreedom{
     DegreeOfFreedom::~DegreeOfFreedom() {
         delete id;
         delete parentNode;
+        delete _dofType;
         id = nullptr;
         parentNode = nullptr;
+        _dofType = nullptr;
     }
 
 /*    bool DegreeOfFreedom::operator==(const DegreeOfFreedom &dof) {

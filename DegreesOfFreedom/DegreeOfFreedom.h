@@ -21,14 +21,14 @@ namespace DegreesOfFreedom{
     
     class DegreeOfFreedom {
         public:
-            //Use this constructor when the degree of freedom is not fixed. DOFs with constraint type free or flux
-            // will be initialized with a value of NaN.
-            DegreeOfFreedom(DOFType* dofType, unsigned* parentunsinged, bool isConstrained);
+            //Use this constructor for all DOFType (fixed, free). Degree of freedom is initialized with 0 value.
+            DegreeOfFreedom(DOFType* dofType, unsigned* parentNode, bool isConstrained);
     
-            //Use this constructor when the degree of freedom is fixed. Only DOFs with constraint type fixed
+            //Use this constructor when the degree of freedom is boundary. Only DOFs with constraint type fixed or flux
             // can be initialized with this constructor.
-            DegreeOfFreedom(DOFType* dofType, double value, unsigned* parentunsinged, bool isConstrained);
-    
+            DegreeOfFreedom(DOFType* dofType, double value, unsigned* parentNode, bool isConstrained);
+            
+            
             ~DegreeOfFreedom();
     
             //bool operator == (const DegreeOfFreedom& dof);

@@ -16,14 +16,13 @@ namespace Analysis {
         DOFInitializer(Mesh *mesh, DomainBoundaryConditions *domainBoundaryConditions, struct Field_DOFType* degreesOfFreedom);
         list<DegreeOfFreedom*> *freeDegreesOfFreedom;
         list<DegreeOfFreedom*> *boundedDegreesOfFreedom;
-        list<DegreeOfFreedom*> *fluxDegreesOfFreedom;
+        list<tuple<DegreeOfFreedom*, double>> *fluxDegreesOfFreedom;
         list<DegreeOfFreedom*> *totalDegreesOfFreedom;
         
     private:
         void initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType* degreesOfFreedom) const;
-        void initiateBoundaryNodeBoundedDOF(Mesh *mesh, Field_DOFType* degreesOfFreedom, DomainBoundaryConditions *domainBoundaryConditions) const;
+        void initiateBoundaryNodeFixedDOF(Mesh *mesh, Field_DOFType* degreesOfFreedom, DomainBoundaryConditions *domainBoundaryConditions) const;
         void initiateBoundaryNodeFluxDOF(Mesh *mesh, Field_DOFType* problemDOFTypes, DomainBoundaryConditions *domainBoundaryConditions) const;
-        
         
         //TODO: Implement initial conditions. Check if there is meaning in domain  initial conditions as a mathematical object.
         void applyInitialConditions(list<DegreeOfFreedom*>);

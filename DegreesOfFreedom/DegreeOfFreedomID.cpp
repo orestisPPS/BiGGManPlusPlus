@@ -12,6 +12,7 @@ namespace DegreesOfFreedom {
     
     DegreeOfFreedomID::~DegreeOfFreedomID() {
         delete id;
+        id = nullptr;
     }
     
     bool DegreeOfFreedomID::operator == (const DegreeOfFreedomID& dof) const {

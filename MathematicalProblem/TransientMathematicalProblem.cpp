@@ -9,12 +9,13 @@ namespace MathematicalProblem {
     
     TransientMathematicalProblem :: TransientMathematicalProblem(
             PartialDifferentialEquation *pde,
-            map<Position,list<BoundaryConditions::BoundaryCondition*>> *bcs,map<int*,double>* domainIC,
+            DomainBoundaryConditions* bcs, map<int*,double>* domainIC,
             struct Field_DOFType *degreesOfFreedom) :
-                                pde(pde), boundaryConditions(bcs),
-                                initialCondition(nullptr),
-                                domainInitialConditions(domainIC),
-                                degreesOfFreedom(degreesOfFreedom) { }
+            pde(pde), boundaryConditions(bcs), initialCondition(nullptr), domainInitialConditions(domainIC), degreesOfFreedom(degreesOfFreedom),
+            MathematicalProblem(pde, bcs, degreesOfFreedom){
+        
+    }
+
 
 
 }// MathematicalProblem
