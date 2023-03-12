@@ -20,9 +20,12 @@ namespace BoundaryConditions {
 
         explicit BoundaryCondition(map<Direction, function<double (vector<double>*)>> directionalBCFunction);
 
-        double valueAt(vector<double> *coordinates);
+        double scalarValueAt(vector<double> *coordinates);
 
-        double valueAt(Direction direction, vector<double> *coordinates);
+        double vectorValueAtDirection(Direction direction, vector<double> *coordinates);
+        
+        vector<double> vectorValueAt(vector<double> *coordinates);
+        
 
     private:
         function<double (vector<double>*)> _boundaryConditionFunction;

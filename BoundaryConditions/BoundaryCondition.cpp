@@ -14,15 +14,25 @@ namespace BoundaryConditions {
         _checkDirectionalBoundaryConditionFunction();
     }
 
-    double BoundaryCondition::valueAt(vector<double> *x) {
-        if (x == nullptr)
+    double BoundaryCondition::scalarValueAt(vector<double> *coordinates) {
+        if (coordinates == nullptr)
             throw std::invalid_argument("Coordinates cannot be null.");
         else
-            return _boundaryConditionFunction(x);
+            return _boundaryConditionFunction(coordinates);
     }
 
-    double BoundaryCondition::valueAt(Direction direction, vector<double> *x) {
-        return _directionalBoundaryConditionFunction.at(direction)(x);
+    double BoundaryCondition::vectorValueAtDirection(Direction direction, vector<double> *coordinates) {
+        return _directionalBoundaryConditionFunction.at(direction)(coordinates);
+    }
+    
+    vector<double> BoundaryCondition::vectorValueAt(vector<double> *coordinates) {
+        vector<double> vectorValue;
+        vectorValue.at(0) = _directionalBoundaryConditionFunction.at(Direction::One)(coordinates);
+        if (_directionalBoundaryConditionFunction.find(Direction::Two) != _directionalBoundaryConditionFunction.end())
+            vectorValue.at(1) = _directionalBoundaryConditionFunction.at(Direction::Two)(coordinates);
+        if (_directionalBoundaryConditionFunction.find(Direction::Three) != _directionalBoundaryConditionFunction.end())
+            vectorValue.at(2) = _directionalBoundaryConditionFunction.at(Direction::Three)(coordinates);
+        return vectorValue;
     }
 
     void BoundaryCondition::_checkDirectionalBoundaryConditionFunction() {

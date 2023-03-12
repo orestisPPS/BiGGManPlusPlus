@@ -26,11 +26,12 @@ namespace BoundaryConditions {
     class DomainBoundaryConditions {
     public:
         explicit DomainBoundaryConditions(SpaceEntityType spaceType);
-        void AddDirichletBoundaryConditions(Position boundaryPosition, list<DomainBoundaryConditions* >* dirichletBCs);
-        void AddNeumannBoundaryConditions(Position boundaryPosition, list<DomainBoundaryConditions* >* neumannBCs);
+        void AddDirichletBoundaryConditions(Position boundaryPosition, list<BoundaryCondition* >* dirichletBCs);
+        void AddNeumannBoundaryConditions(Position boundaryPosition, list<BoundaryCondition* >* neumannBCs);
+        list<BoundaryCondition*>* GetBoundaryConditions(Position boundaryPosition, BoundaryConditionType boundaryConditionType);
     private:
-        map <BoundaryConditionType, map<Position,list<DomainBoundaryConditions* >* >* > _boundaryConditions;
-        static map<Position,list<DomainBoundaryConditions* >* >* createBoundaryConditionsMap(SpaceEntityType& spaceType);
+        map <BoundaryConditionType, map<Position,list<BoundaryCondition* >* >* > _boundaryConditions;
+        static map<Position,list<BoundaryCondition* >* >* createBoundaryConditionsMap(SpaceEntityType& spaceType);
     };
 
 } // BoundaryConditions

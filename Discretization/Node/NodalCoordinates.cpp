@@ -58,7 +58,7 @@ namespace Discretization {
         return *( _positionVectors.at(CoordinateType::Natural).getCoordinateVector());
     }
     
-    const vector<double>* NodalCoordinates::positionVectorPtr() {
+    vector<double>* NodalCoordinates::positionVectorPtr() {
         return _positionVectors.at(CoordinateType::Natural).getCoordinateVector();
     }
         
@@ -68,7 +68,7 @@ namespace Discretization {
     }
     
     //Returns a pointer to the input position vector of the Node
-    const vector<double>* NodalCoordinates::positionVectorPtr(CoordinateType type) {
+    vector<double>* NodalCoordinates::positionVectorPtr(CoordinateType type) {
         return _positionVectors.at(type).getCoordinateVector();
     }
     

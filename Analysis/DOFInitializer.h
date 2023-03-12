@@ -21,7 +21,8 @@ namespace Analysis {
         
     private:
         void initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType* degreesOfFreedom) const;
-        void initiateBoundaryNodeDOFs(Mesh *mesh, Field_DOFType* degreesOfFreedom,DomainBoundaryConditions *domainBoundaryConditions);
+        void initiateBoundaryNodeBoundedDOF(Mesh *mesh, Field_DOFType* degreesOfFreedom, DomainBoundaryConditions *domainBoundaryConditions) const;
+        void initiateBoundaryNodeFluxDOF(Mesh *mesh, Field_DOFType* problemDOFTypes, DomainBoundaryConditions *domainBoundaryConditions) const;
         
         
         //TODO: Implement initial conditions. Check if there is meaning in domain  initial conditions as a mathematical object.
