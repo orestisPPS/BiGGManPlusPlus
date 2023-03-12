@@ -7,6 +7,14 @@
 namespace Discretization {
     Node::Node() : id(DiscreteEntityId()), coordinates() { }
     
+    void Node::printNode() {
+        cout << "Node: " << (*id.global) << endl;
+        cout << "Boundary id: " << (*id.boundary) << " Internal Id: "<< (*id.internal)<< endl;
+        cout << "Node coordinates [x_1, x_2, x_3] = { " <<(coordinates.positionVector(Template)[0]) << ", " <<
+                                                    coordinates.positionVector(Template)[1] << ", " <<
+                                                    coordinates.positionVector(Template)[2] << "}" << endl;
+        cout << "-------------------------------------------" << endl;
+    }
 }// Discretization
     
 

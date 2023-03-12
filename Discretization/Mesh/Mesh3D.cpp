@@ -54,7 +54,11 @@ namespace Discretization {
     }
     
     void Mesh3D::printMesh() {
-        throw runtime_error("Not implemented");
+        for (int k = 0 ; k < numberOfNodesPerDirection[Three] ; k++)
+            for (int j = 0 ; j < numberOfNodesPerDirection[Two] ; j++)
+                for (int i = 0 ; i < numberOfNodesPerDirection[One] ; i++) {
+                    (*_nodesMatrix)(i, j, k)->printNode();
+                }   
     }
     
     map<Position, vector<Node*>*>* Mesh3D::addDBoundaryNodesToMap() {

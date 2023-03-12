@@ -34,7 +34,7 @@ namespace Discretization {
     
         Node *Mesh2D::node(unsigned i) {
             if (isInitialized)
-                return (*_nodesMatrix)(i);
+                return (*_nodesMatrix)(i, 0);
             else
                 throw runtime_error("Node Not Found!");
         }
@@ -56,11 +56,10 @@ namespace Discretization {
     
         void Mesh2D::printMesh() {
             cout << "Mesh2D" << endl;
-            for (int i = 0 ; i < numberOfNodesPerDirection[One] ; i++) {
-                for (int j = 0 ; j < numberOfNodesPerDirection[Two] ; j++) {
-                    throw runtime_error("Not implemented");
+            for (int j = 0 ; j < numberOfNodesPerDirection[Two] ; j++)
+                for (int i = 0 ; i < numberOfNodesPerDirection[One] ; i++){
+                    (*_nodesMatrix)(i, j)->printNode();
                 }
-            }
         }
         
         map<Position, vector<Node*>*>* Mesh2D::addDBoundaryNodesToMap() {
@@ -90,7 +89,7 @@ namespace Discretization {
         vector<Node*>* Mesh2D::addInternalNodesToVector() {
             auto internalNodes = new vector<Node*>();
             for (int j = 1; j < numberOfNodesPerDirection[Two] - 1; j++){
-                for (int i = 1; i < numberOfNodesPerDirection[One] ; ++i) {
+                for (int i = 1; i < numberOfNodesPerDirection[One] - 1; ++i) {
                     internalNodes->push_back((*_nodesMatrix)(i, j));
                 }
             }

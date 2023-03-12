@@ -23,7 +23,8 @@ namespace Discretization
         Discretization::DiscreteEntityId id;
                 
         NodalCoordinates coordinates;
-
+        
+        void printNode();
         //vector<DegreeOfFreedom*> *_degreesOfFreedom;
         
     private:

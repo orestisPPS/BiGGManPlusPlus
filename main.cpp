@@ -18,7 +18,7 @@ using namespace LinearAlgebra;
 int main() {
 
     auto bcSetTest = new BoundaryConditions::DomainBoundaryConditions(Axis);
-    
+    auto test = new StructuredMeshGenerator::MeshTest2D();
     cout << "MTSTK GMS" << endl;
     
 }

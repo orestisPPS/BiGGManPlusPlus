@@ -14,6 +14,7 @@ namespace StructuredMeshGenerator {
             MeshSpecs specs = MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
             auto space = (PositioningInSpace::Plane);
             auto mesh = MeshPreProcessor(specs).mesh;
+            mesh->printMesh();
             
 /*            for(int j = 0; j < mesh->numberOfNodesPerDirection.at(Direction::Two); j++){
                 for(int i = 0; i < mesh->numberOfNodesPerDirection.at(Direction::One); i++){

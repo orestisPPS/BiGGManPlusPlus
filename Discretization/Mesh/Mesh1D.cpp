@@ -58,7 +58,7 @@ namespace Discretization {
     void Mesh1D::printMesh() {
         cout << "Mesh1D" << endl;
         for (int i = 0 ; i < numberOfNodesPerDirection[Direction::One] ; i++) {
-            throw runtime_error("Not implemented");
+            (*_nodesMatrix)(i)->printNode();
         }
     }
     
