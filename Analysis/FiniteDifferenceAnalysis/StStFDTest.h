@@ -5,10 +5,22 @@
 #ifndef UNTITLED_STSTFDTEST_H
 #define UNTITLED_STSTFDTEST_H
 
+#include "SteadyStateFiniteDifferenceAnalysis.h"
+/*#include "../../StructuredMeshGeneration/MeshPreProcessor.h"
+#include "../../StructuredMeshGeneration/MeshSpecs.h"*/
+#include "../../StructuredMeshGeneration/MeshTest2D.h"
+
 namespace NumericalAnalysis {
+    
 
     class StStFDTest {
-
+public:
+        StStFDTest();
+        static Mesh* createMesh();
+        static PartialDifferentialEquation* createPDE();
+        static DomainBoundaryConditions* createBC();
+        static Field_DOFType* createDOF();
+        static FDSchemeSpecs* createSchemeSpecs();
     };
 
 } // NumericalAnalysis

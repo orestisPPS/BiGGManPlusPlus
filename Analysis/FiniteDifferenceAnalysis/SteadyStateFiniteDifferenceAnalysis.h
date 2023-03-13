@@ -14,7 +14,7 @@ namespace NumericalAnalysis {
         SteadyStateFiniteDifferenceAnalysis(SteadyStateMathematicalProblem *mathematicalProblem,
                                             Mesh *mesh,
                                             FDSchemeSpecs *schemeSpecs);
-        void createLinearSystem() override;
+        //void createLinearSystem() override;
         
         
     };

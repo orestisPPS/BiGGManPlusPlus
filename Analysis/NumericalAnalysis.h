@@ -29,9 +29,9 @@ namespace NumericalAnalysis {
                 
         AnalysisDegreesOfFreedom* degreesOfFreedom;
         
-        virtual void createLinearSystem();
+        //virtual void createLinearSystem();
         
-        virtual void solve();
+        //virtual void solve();
         
     protected:
 

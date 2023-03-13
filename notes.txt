@@ -1,16 +1,10 @@
-1)Insert Boundary Values To Nodes
-   ii. Create DOF at nodes 
-   iii.Create BoundaryCreator Class for 2D
 
-2)Create Finite Difference implementation with input error order (up to 4?)
 
-3)Calculate metrix
+1)Create Finite Difference implementation with input error order (up to 4?)
 
-4)Search for gnuplot addon
+2)Calculate metrix
 
-5)Create Simulation Class
+3)Search for gnuplot addon
 
-6) About node -> dof transformation. Search all domain boundaries nodes and the corresponding boundary conditions. Then, create a new dof for each no
-    if it is dirichlet assign the value to the dof else assign the dof to the free nodes list.
-    Then iterate over all the internal nodes and assign their dofs to the free nodes list.
-    Finally organize the list of the free dofs with respect to the node global id.
+4)Check if all destructors are implemented correctly up to this point (steady state fd analysis test)
+    (nodes,dofs ->with their ids, mathematical objects etc)
