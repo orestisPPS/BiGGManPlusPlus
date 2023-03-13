@@ -11,9 +11,12 @@ namespace NumericalAnalysis {
         boundedDegreesOfFreedom = new list<DegreeOfFreedom*>();
         fluxDegreesOfFreedom = new list<tuple<DegreeOfFreedom*, double>>;
         totalDegreesOfFreedom = new list<DegreeOfFreedom*>();
+        
         initiateBoundaryNodeFixedDOF(mesh, degreesOfFreedom, domainBoundaryConditions);
         initiateInternalNodeDOFs(mesh, degreesOfFreedom);
         //initiateBoundaryNodeFluxDOF(mesh, degreesOfFreedom, domainBoundaryConditions);
+        removeDuplicateDOFs();
+        
     }
     
     void DOFInitializer::initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType *degreesOfFreedom) const {
@@ -82,7 +85,7 @@ namespace NumericalAnalysis {
             for (auto &node: *nodesAtPosition) {
                 auto dofValue = -1.0;
                 //If the length of the list of Dirichlet BCs at the position is 1,
-                // the same value of flux is applid to all nodes of the boundary
+                // the same value of flux is applied to all nodes of the boundary
                 if (degreesOfFreedom->DegreesOfFreedom->size() == 1 && dirichletBCAtPosition->size() == 1) {
                     dofValue = dirichletBCAtPosition->front()->scalarValueAt(
                             node->coordinates.positionVectorPtr());
@@ -90,7 +93,9 @@ namespace NumericalAnalysis {
                                                    node->id.global, true);
                     boundedDegreesOfFreedom->push_back(dof);
                     totalDegreesOfFreedom->push_back(dof);
-                } else if (degreesOfFreedom->DegreesOfFreedom->size() > 1 && dirichletBCAtPosition->size() > 1) {
+                }
+                
+                else if (degreesOfFreedom->DegreesOfFreedom->size() > 1 && dirichletBCAtPosition->size() > 1) {
                     auto vectorValue = dirichletBCAtPosition->front()->vectorValueAt(
                             node->coordinates.positionVectorPtr());
                     auto dofType = degreesOfFreedom->DegreesOfFreedom->front();
@@ -106,6 +111,22 @@ namespace NumericalAnalysis {
                             "The number of DOF types and the number of Dirichlet BCs at the boundary are not equal.");
                 }
             }
+        }
+    }
+    
+    void DOFInitializer::removeDuplicateDOFs() const {
+        for (auto & dof : *totalDegreesOfFreedom){
+            for (auto & dof2 : *totalDegreesOfFreedom){
+                if (dof->parentNode == dof2->parentNode && dof->id->constraintType() == dof2->id->constraintType()){
+                    if (dof->id->constraintType() == ConstraintType::Fixed){
+                        boundedDegreesOfFreedom->remove(dof);
+                    }
+                    else if (dof->id->constraintType() == ConstraintType::Free){
+                        freeDegreesOfFreedom->remove(dof);
+                    }
+                    totalDegreesOfFreedom->remove(dof);
+                }
+            }       
         }
     }
 

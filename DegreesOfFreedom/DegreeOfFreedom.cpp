@@ -33,16 +33,16 @@ namespace DegreesOfFreedom{
         _dofType = nullptr;
     }
 
-/*    bool DegreeOfFreedom::operator==(const DegreeOfFreedom &dof) {
+    bool DegreeOfFreedom::operator==(const DegreeOfFreedom &dof) {
         return *id == *dof.id &&
                _dofType == dof._dofType &&
                _value == dof._value &&
-               *parentNode->id.global == *dof.parentNode->id.global;
-    }*/
+               *parentNode == *dof.parentNode;
+    }
 
-/*    bool DegreeOfFreedom::operator!=(const DegreeOfFreedom &dof) {
+    bool DegreeOfFreedom::operator!=(const DegreeOfFreedom &dof) {
         return !(*this == dof);
-    }*/
+    }
 
     DOFType const &DegreeOfFreedom::type() {
         return *(_dofType);

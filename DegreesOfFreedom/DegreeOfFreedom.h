@@ -31,9 +31,9 @@ namespace DegreesOfFreedom{
             
             ~DegreeOfFreedom();
     
-            //bool operator == (const DegreeOfFreedom& dof);
+            bool operator == (const DegreeOfFreedom& dof);
     
-           //bool operator != (const DegreeOfFreedom& dof);
+            bool operator != (const DegreeOfFreedom& dof);
     
             //Pointer to the id of the degree of freedom. Contains ConstraintType Enum (fixed, flux, free)
             // and unsigned int id. The enumeration of the id corresponds to the constraint type.
