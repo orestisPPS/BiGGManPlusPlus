@@ -7,7 +7,6 @@
 namespace NumericalAnalysis {
     NumericalAnalysis::NumericalAnalysis(MathematicalProblem *mathematicalProblem, Mesh *mesh) :
             mathematicalProblem(mathematicalProblem), mesh(mesh) {
-        degreesOfFreedom = initiateDegreesOfFreedom();
     }
     
     NumericalAnalysis::~NumericalAnalysis() {

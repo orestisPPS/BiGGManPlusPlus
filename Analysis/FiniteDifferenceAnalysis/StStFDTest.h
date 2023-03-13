@@ -6,9 +6,9 @@
 #define UNTITLED_STSTFDTEST_H
 
 #include "SteadyStateFiniteDifferenceAnalysis.h"
-/*#include "../../StructuredMeshGeneration/MeshPreProcessor.h"
-#include "../../StructuredMeshGeneration/MeshSpecs.h"*/
-#include "../../StructuredMeshGeneration/MeshTest2D.h"
+#include "../../StructuredMeshGeneration/MeshPreProcessor.h"
+#include "../../StructuredMeshGeneration/MeshSpecs.h"
+
 
 namespace NumericalAnalysis {
     

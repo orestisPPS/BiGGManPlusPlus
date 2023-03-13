@@ -13,7 +13,7 @@ namespace NumericalAnalysis {
         totalDegreesOfFreedom = new list<DegreeOfFreedom*>();
         initiateBoundaryNodeFixedDOF(mesh, degreesOfFreedom, domainBoundaryConditions);
         initiateInternalNodeDOFs(mesh, degreesOfFreedom);
-        initiateBoundaryNodeFluxDOF(mesh, degreesOfFreedom, domainBoundaryConditions);
+        //initiateBoundaryNodeFluxDOF(mesh, degreesOfFreedom, domainBoundaryConditions);
     }
     
     void DOFInitializer::initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType *degreesOfFreedom) const {

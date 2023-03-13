@@ -44,15 +44,13 @@ namespace BoundaryConditions {
     
     void DomainBoundaryConditions::AddDirichletBoundaryConditions(Position boundaryPosition,
                                                                   list<BoundaryCondition* >* dirichletBCs){
-        _boundaryConditions[Dirichlet]->insert(
-                pair<Position, list<BoundaryCondition* > *>(boundaryPosition, dirichletBCs));
+        _boundaryConditions[Dirichlet]->at(boundaryPosition) = (dirichletBCs);
         _boundaryConditions[Neumann]->erase(boundaryPosition);
     }
     
     void DomainBoundaryConditions::AddNeumannBoundaryConditions(Position boundaryPosition,
                                                                 list<BoundaryCondition* >* neumannBCs){
-        _boundaryConditions[Neumann]->insert(
-                pair<Position, list<BoundaryCondition* > *>(boundaryPosition, neumannBCs));
+        _boundaryConditions[Neumann]->at(boundaryPosition) = (neumannBCs);
         _boundaryConditions[Dirichlet]->erase(boundaryPosition);
     }
     

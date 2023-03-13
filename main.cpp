@@ -11,6 +11,7 @@ using namespace LinearAlgebra;
 #include "StructuredMeshGeneration/MeshTest2D.h"
 #include "BoundaryConditions/DomainBoundaryConditions.h"
 #include "DegreesOfFreedom/DegreeOfFreedomTypes.h"
+#include "Analysis/FiniteDifferenceAnalysis/StStFDTest.h"
 #include <functional>
 #include <vector>
 #include <list>
@@ -18,7 +19,9 @@ using namespace LinearAlgebra;
 int main() {
 
     auto bcSetTest = new BoundaryConditions::DomainBoundaryConditions(Axis);
-    auto test = new StructuredMeshGenerator::MeshTest2D();
+    //auto test = new StructuredMeshGenerator::MeshTest2D();
+    auto analysisTest = new NumericalAnalysis::StStFDTest();
+    
     cout << "MTSTK GMS" << endl;
     
 }
