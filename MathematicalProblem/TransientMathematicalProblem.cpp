@@ -4,7 +4,7 @@
 
 #include "TransientMathematicalProblem.h"
 
-namespace MathematicalProblem {
+namespace MathematicalProblems {
     
     
     TransientMathematicalProblem :: TransientMathematicalProblem(
@@ -18,4 +18,4 @@ namespace MathematicalProblem {
 
 
 
-}// MathematicalProblem
+}// MathematicalProblems

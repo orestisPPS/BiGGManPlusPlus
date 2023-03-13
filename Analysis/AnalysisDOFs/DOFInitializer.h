@@ -5,11 +5,11 @@
 #ifndef UNTITLED_DOFINITIALIZER_H
 #define UNTITLED_DOFINITIALIZER_H
 
-#include "../MathematicalProblem/SteadyStateMathematicalProblem.h"
-#include "../DegreesOfFreedom/DegreeOfFreedom.h"
-#include "../Discretization/Mesh/Mesh.h"
+#include "../../MathematicalProblem/SteadyStateMathematicalProblem.h"
+#include "../../DegreesOfFreedom/DegreeOfFreedom.h"
+#include "../../Discretization/Mesh/Mesh.h"
 
-namespace Analysis {
+namespace NumericalAnalysis {
 
     class DOFInitializer {
     public:

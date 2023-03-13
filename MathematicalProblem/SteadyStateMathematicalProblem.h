@@ -4,7 +4,7 @@
 #pragma once
 #include "MathematicalProblem.h"
 
-namespace MathematicalProblem{
+namespace MathematicalProblems{
     class SteadyStateMathematicalProblem : public MathematicalProblem{
     public:
         SteadyStateMathematicalProblem(PartialDifferentialEquation* pde,

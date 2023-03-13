@@ -6,7 +6,7 @@
 #include "../BoundaryConditions/BoundaryCondition.h"
 #include "MathematicalProblem.h"
 
-namespace MathematicalProblem {
+namespace MathematicalProblems {
 
     class TransientMathematicalProblem : public MathematicalProblem{
         

@@ -3,12 +3,12 @@
 //
 
 #include "SteadyStateMathematicalProblem.h"
-namespace MathematicalProblem {
+namespace MathematicalProblems {
 
     SteadyStateMathematicalProblem::SteadyStateMathematicalProblem(
             PartialDifferentialEquation *pde, DomainBoundaryConditions *bcs, struct Field_DOFType *degreesOfFreedom) :
-                    pde(pde), boundaryConditions(bcs), degreesOfFreedom(degreesOfFreedom), 
-                    MathematicalProblem(pde, bcs, degreesOfFreedom){
+            pde(pde), boundaryConditions(bcs), degreesOfFreedom(degreesOfFreedom),
+            MathematicalProblem(pde, bcs, degreesOfFreedom){
         
     }
     

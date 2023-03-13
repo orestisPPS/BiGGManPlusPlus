@@ -3,9 +3,9 @@
 //
 
 #include "MathematicalProblem.h"
-using namespace MathematicalProblem;
+using namespace MathematicalProblems;
 
-namespace MathematicalProblem {
+namespace MathematicalProblems {
     
     MathematicalProblem::MathematicalProblem(PartialDifferentialEquation* pde,
                                              DomainBoundaryConditions* bcs,
@@ -20,4 +20,4 @@ namespace MathematicalProblem {
         boundaryConditions = nullptr;
         degreesOfFreedom = nullptr;
     }
-} // MathematicalProblem
+} // MathematicalProblems

@@ -4,7 +4,7 @@
 
 #include "DOFInitializer.h"
 
-namespace Analysis {
+namespace NumericalAnalysis {
     
     DOFInitializer::DOFInitializer(Mesh* mesh, DomainBoundaryConditions* domainBoundaryConditions, Field_DOFType* degreesOfFreedom) {
         freeDegreesOfFreedom = new list<DegreeOfFreedom*>();

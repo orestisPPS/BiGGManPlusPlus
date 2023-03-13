@@ -4,7 +4,7 @@
 
 #include "AnalysisDegreesOfFreedom.h"
 
-namespace Analysis {
+namespace NumericalAnalysis {
     
     AnalysisDegreesOfFreedom::AnalysisDegreesOfFreedom() {
         totalDegreesOfFreedom = new list<DegreeOfFreedom*>;
@@ -25,8 +25,8 @@ namespace Analysis {
         fluxDegreesOfFreedom = nullptr;
     }
         
-    void AnalysisDegreesOfFreedom::_initiateDegreesOfFreedom(Mesh *mesh, DomainBoundaryConditions *domainBoundaryConditions,
-                                                             struct Field_DOFType* degreesOfFreedom) {
+    void AnalysisDegreesOfFreedom::initiateDegreesOfFreedom(Mesh *mesh, DomainBoundaryConditions *domainBoundaryConditions,
+                                                             Field_DOFType* degreesOfFreedom) {
         auto dofInitializer = DOFInitializer(mesh, domainBoundaryConditions, degreesOfFreedom);
         totalDegreesOfFreedom = dofInitializer.totalDegreesOfFreedom;
         freeDegreesOfFreedom = dofInitializer.freeDegreesOfFreedom;
@@ -50,4 +50,4 @@ namespace Analysis {
             dof = nullptr;
         }
     }
-} // Analysis
+} // NumericalAnalysis

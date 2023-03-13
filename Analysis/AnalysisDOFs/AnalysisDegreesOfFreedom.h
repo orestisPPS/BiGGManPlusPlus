@@ -5,12 +5,12 @@
 #ifndef UNTITLED_ANALYSISDEGREESOFFREEDOM_H
 #define UNTITLED_ANALYSISDEGREESOFFREEDOM_H
 #include <tuple>
-#include "../MathematicalProblem/SteadyStateMathematicalProblem.h"
-#include "../DegreesOfFreedom/DegreeOfFreedom.h"
+#include "../../MathematicalProblem/SteadyStateMathematicalProblem.h"
+#include "../../DegreesOfFreedom/DegreeOfFreedom.h"
 #include "DOFInitializer.h"
-#include "../Discretization/Mesh/Mesh.h"
+#include "../../Discretization/Mesh/Mesh.h"
 
-namespace Analysis {
+namespace NumericalAnalysis {
 
     class AnalysisDegreesOfFreedom {
     public:
@@ -26,8 +26,8 @@ namespace Analysis {
         
         list<tuple<DegreeOfFreedom*, double>> *fluxDegreesOfFreedom;
         
-        void _initiateDegreesOfFreedom(Mesh *mesh, DomainBoundaryConditions *domainBoundaryConditions,
-                                       struct Field_DOFType* degreesOfFreedom);
+        void initiateDegreesOfFreedom(Mesh *mesh, DomainBoundaryConditions *domainBoundaryConditions,
+                                       Field_DOFType* degreesOfFreedom);
         void printDOFCount() const;
         
     private:
@@ -37,6 +37,6 @@ namespace Analysis {
         
     };
 
-} // Analysis
+} // NumericalAnalysis
 
 #endif //UNTITLED_ANALYSISDEGREESOFFREEDOM_H

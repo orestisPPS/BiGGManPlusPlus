@@ -8,14 +8,15 @@
 #include "../PartialDifferentialEquations/PartialDifferentialEquation.h"
 #include "../BoundaryConditions/DomainBoundaryConditions.h"
 #include "../DegreesOfFreedom/DegreeOfFreedomTypes.h"
+using namespace DegreesOfFreedom;
 
-namespace MathematicalProblem {
+namespace MathematicalProblems {
 
     class MathematicalProblem {
         public:
         MathematicalProblem(PartialDifferentialEquation* pde,
                             DomainBoundaryConditions* bcs,
-                            struct Field_DOFType* degreesOfFreedom);
+                            Field_DOFType* degreesOfFreedom);
         ~MathematicalProblem();
 
         PartialDifferentialEquation* pde;
@@ -23,6 +24,6 @@ namespace MathematicalProblem {
         Field_DOFType *degreesOfFreedom;
     };
 
-} // MathematicalProblem
+} // MathematicalProblems
 
 #endif //UNTITLED_MATHEMATICALPROBLEM_H
