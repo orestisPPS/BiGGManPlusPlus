@@ -66,22 +66,26 @@ namespace StructuredMeshGenerator{
         auto boundaryId = 0;
         //Bottom boundary nodes.
         for (auto i = 0; i < index1 ; ++i) {
-            (*nodesMatrix)(i, 0) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, 0) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, 0) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //Right boundary nodes.
         for (auto i = 1; i < index2 ; ++i) {
-            (*nodesMatrix)(index1 - 1, i) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(index1 - 1, i) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(index1 - 1, i) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //Top boundary nodes.
         for (int i = index1 - 2; i >= 0 ; --i) {
-            (*nodesMatrix)(i, index2 - 1) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, index2 - 1) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, index2 - 1) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //Left boundary nodes.
         for (auto i = index2 - 2; i >= 1 ; --i) {
-            (*nodesMatrix)(0, i) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(0, i) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(0, i) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }         
     }
@@ -90,62 +94,98 @@ namespace StructuredMeshGenerator{
         auto boundaryId = 0;
         //FrontBottom boundary nodes.
         for (int i = 0; i < _nn1 ; ++i) {
-            (*nodesMatrix)(i, 0, 0) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, 0, 0) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, 0, 0) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //FrontRight boundary nodes.
         for (int i = 1; i < _nn2 ; ++i) {
-            (*nodesMatrix)(_nn1 - 1, i, 0) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(_nn1 - 1, i, 0) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(_nn1 - 1, i, 0) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //FrontTop boundary nodes.
         for (int i = _nn1 - 2; i >= 0 ; --i) {
-            (*nodesMatrix)(i, _nn2 - 1, 0) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, _nn2 - 1, 0) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, _nn2 - 1, 0) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //FrontLeft boundary nodes.
         for (auto i = _nn2 - 2; i >= 1 ; --i) {
-            (*nodesMatrix)(0, i, 0) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(0, i, 0) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(0, i, 0) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //BackBottom boundary nodes.
-        for (auto i = 0; i < _nn1 ; ++i) {
-            (*nodesMatrix)(i, 0, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+        for (int i = 0; i < _nn1 ; ++i) {
+            nodesMatrix->at(i, 0, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, 0, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //BackRight boundary nodes.
         for (int i = 1; i < _nn2 ; ++i) {
-            (*nodesMatrix)(_nn1 - 1, i, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(_nn1 - 1, i, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(_nn1 - 1, i, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //BackTop boundary nodes.
         for (int i = _nn1 - 2; i >= 0 ; --i) {
-            (*nodesMatrix)(i, _nn2 - 1, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, _nn2 - 1, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, _nn2 - 1, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //BackLeft boundary nodes.
         for (auto i = _nn2 - 2; i >= 1 ; --i) {
-            (*nodesMatrix)(0, i, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(0, i, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(0, i, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
-        //BottomLeft boundary nodes.
-        for (auto i = 1; i < _nn3 - 1 ; ++i) {
-            (*nodesMatrix)(0, 0, i) = AllocateBoundaryNode(boundaryId);
+        //LeftBottom boundary nodes.
+        for (int i = 1; i < _nn3 - 1 ; ++i) {
+            nodesMatrix->at(0, 0, i) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(0, 0, i) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
-        //BottomRight boundary nodes.
-        for (auto i = 1; i < _nn3 - 1 ; ++i) {
-            (*nodesMatrix)(_nn1 - 1, 0, i) = AllocateBoundaryNode(boundaryId);
+        //LeftTop boundary nodes.
+        for (int i = 1; i < _nn3 - 1 ; ++i) {
+            nodesMatrix->at(0, _nn2 - 1, i) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(0, _nn2 - 1, i) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
-        //TopLeft boundary nodes.
-        for (auto i = 1; i < _nn3 - 1 ; ++i) {
-            (*nodesMatrix)(0, _nn2 - 1, i) = AllocateBoundaryNode(boundaryId);
+        //RightBottom boundary nodes.
+        for (int i = 1; i < _nn3 - 1 ; ++i) {
+            nodesMatrix->at(_nn1 - 1, 0, i) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(_nn1 - 1, 0, i) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
-        //TopRight boundary nodes.
-        for (auto i = 1; i < _nn3 - 1 ; ++i) {
-            (*nodesMatrix)(_nn1 - 1, _nn2 - 1, i) = AllocateBoundaryNode(boundaryId);
+        //RightTop boundary nodes.
+        for (int i = 1; i < _nn3 - 1 ; ++i) {
+            nodesMatrix->at(_nn1 - 1, _nn2 - 1, i) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(_nn1 - 1, _nn2 - 1, i) = AllocateBoundaryNode(boundaryId);
+            boundaryId++;
+        }
+        //BottomFront boundary nodes.
+        for (int i = 1; i < _nn1 - 1 ; ++i) {
+            nodesMatrix->at(i, 0, 0) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, 0, 0) = AllocateBoundaryNode(boundaryId);
+            boundaryId++;
+        }
+        //BottomBack boundary nodes.
+        for (int i = 1; i < _nn1 - 1 ; ++i) {
+            nodesMatrix->at(i, 0, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, 0, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            boundaryId++;
+        }
+        //TopFront boundary nodes.
+        for (int i = 1; i < _nn1 - 1 ; ++i) {
+            nodesMatrix->at(i, _nn2 - 1, 0) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, _nn2 - 1, 0) = AllocateBoundaryNode(boundaryId);
+            boundaryId++;
+        }
+        //TopBack boundary nodes.
+        for (int i = 1; i < _nn1 - 1 ; ++i) {
+            nodesMatrix->at(i, _nn2 - 1, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, _nn2 - 1, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
             boundaryId++;
         }
     }
@@ -182,7 +222,8 @@ namespace StructuredMeshGenerator{
         for (int i = 1; i < _nn3 - 1; i++){
             for (int j = 1; j < _nn2 - 1; j++){
                 for (int k = 1; k < _nn1 - 1; k++){
-                    (*nodesMatrix)(i, j, k) = AllocateInternalNode(internalId);
+                    nodesMatrix->at(i, j, k) = AllocateInternalNode(internalId);
+                    //(*nodesMatrix)(i, j, k) = AllocateInternalNode(internalId);
                     internalId++;
                 }
             }

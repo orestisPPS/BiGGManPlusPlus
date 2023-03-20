@@ -54,7 +54,20 @@ namespace Discretization {
                                     " Third entry must be 0.");
         }
     
-        void Mesh2D::printMesh() {}
+        void Mesh2D::printMesh() {
+            cout << "Number of Nodes : " << totalNodes() << endl;
+            for (int i = 0; i < numberOfNodesPerDirection[Two] ; ++i) {
+                for (int j = 0; j < numberOfNodesPerDirection[One] ; ++j) {
+                    cout << "(i, j) : (" << j << ", " << i << ")" << endl;
+                    cout << "ID (Global, Boundary, Internal) : (" << (*(*_nodesMatrix)(j, i)->id.global) << ", "
+                                                                 << (*(*_nodesMatrix)(j, i)->id.boundary) << ", "
+                                                                 << (*(*_nodesMatrix)(j, i)->id.internal) << ")" << endl;
+
+                    cout <<" " << endl;
+                }
+
+            }
+        }
         
         map<Position, vector<Node*>*>* Mesh2D::addDBoundaryNodesToMap() {
             auto boundaryNodes = new map<Position, vector<Node*>*>();

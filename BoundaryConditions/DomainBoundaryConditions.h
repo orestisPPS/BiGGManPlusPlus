@@ -29,8 +29,9 @@ namespace BoundaryConditions {
         void AddDirichletBoundaryConditions(Position boundaryPosition, list<BoundaryCondition* >* dirichletBCs);
         void AddNeumannBoundaryConditions(Position boundaryPosition, list<BoundaryCondition* >* neumannBCs);
         list<BoundaryCondition*>* GetBoundaryConditions(Position boundaryPosition, BoundaryConditionType boundaryConditionType);
+        map <BoundaryConditionType, map<Position,list<BoundaryCondition* >* >* > boundaryConditions;
+
     private:
-        map <BoundaryConditionType, map<Position,list<BoundaryCondition* >* >* > _boundaryConditions;
         static map<Position,list<BoundaryCondition* >* >* createBoundaryConditionsMap(SpaceEntityType& spaceType);
     };
 

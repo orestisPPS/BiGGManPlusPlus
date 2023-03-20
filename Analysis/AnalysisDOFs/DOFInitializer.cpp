@@ -2,6 +2,7 @@
 // Created by hal9000 on 2/18/23.
 //
 
+#include <algorithm>
 #include "DOFInitializer.h"
 
 namespace NumericalAnalysis {
@@ -11,11 +12,13 @@ namespace NumericalAnalysis {
         boundedDegreesOfFreedom = new list<DegreeOfFreedom*>();
         fluxDegreesOfFreedom = new list<tuple<DegreeOfFreedom*, double>>;
         totalDegreesOfFreedom = new list<DegreeOfFreedom*>();
+        _nodeDOFList = list<tuple<unsigned, DOFType*>>();
         
         initiateBoundaryNodeFixedDOF(mesh, degreesOfFreedom, domainBoundaryConditions);
         initiateInternalNodeDOFs(mesh, degreesOfFreedom);
+        mesh->printMesh();
         //initiateBoundaryNodeFluxDOF(mesh, degreesOfFreedom, domainBoundaryConditions);
-        removeDuplicateDOFs();
+        //removeDuplicatesAndDelete();
         
     }
     
@@ -33,21 +36,20 @@ namespace NumericalAnalysis {
 
     void DOFInitializer::initiateBoundaryNodeFluxDOF(Mesh *mesh, Field_DOFType *problemDOFTypes,
                                                                        DomainBoundaryConditions *domainBoundaryConditions) const {
-        //March through the boundaryNodes map
-        for (auto & boundaryNode : *mesh->boundaryNodes){
-            auto position = boundaryNode.first;
-            auto nodesAtPosition = boundaryNode.second;
+        //March through the domainBoundarys map
+        for (auto & domainBoundary : *mesh->boundaryNodes){
+            auto position = domainBoundary.first;
+            auto nodesAtPosition = domainBoundary.second;
             auto neumannBCAtPosition = domainBoundaryConditions->
                     GetBoundaryConditions(position, BoundaryConditionType::Neumann);
-            //March through the nodes at the Position  that is the key of the boundaryNodes map
+            //March through the nodes at the Position  that is the key of the domainBoundary map
             for (auto & node : *nodesAtPosition){
                 
                 auto fluxValue = -1.0;
                 //If the length of the list of Neumann BCs at the position is 1,
                 // the same value of flux is applied to all nodes of the boundary
                 if (problemDOFTypes->DegreesOfFreedom->size() == 1 &&neumannBCAtPosition->size() == 1){
-                    fluxValue = neumannBCAtPosition->front()->scalarValueAt(
-                            node->coordinates.positionVectorPtr());
+                    fluxValue = neumannBCAtPosition->front()->scalarValueAt(node->coordinates.positionVectorPtr());
                     auto dof = new DegreeOfFreedom(problemDOFTypes->DegreesOfFreedom->front(),
                                                    node->id.global, true);
                     fluxDegreesOfFreedom->push_back(tuple<DegreeOfFreedom*, double>(dof, fluxValue));
@@ -76,12 +78,12 @@ namespace NumericalAnalysis {
     void DOFInitializer::initiateBoundaryNodeFixedDOF(Mesh *mesh, Field_DOFType *degreesOfFreedom,
                                                                         DomainBoundaryConditions *domainBoundaryConditions) const {
         //March through the boundaryNodes map
-        for (auto &boundaryNode: *mesh->boundaryNodes) {
-            auto position = boundaryNode.first;
-            auto nodesAtPosition = boundaryNode.second;
+        for (auto &domainBoundary: *mesh->boundaryNodes) {
+            auto position = domainBoundary.first;
+            auto nodesAtPosition = domainBoundary.second;
             auto dirichletBCAtPosition = domainBoundaryConditions->
                     GetBoundaryConditions(position, BoundaryConditionType::Dirichlet);
-            //March through the nodes at the Position  that is the key of the boundaryNodes map
+            //March through the nodes at the Position  that is the key of the domainBoundary map
             for (auto &node: *nodesAtPosition) {
                 auto dofValue = -1.0;
                 //If the length of the list of Dirichlet BCs at the position is 1,
@@ -114,20 +116,26 @@ namespace NumericalAnalysis {
         }
     }
     
-    void DOFInitializer::removeDuplicateDOFs() const {
-        for (auto & dof : *totalDegreesOfFreedom){
-            for (auto & dof2 : *totalDegreesOfFreedom){
-                if (dof->parentNode == dof2->parentNode && dof->id->constraintType() == dof2->id->constraintType()){
-                    if (dof->id->constraintType() == ConstraintType::Fixed){
-                        boundedDegreesOfFreedom->remove(dof);
-                    }
-                    else if (dof->id->constraintType() == ConstraintType::Free){
-                        freeDegreesOfFreedom->remove(dof);
-                    }
-                    totalDegreesOfFreedom->remove(dof);
+    //Deallocate all the duplocicate dof objects
+    void DOFInitializer::removeDuplicatesAndDelete() const {
+        
+        auto duplicateDOFs = new vector<DegreeOfFreedom*>();
+        for (auto & dof : *freeDegreesOfFreedom){
+            auto nodeID = dof->parentNode;
+            auto dofType = dof->type();
+            auto dofIterator = boundedDegreesOfFreedom->begin();
+            while (dofIterator != boundedDegreesOfFreedom->end()){
+                if ((*dofIterator)->parentNode == nodeID && (*dofIterator)->type() == dofType){
+                    duplicateDOFs->push_back(*dofIterator);
+                    boundedDegreesOfFreedom->erase(dofIterator);
                 }
-            }       
+                else{
+                    dofIterator++;
+                }
+            }
         }
+        
+
     }
 
 

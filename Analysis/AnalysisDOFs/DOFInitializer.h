@@ -20,10 +20,11 @@ namespace NumericalAnalysis {
         list<DegreeOfFreedom*> *totalDegreesOfFreedom;
         
     private:
+        list<tuple<unsigned, DOFType*>> _nodeDOFList;
         void initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType* degreesOfFreedom) const;
         void initiateBoundaryNodeFixedDOF(Mesh *mesh, Field_DOFType* degreesOfFreedom, DomainBoundaryConditions *domainBoundaryConditions) const;
         void initiateBoundaryNodeFluxDOF(Mesh *mesh, Field_DOFType* problemDOFTypes, DomainBoundaryConditions *domainBoundaryConditions) const;
-        void removeDuplicateDOFs() const;
+        void removeDuplicatesAndDelete() const;
         
         //TODO: Implement initial conditions. Check if there is meaning in domain  initial conditions as a mathematical object.
         void applyInitialConditions(list<DegreeOfFreedom*>);
