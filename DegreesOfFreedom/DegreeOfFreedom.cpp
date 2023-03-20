@@ -27,7 +27,7 @@ namespace DegreesOfFreedom{
     DegreeOfFreedom::~DegreeOfFreedom() {
         delete id;
         //delete parentNode;
-        delete _dofType;
+        //delete _dofType;
         id = nullptr;
         parentNode = nullptr;
         _dofType = nullptr;

@@ -21,6 +21,7 @@ namespace NumericalAnalysis {
         
     private:
         list<tuple<unsigned, DOFType*>> _nodeDOFList;
+        void printDOFList(list<DegreeOfFreedom*> *dofList);
         void initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType* degreesOfFreedom) const;
         void initiateBoundaryNodeFixedDOF(Mesh *mesh, Field_DOFType* degreesOfFreedom, DomainBoundaryConditions *domainBoundaryConditions) const;
         void initiateBoundaryNodeFluxDOF(Mesh *mesh, Field_DOFType* problemDOFTypes, DomainBoundaryConditions *domainBoundaryConditions) const;
