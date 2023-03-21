@@ -35,11 +35,11 @@ namespace DegreesOfFreedom{
     
            bool operator != (const DegreeOfFreedom& dof);
     
-            //Pointer to the id of the degree of freedom. Contains ConstraintType Enum (fixed, flux, free)
-            // and unsigned int id. The enumeration of the id corresponds to the constraint type.
+            //Pointer to the value of the degree of freedom. Contains ConstraintType Enum (fixed, flux, free)
+            // and unsigned int value. The enumeration of the value corresponds to the constraint type.
             DegreeOfFreedomID *id;
     
-            //Unsigned int pointer to the global id of the parent node 
+            //Unsigned int pointer to the global value of the parent node 
             unsigned* parentNode;
     
             //Constant reference to an enum that indicates the type of degree of freedom

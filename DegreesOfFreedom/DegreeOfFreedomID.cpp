@@ -7,20 +7,20 @@
 namespace DegreesOfFreedom {
     
     DegreeOfFreedomID::DegreeOfFreedomID(ConstraintType type) : _constraintType(type){
-        id = new unsigned int;
+        value = new unsigned int;
     }
     
     DegreeOfFreedomID::~DegreeOfFreedomID() {
-        delete id;
-        id = nullptr;
+        delete value;
+        value = nullptr;
     }
     
     bool DegreeOfFreedomID::operator == (const DegreeOfFreedomID& dof) const {
-        return *id == *dof.id;
+        return *value == *dof.value;
     }
     
     bool DegreeOfFreedomID::operator != (const DegreeOfFreedomID& dof) const {
-        return *id != *dof.id;
+        return *value != *dof.value;
     }
     
     //Constant reference to an enum that indicates whether the degree of freedom is

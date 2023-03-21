@@ -194,7 +194,7 @@ namespace StructuredMeshGenerator{
         
         Node *node = new Node();
         *node->id.boundary = boundaryId;
-        cout << "Boundary node " << boundaryId << " created." << endl;
+        //cout << "Boundary node " << boundaryId << " created." << endl;
         return node;
     }
     
@@ -211,7 +211,7 @@ namespace StructuredMeshGenerator{
         for (int j = 1; j < index2 - 1; j++){
             for (int i = 1; i < index1 - 1; i++){
                 (*nodesMatrix)(i, j) = AllocateInternalNode(internalId);
-                cout << "Internal node " << internalId << " created." << endl;
+                //cout << "Internal node " << internalId << " created." << endl;
                 internalId++;
             }
         }
@@ -233,7 +233,7 @@ namespace StructuredMeshGenerator{
     Node *NodeFactory::AllocateInternalNode(unsigned internalId) {
         Node *node = new Node();
         *node->id.internal = internalId;
-        //cout << "Internal node id: " << *node->id->global << endl;
+        //cout << "Internal node value: " << *node->value->global << endl;
         return node;
     }
     
@@ -247,7 +247,7 @@ namespace StructuredMeshGenerator{
         auto id = 0;
         for (int j = 0; j < _nn2; j++){
             for (int i = 0; i < _nn1; i++){
-                //(*nodesMatrix)(i, j)->id.global = new unsigned(i + j * _nn1);
+                //(*nodesMatrix)(i, j)->value.global = new unsigned(i + j * _nn1);
                 (*nodesMatrix)(i, j)->id.global = new unsigned(id);
                 id++;
             }
@@ -259,7 +259,7 @@ namespace StructuredMeshGenerator{
         for (int k = 0; k < _nn3; k++){
             for (int j = 0; j < _nn2; j++){
                 for (int i = 0; i < _nn1; i++){
-                    //(*nodesMatrix)(i, j, k)->id.global = new unsigned(i + j * _nn1 + k * _nn1 * _nn2);
+                    //(*nodesMatrix)(i, j, k)->value.global = new unsigned(i + j * _nn1 + k * _nn1 * _nn2);
                     (*nodesMatrix)(i, j, k)->id.global = new unsigned(id);
                     id++;
                 }

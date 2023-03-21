@@ -57,7 +57,7 @@ namespace DegreesOfFreedom{
     //Prints in the CLI the DOF ID value, DOF type  and constraint type
     void DegreeOfFreedom::Print() {
         std::cout
-                << "DOF ID: " << *id->id << " DOF Type: " << _dofType << " Constraint Type: " << id->constraintType()
+                << "DOF ID: " << *id->value << " DOF Type: " << _dofType << " Constraint Type: " << id->constraintType()
                 << std::endl;
     }
 }
