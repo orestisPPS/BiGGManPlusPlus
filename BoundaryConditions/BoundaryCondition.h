@@ -9,30 +9,33 @@
 #include <map>
 #include <functional>
 #include "../PositioningInSpace/DirectionsPositions.h"
+#include "DomainBoundaryConditions.h"
+
 using namespace PositioningInSpace;
 using namespace std;
  
 namespace BoundaryConditions {
 
+    enum BoundaryConditionType {
+        Dirichlet,
+        Neumann
+    };
     class BoundaryCondition {
     public:
-        explicit BoundaryCondition(function<double (vector<double>*)> BCFunction);
-
-        explicit BoundaryCondition(map<Direction, function<double (vector<double>*)>> directionalBCFunction);
-
-        double scalarValueAt(vector<double> *coordinates);
-
-        double vectorValueAtDirection(Direction direction, vector<double> *coordinates);
         
-        vector<double> vectorValueAt(vector<double> *coordinates);
+        explicit BoundaryCondition(BoundaryConditionType bcType, map<DOFType*, function<double (vector<double>*)>>* bcForDof);
+        
+        double scalarValueOfDOFAt(DOFType type, vector<double> *coordinates);
+        
+        vector<double> vectorValueOfAllDOFAt(vector<double> *coordinates);
+        
+        const BoundaryConditionType& type() const;
         
 
     private:
-        function<double (vector<double>*)> _boundaryConditionFunction;
+        BoundaryConditionType _bcType;
 
-        map<Direction, function<double (vector<double>*)>> _directionalBoundaryConditionFunction;
-
-        void _checkDirectionalBoundaryConditionFunction();
+        map<DOFType*, function<double (vector<double>*)>>* bcForDof;
     };
 } // BoundaryConditions
 

@@ -11,17 +11,16 @@
 #include "BoundaryCondition.h"
 #include "../PositioningInSpace/DirectionsPositions.h"
 #include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
+#include "../DegreesOfFreedom/DegreeOfFreedomTypes.h"
 
 using namespace BoundaryConditions;
 using namespace PositioningInSpace;
+using namespace DegreesOfFreedom;
 using namespace std;
 
 namespace BoundaryConditions {
     
-    enum BoundaryConditionType {
-        Dirichlet,
-        Neumann
-    };
+
     
     class DomainBoundaryConditions {
     public:
@@ -29,10 +28,10 @@ namespace BoundaryConditions {
         void AddDirichletBoundaryConditions(Position boundaryPosition, list<BoundaryCondition* >* dirichletBCs);
         void AddNeumannBoundaryConditions(Position boundaryPosition, list<BoundaryCondition* >* neumannBCs);
         list<BoundaryCondition*>* GetBoundaryConditions(Position boundaryPosition, BoundaryConditionType boundaryConditionType);
-        map <BoundaryConditionType, map<Position,list<BoundaryCondition* >* >* > boundaryConditions;
-
+        map <Position, tuple<BoundaryConditionType, map<DOFType*, BoundaryCondition*>*>*>* bcWithTypeForDOFAtPosition;
+        
     private:
-        static map<Position,list<BoundaryCondition* >* >* createBoundaryConditionsMap(SpaceEntityType& spaceType);
+        static map <Position, tuple<BoundaryConditionType, map<DOFType*, BoundaryCondition*>*>*>* createBoundaryConditionsMap(SpaceEntityType& spaceType);
     };
 
 } // BoundaryConditions

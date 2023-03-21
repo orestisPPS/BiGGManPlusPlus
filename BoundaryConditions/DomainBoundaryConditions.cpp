@@ -12,11 +12,15 @@ namespace BoundaryConditions {
                                 pair<BoundaryConditionType, map<Position, list<BoundaryCondition *> *> *>
                                  (Neumann, createBoundaryConditionsMap(spaceType))}) {
     }
-    
-    map<Position, list<BoundaryCondition *> *> *DomainBoundaryConditions::createBoundaryConditionsMap(SpaceEntityType &spaceType) {
-        auto* boundaryConditionsMap = new map<Position, list<BoundaryCondition* >* >();
+
+    map <Position, tuple<BoundaryConditionType, map<DOFType*, BoundaryCondition*>*>*>*DomainBoundaryConditions::createBoundaryConditionsMap(SpaceEntityType &spaceType) {
+        auto* boundaryConditionsMap = new map <Position, tuple<BoundaryConditionType, map<DOFType*, BoundaryCondition*>*>*>*;
         switch (spaceType) {
             case PositioningInSpace::Axis:
+                
+                boundaryConditionsMap->insert(pair<Position, tuple<BoundaryConditionType, map<DOFType*, BoundaryCondition*>*>*>
+                        (Left, new tuple<BoundaryConditionType, map<DOFType*, BoundaryCondition*>*>(Dirichlet, new map<DOFType*, BoundaryCondition*>())));
+                
                 boundaryConditionsMap->insert(pair<Position,list<BoundaryCondition *> *>(Left, new list<BoundaryCondition* >()));
                 boundaryConditionsMap->insert(pair<Position,list<BoundaryCondition* > *>(Right, new list<BoundaryCondition* >()));
                 break; 
@@ -27,12 +31,7 @@ namespace BoundaryConditions {
                 boundaryConditionsMap->insert(pair<Position,list<BoundaryCondition* > *>(Top, new list<BoundaryCondition* >()));
                 break;
             case PositioningInSpace::Volume:
-                boundaryConditionsMap->insert(pair<Position,list<BoundaryCondition* > *>(Left, new list<BoundaryCondition* >()));
-                boundaryConditionsMap->insert(pair<Position,list<BoundaryCondition* > *>(Right, new list<BoundaryCondition* >()));
-                boundaryConditionsMap->insert(pair<Position,list<BoundaryCondition* > *>(Bottom, new list<BoundaryCondition* >()));
-                boundaryConditionsMap->insert(pair<Position,list<BoundaryCondition* > *>(Top, new list<BoundaryCondition* >()));
-                boundaryConditionsMap->insert(pair<Position,list<BoundaryCondition* > *>(Front, new list<BoundaryCondition* >()));
-                boundaryConditionsMap->insert(pair<Position,list<BoundaryCondition* > *>(Back, new list<BoundaryCondition* >()));
+                
                 break;
             default:
                 throw invalid_argument("Invalid space type");

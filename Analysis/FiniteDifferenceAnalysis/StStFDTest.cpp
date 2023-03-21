@@ -44,7 +44,8 @@ namespace NumericalAnalysis {
     }
     
     Field_DOFType* StStFDTest::createDOF() {
-        return new TemperatureScalar_DOFType();
+        //return new TemperatureScalar_DOFType();
+        return new DisplacementVectorField2D_DOFType();
     }
     
     FDSchemeSpecs* StStFDTest::createSchemeSpecs() {
