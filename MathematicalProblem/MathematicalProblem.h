@@ -9,6 +9,7 @@
 #include "../BoundaryConditions/DomainBoundaryConditions.h"
 #include "../DegreesOfFreedom/DegreeOfFreedomTypes.h"
 using namespace DegreesOfFreedom;
+using namespace BoundaryConditions;
 
 namespace MathematicalProblems {
 

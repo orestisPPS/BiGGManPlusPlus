@@ -9,9 +9,10 @@
 #include <map>
 #include <functional>
 #include "../PositioningInSpace/DirectionsPositions.h"
-#include "DomainBoundaryConditions.h"
+#include "../DegreesOfFreedom/DegreeOfFreedomTypes.h"
 
 using namespace PositioningInSpace;
+using namespace DegreesOfFreedom;
 using namespace std;
  
 namespace BoundaryConditions {
@@ -20,22 +21,28 @@ namespace BoundaryConditions {
         Dirichlet,
         Neumann
     };
+    
     class BoundaryCondition {
     public:
+        //Boundary Condition for all degrees of freedom of the problem defined for a single boundary position
+        explicit BoundaryCondition(BoundaryConditionType bcType, map<DOFType, function<double (vector<double>*)>>* bcForDof);
         
-        explicit BoundaryCondition(BoundaryConditionType bcType, map<DOFType*, function<double (vector<double>*)>>* bcForDof);
-        
+        //Returns the double value of the boundary condition for the given degree of freedom
+        //at the given boundary node coordinates vector pointer.
         double scalarValueOfDOFAt(DOFType type, vector<double> *coordinates);
         
+        //Returns the vector value of all boundary conditions for all degrees of freedom 
+        //at the given boundary node coordinates vector pointer.
         vector<double> vectorValueOfAllDOFAt(vector<double> *coordinates);
         
+        //Returns an BoundaryConditionType enum constant reference of the type of the boundary condition
         const BoundaryConditionType& type() const;
         
 
     private:
         BoundaryConditionType _bcType;
 
-        map<DOFType*, function<double (vector<double>*)>>* bcForDof;
+        map<DOFType, function<double (vector<double>*)>>* bcForDof;
     };
 } // BoundaryConditions
 

@@ -31,21 +31,30 @@ namespace NumericalAnalysis {
     }
     
     DomainBoundaryConditions* StStFDTest::createBC() {
-        auto dirichletLeft = new BoundaryCondition(function<double (vector<double>*)> ([](vector<double>* x) {return 0;}));
-        auto dirichletRight = new BoundaryCondition(function<double (vector<double>*)> ([](vector<double>* x) {return 0;}));
-        auto dirichletTop = new BoundaryCondition(function<double (vector<double>*)> ([](vector<double>* x) {return 0;}));
-        auto dirichletBottom = new BoundaryCondition(function<double (vector<double>*)> ([](vector<double>* x) {return 0;}));
-        auto bcs = new DomainBoundaryConditions(Plane);
-        bcs->AddDirichletBoundaryConditions(Left, new list<BoundaryCondition*> {dirichletLeft});
-        bcs->AddDirichletBoundaryConditions(Right, new list<BoundaryCondition*> {dirichletRight});
-        bcs->AddDirichletBoundaryConditions(Top, new list<BoundaryCondition*> {dirichletTop});
-        bcs->AddDirichletBoundaryConditions(Bottom, new list<BoundaryCondition*> {dirichletBottom});
-        return bcs;
+        auto dummyBCFunctionForAllBoundaryPositions = function<double (vector<double>*)> ([](vector<double>* x) {return 0;});
+        auto dummyDOFTypeFunctionMap = new map<DOFType, function<double (vector<double>*)>>();
+        
+        auto BCDummyMapPair = pair<DOFType, function<double (vector<double>*)>> (Temperature, dummyBCFunctionForAllBoundaryPositions);
+        dummyDOFTypeFunctionMap->insert(BCDummyMapPair);
+        
+        auto leftBC = new BoundaryCondition(BoundaryConditionType::Dirichlet, dummyDOFTypeFunctionMap);
+        auto rightBC = new BoundaryCondition(BoundaryConditionType::Dirichlet, dummyDOFTypeFunctionMap);
+        auto topBC = new BoundaryCondition(BoundaryConditionType::Dirichlet, dummyDOFTypeFunctionMap);
+        auto bottomBC = new BoundaryCondition(BoundaryConditionType::Dirichlet, dummyDOFTypeFunctionMap);
+        
+        auto dummyBCMap = new map<Position, BoundaryCondition*>();
+        dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Left, leftBC));
+        dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Right, rightBC));
+        dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Top, topBC));
+        dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Bottom, bottomBC));
+        
+        return new DomainBoundaryConditions(dummyBCMap);
+               
     }
     
     Field_DOFType* StStFDTest::createDOF() {
-        //return new TemperatureScalar_DOFType();
-        return new DisplacementVectorField2D_DOFType();
+        return new TemperatureScalar_DOFType();
+        //return new DisplacementVectorField2D_DOFType();
     }
     
     FDSchemeSpecs* StStFDTest::createSchemeSpecs() {

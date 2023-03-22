@@ -18,7 +18,6 @@ using namespace LinearAlgebra;
 #include <tuple>
 int main() {
 
-    auto bcSetTest = new BoundaryConditions::DomainBoundaryConditions(Axis);
     //auto test = new StructuredMeshGenerator::MeshTest2D();
     auto analysisTest = new NumericalAnalysis::StStFDTest();
     

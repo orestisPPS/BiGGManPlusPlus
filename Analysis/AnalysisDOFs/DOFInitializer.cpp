@@ -12,10 +12,9 @@ namespace NumericalAnalysis {
         boundedDegreesOfFreedom = new list<DegreeOfFreedom*>();
         fluxDegreesOfFreedom = new list<tuple<DegreeOfFreedom*, double>>;
         totalDegreesOfFreedom = new list<DegreeOfFreedom*>();
-        
-        initiateBoundaryNodeFixedDOF(mesh, degreesOfFreedom, domainBoundaryConditions);
+
         initiateInternalNodeDOFs(mesh, degreesOfFreedom);
-        //initiateBoundaryNodeFluxDOF(mesh, degreesOfFreedom, domainBoundaryConditions);
+        initiateBoundaryNodeDOF(mesh, degreesOfFreedom, domainBoundaryConditions);
         removeDuplicatesAndDelete(mesh);
         assignDOFIDs();
         //printDOFList(totalDegreesOfFreedom);
@@ -33,94 +32,39 @@ namespace NumericalAnalysis {
             }            
         }
     }
-
-    void DOFInitializer::initiateBoundaryNodeFluxDOF(Mesh *mesh, Field_DOFType *problemDOFTypes,
-                                                                       DomainBoundaryConditions *domainBoundaryConditions) const {
-        //March through the domainBoundarys map
+    void DOFInitializer::initiateBoundaryNodeDOF(Mesh *mesh, Field_DOFType *problemDOFTypes,
+                                                     DomainBoundaryConditions *domainBoundaryConditions) const {
         for (auto & domainBoundary : *mesh->boundaryNodes){
             auto position = domainBoundary.first;
             auto nodesAtPosition = domainBoundary.second;
-            auto neumannBCAtPosition = domainBoundaryConditions->
-                    GetBoundaryConditions(position, BoundaryConditionType::Neumann);
+            auto bcAtPosition = domainBoundaryConditions-> getBoundaryConditionAtPosition(position);
             //March through the nodes at the Position  that is the key of the domainBoundary map
             for (auto & node : *nodesAtPosition){
-                
-                auto fluxValue = -1.0;
-                //If the length of the list of Neumann BCs at the position is 1,
-                // the same value of flux is applied to all nodes of the boundary
-                if (problemDOFTypes->DegreesOfFreedom->size() == 1 &&neumannBCAtPosition->size() == 1){
-                    fluxValue = neumannBCAtPosition->front()->scalarValueAt(node->coordinates.positionVectorPtr());
-                    auto dof = new DegreeOfFreedom(problemDOFTypes->DegreesOfFreedom->front(),
-                                                   node->id.global, true);
-                    fluxDegreesOfFreedom->push_back(tuple<DegreeOfFreedom*, double>(dof, fluxValue));
-                    freeDegreesOfFreedom->push_back(dof);
-                    totalDegreesOfFreedom->push_back(dof);
-                }
-                else if (problemDOFTypes->DegreesOfFreedom->size() > 1 &&neumannBCAtPosition->size() > 1){
-                    auto fluxVectorValue = neumannBCAtPosition->front()->vectorValueAt(
-                            node->coordinates.positionVectorPtr());
-                    auto dofType = problemDOFTypes->DegreesOfFreedom->front();
-                    for (int i = 0; i < problemDOFTypes->DegreesOfFreedom->size(); i++){
-                        dofType = problemDOFTypes->DegreesOfFreedom->at(i);
-                        auto dof = new DegreeOfFreedom(dofType,node->id.global, true);
-                        fluxDegreesOfFreedom->push_back(tuple<DegreeOfFreedom*, double>(dof, fluxVectorValue[i]));
-                        freeDegreesOfFreedom->push_back(dof);
-                        totalDegreesOfFreedom->push_back(dof);
+                auto dofValue = -1.0;
+                for (auto& dofType : *problemDOFTypes->DegreesOfFreedom){
+                    dofValue = bcAtPosition->scalarValueOfDOFAt((*dofType), node->coordinates.positionVectorPtr());
+                    switch (bcAtPosition->type()){
+                        case Dirichlet:{
+                            auto dirichletDOF = new DegreeOfFreedom(dofType, node->id.global, true);
+                            boundedDegreesOfFreedom->push_back(dirichletDOF);
+                            totalDegreesOfFreedom->push_back(dirichletDOF);
+                            break;
+                        }
+                        case Neumann:{
+                            auto neumannDOF = new DegreeOfFreedom(dofType, node->id.global, true);
+                            fluxDegreesOfFreedom->push_back(tuple<DegreeOfFreedom*, double>(neumannDOF, dofValue));
+                            freeDegreesOfFreedom->push_back(neumannDOF);
+                            totalDegreesOfFreedom->push_back(neumannDOF);
+                            break;
+                        }
+                        default:
+                            throw std::invalid_argument("Boundary condition type not recognized");
                     }
-                }
-                else{
-                    throw std::invalid_argument("The number of DOF types and the number of Neumann BCs at the boundary are not equal.");
                 }
             }
         }
     }
     
-    void printDOFList(list<DegreeOfFreedom*> *dofList){
-        for (auto & dof : *dofList){
-            cout << (*dof->parentNode) << endl;
-        }
-    }
-
-    void DOFInitializer::initiateBoundaryNodeFixedDOF(Mesh *mesh, Field_DOFType *degreesOfFreedom,
-                                                                        DomainBoundaryConditions *domainBoundaryConditions) const {
-        //March through the boundaryNodes map
-        for (auto &domainBoundary: *mesh->boundaryNodes) {
-            auto position = domainBoundary.first;
-            auto nodesAtPosition = domainBoundary.second;
-            auto dirichletBCAtPosition = domainBoundaryConditions->
-                    GetBoundaryConditions(position, BoundaryConditionType::Dirichlet);
-            //March through the nodes at the Position  that is the key of the domainBoundary map
-            for (auto &node: *nodesAtPosition) {
-                auto dofValue = -1.0;
-                //If the length of the list of Dirichlet BCs at the position is 1,
-                // the same value of flux is applied to all nodes of the boundary
-                if (degreesOfFreedom->DegreesOfFreedom->size() == 1 && dirichletBCAtPosition->size() == 1) {
-                    dofValue = dirichletBCAtPosition->front()->scalarValueAt(
-                            node->coordinates.positionVectorPtr());
-                    auto dof = new DegreeOfFreedom(degreesOfFreedom->DegreesOfFreedom->front(), dofValue,
-                                                   node->id.global, true);
-                    boundedDegreesOfFreedom->push_back(dof);
-                    totalDegreesOfFreedom->push_back(dof);
-                }
-                
-                else if (degreesOfFreedom->DegreesOfFreedom->size() > 1 && dirichletBCAtPosition->size() > 1) {
-                    auto vectorValue = dirichletBCAtPosition->front()->vectorValueAt(
-                            node->coordinates.positionVectorPtr());
-                    auto dofType = degreesOfFreedom->DegreesOfFreedom->front();
-                    for (int i = 0; i < degreesOfFreedom->DegreesOfFreedom->size(); i++) {
-                        dofValue = vectorValue[i];
-                        dofType = degreesOfFreedom->DegreesOfFreedom->at(i);
-                    }
-                    auto dof = new DegreeOfFreedom(dofType, dofValue, node->id.global, true);
-                    boundedDegreesOfFreedom->push_back(dof);
-                    totalDegreesOfFreedom->push_back(dof);
-                } else {
-                    throw std::invalid_argument(
-                            "The number of DOF types and the number of Dirichlet BCs at the boundary are not equal.");
-                }
-            }
-        }
-    }
     
     void DOFInitializer::removeDuplicatesAndDelete(Mesh *mesh) const {
         
