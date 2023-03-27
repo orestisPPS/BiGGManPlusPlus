@@ -2,25 +2,19 @@
 // Created by hal9000 on 12/17/22.
 //
 #pragma once
-#include "../PartialDifferentialEquations/PartialDifferentialEquation.h"
-#include "../BoundaryConditions/DomainBoundaryConditions.h"
+#include "MathematicalProblem.h"
 
-namespace MathematicalProblem{
-    class SteadyStateMathematicalProblem {
+namespace MathematicalProblems{
+    class SteadyStateMathematicalProblem : public MathematicalProblem{
     public:
         SteadyStateMathematicalProblem(PartialDifferentialEquation* pde,
                                        DomainBoundaryConditions* bcs,
-                                       list<DegreeOfFreedom* >* dof, SpaceEntityType space);
+                                       struct Field_DOFType* degreesOfFreedom) ;
 
         ~SteadyStateMathematicalProblem();
         PartialDifferentialEquation* pde;
         DomainBoundaryConditions* boundaryConditions;
-        list<DegreeOfFreedom*>* degreesOfFreedom;
-        SpaceEntityType space;
-    
-    private:
-        void checkDegreesOfFreedom() const;
-        void checkSpaceEntityType() const;
+        Field_DOFType *degreesOfFreedom;
     };
     
 }

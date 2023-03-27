@@ -15,7 +15,7 @@ namespace DegreesOfFreedom {
 
     class DegreeOfFreedomID {
     public:
-        DegreeOfFreedomID(ConstraintType type, unsigned int id);
+        explicit DegreeOfFreedomID(ConstraintType type);
         
         ~DegreeOfFreedomID();
         
@@ -23,8 +23,8 @@ namespace DegreesOfFreedom {
 
         bool operator != (const DegreeOfFreedomID& dof) const;
         
-        //Pointer to the id of the degree of freedom
-        unsigned int* id;
+        //Pointer to the value of the degree of freedom
+        unsigned int* value;
 
         //Constant reference to an enum that indicates whether the degree of freedom is
         // fixed (Dirichlet BC), flux (Neumann BC), or free.

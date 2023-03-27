@@ -12,25 +12,18 @@
 #include "../PositioningInSpace/DirectionsPositions.h"
 #include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 
-using namespace BoundaryConditions;
 using namespace PositioningInSpace;
+using namespace DegreesOfFreedom;
 using namespace std;
 
 namespace BoundaryConditions {
     
-    enum BoundaryConditionType {
-        Dirichlet,
-        Neumann
-    };
-    
     class DomainBoundaryConditions {
     public:
-        explicit DomainBoundaryConditions(SpaceEntityType spaceType);
-        void AddDirichletBoundaryConditions(Position boundaryPosition, list<DomainBoundaryConditions* >* dirichletBCs);
-        void AddNeumannBoundaryConditions(Position boundaryPosition, list<DomainBoundaryConditions* >* neumannBCs);
+        explicit DomainBoundaryConditions(map <Position, BoundaryCondition*>* bcAtPosition);
+        BoundaryCondition* getBoundaryConditionAtPosition(Position boundaryPosition);
     private:
-        map <BoundaryConditionType, map<Position,list<DomainBoundaryConditions* >* >* > _boundaryConditions;
-        static map<Position,list<DomainBoundaryConditions* >* >* createBoundaryConditionsMap(SpaceEntityType& spaceType);
+        map <Position, BoundaryCondition*>* bcAtPosition;
     };
 
 } // BoundaryConditions

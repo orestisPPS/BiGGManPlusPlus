@@ -4,17 +4,12 @@
 
 #ifndef UNTITLED_NODE_H
 #define UNTITLED_NODE_H
-#pragma once
+
 #include "../Id/DiscreteEntityId.h"
-#include <map>
-#include <list>
-#include "../../PositioningInSpace/CoordinateVector.h"
-#include "../../DegreesOfFreedom/DegreeOfFreedom.h"
 #include "NodalCoordinates.h"
+//#include "../../DegreesOfFreedom/DegreeOfFreedom.h"
 
 using namespace PositioningInSpace;
-
-using namespace DegreesOfFreedom;
 using namespace std;
 
 namespace Discretization
@@ -23,15 +18,18 @@ namespace Discretization
 
     public:
 
-        explicit Node();
+        Node();
 
         Discretization::DiscreteEntityId id;
                 
         NodalCoordinates coordinates;
         
+        void printNode();
+        //vector<DegreeOfFreedom*> *_degreesOfFreedom;
+        
     private:
                
-        list <DegreeOfFreedom*> *_degreesOfFreedom;
+
     };
 }
 

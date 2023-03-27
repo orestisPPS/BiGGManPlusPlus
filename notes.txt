@@ -1,11 +1,27 @@
-1)Insert Boundary Values To Nodes
-   ii. Create DOF at nodes 
-   iii.Create BoundaryCreator Class for 2D
 
-2)Create Finite Difference implementation with input error order (up to 4?)
 
-3)Calculate metrix
+1)Create Finite Difference implementation with input error order (up to 4?)
 
-4)Search for gnuplot addon
+2)Calculate metrix
 
-5)Create Simulation Class
+3)Search for gnuplot addon
+
+4)Check if all destructors are implemented correctly up to this point (steady state fd analysis test)
+    (nodes,dofs ->with their ids, mathematical objects etc)
+    
+    
+    
+    
+    
+C# Snippet for matrix calculation
+
+foreach (var node in freeDOF)
+{
+    var k = node.InternalId;
+    A[k, k] = - 2d * (node.metrics.contravariantTensor[0, 0] + node.metrics.contravariantTensor[1, 1]); //Central
+    foreach (var freeNeighboor in node.freeHood)
+    {
+        var posj = freeNeighboor.Value.InternalId;
+        A[k, posj] = CoefficientCalculator(freeNeighboor.Key, node);
+    }
+}

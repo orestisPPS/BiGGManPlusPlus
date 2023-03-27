@@ -2,39 +2,40 @@
 // Created by hal9000 on 2/16/23.
 //
 #include <stdexcept>
+#include <utility>
 #include "BoundaryCondition.h"
 
 namespace BoundaryConditions {
-    BoundaryCondition::BoundaryCondition(function<double(vector<double>*)> BCFunction) :
-            _boundaryConditionFunction(std::move(BCFunction)){
+    
+    BoundaryCondition::BoundaryCondition(BoundaryConditionType bcType, map<DOFType, function<double (vector<double>*)>>* bcForDof) :
+            _bcType(bcType), bcForDof(bcForDof) {
     }
-
-    BoundaryCondition::BoundaryCondition(map<Direction, function<double(vector<double>*)>> directionalBCFunction) :
-            _directionalBoundaryConditionFunction(std::move(directionalBCFunction)) {
-        _checkDirectionalBoundaryConditionFunction();
-    }
-
-    double BoundaryCondition::valueAt(vector<double> *x) {
-        if (x == nullptr)
-            throw std::invalid_argument("Coordinates cannot be null.");
-        else
-            return _boundaryConditionFunction(x);
-    }
-
-    double BoundaryCondition::valueAt(Direction direction, vector<double> *x) {
-        return _directionalBoundaryConditionFunction.at(direction)(x);
-    }
-
-    void BoundaryCondition::_checkDirectionalBoundaryConditionFunction() {
-        if (_directionalBoundaryConditionFunction.empty()) {
-            throw std::invalid_argument("At least one direction must be specified for a directional boundary condition.");
-        }
-        if (_directionalBoundaryConditionFunction.size() > 3) {
-            throw std::invalid_argument("A boundary condition can only be specified in Direction:: One/Two/Three.");
-        }
-        //Check for time boundary condition
-        if (_directionalBoundaryConditionFunction.find(Direction::Time) != _directionalBoundaryConditionFunction.end()) {
-            throw std::invalid_argument("A boundary condition cannot be specified in Direction::Time. It is an initial condition.");
+    
+    BoundaryCondition::BoundaryCondition(BoundaryConditionType bcType, map<DOFType, double>* bcForDof){
+        _bcType = bcType;
+        this->bcForDof = new map<DOFType, function<double (vector<double>*)>>();
+        for (auto &bc : *bcForDof) {
+            this->bcForDof->insert({bc.first, [bc](vector<double> *coordinates) { return bc.second; }});
         }
     }
+    
+    double BoundaryCondition::scalarValueOfDOFAt(DOFType type, vector<double> *coordinates) {
+        return bcForDof->at(type)(coordinates);
+    }
+
+    vector<double> BoundaryCondition::vectorValueOfAllDOFAt(vector<double> *coordinates) {
+        vector<double> result = vector<double>(bcForDof->size());
+        for (auto &bc : *bcForDof) {
+            result.push_back(bc.second(coordinates));
+        }
+        return result;
+    }
+    
+    const BoundaryConditionType &BoundaryCondition::type() const {
+        return _bcType;
+    }
+
+
+
+
 } // BoundaryConditions

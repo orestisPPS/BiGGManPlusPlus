@@ -4,6 +4,9 @@
 #pragma once
 #include "MeshSpecs.h"
 #include "../Discretization/Mesh/Mesh.h"
+#include "../Discretization/Mesh/Mesh1D.h"
+#include "../Discretization/Mesh/Mesh2D.h"
+#include "../Discretization/Mesh/Mesh3D.h"
 #include "../LinearAlgebra/Array.h"
 #include "../LinearAlgebra/Transformations.h"
 #include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
@@ -17,7 +20,6 @@ namespace StructuredMeshGenerator {
         
     private:
         static Mesh* initiateMesh(MeshSpecs &meshSpecs);
-        void assignSpatialProperties(MeshSpecs &meshSpecs) const;
         void assignCoordinates(MeshSpecs &meshSpecs);
         void assign1DCoordinates(MeshSpecs &meshSpecs) const;
         void assign2DCoordinates(MeshSpecs &meshSpecs) const;

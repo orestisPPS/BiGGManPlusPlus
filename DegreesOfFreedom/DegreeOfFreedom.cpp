@@ -4,35 +4,38 @@
 
 #include "DegreeOfFreedom.h"
 
+
 namespace DegreesOfFreedom{
 
-    DegreeOfFreedom::DegreeOfFreedom(DOFType dofType, DegreeOfFreedomID *id, unsigned* parentNodeGlobalId) :
-            _dofType(dofType), _value(numeric_limits<double>::quiet_NaN()) {
-        this->id = id;
-        this->parentNodeGlobalId = parentNodeGlobalId;
+    DegreeOfFreedom::DegreeOfFreedom(DOFType* dofType, unsigned* parentNode, bool isConstrained) :
+            _dofType(dofType), parentNode(parentNode) ,_value(numeric_limits<double>::quiet_NaN()) {
+        if (isConstrained)
+            id = new DegreeOfFreedomID(ConstraintType::Fixed);
+        else
+            id = new DegreeOfFreedomID(ConstraintType::Free);
+            
     }
 
-    DegreeOfFreedom::DegreeOfFreedom(DOFType dofType, double value, DegreeOfFreedomID *id, unsigned* parentNodeGlobalId) :
-            _dofType(dofType), _value(value) {
-        if (id->constraintType() != ConstraintType::Fixed)
-            throw std::invalid_argument("Cannot initialize a DOF with a value if it is not fixed"
-                                        "Use the constructor that does not take a value");
-        this->id = id;
-        this->parentNodeGlobalId = parentNodeGlobalId;
+    DegreeOfFreedom::DegreeOfFreedom(DOFType* dofType, double value, unsigned* parentNode, bool isConstrained) :
+            _dofType(dofType), _value(value) , parentNode(parentNode) {
+        if (isConstrained)
+            id = new DegreeOfFreedomID(ConstraintType::Fixed);
+        else
+            throw invalid_argument("A DOF with a prescribed value must be constrained");
     }
-
+    
     DegreeOfFreedom::~DegreeOfFreedom() {
         delete id;
-        delete parentNodeGlobalId;
+        //delete parentNode;
+        //delete _dofType;
         id = nullptr;
-        parentNodeGlobalId = nullptr;
+        parentNode = nullptr;
+        _dofType = nullptr;
     }
 
     bool DegreeOfFreedom::operator==(const DegreeOfFreedom &dof) {
-        return *id == *dof.id &&
-               _dofType == dof._dofType &&
-               _value == dof._value &&
-               *parentNodeGlobalId == *dof.parentNodeGlobalId;
+        return _dofType == dof._dofType &&
+               *parentNode == *dof.parentNode;
     }
 
     bool DegreeOfFreedom::operator!=(const DegreeOfFreedom &dof) {
@@ -40,7 +43,7 @@ namespace DegreesOfFreedom{
     }
 
     DOFType const &DegreeOfFreedom::type() {
-        return _dofType;
+        return *(_dofType);
     }
 
 
@@ -54,7 +57,7 @@ namespace DegreesOfFreedom{
     //Prints in the CLI the DOF ID value, DOF type  and constraint type
     void DegreeOfFreedom::Print() {
         std::cout
-                << "DOF ID: " << *id->id << " DOF Type: " << _dofType << " Constraint Type: " << id->constraintType()
+                << "DOF ID: " << *id->value << " DOF Type: " << _dofType << " Constraint Type: " << id->constraintType()
                 << std::endl;
     }
 }
