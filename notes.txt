@@ -8,3 +8,20 @@
 
 4)Check if all destructors are implemented correctly up to this point (steady state fd analysis test)
     (nodes,dofs ->with their ids, mathematical objects etc)
+    
+    
+    
+    
+    
+C# Snippet for matrix calculation
+
+foreach (var node in freeDOF)
+{
+    var k = node.InternalId;
+    A[k, k] = - 2d * (node.metrics.contravariantTensor[0, 0] + node.metrics.contravariantTensor[1, 1]); //Central
+    foreach (var freeNeighboor in node.freeHood)
+    {
+        var posj = freeNeighboor.Value.InternalId;
+        A[k, posj] = CoefficientCalculator(freeNeighboor.Key, node);
+    }
+}
