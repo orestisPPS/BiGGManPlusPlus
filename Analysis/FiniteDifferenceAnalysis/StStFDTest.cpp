@@ -37,7 +37,7 @@ namespace NumericalAnalysis {
         auto BCDummyMapPair = pair<DOFType, function<double (vector<double>*)>> (Temperature, dummyBCFunctionForAllBoundaryPositions);
         dummyDOFTypeFunctionMap->insert(BCDummyMapPair);
         
-        auto leftBC = new BoundaryCondition(BoundaryConditionType::Dirichlet, dummyDOFTypeFunctionMap);
+        auto leftBC = new BoundaryCondition(BoundaryConditionType::Neumann, dummyDOFTypeFunctionMap);
         auto rightBC = new BoundaryCondition(BoundaryConditionType::Dirichlet, dummyDOFTypeFunctionMap);
         auto topBC = new BoundaryCondition(BoundaryConditionType::Dirichlet, dummyDOFTypeFunctionMap);
         auto bottomBC = new BoundaryCondition(BoundaryConditionType::Dirichlet, dummyDOFTypeFunctionMap);
@@ -49,7 +49,6 @@ namespace NumericalAnalysis {
         dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Bottom, bottomBC));
         
         return new DomainBoundaryConditions(dummyBCMap);
-               
     }
     
     Field_DOFType* StStFDTest::createDOF() {

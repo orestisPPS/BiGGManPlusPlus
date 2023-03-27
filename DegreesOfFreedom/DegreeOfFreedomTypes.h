@@ -40,7 +40,6 @@ namespace DegreesOfFreedom {
             void deallocate(){
                 for (auto dof : *DegreesOfFreedom){
                     delete dof;
-                    dof = nullptr;
                 }
                 delete DegreesOfFreedom;
                 DegreesOfFreedom = nullptr;

@@ -27,6 +27,9 @@ namespace BoundaryConditions {
         //Boundary Condition for all degrees of freedom of the problem defined for a single boundary position
         explicit BoundaryCondition(BoundaryConditionType bcType, map<DOFType, function<double (vector<double>*)>>* bcForDof);
         
+        //Only for double bc
+        explicit BoundaryCondition(BoundaryConditionType bcType, map<DOFType, double>* bcForDof);
+        
         //Returns the double value of the boundary condition for the given degree of freedom
         //at the given boundary node coordinates vector pointer.
         double scalarValueOfDOFAt(DOFType type, vector<double> *coordinates);

@@ -45,13 +45,13 @@ namespace NumericalAnalysis {
                     dofValue = bcAtPosition->scalarValueOfDOFAt((*dofType), node->coordinates.positionVectorPtr());
                     switch (bcAtPosition->type()){
                         case Dirichlet:{
-                            auto dirichletDOF = new DegreeOfFreedom(dofType, node->id.global, true);
+                            auto dirichletDOF = new DegreeOfFreedom(dofType, dofValue, node->id.global, true);
                             boundedDegreesOfFreedom->push_back(dirichletDOF);
                             totalDegreesOfFreedom->push_back(dirichletDOF);
                             break;
                         }
                         case Neumann:{
-                            auto neumannDOF = new DegreeOfFreedom(dofType, node->id.global, true);
+                            auto neumannDOF = new DegreeOfFreedom(dofType, node->id.global, false);
                             fluxDegreesOfFreedom->push_back(tuple<DegreeOfFreedom*, double>(neumannDOF, dofValue));
                             freeDegreesOfFreedom->push_back(neumannDOF);
                             totalDegreesOfFreedom->push_back(neumannDOF);
@@ -87,10 +87,32 @@ namespace NumericalAnalysis {
         auto duplicates = vector<DegreeOfFreedom*>();
         //Remove the duplicates from the list of total DOFs. The duplicates are added to the duplicates vector.
         totalDegreesOfFreedom->unique([&duplicates](DegreeOfFreedom* a, DegreeOfFreedom* b){
-            if ((*a->parentNode) == (*b->parentNode)){
+            auto parentNodeCondition = (*a->parentNode) == (*b->parentNode);
+            auto dofTypeCondition = a->type() == b->type();
+            auto constraintTypeCondition = false;
+            //auto aDirichletBNeumann = a->id->constraintType() == ConstraintType::Fixed && b->id->constraintType() == ConstraintType::Free;
+
+            constraintTypeCondition = a->id->constraintType() == Fixed && b->id->constraintType() == Free;
+            if (parentNodeCondition && dofTypeCondition && constraintTypeCondition){
                 duplicates.push_back(b);
+                return true;
             }
-            return (*a->parentNode) == (*b->parentNode);
+            constraintTypeCondition = a->id->constraintType() == Free && b->id->constraintType() == Fixed;
+            if (parentNodeCondition && dofTypeCondition && constraintTypeCondition){
+                duplicates.push_back(a);
+                return true;
+            }
+            constraintTypeCondition = a->id->constraintType() == Fixed && b->id->constraintType() == Fixed;
+            if (parentNodeCondition && dofTypeCondition && constraintTypeCondition){
+                 duplicates.push_back(b);
+                return true;
+            }
+            constraintTypeCondition = a->id->constraintType() == Free && b->id->constraintType() == Free;
+            if (parentNodeCondition && dofTypeCondition && constraintTypeCondition){
+                duplicates.push_back(b);
+                return true;
+            }
+            return false;
         });
         
         //Remove the duplicates of the duplicates vector from the bounded or free and flux DOF lists according to
