@@ -18,7 +18,7 @@ namespace NumericalAnalysis {
         vector<DegreeOfFreedom*> *freeDegreesOfFreedom;
         vector<DegreeOfFreedom*> *boundedDegreesOfFreedom;
         vector<tuple<DegreeOfFreedom*, double>> *fluxDegreesOfFreedom;
-        vector<DegreeOfFreedom*> *totalDegreesOfFreedom;      
+        vector<DegreeOfFreedom*> *totalDegreesOfFreedom;
         
     private:
         
@@ -28,13 +28,21 @@ namespace NumericalAnalysis {
         list<DegreeOfFreedom*> *_totalDegreesOfFreedomList;
         
         void _initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType* degreesOfFreedom) const;
+        
         void _initiateBoundaryNodeDOF(Mesh *mesh, Field_DOFType *problemDOFTypes,
-                                     DomainBoundaryConditions *domainBoundaryConditions) const;
+                                      DomainBoundaryConditions *domainBoundaryConditions) const;
         void _removeDuplicatesAndDelete(Mesh *mesh) const;
+        
         void _assignDOFIDs() const;
         
+        void _reconstructTotalDOFList() const;
+
+        void _assignDOFIDsToNodes(Mesh *mesh) const;
+        
         static void _listPtrToVectorPtr(vector<DegreeOfFreedom*> *vector, list<DegreeOfFreedom*> *list) ;
-            
+        
+
+        
         //TODO: Implement initial conditions. Check if there is meaning in domain  initial conditions as a mathematical object.
         void applyInitialConditions(list<DegreeOfFreedom*>);
     };

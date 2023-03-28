@@ -29,16 +29,6 @@ namespace NumericalAnalysis {
         fluxDegreesOfFreedom = nullptr;
     }
     
-/*    map<unsigned*, vector<DegreeOfFreedom*>*> AnalysisDegreesOfFreedom::_createNodeDofMap(Mesh *mesh, Field_DOFType* degreesOfFreedom) {
-        map<unsigned*, vector<DegreeOfFreedom*>*> nodeDofMap;
-        for (auto &dof : *totalDegreesOfFreedom){
-            auto node = dof->parentNode;
-            if (nodeDofMap.find(node) == nodeDofMap.end()){
-                nodeDofMap[node] = mesh->nodeFromID(*node)->degreesOfFreedom;
-            }
-            nodeDofMap[node] = new vector<DegreeOfFreedom*>();
-        }
-    }*/
 
     void AnalysisDegreesOfFreedom::printDOFCount() const {
         cout << "Degrees of Freedom Initiated" << endl;

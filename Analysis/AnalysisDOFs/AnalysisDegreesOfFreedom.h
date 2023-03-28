@@ -19,8 +19,6 @@ namespace NumericalAnalysis {
         
         ~AnalysisDegreesOfFreedom();
         
-        map<unsigned*, vector<DegreeOfFreedom*>*> *nodeDoFMap; 
-        
         vector<DegreeOfFreedom*> *totalDegreesOfFreedom;
 
         vector<DegreeOfFreedom*> *freeDegreesOfFreedom;
@@ -33,11 +31,7 @@ namespace NumericalAnalysis {
         
     private:
         
-        map<unsigned*, vector<DegreeOfFreedom*>> _createNodeDofMap(Mesh *mesh, Field_DOFType* degreesOfFreedom);
-        
         void _deallocateDegreesOfFreedom() const;
-
-        
     };
 
 } // NumericalAnalysis

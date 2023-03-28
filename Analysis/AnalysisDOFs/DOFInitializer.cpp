@@ -8,22 +8,29 @@
 namespace NumericalAnalysis {
     
     DOFInitializer::DOFInitializer(Mesh* mesh, DomainBoundaryConditions* domainBoundaryConditions, Field_DOFType* degreesOfFreedom) {
+        
         _freeDegreesOfFreedomList = new list<DegreeOfFreedom*>();
+        freeDegreesOfFreedom =  new vector<DegreeOfFreedom*>();
         _boundedDegreesOfFreedomList = new list<DegreeOfFreedom*>();
+        boundedDegreesOfFreedom = new vector<DegreeOfFreedom*>();
         _fluxDegreesOfFreedomList = new list<tuple<DegreeOfFreedom*, double>>;
+        fluxDegreesOfFreedom = new vector<tuple<DegreeOfFreedom*, double>>;
         _totalDegreesOfFreedomList = new list<DegreeOfFreedom*>();
-
+        totalDegreesOfFreedom = new vector<DegreeOfFreedom*>();
+        
         _initiateInternalNodeDOFs(mesh, degreesOfFreedom);
         _initiateBoundaryNodeDOF(mesh, degreesOfFreedom, domainBoundaryConditions);
         _removeDuplicatesAndDelete(mesh);
         _assignDOFIDs();
-        
+        _reconstructTotalDOFList();
+        _assignDOFIDsToNodes(mesh);
         _listPtrToVectorPtr(freeDegreesOfFreedom, _freeDegreesOfFreedomList);
         _listPtrToVectorPtr(boundedDegreesOfFreedom, _boundedDegreesOfFreedomList);
         for (auto & fluxDOF : *_fluxDegreesOfFreedomList){
             fluxDegreesOfFreedom->push_back(fluxDOF);
         }
         _listPtrToVectorPtr(totalDegreesOfFreedom, _totalDegreesOfFreedomList);
+
         
         delete _freeDegreesOfFreedomList;
         delete _boundedDegreesOfFreedomList;
@@ -128,6 +135,9 @@ namespace NumericalAnalysis {
             return false;
         });
         
+
+        
+        
         //Remove the duplicates of the duplicates vector from the bounded or free and flux DOF lists according to
         // the constraint type their value (fixed or free).
         for (auto &dof : duplicates) {
@@ -147,6 +157,7 @@ namespace NumericalAnalysis {
             delete dof;
             dof = nullptr;
         }
+        
     }
 
     void DOFInitializer::_assignDOFIDs() const {
@@ -163,6 +174,20 @@ namespace NumericalAnalysis {
             cout << "FIXED DOF ID: " << dofID << " Node: " << (*dof->parentNode)<< endl;
             dofID++;
         }
+    }
+    
+    void DOFInitializer::_reconstructTotalDOFList() const {
+        _totalDegreesOfFreedomList->clear();
+        _totalDegreesOfFreedomList->insert(_totalDegreesOfFreedomList->end(),
+                                           _freeDegreesOfFreedomList->begin(), _freeDegreesOfFreedomList->end());
+        _totalDegreesOfFreedomList->insert(_totalDegreesOfFreedomList->end(),
+                                           _boundedDegreesOfFreedomList->begin(), _boundedDegreesOfFreedomList->end());
+    }
+    
+    void DOFInitializer::_assignDOFIDsToNodes(Mesh *mesh) const {
+        for (auto &dof : *_totalDegreesOfFreedomList) {
+            auto node = mesh->nodeFromID(((*dof->parentNode)));
+            node->degreesOfFreedom->push_back(dof->id->value);}
     }
     
     void DOFInitializer::_listPtrToVectorPtr(vector<DegreeOfFreedom *> *vector, list<DegreeOfFreedom *> *list) {

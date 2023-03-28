@@ -79,7 +79,6 @@ add_executable(untitled main.cpp
         Analysis/FiniteDifferenceAnalysis/StStFDTest.cpp
         DegreesOfFreedom/DegreesOfFreedomCategorization.h
         DegreesOfFreedom/DegreesOfFreedomCategorization.cpp
-        Analysis/DOFInitializer.h
-        Analysis/DOFInitializer.cpp)
+        Analysis/DOFInitializer.cpp LinearAlgebra/LinearSystem.h LinearAlgebra/LinearSystem.cpp)
         
         
