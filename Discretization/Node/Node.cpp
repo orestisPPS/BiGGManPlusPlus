@@ -5,7 +5,9 @@
 #include "Node.h"
 
 namespace Discretization {
-    Node::Node() : id(DiscreteEntityId()), coordinates() { }
+    Node::Node() : id(DiscreteEntityId()), coordinates() {
+        degreesOfFreedom = new vector<unsigned*>();
+    }
     
     void Node::printNode() {
         cout << "Node: " << (*id.global) << endl;

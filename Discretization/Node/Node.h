@@ -24,6 +24,8 @@ namespace Discretization
                 
         NodalCoordinates coordinates;
         
+        vector<unsigned*>* degreesOfFreedom;
+        
         void printNode();
         //vector<DegreeOfFreedom*> *_degreesOfFreedom;
         

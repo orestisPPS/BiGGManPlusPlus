@@ -29,7 +29,7 @@ namespace Discretization {
         if (isInitialized)
             return _nodesMatrix->at(ID);
         else
-            throw std::runtime_error("Mesh has not been initialized");
+            return nullptr;
     }
     
 

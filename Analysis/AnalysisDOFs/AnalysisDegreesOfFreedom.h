@@ -14,23 +14,26 @@ namespace NumericalAnalysis {
 
     class AnalysisDegreesOfFreedom {
     public:
-        AnalysisDegreesOfFreedom();
+        AnalysisDegreesOfFreedom(Mesh *mesh, DomainBoundaryConditions *domainBoundaryConditions,
+                                 Field_DOFType* degreesOfFreedom);
         
         ~AnalysisDegreesOfFreedom();
         
-        list<DegreeOfFreedom*> *totalDegreesOfFreedom;
+        map<unsigned*, vector<DegreeOfFreedom*>*> *nodeDoFMap; 
         
-        list<DegreeOfFreedom*> *freeDegreesOfFreedom;
+        vector<DegreeOfFreedom*> *totalDegreesOfFreedom;
+
+        vector<DegreeOfFreedom*> *freeDegreesOfFreedom;
+
+        vector<DegreeOfFreedom*> *boundedDegreesOfFreedom;
+
+        vector<tuple<DegreeOfFreedom*, double>> *fluxDegreesOfFreedom;
         
-        list<DegreeOfFreedom*> *boundedDegreesOfFreedom;
-        
-        list<tuple<DegreeOfFreedom*, double>> *fluxDegreesOfFreedom;
-        
-        void initiateDegreesOfFreedom(Mesh *mesh, DomainBoundaryConditions *domainBoundaryConditions,
-                                       Field_DOFType* degreesOfFreedom);
         void printDOFCount() const;
         
     private:
+        
+        map<unsigned*, vector<DegreeOfFreedom*>> _createNodeDofMap(Mesh *mesh, Field_DOFType* degreesOfFreedom);
         
         void _deallocateDegreesOfFreedom() const;
 

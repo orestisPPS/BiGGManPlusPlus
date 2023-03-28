@@ -6,11 +6,15 @@
 
 namespace NumericalAnalysis {
     
-    AnalysisDegreesOfFreedom::AnalysisDegreesOfFreedom() {
-        totalDegreesOfFreedom = new list<DegreeOfFreedom*>;
-        freeDegreesOfFreedom = new list<DegreeOfFreedom*>;
-        boundedDegreesOfFreedom = new list<DegreeOfFreedom*>;
-        fluxDegreesOfFreedom = new list<tuple<DegreeOfFreedom*, double>>;
+    AnalysisDegreesOfFreedom::AnalysisDegreesOfFreedom(Mesh *mesh, DomainBoundaryConditions *domainBoundaryConditions,
+                                                       Field_DOFType* degreesOfFreedom) {
+        auto dofInitializer = DOFInitializer(mesh, domainBoundaryConditions, degreesOfFreedom);
+        totalDegreesOfFreedom = dofInitializer.totalDegreesOfFreedom;
+        freeDegreesOfFreedom = dofInitializer.freeDegreesOfFreedom;
+        boundedDegreesOfFreedom = dofInitializer.boundedDegreesOfFreedom;
+        fluxDegreesOfFreedom = dofInitializer.fluxDegreesOfFreedom;
+        
+        printDOFCount();
     }
     
     AnalysisDegreesOfFreedom::~AnalysisDegreesOfFreedom() {
@@ -24,17 +28,17 @@ namespace NumericalAnalysis {
         boundedDegreesOfFreedom = nullptr;
         fluxDegreesOfFreedom = nullptr;
     }
-        
-    void AnalysisDegreesOfFreedom::initiateDegreesOfFreedom(Mesh *mesh, DomainBoundaryConditions *domainBoundaryConditions,
-                                                             Field_DOFType* degreesOfFreedom) {
-        auto dofInitializer = DOFInitializer(mesh, domainBoundaryConditions, degreesOfFreedom);
-        totalDegreesOfFreedom = dofInitializer.totalDegreesOfFreedom;
-        freeDegreesOfFreedom = dofInitializer.freeDegreesOfFreedom;
-        boundedDegreesOfFreedom = dofInitializer.boundedDegreesOfFreedom;
-        fluxDegreesOfFreedom = dofInitializer.fluxDegreesOfFreedom;
-        
-        printDOFCount();
-    }
+    
+/*    map<unsigned*, vector<DegreeOfFreedom*>*> AnalysisDegreesOfFreedom::_createNodeDofMap(Mesh *mesh, Field_DOFType* degreesOfFreedom) {
+        map<unsigned*, vector<DegreeOfFreedom*>*> nodeDofMap;
+        for (auto &dof : *totalDegreesOfFreedom){
+            auto node = dof->parentNode;
+            if (nodeDofMap.find(node) == nodeDofMap.end()){
+                nodeDofMap[node] = mesh->nodeFromID(*node)->degreesOfFreedom;
+            }
+            nodeDofMap[node] = new vector<DegreeOfFreedom*>();
+        }
+    }*/
 
     void AnalysisDegreesOfFreedom::printDOFCount() const {
         cout << "Degrees of Freedom Initiated" << endl;
