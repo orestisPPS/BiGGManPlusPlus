@@ -6,6 +6,7 @@
 #define UNTITLED_LINEARSYSTEM_H
 
 #include "../Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.h"
+#include "Array.h"
 
 using namespace NumericalAnalysis;
 
@@ -13,13 +14,28 @@ namespace LinearAlgebra {
 
     class LinearSystem {
         public:
-            LinearSystem(AnalysisDegreesOfFreedom* analysisDegreesOfFreedom);
-            void createMatrix();
-            void createRHS();
-            void updateRHS();
+            explicit LinearSystem(AnalysisDegreesOfFreedom* analysisDegreesOfFreedom, Mesh* mesh);
+            
             ~LinearSystem();
+            
+            Array<double>* matrix;
+            
+            vector<double>* RHS;
+            
+            unsigned* numberOfDOFs;
+            
+            void createLinearSystem(Mesh* mesh);
+            
+            void updateRHS();
+    private:
+        AnalysisDegreesOfFreedom* _analysisDegreesOfFreedom;
+        
+        void createMatrix(Mesh* mesh);
+        
+        void createRHS();
     };
 
 } // LinearAlgebra
 
 #endif //UNTITLED_LINEARSYSTEM_H
+

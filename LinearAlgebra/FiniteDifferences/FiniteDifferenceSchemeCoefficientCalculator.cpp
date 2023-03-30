@@ -47,7 +47,7 @@ namespace LinearAlgebra {
         return positions;
     }
 
-    list<list<Position>> FiniteDifferenceSchemeCoefficientCalculator::get3DPositionsAtDirection(Direction direction) {
+    list<list<Position>> FiniteDifferenceSchemeCoefficientCalculator:: get3DPositionsAtDirection(Direction direction) {
         
         list <Position> horizontalNeighbours = {Left, Right};
         list <Position> verticalNeighbours = {Top, Bottom};

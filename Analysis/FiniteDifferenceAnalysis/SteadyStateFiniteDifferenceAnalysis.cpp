@@ -3,6 +3,7 @@
 //
 
 #include "SteadyStateFiniteDifferenceAnalysis.h"
+#include "../../LinearAlgebra/LinearSystem.h"
 
 namespace NumericalAnalysis {
     
@@ -10,6 +11,8 @@ namespace NumericalAnalysis {
         SteadyStateMathematicalProblem *mathematicalProblem, Mesh *mesh, FDSchemeSpecs *schemeSpecs) :
         FiniteDifferenceAnalysis(mathematicalProblem, mesh, schemeSpecs){
         degreesOfFreedom = initiateDegreesOfFreedom();
+        auto linearSystem = new LinearSystem(degreesOfFreedom, mesh);
+        linearSystem->createLinearSystem(mesh);
     }
     
     //void SteadyStateFiniteDifferenceAnalysis::createLinearSystem() {

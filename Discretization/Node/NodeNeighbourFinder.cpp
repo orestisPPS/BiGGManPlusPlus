@@ -68,26 +68,27 @@ namespace Discretization {
         return neighbours;
     }
     
-    map<Position, vector<unsigned*>*>
+    map<Position, vector<DegreeOfFreedom*>*>
     NodeNeighbourFinder::getAllNeighbourDOF(Mesh *mesh, const unsigned int *nodeId) {
         auto neighbours = getNeighbourNodes(mesh, nodeId);
-        map<Position, vector<unsigned int*>*> neighbourDOF;
+        map<Position, vector<DegreeOfFreedom*>*> neighbourDOF;
         for (auto & neighbour : neighbours) {
             neighbourDOF[neighbour.first] = neighbour.second->degreesOfFreedom;
         }
         return neighbourDOF;    
     }
 
-    map<Position, unsigned*>
+    map<Position, DegreeOfFreedom*>
     NodeNeighbourFinder::getSpecificNeighbourDOF(Mesh *mesh, unsigned* nodeId, DOFType dofType) {
-        auto neighbourDOF = getAllNeighbourDOF(mesh, nodeId);
-        map<Position, unsigned*> specificNeighbourDOF;
-        for (auto & dof : neighbourDOF) {
-            //Search for the specific DOF type is contained in the vector. if not return nullptr
-            if (!dof.second->empty() ) {
-                specificNeighbourDOF[dof.first] = dof.second->at(dofType);
+        auto dofHood = getAllNeighbourDOF(mesh, nodeId);
+        map<Position, DegreeOfFreedom*> specificNeighbourDOF;
+        for (auto & dofAtPosition : dofHood) {
+            for (auto & dofVectorComponent : *dofAtPosition.second) {
+                if (dofVectorComponent->type() == dofType) {
+                    specificNeighbourDOF[dofAtPosition.first] = dofVectorComponent;
+                }
             }
-        }   
+        }
         
 
     }

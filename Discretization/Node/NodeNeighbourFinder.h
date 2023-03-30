@@ -25,12 +25,12 @@ namespace Discretization {
             //Returns a map of all the degrees of freedom of the neighbour nodes of the given node id.
             //Key: Position Enum
             //Value: Vector pointer of DOF id pointers of the neighbour node
-            static map<Position, vector<unsigned*>*> getAllNeighbourDOF(Mesh* mesh, const unsigned* nodeId);
+            static map<Position, vector<DegreeOfFreedom*>*> getAllNeighbourDOF(Mesh* mesh, const unsigned* nodeId);
             
             //Returns a map of a specific degree of freedom of the neighbour nodes of the given node id.
             //Key: Position Enum
             //Value: DOF id pointer of dofType of the neighbour node
-            static map<Position, unsigned*> getSpecificNeighbourDOF(Mesh* mesh, unsigned* nodeId, DOFType dofType);
+            static map<Position, DegreeOfFreedom*> getSpecificNeighbourDOF(Mesh* mesh, unsigned* nodeId, DOFType dofType);
         private:
 
     };

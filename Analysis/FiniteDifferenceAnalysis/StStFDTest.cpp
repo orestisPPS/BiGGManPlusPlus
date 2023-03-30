@@ -18,8 +18,8 @@ namespace NumericalAnalysis {
 
     Mesh* StStFDTest::createMesh() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 5;
-        numberOfNodes[Direction::Two] = 5;
+        numberOfNodes[Direction::One] = 1000;
+        numberOfNodes[Direction::Two] = 1000;
         auto specs = StructuredMeshGenerator::MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto space = (PositioningInSpace::Plane);
         auto mesh = StructuredMeshGenerator::MeshPreProcessor(specs).mesh;
@@ -38,8 +38,8 @@ namespace NumericalAnalysis {
         dummyDOFTypeFunctionMap->insert(BCDummyMapPair);
         
         auto leftBC = new BoundaryCondition(BoundaryConditionType::Neumann, dummyDOFTypeFunctionMap);
-        auto rightBC = new BoundaryCondition(BoundaryConditionType::Dirichlet, dummyDOFTypeFunctionMap);
-        auto topBC = new BoundaryCondition(BoundaryConditionType::Dirichlet, dummyDOFTypeFunctionMap);
+        auto rightBC = new BoundaryCondition(BoundaryConditionType::Neumann, dummyDOFTypeFunctionMap);
+        auto topBC = new BoundaryCondition(BoundaryConditionType::Neumann, dummyDOFTypeFunctionMap);
         auto bottomBC = new BoundaryCondition(BoundaryConditionType::Dirichlet, dummyDOFTypeFunctionMap);
         
         auto dummyBCMap = new map<Position, BoundaryCondition*>();

@@ -6,7 +6,7 @@
 
 namespace Discretization {
     Node::Node() : id(DiscreteEntityId()), coordinates() {
-        degreesOfFreedom = new vector<unsigned*>();
+        degreesOfFreedom = new vector<DegreeOfFreedom*>();
     }
     
     void Node::printNode() {

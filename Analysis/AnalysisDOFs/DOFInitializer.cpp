@@ -164,14 +164,14 @@ namespace NumericalAnalysis {
         unsigned dofID = 0;
         for (auto &dof : *_freeDegreesOfFreedomList) {
             (*dof->id->value) = dofID;
-            cout << "FREE DOF ID: " << dofID << " Node: " << (*dof->parentNode)<< endl;
+            //cout << "FREE DOF ID: " << dofID << " Node: " << (*dof->parentNode)<< endl;
             dofID++;
         }
         cout <<" "<< endl;
         dofID = 0;
         for (auto &dof : *_boundedDegreesOfFreedomList) {
             (*dof->id->value) = dofID;
-            cout << "FIXED DOF ID: " << dofID << " Node: " << (*dof->parentNode)<< endl;
+            //cout << "FIXED DOF ID: " << dofID << " Node: " << (*dof->parentNode)<< endl;
             dofID++;
         }
     }
@@ -187,7 +187,8 @@ namespace NumericalAnalysis {
     void DOFInitializer::_assignDOFIDsToNodes(Mesh *mesh) const {
         for (auto &dof : *_totalDegreesOfFreedomList) {
             auto node = mesh->nodeFromID(((*dof->parentNode)));
-            node->degreesOfFreedom->push_back(dof->id->value);}
+            node->degreesOfFreedom->push_back(dof);
+        }
     }
     
     void DOFInitializer::_listPtrToVectorPtr(vector<DegreeOfFreedom *> *vector, list<DegreeOfFreedom *> *list) {
