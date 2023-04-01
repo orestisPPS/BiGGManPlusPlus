@@ -102,5 +102,24 @@ namespace Discretization {
             }
             return internalNodes;
         }
-} // 
+        
+        void Mesh2D::createIsoParametricCurves() {
+            auto isoCurves = new map<Direction, map<double, Node*>*>();
+            isoCurves->insert(pair<Direction, map<double, Node*>*>(Direction::One, new map<double, Node*>()));
+            isoCurves->insert(pair<Direction, map<double, Node*>*>(Direction::Two, new map<double, Node*>()));
+            for (int j = 0; j < numberOfNodesPerDirection[Two] ; ++j) {
+                for (int i = 0; i < numberOfNodesPerDirection[One] ; ++i) {
+                    auto test = node(i, j);
+                    (*(*isoCurves)[One]).insert(pair<double, Node*>
+                            (node(i, j)->coordinates(Parametric, 0), node(i, j)));
+                    (*(*isoCurves)[Two]).insert(pair<double, Node*>
+                            ((node(i, j)->coordinates(Parametric, 1)), node(i, j)));
+                }
+/*                    (*(*isoCurves)[One])[node(i, j)->coordinates(Parametric, 0)] = node(i, j);
+                    (*(*isoCurves)[Two])[node(i, j)->coordinates(Parametric, 1)] = node(i, j);  */              }
+            auto isoParametricCurves = new IsoParametricCurves(isoCurves);    
+        }
+
+}
+        
 

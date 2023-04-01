@@ -26,6 +26,8 @@ namespace Discretization {
         Node* node(unsigned i, unsigned j, unsigned k) override;
         
         void printMesh() override;
+
+        void createIsoParametricCurves() override;
         
     protected:
         
@@ -33,7 +35,7 @@ namespace Discretization {
         
         vector<Node*>* addInternalNodesToVector() override;
         
-        IsoParametricCurves* createIsoParametricCurves() override;
+
         
     };
 

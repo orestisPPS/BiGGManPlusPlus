@@ -75,8 +75,7 @@ namespace Discretization {
     
     void createNumberOfNodesPerDirectionMap() { }
     
-    IsoParametricCurves* Mesh::createIsoParametricCurves() {
-        return nullptr;
+    void Mesh::createIsoParametricCurves() {
     }
     
     void Mesh::categorizeNodes() {

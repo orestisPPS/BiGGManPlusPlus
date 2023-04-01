@@ -23,12 +23,14 @@ namespace PositioningInSpace {
         
         unsigned getNodeIdAtParametricDirectionAndCoordinate(Direction direction, double coordinate);
         
+        Node* getNodeWithParametricCoordinates(vector<double>*);
+        
+        unsigned getNodeIdWithParametricCoordinates(vector<double>*);
         
         vector<Node*> getIsoCurveNodes(Direction direction, double constantCoordinate);
         
         vector<unsigned> getIsoCurveNodeIds(Direction direction, double constantCoordinate);
-        
-        
+                
     private:
         //Map of iso-parametric curves containing all the nodes that belong to the same parametric coordinate axis.
         //Key: Direction (One (ξ), Two (η), Three(ζ)

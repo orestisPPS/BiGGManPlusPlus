@@ -82,10 +82,13 @@ namespace Discretization {
         return internalNodes;
     }
     
-    IsoParametricCurves* Mesh1D::addIsoParametricCurves() {
-        auto isoCurves = new map<;
-        isoParametricCurves->addIsoParametricCurve(new IsoParametricCurve1D());
-        return isoParametricCurves;
+    void Mesh1D::createIsoParametricCurves() {
+        auto isoCurves = new map<Direction, map<double, Node*>*>();
+        isoCurves->insert(pair<Direction, map<double, Node*>*>(Direction::One, new map<double, Node*>()));
+        for (int i = 0; i < numberOfNodesPerDirection[Direction::One]; i++) {
+            (*(*isoCurves)[One]).insert(pair<double, Node*>(node(i)->coordinates(Parametric, 0), node(i)));
+        }
+        isoParametricCurves = new IsoParametricCurves(isoCurves);
     }
     
     

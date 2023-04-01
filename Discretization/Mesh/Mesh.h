@@ -29,6 +29,8 @@ namespace Discretization {
         
         bool isInitialized;
 
+        IsoParametricCurves* isoParametricCurves;
+
         //---------------Implemented parent class methods--------------
         
         unsigned totalNodes();
@@ -50,11 +52,9 @@ namespace Discretization {
     
         virtual Node* node(unsigned i, unsigned j, unsigned k);
         
-        IsoParametricCurves* isoParametricCurves;
-        
-        virtual void printMesh();
-        
+        virtual void createIsoParametricCurves();
 
+        virtual void printMesh();
         
      protected:
         Array<Node *> *_nodesMatrix;
@@ -66,8 +66,6 @@ namespace Discretization {
         
         //Adds the internal nodes of the mesh to a vector pointer of node pointers
         virtual vector<Node*>* addInternalNodesToVector();
-        
-        virtual IsoParametricCurves* createIsoParametricCurves();
         
         void categorizeNodes();
          
