@@ -6,6 +6,7 @@
 #include "../Node/Node.h"
 #include<vector>
 #include "../../LinearAlgebra/Array.h"
+#include "../../PositioningInSpace/IsoParametricCurves.h"
 using namespace Discretization;
 using namespace LinearAlgebra;
 
@@ -32,6 +33,8 @@ namespace Discretization {
         
         unsigned totalNodes();
         
+        //Returns the node pointer of the node with the given global ID
+        //Ιf the node does not exist, returns nullptr
         Node* nodeFromID(unsigned ID);
         
         
@@ -47,6 +50,8 @@ namespace Discretization {
     
         virtual Node* node(unsigned i, unsigned j, unsigned k);
         
+        IsoParametricCurves* isoParametricCurves;
+        
         virtual void printMesh();
         
 
@@ -56,16 +61,18 @@ namespace Discretization {
         
         void initialize();
                   
-         //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
+        //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
         virtual map<Position, vector<Node*>*> *addDBoundaryNodesToMap();
         
-         //Adds the internal nodes of the mesh to a vector pointer of node pointers
+        //Adds the internal nodes of the mesh to a vector pointer of node pointers
         virtual vector<Node*>* addInternalNodesToVector();
-
-         void categorizeNodes();
+        
+        virtual IsoParametricCurves* createIsoParametricCurves();
+        
+        void categorizeNodes();
          
-         void createNumberOfNodesPerDirectionMap();
-         
-         void cleanMeshDataStructures();
+        void createNumberOfNodesPerDirectionMap();
+        
+        void cleanMeshDataStructures();
     };
 }

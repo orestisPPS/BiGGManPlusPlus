@@ -4,12 +4,17 @@
 
 #include "Mesh.h"
 
-#include <utility>
 using namespace  Discretization;
 
 namespace Discretization {
     
-    Mesh::Mesh() { }
+    Mesh::Mesh() {
+        isInitialized = false;
+        _nodesMatrix = nullptr;
+        boundaryNodes = nullptr;
+        internalNodes = nullptr;
+        isoParametricCurves = nullptr;
+    }
         
     Mesh::~Mesh() {
         delete _nodesMatrix;
@@ -69,7 +74,11 @@ namespace Discretization {
     
     
     void createNumberOfNodesPerDirectionMap() { }
-
+    
+    IsoParametricCurves* Mesh::createIsoParametricCurves() {
+        return nullptr;
+    }
+    
     void Mesh::categorizeNodes() {
         if (isInitialized) {
             boundaryNodes = addDBoundaryNodesToMap();

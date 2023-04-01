@@ -75,7 +75,7 @@ namespace Discretization {
         for (auto & neighbour : neighbours) {
             neighbourDOF[neighbour.first] = neighbour.second->degreesOfFreedom;
         }
-        return neighbourDOF;    
+        return neighbourDOF;
     }
 
     map<Position, DegreeOfFreedom*>
@@ -89,8 +89,7 @@ namespace Discretization {
                 }
             }
         }
-        
-
+        return specificNeighbourDOF;
     }
     
     

@@ -22,31 +22,21 @@ namespace LinearAlgebra {
     public:
         //Custom constructor that takes the size of a 1D array 
         // and allocates the memory in the heap
-        Array(unsigned rows){
-            this->_numberOfRows = rows;
-            this->_numberOfColumns = 1;
-            this->_numberOfAisles = 1;
-            parallelizationThreshold = 1000;
+        Array(unsigned rows) : _numberOfRows(rows), _numberOfColumns(1), _numberOfAisles(1), parallelizationThreshold(1000) {
             _array = new T[rows];
         }
         //Custom constructor that takes the size of a 2D array
         // and allocates the memory in the heap
 
-        Array(unsigned rows, unsigned  columns){
-            this->_numberOfRows = rows;
-            this->_numberOfColumns = columns;
-            this->_numberOfAisles = 1;
-            parallelizationThreshold = 1000;
+        Array(unsigned rows, unsigned  columns) :
+        _numberOfRows(rows), _numberOfColumns(columns), _numberOfAisles(1), parallelizationThreshold(1000) {
             _array = new T[rows * columns];
         }
         //Custom constructor that takes the size of a 3D array
         // and allocates the memory in the heap
 
-        Array(unsigned rows, unsigned  columns, unsigned aisles){
-            this->_numberOfRows = rows;
-            this->_numberOfColumns = columns;
-            this->_numberOfAisles = aisles;
-            parallelizationThreshold = 1000;
+        Array(unsigned rows, unsigned  columns, unsigned aisles) :
+        _numberOfRows(rows), _numberOfColumns(columns), _numberOfAisles(aisles), parallelizationThreshold(1000){
             _array = new T[rows * columns * aisles];
         }
 
@@ -387,7 +377,7 @@ namespace LinearAlgebra {
             return _numberOfAisles;
         }
         //Returns the size or the array
-        const unsigned int size() const {
+        unsigned int size() {
             return _numberOfRows * _numberOfColumns * _numberOfAisles;
         }
         
