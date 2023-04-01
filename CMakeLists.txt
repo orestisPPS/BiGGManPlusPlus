@@ -79,6 +79,6 @@ add_executable(untitled main.cpp
         Analysis/FiniteDifferenceAnalysis/StStFDTest.cpp
         DegreesOfFreedom/DegreesOfFreedomCategorization.h
         DegreesOfFreedom/DegreesOfFreedomCategorization.cpp
-        Analysis/DOFInitializer.cpp LinearAlgebra/LinearSystem.h LinearAlgebra/LinearSystem.cpp PositioningInSpace/IsoParametricCurves.h PositioningInSpace/IsoParametricCurves.cpp)
+        LinearAlgebra/LinearSystem.h LinearAlgebra/LinearSystem.cpp PositioningInSpace/IsoParametricCurves.h PositioningInSpace/IsoParametricCurves.cpp)
         
         

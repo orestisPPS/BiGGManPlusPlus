@@ -34,6 +34,9 @@ namespace Discretization {
 
         vector<Node*>* addInternalNodesToVector() override;
 
+        IsoParametricCurves* createIsoParametricCurves() override;
+
+
     };
 
 } // Discretization
