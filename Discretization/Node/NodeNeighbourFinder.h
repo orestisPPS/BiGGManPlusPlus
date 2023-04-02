@@ -15,6 +15,7 @@ using namespace PositioningInSpace;
 
 namespace Discretization {
 
+    
     class NodeNeighbourFinder {
         public:
             //Returns a map of all the neighbour nodes of the given node id.

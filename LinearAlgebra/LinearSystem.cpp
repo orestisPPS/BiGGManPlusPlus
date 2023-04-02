@@ -3,7 +3,7 @@
 //
 
 #include "LinearSystem.h"
-#include "../Discretization/Node/NodeNeighbourFinder.h"
+#include "../Discretization/Node/IsoParametricNeighbourFinder.h"
 
 namespace LinearAlgebra {
     
@@ -27,15 +27,15 @@ namespace LinearAlgebra {
     }
     
     void LinearSystem::createMatrix(Mesh* mesh) {
-        
+        auto hoodStuff = IsoParametricNeighbourFinder(mesh);
         for (auto &dof : *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
             auto positionI = (*dof->id->value);
             matrix->at(positionI, positionI) = 2;
-            auto dofHood = NodeNeighbourFinder::getSpecificNeighbourDOF(mesh, dof->id->value, dof->type());
+/*            auto dofHood = NodeNeighbourFinder::getSpecificNeighbourDOF(mesh, dof->id->value, dof->type());
             for (auto &neighbour : dofHood) {
                 auto positionJ = (*neighbour.second->id->value);
                 matrix->at(positionI, positionJ) = 1;
-            }
+            }*/
         }
         matrix->print();
     }

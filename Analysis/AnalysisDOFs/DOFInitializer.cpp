@@ -44,7 +44,7 @@ namespace NumericalAnalysis {
     void DOFInitializer::_initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType *degreesOfFreedom) const {
                 
         //March through the mesh nodes
-        for (auto & internalNode : *mesh->internalNodes){
+        for (auto & internalNode : *mesh->internalNodesVector){
             for (auto & DOFType : *degreesOfFreedom->DegreesOfFreedom){
                 auto dof = new DegreeOfFreedom(DOFType, internalNode->id.global, false);
                 _freeDegreesOfFreedomList->push_back(dof);

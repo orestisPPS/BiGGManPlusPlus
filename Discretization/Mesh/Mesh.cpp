@@ -12,8 +12,8 @@ namespace Discretization {
         isInitialized = false;
         _nodesMatrix = nullptr;
         boundaryNodes = nullptr;
-        internalNodes = nullptr;
-        isoParametricCurves = nullptr;
+        internalNodesVector = nullptr;
+        totalNodesVector = nullptr;
     }
         
     Mesh::~Mesh() {
@@ -21,6 +21,10 @@ namespace Discretization {
         _nodesMatrix = nullptr;
         delete boundaryNodes;
         boundaryNodes = nullptr;
+        delete internalNodesVector;
+        internalNodesVector = nullptr;
+        delete totalNodesVector;
+        totalNodesVector = nullptr;
     }
         
     unsigned Mesh::totalNodes() {
@@ -36,9 +40,7 @@ namespace Discretization {
         else
             return nullptr;
     }
-    
-
-    
+        
     unsigned Mesh::dimensions(){ return 0;}
     
     SpaceEntityType Mesh::space() {
@@ -70,7 +72,11 @@ namespace Discretization {
     
     vector<Node*>* Mesh::addInternalNodesToVector() {
         return nullptr;
-    }    
+    }
+    
+    vector<Node*>* Mesh::addTotalNodesToVector() {
+        return nullptr;        
+    }
     
     
     void createNumberOfNodesPerDirectionMap() { }
@@ -81,7 +87,8 @@ namespace Discretization {
     void Mesh::categorizeNodes() {
         if (isInitialized) {
             boundaryNodes = addDBoundaryNodesToMap();
-            internalNodes = addInternalNodesToVector();
+            internalNodesVector = addInternalNodesToVector();
+            totalNodesVector = addTotalNodesToVector();
         }
         else
             throw std::runtime_error("Mesh has not been initialized");
@@ -107,8 +114,8 @@ namespace Discretization {
         delete boundaryNodes;
         boundaryNodes = nullptr;
 
-        //Deallocate internalNodes vector
-        delete internalNodes;
-        internalNodes = nullptr;
+        //Deallocate internalNodesVector vector
+        delete internalNodesVector;
+        internalNodesVector = nullptr;
     }
 } // Discretization

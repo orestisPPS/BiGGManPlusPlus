@@ -36,8 +36,11 @@ namespace PositioningInSpace {
         //Key: Direction (One (ξ), Two (η), Three(ζ)
         //Value: Iso-parametric curve map at the key direction
         //Key: Parametric axis coordinate
-        //Value: Node pointer of the node with key coordinate
-        map<Direction, map<double,Node*>*>* isoParametricCurves;
+        //Value: Vector of Node pointers of that have the key coordinate
+        map<Direction, map<double,vector<Node*>>>* isoParametricCurves;
+        
+        
+        map<Direction, map<double,vector<Node*>>>* lolololo;
         
     };
 

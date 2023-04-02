@@ -111,24 +111,18 @@ namespace Discretization {
         }
         return internalNodes;
     }
-    
-    void Mesh3D::createIsoParametricCurves() {
-        auto isoCurves = new map<Direction, map<double, Node *> *>();
-        for (int k = 0; k < numberOfNodesPerDirection[Three]; k++) {
-            for (int j = 0; j < numberOfNodesPerDirection[Two]; j++) {
+
+    vector<Node*>* Mesh3D::addTotalNodesToVector() {
+        auto totalNodes = new vector<Node*>(_nodesMatrix->size());
+        for (int k = 0; k < numberOfNodesPerDirection[Three]; k++){
+            for (int j = 0; j < numberOfNodesPerDirection[Two]; j++){
                 for (int i = 0; i < numberOfNodesPerDirection[One]; ++i) {
-                    for (int i = 0; i < numberOfNodesPerDirection[One]; ++i) {
-                        (*(*isoCurves)[One]).insert(pair<double, Node *>
-                                                            (node(i, j, k)->coordinates(Parametric, 0), node(i, j, k)));
-                        (*(*isoCurves)[Two]).insert(pair<double, Node *>
-                                                            (node(i, j, k)->coordinates(Parametric, 1), node(i, j, k)));
-                        (*(*isoCurves)[Three]).insert(pair<double, Node *>
-                                                              (node(i, j, k)->coordinates(Parametric, 2),
-                                                               node(i, j, k)));
-                    }
+                    totalNodes->push_back((*_nodesMatrix)(i, j, k));
                 }
             }
         }
+        return totalNodes;      
     }
+    
         
 } // Discretization

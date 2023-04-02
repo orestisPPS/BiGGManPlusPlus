@@ -6,7 +6,6 @@
 #include "../Node/Node.h"
 #include<vector>
 #include "../../LinearAlgebra/Array.h"
-#include "../../PositioningInSpace/IsoParametricCurves.h"
 using namespace Discretization;
 using namespace LinearAlgebra;
 
@@ -25,11 +24,12 @@ namespace Discretization {
 
         map<Position, vector<Node*>*>* boundaryNodes;
         
-        vector<Node*>* internalNodes;
+        vector<Node*>* internalNodesVector;
         
+        vector<Node*>* totalNodesVector;
+                
         bool isInitialized;
 
-        IsoParametricCurves* isoParametricCurves;
 
         //---------------Implemented parent class methods--------------
         
@@ -66,6 +66,9 @@ namespace Discretization {
         
         //Adds the internal nodes of the mesh to a vector pointer of node pointers
         virtual vector<Node*>* addInternalNodesToVector();
+        
+        //Adds the total nodes of the mesh to a vector pointer of node pointers
+        virtual vector<Node*>* addTotalNodesToVector();
         
         void categorizeNodes();
          
