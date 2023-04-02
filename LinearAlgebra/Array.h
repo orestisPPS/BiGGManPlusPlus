@@ -527,10 +527,11 @@ namespace LinearAlgebra {
         void print(){
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = 0; j < _numberOfColumns; ++j) {
-                    std::cout << _array[i * _numberOfColumns + j] << " ";
+                    cout << _array[i * _numberOfColumns + j] << " ";
                 }
-                std::cout << std::endl;
+                cout << endl;
             }
+
         }
 
     private:

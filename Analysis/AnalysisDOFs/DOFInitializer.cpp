@@ -164,7 +164,7 @@ namespace NumericalAnalysis {
         unsigned dofID = 0;
         for (auto &dof : *_freeDegreesOfFreedomList) {
             (*dof->id->value) = dofID;
-            //cout << "FREE DOF ID: " << dofID << " Node: " << (*dof->parentNode)<< endl;
+            cout << "FREE DOF ID: " << dofID << " Node: " << (*dof->parentNode)<< endl;
             dofID++;
         }
         cout <<" "<< endl;

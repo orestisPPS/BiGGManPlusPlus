@@ -6,6 +6,9 @@
 #define UNTITLED_ISOPARAMETRICNEIGHBOURFINDER_H
 
 #include "../Mesh/Mesh.h"
+#include "../../Utility/Calculators.h"
+#include <cmath>
+
 
 namespace Discretization {
 
@@ -17,35 +20,38 @@ namespace Discretization {
         // node shares a common parametric coordinate in one  or two directions. (iso-line, iso-surface)
         explicit IsoParametricNeighbourFinder(Mesh* mesh);
         
-        vector<double> maximumParametricCoords;
+        ~IsoParametricNeighbourFinder();
         
-        map<Position, vector<double>> allPossibleNeighbourParametricCoords;
+        double maxMagnitude;
+        
+        map<Node*, map<Position, vector<Node*>>> getNeighbourNodes(unsigned nodeId);
+        
         
         Node* getNeighbourAtPosition(unsigned nodeId, Position position);
         
 
-
-
-        map<Position, map<int, Node*>> getNeighbourNodes(unsigned nodeId, unsigned  depth);
+        map<Position, vector<Node*>> getNeighbourNodes(unsigned nodeId, unsigned  depth);
         
-        map<Position, map<int, Node*>> getCustomDepthNeighbourNodes(unsigned nodeId, map<Position, unsigned> depthMap);
+        map<Position, vector<Node*>> getCustomDepthNeighbourNodes(unsigned nodeId, map<Position, unsigned> depthMap);
         
-        map<Position, map<int, vector<DegreeOfFreedom*>>> getAllNeighbourDOF(unsigned nodeId, unsigned depth);
+        map<Position, vector<vector<DegreeOfFreedom*>>> getAllNeighbourDOF(unsigned nodeId, unsigned depth);
 
-        map<Position, map<int, DegreeOfFreedom*>> getSpecificNeighbourDOF(unsigned* nodeId, DOFType dofType, unsigned depth);
+        map<Position, vector<DegreeOfFreedom*>> getSpecificNeighbourDOF(unsigned nodeId, DOFType dofType, unsigned depth);
+        
+        map<Position, vector<DegreeOfFreedom*>> getSpecificNeighbourDOF(unsigned nodeId, DOFType dofType,
+                                                                        ConstraintType constraintType, unsigned depth);
         
     private:
         map<vector<double>, Node*> _parametricCoordinatesToNodeMap;
         
         Mesh* _mesh;
-
-        // Returns the map of the parametric coordinate vectors of all possible neighbour nodes.
-        static map<Position, vector<double>>  _getAllPossibleNeighbourParametricCoords();
         
-        // Maps all the parametric coordinates of the nodes in the mesh to the node pointer they belong to.
+        
+        // Maps all the parametric coordinates of mesh to the node pointer they belong to.
         map<vector<double>, Node*> _createParametricCoordinatesToNodeMap();
         
-        
+        void _addNodeToNeighboursIfParametricCoordsExists(Position position, vector<double>& parametricCoords, map<Position,
+                                                          vector<Node*>> &neighbourNodesMap);
         
     };
 

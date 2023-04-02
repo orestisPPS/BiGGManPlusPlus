@@ -4,6 +4,7 @@
 
 #include "LinearSystem.h"
 #include "../Discretization/Node/IsoParametricNeighbourFinder.h"
+#include "../DegreesOfFreedom/IsoParametricDOFFinder.h"
 
 namespace LinearAlgebra {
     
@@ -27,17 +28,22 @@ namespace LinearAlgebra {
     }
     
     void LinearSystem::createMatrix(Mesh* mesh) {
-        auto hoodStuff = IsoParametricNeighbourFinder(mesh);
+
+        //auto hoodStuff = IsoParametricDOFFinder(_analysisDegreesOfFreedom, mesh);
         for (auto &dof : *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
             auto positionI = (*dof->id->value);
             matrix->at(positionI, positionI) = 2;
-/*            auto dofHood = NodeNeighbourFinder::getSpecificNeighbourDOF(mesh, dof->id->value, dof->type());
+            auto hoodStuff = IsoParametricNeighbourFinder(mesh);
+            auto dofHood = hoodStuff.getSpecificNeighbourDOF(*dof->parentNode,
+                                                             dof->type(), Free, 1);
             for (auto &neighbour : dofHood) {
-                auto positionJ = (*neighbour.second->id->value);
-                matrix->at(positionI, positionJ) = 1;
-            }*/
+                    auto positionJ = (*neighbour.second[0]->id->value);
+                    matrix->at(positionI, positionJ) = 1;
+
+            }
         }
         matrix->print();
+
     }
     
 } // LinearAlgebra

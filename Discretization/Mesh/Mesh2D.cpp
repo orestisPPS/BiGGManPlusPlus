@@ -111,6 +111,9 @@ namespace Discretization {
                 }
             }
             return totalNodes;
+            //print node id
+
+            
         }
         
 }
