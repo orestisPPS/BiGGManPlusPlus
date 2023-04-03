@@ -17,6 +17,24 @@ namespace Discretization {
                                                     coordinates.positionVector(Template)[2] << "}" << endl;
         cout << "-------------------------------------------" << endl;
     }
+    
+    DegreeOfFreedom* Node::getDegreeOfFreedomPtr(DOFType type) const {
+        for (auto &dof : *degreesOfFreedom) {
+            if (dof->type() == type) {
+                return dof;
+            }
+        }
+        return nullptr;
+    }
+    
+    const DegreeOfFreedom& Node::getDegreeOfFreedom(DOFType type) const {
+        for (auto &dof : *degreesOfFreedom) {
+            if (dof->type() == type) {
+                return *dof;
+            }
+        }
+        return *degreesOfFreedom->at(0);
+    }
 }// Discretization
     
 

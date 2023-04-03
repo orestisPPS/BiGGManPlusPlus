@@ -29,21 +29,24 @@ namespace LinearAlgebra {
     
     void LinearSystem::createMatrix(Mesh* mesh) {
 
-        //auto hoodStuff = IsoParametricDOFFinder(_analysisDegreesOfFreedom, mesh);
+        
         for (auto &dof : *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
             auto positionI = (*dof->id->value);
             matrix->at(positionI, positionI) = 2;
-            auto hoodStuff = IsoParametricNeighbourFinder(mesh);
-            auto dofHood = hoodStuff.getSpecificNeighbourDOF(*dof->parentNode,
-                                                             dof->type(), Free, 1);
-            for (auto &neighbour : dofHood) {
-                    auto positionJ = (*neighbour.second[0]->id->value);
-                    matrix->at(positionI, positionJ) = 1;
-
+            auto hoodStuff = new IsoParametricNeighbourFinder(mesh);
+/*            //auto dofHood = hoodStuff->getSpecificNeighbourDOF(*dof->parentNode, dof->type(), Free, 1);
+            for (auto &neighbour : *dofHood) {
+*//*                    auto positionJ = (*neighbour.second.at(0)->id->value);
+                    matrix->at(positionI, positionJ) = 1;*//*
             }
-        }
+            delete hoodStuff;
+            delete dofHood;
+            dofHood = nullptr;
+        }*/
+/*        delete hoodStuff;
+        hoodStuff = nullptr;*/
         matrix->print();
 
-    }
+    }}
     
 } // LinearAlgebra

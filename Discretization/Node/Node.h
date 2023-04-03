@@ -28,6 +28,10 @@ namespace Discretization
         
         void printNode();
         
+        DegreeOfFreedom* getDegreeOfFreedomPtr(DOFType type) const;
+        
+        const DegreeOfFreedom& getDegreeOfFreedom(DOFType type) const;
+        
     private:
                
 
