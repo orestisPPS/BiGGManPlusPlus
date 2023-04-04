@@ -59,6 +59,10 @@ namespace Discretization {
      protected:
         Array<Node *> *_nodesMatrix;
         
+        map<unsigned, Node*>* _nodesMap;
+        
+        map<unsigned, Node*>* createNodesMap() const;
+        
         void initialize();
                   
         //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers

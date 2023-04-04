@@ -9,17 +9,16 @@ namespace Discretization {
     IsoParametricNeighbourFinder::IsoParametricNeighbourFinder(Mesh *mesh){
         this->_mesh = mesh;
         this->_parametricCoordinatesToNodeMap = _createParametricCoordinatesToNodeMap();
-        maxMagnitude = Utility::Calculators::magnitude(vector<double>{
-                static_cast<double>(mesh->numberOfNodesPerDirection[PositioningInSpace::One] - 1),
-                static_cast<double>(mesh->numberOfNodesPerDirection[PositioningInSpace::Two] - 1),
-                static_cast<double>(mesh->numberOfNodesPerDirection[PositioningInSpace::Three] - 1)});
-        //auto hoodTest = getAllNeighbourNodes(6, 1);
-        //auto dofHoodTest = getAllNeighbourDOF(6, 1);
-        auto graph = new IsoParametricNodeHoodGraph(_mesh->nodeFromID(16), 3, mesh, _parametricCoordinatesToNodeMap);
     }
 
     IsoParametricNeighbourFinder::~IsoParametricNeighbourFinder() {
         cout << "IsoParametricNeighbourFinder destructor called" << endl;
+    }
+    
+    IsoParametricNodeGraph IsoParametricNeighbourFinder::getIsoParametricNodeGraph(Node *node, int graphDepth) {
+        auto isoParametricNodeGraph = IsoParametricNodeGraph(node, graphDepth, _mesh,
+                                                   _parametricCoordinatesToNodeMap);
+        return isoParametricNodeGraph;
     }
 
 

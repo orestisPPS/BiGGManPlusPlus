@@ -14,6 +14,7 @@ namespace Discretization {
         boundaryNodes = nullptr;
         internalNodesVector = nullptr;
         totalNodesVector = nullptr;
+        _nodesMap = nullptr;
     }
         
     Mesh::~Mesh() {
@@ -36,7 +37,7 @@ namespace Discretization {
     
     Node* Mesh::nodeFromID(unsigned ID) {
         if (isInitialized)
-            return _nodesMatrix->at(ID);
+            return _nodesMap->at(ID);
         else
             return nullptr;
     }
@@ -104,6 +105,21 @@ namespace Discretization {
         else
             throw std::runtime_error("Mesh has not been initialized");
     }
+    
+    map<unsigned , Node*>* Mesh::createNodesMap() const {
+        if (isInitialized) {
+            auto nodesMap = new map<unsigned , Node*>();
+            for (auto &node : *totalNodesVector) {
+                
+                nodesMap->insert(pair<unsigned, Node*>(*node->id.global, node));
+            }
+            return nodesMap;
+        }
+        else
+            throw std::runtime_error("Mesh has not been initialized");
+    }
+    
+    
     
     void Mesh::cleanMeshDataStructures() {
         //search all boundaryNodes map and deallocate all vector pointer values

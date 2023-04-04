@@ -8,7 +8,8 @@ namespace Discretization {
     
         Mesh2D::Mesh2D(Array<Node *> *nodes) : Mesh() {
             this->_nodesMatrix = nodes;
-            initialize();      
+            initialize();
+            _nodesMap = createNodesMap();
         }
     
         Mesh2D::~Mesh2D() {

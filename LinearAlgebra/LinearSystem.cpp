@@ -1,5 +1,5 @@
 //
-// Created by hal9000 on 3/28/23.
+// Created by hal9 000 on 3/28/23.
 //
 
 #include "LinearSystem.h"
@@ -28,25 +28,31 @@ namespace LinearAlgebra {
     }
     
     void LinearSystem::createMatrix(Mesh* mesh) {
+        auto hoodStuff = IsoParametricNeighbourFinder(mesh);
+        for (auto &dof: *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
+            //Node with the DOF
+            auto node = mesh->nodeFromID(*dof->parentNode);
 
-        
-        for (auto &dof : *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
+            //I Position in the matrix (free DOF id)
             auto positionI = (*dof->id->value);
             matrix->at(positionI, positionI) = 2;
-            auto hoodStuff = new IsoParametricNeighbourFinder(mesh);
-/*            //auto dofHood = hoodStuff->getSpecificNeighbourDOF(*dof->parentNode, dof->type(), Free, 1);
-            for (auto &neighbour : *dofHood) {
-*//*                    auto positionJ = (*neighbour.second.at(0)->id->value);
-                    matrix->at(positionI, positionJ) = 1;*//*
-            }
-            delete hoodStuff;
-            delete dofHood;
-            dofHood = nullptr;
-        }*/
-/*        delete hoodStuff;
-        hoodStuff = nullptr;*/
-        matrix->print();
 
-    }}
-    
-} // LinearAlgebra
+            //J Position in the matrix (neighbouring free DOF id)
+            auto dofGraph =
+                    //hoodStuff.getIsoParametricNodeGraph(node, 1).getSpecificDOFGraph(dof->type(), Free);
+                    hoodStuff.getIsoParametricNodeGraph(node, 1).getSpecificDOFGraph(dof->type());
+
+            for (auto &neighbour: *dofGraph) {
+                for (auto &neighbourDof: neighbour.second) {
+                    if (neighbourDof->id->constraintType() == Free) {
+                        auto positionJ = (*neighbourDof->id->value);
+                        matrix->at(positionI, positionJ) = +1;
+                    }
+                }
+                //TODO: DEALLOCATE MAPS!
+            }
+
+        }
+        matrix->print();
+    }
+}// LinearAlgebra
