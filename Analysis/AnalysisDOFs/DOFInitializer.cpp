@@ -18,6 +18,7 @@ namespace NumericalAnalysis {
         _totalDegreesOfFreedomList = new list<DegreeOfFreedom*>();
         totalDegreesOfFreedom = new vector<DegreeOfFreedom*>();
         totalDegreesOfFreedomMap = new map<unsigned, DegreeOfFreedom*>();
+        totalDegreesOfFreedomMapInverse = new map<DegreeOfFreedom*, unsigned>();
         
         _initiateInternalNodeDOFs(mesh, degreesOfFreedom);
         _initiateBoundaryNodeDOF(mesh, degreesOfFreedom, domainBoundaryConditions);
@@ -36,9 +37,7 @@ namespace NumericalAnalysis {
         delete _freeDegreesOfFreedomList;
         delete _boundedDegreesOfFreedomList;
         delete _fluxDegreesOfFreedomList;
-        delete _totalDegreesOfFreedomList;
-
-        
+        delete _totalDegreesOfFreedomList;        
         //printDOFList(_totalDegreesOfFreedomList);
     }
     
@@ -197,6 +196,8 @@ namespace NumericalAnalysis {
         for (auto &node : *mesh->totalNodesVector) {
             for (auto &dof : *node->degreesOfFreedom) {
                 totalDegreesOfFreedomMap->insert(pair<unsigned, DegreeOfFreedom*>(dofId, dof));
+                totalDegreesOfFreedomMapInverse->insert(pair<DegreeOfFreedom*, unsigned>(dof, dofId));
+                cout<< "DOF ID: " << dofId << " Node: " << *totalDegreesOfFreedomMap->at(dofId)->parentNode << endl;
                 dofId++;
             }
         }

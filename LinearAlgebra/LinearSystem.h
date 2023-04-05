@@ -23,6 +23,10 @@ namespace LinearAlgebra {
             
             vector<double>* RHS;
             
+            unsigned* numberOfFreeDOFs;
+            
+            unsigned* numberOfFixedDOFs;
+            
             unsigned* numberOfDOFs;
             
             void createLinearSystem();
@@ -36,11 +40,17 @@ namespace LinearAlgebra {
         
         AnalysisDegreesOfFreedom* _analysisDegreesOfFreedom;
         
-        void createMatrix();
-        void createAllDOFMatrix();
+        Array<double>* _freeDOFMatrix;
+
+        // Fixed DOF x Total DOF
+        Array<double>* _fixedDOFMatrix;
+
+        void _createMatrix();
+        void _createFixedDOFSubMatrix();
+        void _createFreeDOFSubMatrix();
+
         
-        void createRHS();
-        void createRHS2();
+        void _createRHS();
     };
 
 } // LinearAlgebra

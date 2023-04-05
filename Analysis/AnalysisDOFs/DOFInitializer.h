@@ -20,6 +20,7 @@ namespace NumericalAnalysis {
         vector<tuple<DegreeOfFreedom*, double>> *fluxDegreesOfFreedom;
         vector<DegreeOfFreedom*> *totalDegreesOfFreedom;
         map<unsigned, DegreeOfFreedom*> *totalDegreesOfFreedomMap;
+        map<DegreeOfFreedom*, unsigned> *totalDegreesOfFreedomMapInverse;
         
     private:
         

@@ -31,7 +31,7 @@ namespace NumericalAnalysis {
     }
     
     DomainBoundaryConditions* StStFDTest::createBC() {
-        auto dummyBCFunctionForAllBoundaryPositions = function<double (vector<double>*)> ([](vector<double>* x) {return 0;});
+        auto dummyBCFunctionForAllBoundaryPositions = function<double (vector<double>*)> ([](vector<double>* x) {return 1;});
         auto dummyDOFTypeFunctionMap = new map<DOFType, function<double (vector<double>*)>>();
         
         auto BCDummyMapPair = pair<DOFType, function<double (vector<double>*)>> (Temperature, dummyBCFunctionForAllBoundaryPositions);

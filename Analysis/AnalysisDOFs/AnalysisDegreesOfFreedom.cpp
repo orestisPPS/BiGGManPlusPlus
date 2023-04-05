@@ -11,9 +11,11 @@ namespace NumericalAnalysis {
         auto dofInitializer = DOFInitializer(mesh, domainBoundaryConditions, degreesOfFreedom);
         totalDegreesOfFreedom = dofInitializer.totalDegreesOfFreedom;
         freeDegreesOfFreedom = dofInitializer.freeDegreesOfFreedom;
-        boundedDegreesOfFreedom = dofInitializer.boundedDegreesOfFreedom;
+        fixedDegreesOfFreedom = dofInitializer.boundedDegreesOfFreedom;
         fluxDegreesOfFreedom = dofInitializer.fluxDegreesOfFreedom;
         totalDegreesOfFreedomMap = dofInitializer.totalDegreesOfFreedomMap;
+        totalDegreesOfFreedomMapInverse = dofInitializer.totalDegreesOfFreedomMapInverse;
+
         printDOFCount();
     }
     
@@ -21,11 +23,11 @@ namespace NumericalAnalysis {
         _deallocateDegreesOfFreedom();
         delete totalDegreesOfFreedom;
         delete freeDegreesOfFreedom;
-        delete boundedDegreesOfFreedom;
+        delete fixedDegreesOfFreedom;
         delete fluxDegreesOfFreedom;
         totalDegreesOfFreedom = nullptr;
         freeDegreesOfFreedom = nullptr;
-        boundedDegreesOfFreedom = nullptr;
+        fixedDegreesOfFreedom = nullptr;
         fluxDegreesOfFreedom = nullptr;
     }
     
@@ -34,7 +36,7 @@ namespace NumericalAnalysis {
         cout << "Degrees of Freedom Initiated" << endl;
         cout << "Total DOFs: " << totalDegreesOfFreedom->size() << endl;
         cout << "Free DOFs: " << freeDegreesOfFreedom->size() << endl;
-        cout << "Bounded DOFs: " << boundedDegreesOfFreedom->size() << endl;
+        cout << "Bounded DOFs: " << fixedDegreesOfFreedom->size() << endl;
         cout << "Flux DOFs: " << fluxDegreesOfFreedom->size() << endl;
     }
     
