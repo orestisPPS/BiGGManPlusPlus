@@ -7,6 +7,7 @@
 
 #include "../Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.h"
 #include "Array.h"
+#include "../Discretization/Node/IsoParametricNeighbourFinder.h"
 
 using namespace NumericalAnalysis;
 
@@ -24,13 +25,18 @@ namespace LinearAlgebra {
             
             unsigned* numberOfDOFs;
             
-            void createLinearSystem(Mesh* mesh);
+            void createLinearSystem();
             
             void updateRHS();
     private:
+        
+        Mesh* _mesh;
+
+        IsoParametricNeighbourFinder* _isoParametricNeighbourFinder;
+        
         AnalysisDegreesOfFreedom* _analysisDegreesOfFreedom;
         
-        void createMatrix(Mesh* mesh);
+        void createMatrix();
         
         void createRHS();
     };

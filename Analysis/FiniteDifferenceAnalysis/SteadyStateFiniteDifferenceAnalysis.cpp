@@ -12,7 +12,7 @@ namespace NumericalAnalysis {
         FiniteDifferenceAnalysis(mathematicalProblem, mesh, schemeSpecs){
         degreesOfFreedom = initiateDegreesOfFreedom();
         auto linearSystem = new LinearSystem(degreesOfFreedom, mesh);
-        linearSystem->createLinearSystem(mesh);
+        linearSystem->createLinearSystem();
     }
     
     //void SteadyStateFiniteDifferenceAnalysis::createLinearSystem() {
