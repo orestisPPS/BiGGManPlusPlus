@@ -11,6 +11,7 @@ namespace LinearAlgebra {
         this->_mesh = mesh;
         this->_isoParametricNeighbourFinder = new IsoParametricNeighbourFinder(mesh);
         numberOfDOFs = new unsigned(_analysisDegreesOfFreedom->freeDegreesOfFreedom->size());
+        numberOfDOFs = new unsigned(_analysisDegreesOfFreedom->totalDegreesOfFreedomMap->size());
         matrix = new Array<double>(*numberOfDOFs, *numberOfDOFs);
         RHS = new vector<double>(*numberOfDOFs);
         //matrix->print();
@@ -25,8 +26,10 @@ namespace LinearAlgebra {
     }
     
     void LinearSystem::createLinearSystem() {
-        createMatrix();
-        createRHS();
+        //createMatrix();
+        //createRHS();
+        createAllDOFMatrix();
+        //createRHS2();
     }
     
     void LinearSystem::createMatrix() {
@@ -44,10 +47,37 @@ namespace LinearAlgebra {
 
             for (auto &neighbour: *dofGraph) {
                 for (auto &neighbourDof: neighbour.second) {
-                    if (neighbourDof->id->constraintType() == Free) {
-                        auto positionJ = (*neighbourDof->id->value);
-                        matrix->at(positionI, positionJ) = +1;
-                    }
+                    auto positionJ = (*neighbourDof->id->value);
+                    matrix->at(positionI, positionJ) = +1;
+                }
+                //TODO: DEALLOCATE MAPS!
+            }
+            delete dofGraph;
+            dofGraph = nullptr;
+        }
+        matrix->print();
+    }
+
+    void LinearSystem::createAllDOFMatrix() {
+        auto lol  = _analysisDegreesOfFreedom->totalDegreesOfFreedomMap;
+        
+        for (auto &dofMapPair: *_analysisDegreesOfFreedom->totalDegreesOfFreedomMap) {
+            auto dof = dofMapPair.second;
+            //Node with the DOF
+            auto node = _mesh->nodeFromID(*dof->parentNode);
+
+            //I Position in the matrix (free DOF id)
+            auto positionI = (dofMapPair.first);
+            matrix->at(positionI, positionI) = 2;
+
+            //J Position in the matrix (neighbouring free DOF id)
+            auto dofGraph = _isoParametricNeighbourFinder->getIsoParametricNodeGraph(node, 1)
+                    .getSpecificDOFGraph(dof->type());
+
+            for (auto &neighbour: *dofGraph) {
+                for (auto &neighbourDof: neighbour.second) {
+                    auto positionJ = (*neighbourDof->id->value);
+                    matrix->at(positionI, positionJ) = +1;
                 }
                 //TODO: DEALLOCATE MAPS!
             }

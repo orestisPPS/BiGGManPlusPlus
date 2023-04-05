@@ -13,7 +13,7 @@ namespace NumericalAnalysis {
         freeDegreesOfFreedom = dofInitializer.freeDegreesOfFreedom;
         boundedDegreesOfFreedom = dofInitializer.boundedDegreesOfFreedom;
         fluxDegreesOfFreedom = dofInitializer.fluxDegreesOfFreedom;
-        
+        totalDegreesOfFreedomMap = dofInitializer.totalDegreesOfFreedomMap;
         printDOFCount();
     }
     

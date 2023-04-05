@@ -19,6 +19,7 @@ namespace NumericalAnalysis {
         vector<DegreeOfFreedom*> *boundedDegreesOfFreedom;
         vector<tuple<DegreeOfFreedom*, double>> *fluxDegreesOfFreedom;
         vector<DegreeOfFreedom*> *totalDegreesOfFreedom;
+        map<unsigned, DegreeOfFreedom*> *totalDegreesOfFreedomMap;
         
     private:
         
@@ -38,6 +39,8 @@ namespace NumericalAnalysis {
         void _reconstructTotalDOFList() const;
 
         void _assignDOFIDsToNodes(Mesh *mesh) const;
+        
+        void _createTotalDOFMap(Mesh *mesh) const;
         
         static void _listPtrToVectorPtr(vector<DegreeOfFreedom*> *vector, list<DegreeOfFreedom*> *list) ;
         

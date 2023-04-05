@@ -37,8 +37,10 @@ namespace LinearAlgebra {
         AnalysisDegreesOfFreedom* _analysisDegreesOfFreedom;
         
         void createMatrix();
+        void createAllDOFMatrix();
         
         void createRHS();
+        void createRHS2();
     };
 
 } // LinearAlgebra
