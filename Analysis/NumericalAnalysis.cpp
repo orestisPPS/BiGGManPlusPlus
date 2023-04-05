@@ -19,9 +19,9 @@ namespace NumericalAnalysis {
     }
     
     AnalysisDegreesOfFreedom* NumericalAnalysis::initiateDegreesOfFreedom() const {
-        auto dofs = new AnalysisDegreesOfFreedom();
-        dofs->initiateDegreesOfFreedom(mesh, mathematicalProblem->boundaryConditions,
-                                       mathematicalProblem->degreesOfFreedom);
+        auto dofs = new AnalysisDegreesOfFreedom(mesh, mathematicalProblem->boundaryConditions,
+                                                 mathematicalProblem->degreesOfFreedom);
+
         return dofs;
     }
 } // NumericalAnalysis

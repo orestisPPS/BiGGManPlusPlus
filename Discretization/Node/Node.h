@@ -7,9 +7,9 @@
 
 #include "../Id/DiscreteEntityId.h"
 #include "NodalCoordinates.h"
-//#include "../../DegreesOfFreedom/DegreeOfFreedom.h"
-
+#include "../../DegreesOfFreedom/DegreeOfFreedom.h"
 using namespace PositioningInSpace;
+using namespace DegreesOfFreedom;
 using namespace std;
 
 namespace Discretization
@@ -24,8 +24,13 @@ namespace Discretization
                 
         NodalCoordinates coordinates;
         
+        vector<DegreeOfFreedom*>* degreesOfFreedom;
+        
         void printNode();
-        //vector<DegreeOfFreedom*> *_degreesOfFreedom;
+        
+        DegreeOfFreedom* getDegreeOfFreedomPtr(DOFType type) const;
+        
+        const DegreeOfFreedom& getDegreeOfFreedom(DOFType type) const;
         
     private:
                

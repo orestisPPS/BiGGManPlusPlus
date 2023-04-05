@@ -8,7 +8,8 @@ namespace Discretization {
     
         Mesh2D::Mesh2D(Array<Node *> *nodes) : Mesh() {
             this->_nodesMatrix = nodes;
-            initialize();      
+            initialize();
+            _nodesMap = createNodesMap();
         }
     
         Mesh2D::~Mesh2D() {
@@ -102,5 +103,20 @@ namespace Discretization {
             }
             return internalNodes;
         }
-} // 
+
+        vector<Node*>* Mesh2D::addTotalNodesToVector() {
+            auto totalNodes = new vector<Node*>(_nodesMatrix->size());
+            for (int j = 0; j < numberOfNodesPerDirection[Two] ; j++){
+                for (int i = 0; i < numberOfNodesPerDirection[One] ; ++i) {
+                    (*totalNodes)[i + j * numberOfNodesPerDirection[One]] = (*_nodesMatrix)(i, j);
+                }
+            }
+            return totalNodes;
+            //print node id
+
+            
+        }
+        
+}
+        
 

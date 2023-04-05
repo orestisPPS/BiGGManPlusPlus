@@ -78,7 +78,7 @@ namespace LinearAlgebra {
 
             // The transformation tensor that rotates a vector around axis 1 in the 2-3 plane by an input angle
             static Array<double> rotationTensorOne(double angleInDegrees) {
-                auto angleInRadians = Utility::Calculators::DegreesToRadians(angleInDegrees);
+                auto angleInRadians = Utility::Calculators::degreesToRadians(angleInDegrees);
                 Array<double> rotationTensorOne(3, 3);
                 rotationTensorOne.populateElement(0, 0, 1);
                 rotationTensorOne.populateElement(1, 1, cos(angleInRadians));
@@ -90,7 +90,7 @@ namespace LinearAlgebra {
 
             // The transformation tensor that rotates a vector around axis 2 in the 1-3 plane by an input angle
             static Array<double> rotationTensorTwo(double angleInDegrees) {
-                auto angleInRadians = Utility::Calculators::DegreesToRadians(angleInDegrees);
+                auto angleInRadians = Utility::Calculators::degreesToRadians(angleInDegrees);
                 Array<double> rotationTensorTwo(3, 3);
                 rotationTensorTwo.populateElement(0, 0, cos(angleInRadians));
                 rotationTensorTwo.populateElement(0, 2, sin(angleInRadians));
@@ -102,7 +102,7 @@ namespace LinearAlgebra {
 
             // The transformation tensor that rotates a vector around axis 3 in the 1-2 plane by an input angle
             static Array<double> rotationTensorThree(double angleInDegrees) {
-                auto angleInRadians = Utility::Calculators::DegreesToRadians(angleInDegrees);
+                auto angleInRadians = Utility::Calculators::degreesToRadians(angleInDegrees);
                 Array<double> rotationTensorThree(3, 3);
                 rotationTensorThree.populateElement(0, 0, cos(angleInRadians));
                 rotationTensorThree.populateElement(0, 1, -sin(angleInRadians));
@@ -114,7 +114,7 @@ namespace LinearAlgebra {
 
             // The transformation tensor that shears a vector in direction 1 in the 1-2 plane by an input angle
             static Array<double> shearTensorOne_planeOneTwo(double shearAngleInDegrees) {
-                auto shearAngleInRadians = Utility::Calculators::DegreesToRadians(shearAngleInDegrees);
+                auto shearAngleInRadians = Utility::Calculators::degreesToRadians(shearAngleInDegrees);
                 Array<double> shearTensorOne_planeOneTwo(3, 3);
                 shearTensorOne_planeOneTwo.populateElement(0, 0, 1);
                 shearTensorOne_planeOneTwo.populateElement(0, 1, ::tan(shearAngleInDegrees));
@@ -125,7 +125,7 @@ namespace LinearAlgebra {
 
             // The transformation tensor that shears a vector in direction 2 in the 1-2 plane by an input angle
             static Array<double> shearTensorTwo_planeOneTwo(double shearAngleInDegrees) {
-                auto shearAngleInRadians = Utility::Calculators::DegreesToRadians(shearAngleInDegrees);
+                auto shearAngleInRadians = Utility::Calculators::degreesToRadians(shearAngleInDegrees);
                 Array<double> shearTensorTwo_planeOneTwo(3, 3);
                 shearTensorTwo_planeOneTwo.populateElement(0, 0, 1);
                 shearTensorTwo_planeOneTwo.populateElement(1, 0, ::tan(shearAngleInDegrees));
@@ -136,7 +136,7 @@ namespace LinearAlgebra {
 
             // The transformation tensor that shears a vector in direction 1 in the 1-3 plane by an input angle
             static Array<double> shearTensorOne_planeOneThree(double shearAngleInDegrees) {
-                auto shearAngleInRadians = Utility::Calculators::DegreesToRadians(shearAngleInDegrees);
+                auto shearAngleInRadians = Utility::Calculators::degreesToRadians(shearAngleInDegrees);
                 Array<double> shearTensorOne_planeOneThree(3, 3);
                 shearTensorOne_planeOneThree.populateElement(0, 0, 1);
                 shearTensorOne_planeOneThree.populateElement(0, 2, ::tan(shearAngleInDegrees));
@@ -147,7 +147,7 @@ namespace LinearAlgebra {
 
             // The transformation tensor that shears a vector in direction 3 in the 1-3 plane by an input angle
             static Array<double> shearTensorThree_planeOneThree(double shearAngleInDegrees) {
-                auto shearAngleInRadians = Utility::Calculators::DegreesToRadians(shearAngleInDegrees);
+                auto shearAngleInRadians = Utility::Calculators::degreesToRadians(shearAngleInDegrees);
                 Array<double> shearTensorThree_planeOneThree(3, 3);
                 shearTensorThree_planeOneThree.populateElement(0, 0, 1);
                 shearTensorThree_planeOneThree.populateElement(2, 0, ::tan(shearAngleInDegrees));
@@ -158,7 +158,7 @@ namespace LinearAlgebra {
 
             // The transformation tensor that shears a vector in direction 2 in the 2-3 plane by an input angle
             static Array<double> shearTensorTwo_planeTwoThree(double shearAngleInDegrees) {
-                auto shearAngleInRadians = Utility::Calculators::DegreesToRadians(shearAngleInDegrees);
+                auto shearAngleInRadians = Utility::Calculators::degreesToRadians(shearAngleInDegrees);
                 Array<double> shearTensorTwo_planeTwoThree(3, 3);
                 shearTensorTwo_planeTwoThree.populateElement(0, 0, 1);
                 shearTensorTwo_planeTwoThree.populateElement(1, 1, 1);
@@ -169,7 +169,7 @@ namespace LinearAlgebra {
 
             // The transformation tensor that shears a vector in direction 3 in the 2-3 plane by an input angle
             static static Array<double> shearTensorThree_planeTwoThree(double shearAngleInDegrees) {
-                auto shearAngleInRadians = Utility::Calculators::DegreesToRadians(shearAngleInDegrees);
+                auto shearAngleInRadians = Utility::Calculators::degreesToRadians(shearAngleInDegrees);
                 Array<double> shearTensorThree_planeTwoThree(3, 3);
                 shearTensorThree_planeTwoThree.populateElement(0, 0, 1);
                 shearTensorThree_planeTwoThree.populateElement(1, 1, 1);
@@ -263,7 +263,7 @@ namespace LinearAlgebra {
 
 /*static vector<double> Shear(vector<double> &array, double shearAngleInDegrees, PositioningInSpace::Direction axis){
     vector<double> shearedArray;
-    shearAngleInDegrees = Utility::Calculators::DegreesToRadians(shearAngleInDegrees);
+    shearAngleInDegrees = Utility::Calculators::degreesToRadians(shearAngleInDegrees);
     
     switch (array.size()) {
         case 2:

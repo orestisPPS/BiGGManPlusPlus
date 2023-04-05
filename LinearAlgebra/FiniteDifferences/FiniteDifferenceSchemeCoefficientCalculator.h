@@ -20,9 +20,9 @@ namespace LinearAlgebra {
         FiniteDifferenceSchemeCoefficientCalculator(FDSchemeSpecs &schemeSpecs);
     private:
         static void correlateSpaceAndSchemeSpecs(FDSchemeSpecs &schemeSpecs);
-        list<list<Position>> get1DPositionsAtDirection(Direction direction);
-        list<list<Position>> get2DPositionsAtDirection(Direction direction);
-        list<list<Position>> get3DPositionsAtDirection(Direction direction);
+        static list<list<Position>> get1DPositionsAtDirection(Direction direction);
+        static list<list<Position>> get2DPositionsAtDirection(Direction direction);
+        static list<list<Position>> get3DPositionsAtDirection(Direction direction);
         map<Position,int> NormalNeighboursSigns();
         map<Position,tuple<int,int>> DiagonalNeigboursSigns();
     };
