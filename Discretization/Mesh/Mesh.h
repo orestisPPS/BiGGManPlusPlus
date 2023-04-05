@@ -24,14 +24,19 @@ namespace Discretization {
 
         map<Position, vector<Node*>*>* boundaryNodes;
         
-        vector<Node*>* internalNodes;
+        vector<Node*>* internalNodesVector;
         
+        vector<Node*>* totalNodesVector;
+                
         bool isInitialized;
+
 
         //---------------Implemented parent class methods--------------
         
         unsigned totalNodes();
         
+        //Returns the node pointer of the node with the given global ID
+        //Ιf the node does not exist, returns nullptr
         Node* nodeFromID(unsigned ID);
         
         
@@ -47,25 +52,32 @@ namespace Discretization {
     
         virtual Node* node(unsigned i, unsigned j, unsigned k);
         
-        virtual void printMesh();
-        
+        virtual void createIsoParametricCurves();
 
+        virtual void printMesh();
         
      protected:
         Array<Node *> *_nodesMatrix;
         
+        map<unsigned, Node*>* _nodesMap;
+        
+        map<unsigned, Node*>* createNodesMap() const;
+        
         void initialize();
                   
-         //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
+        //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
         virtual map<Position, vector<Node*>*> *addDBoundaryNodesToMap();
         
-         //Adds the internal nodes of the mesh to a vector pointer of node pointers
+        //Adds the internal nodes of the mesh to a vector pointer of node pointers
         virtual vector<Node*>* addInternalNodesToVector();
-
-         void categorizeNodes();
+        
+        //Adds the total nodes of the mesh to a vector pointer of node pointers
+        virtual vector<Node*>* addTotalNodesToVector();
+        
+        void categorizeNodes();
          
-         void createNumberOfNodesPerDirectionMap();
-         
-         void cleanMeshDataStructures();
+        void createNumberOfNodesPerDirectionMap();
+        
+        void cleanMeshDataStructures();
     };
 }

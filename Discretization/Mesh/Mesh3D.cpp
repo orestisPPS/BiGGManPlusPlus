@@ -9,6 +9,7 @@ namespace Discretization {
     Mesh3D::Mesh3D(Array<Node*>* nodes) : Mesh(){
         this->_nodesMatrix = nodes;
         initialize();
+        _nodesMap = createNodesMap();
     }
     
     Mesh3D::~Mesh3D() {
@@ -110,6 +111,18 @@ namespace Discretization {
             }
         }
         return internalNodes;
+    }
+
+    vector<Node*>* Mesh3D::addTotalNodesToVector() {
+        auto totalNodes = new vector<Node*>(_nodesMatrix->size());
+        for (int k = 0; k < numberOfNodesPerDirection[Three]; k++){
+            for (int j = 0; j < numberOfNodesPerDirection[Two]; j++){
+                for (int i = 0; i < numberOfNodesPerDirection[One]; ++i) {
+                    totalNodes->push_back((*_nodesMatrix)(i, j, k));
+                }
+            }
+        }
+        return totalNodes;      
     }
     
         

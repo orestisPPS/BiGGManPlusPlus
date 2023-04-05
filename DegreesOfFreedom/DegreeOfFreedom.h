@@ -10,8 +10,6 @@
 #include "limits"
 #include "DegreeOfFreedomID.h"
 #include "DegreeOfFreedomTypes.h"
-#include "../Discretization/Node/Node.h"
-using namespace Discretization;
 
 using namespace std;
 using namespace DegreesOfFreedom;

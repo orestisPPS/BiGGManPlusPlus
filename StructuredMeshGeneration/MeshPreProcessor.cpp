@@ -9,6 +9,7 @@ namespace StructuredMeshGenerator{
     MeshPreProcessor :: MeshPreProcessor(MeshSpecs &meshSpecs){
         mesh = initiateMesh(meshSpecs);
         assignCoordinates(meshSpecs);
+        mesh->createIsoParametricCurves();
        // CalculateMeshMetrics();
     }
 

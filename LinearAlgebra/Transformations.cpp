@@ -134,7 +134,7 @@ namespace LinearAlgebra {
     
     void Transformations::_rotateAroundAxis1(vector<double> &vector, double angle) {
         std::vector<double> result(vector.size());
-        angle = Utility::Calculators::DegreesToRadians(angle);
+        angle = Utility::Calculators::degreesToRadians(angle);
         result[0] =  vector[0];
         result[1] =  vector[1] * cos(angle) + vector[2] * sin(angle);
         result[2] = -vector[1] * sin(angle) + vector[2] * cos(angle);
@@ -143,7 +143,7 @@ namespace LinearAlgebra {
     
     void Transformations::_rotateAroundAxis2(vector<double> &vector, double angle) {
         std::vector<double> result(vector.size());
-        angle = Utility::Calculators::DegreesToRadians(angle);
+        angle = Utility::Calculators::degreesToRadians(angle);
         result[0] = vector[0] * cos(angle) - vector[2] * sin(angle);
         result[1] = vector[1];
         result[2] = vector[0] * sin(angle) + vector[2] * cos(angle);
@@ -152,7 +152,7 @@ namespace LinearAlgebra {
     
     void Transformations::_rotateAroundAxis3(vector<double> &vector, double angle) {
         std::vector<double> result(vector.size());
-        angle = Utility::Calculators::DegreesToRadians(angle);
+        angle = Utility::Calculators::degreesToRadians(angle);
         result[0] = vector[0] * cos(angle) - vector[1] * sin(angle);
         result[1] = vector[0] * sin(angle) + vector[1] * cos(angle);
         result[2] = vector[2];
@@ -160,8 +160,8 @@ namespace LinearAlgebra {
     
     void Transformations::_shearPlane12(vector<double> &vector, double shear1, double shear2) {
         std::vector<double> result(vector.size());
-        shear1 = Utility::Calculators::DegreesToRadians(shear1);
-        shear2 = Utility::Calculators::DegreesToRadians(shear2);
+        shear1 = Utility::Calculators::degreesToRadians(shear1);
+        shear2 = Utility::Calculators::degreesToRadians(shear2);
         result[0] = vector[0] + shear1 * vector[1];
         result[1] = vector[1] + shear2 * vector[0];
         result[2] = vector[2];
@@ -169,8 +169,8 @@ namespace LinearAlgebra {
     
     void Transformations::_shearPlane13(vector<double> &vector, double shear1, double shear3) {
         std::vector<double> result(vector.size());
-        shear1 = Utility::Calculators::DegreesToRadians(shear1);
-        shear3 = Utility::Calculators::DegreesToRadians(shear3);
+        shear1 = Utility::Calculators::degreesToRadians(shear1);
+        shear3 = Utility::Calculators::degreesToRadians(shear3);
         result[0] = vector[0] + shear1 * vector[2];
         result[1] = vector[1];
         result[2] = vector[2] + shear3 * vector[0];
@@ -178,8 +178,8 @@ namespace LinearAlgebra {
     
     void Transformations::_shearPlane23(vector<double> &vector, double shear2, double shear3) {
         std::vector<double> result(vector.size());
-        shear2 = Utility::Calculators::DegreesToRadians(shear2);
-        shear3 = Utility::Calculators::DegreesToRadians(shear3);
+        shear2 = Utility::Calculators::degreesToRadians(shear2);
+        shear3 = Utility::Calculators::degreesToRadians(shear3);
         result[0] = vector[0];
         result[1] = vector[1] + shear2 * vector[2];
         result[2] = vector[2] + shear3 * vector[1];

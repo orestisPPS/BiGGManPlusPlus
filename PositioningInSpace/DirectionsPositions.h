@@ -13,6 +13,8 @@ namespace PositioningInSpace {
         Three,
         Time
     };
+    
+    //static list<Direction> directions = {Direction::One, Direction::Two, Direction::Three};
 
     ///Relative Positions
     enum Position {
@@ -25,6 +27,7 @@ namespace PositioningInSpace {
         BottomLeft,
         Bottom,
         BottomRight,
+        
         FrontTopLeft,
         FrontTop,
         FrontTopRight,
@@ -34,6 +37,7 @@ namespace PositioningInSpace {
         FrontBottomLeft,
         FrontBottom,
         FrontBottomRight,
+        
         BackTopLeft,
         BackTop,
         BackTopRight,
@@ -45,7 +49,30 @@ namespace PositioningInSpace {
         BackBottomRight
     };
     
+/*
+    static list<Position> positions = {Position::TopLeft, Position::Top, Position::TopRight,
+                                       Position::Left, Position::Center, Position::Right,
+                                       Position::BottomLeft, Position::Bottom, Position::BottomRight,
+                                       Position::FrontTopLeft, Position::FrontTop, Position::FrontTopRight,
+                                       Position::FrontLeft, Position::Front, Position::FrontRight,
+                                       Position::FrontBottomLeft, Position::FrontBottom, Position::FrontBottomRight,
+                                       Position::BackTopLeft, Position::BackTop, Position::BackTopRight,
+                                       Position::BackLeft, Position::Back, Position::BackRight,
+                                       Position::BackBottomLeft, Position::BackBottom, Position::BackBottomRight};
+    
+*/
 
-
+    
+/*    struct Directions{
+        static list<Direction> getDirections(){
+            return directions;
+        }
+    };
+    
+    struct Positions{
+        static list<Position> getPositions(){
+            return positions;
+        }
+    };*/
 } // PositioningInSpace
 

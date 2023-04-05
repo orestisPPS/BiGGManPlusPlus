@@ -33,8 +33,8 @@ namespace Discretization {
         
         vector<Node*>* addInternalNodesToVector() override;
 
+        vector<Node*>* addTotalNodesToVector() override;
         
-
     };
 
 } // Discretization

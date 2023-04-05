@@ -14,18 +14,35 @@ namespace NumericalAnalysis {
     class DOFInitializer {
     public:
         DOFInitializer(Mesh *mesh, DomainBoundaryConditions *domainBoundaryConditions, struct Field_DOFType* degreesOfFreedom);
-        list<DegreeOfFreedom*> *freeDegreesOfFreedom;
-        list<DegreeOfFreedom*> *boundedDegreesOfFreedom;
-        list<tuple<DegreeOfFreedom*, double>> *fluxDegreesOfFreedom;
-        list<DegreeOfFreedom*> *totalDegreesOfFreedom;
+        
+        vector<DegreeOfFreedom*> *freeDegreesOfFreedom;
+        vector<DegreeOfFreedom*> *boundedDegreesOfFreedom;
+        vector<tuple<DegreeOfFreedom*, double>> *fluxDegreesOfFreedom;
+        vector<DegreeOfFreedom*> *totalDegreesOfFreedom;
         
     private:
-        void initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType* degreesOfFreedom) const;
-        void initiateBoundaryNodeDOF(Mesh *mesh, Field_DOFType *problemDOFTypes,
-                                     DomainBoundaryConditions *domainBoundaryConditions) const;
-        void removeDuplicatesAndDelete(Mesh *mesh) const;
-        void assignDOFIDs() const;
+        
+        list<DegreeOfFreedom*> *_freeDegreesOfFreedomList;
+        list<DegreeOfFreedom*> *_boundedDegreesOfFreedomList;
+        list<tuple<DegreeOfFreedom*, double>> *_fluxDegreesOfFreedomList;
+        list<DegreeOfFreedom*> *_totalDegreesOfFreedomList;
+        
+        void _initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType* degreesOfFreedom) const;
+        
+        void _initiateBoundaryNodeDOF(Mesh *mesh, Field_DOFType *problemDOFTypes,
+                                      DomainBoundaryConditions *domainBoundaryConditions) const;
+        void _removeDuplicatesAndDelete(Mesh *mesh) const;
+        
+        void _assignDOFIDs() const;
+        
+        void _reconstructTotalDOFList() const;
 
+        void _assignDOFIDsToNodes(Mesh *mesh) const;
+        
+        static void _listPtrToVectorPtr(vector<DegreeOfFreedom*> *vector, list<DegreeOfFreedom*> *list) ;
+        
+
+        
         //TODO: Implement initial conditions. Check if there is meaning in domain  initial conditions as a mathematical object.
         void applyInitialConditions(list<DegreeOfFreedom*>);
     };
