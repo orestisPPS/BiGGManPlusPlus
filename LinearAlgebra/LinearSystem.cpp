@@ -33,8 +33,6 @@ namespace LinearAlgebra {
     void LinearSystem::createLinearSystem() {
         _createMatrix();
         _createRHS();
-        //createAllDOFMatrix();
-        //createRHS2();
     }
     
     void LinearSystem::_createMatrix() {
@@ -55,8 +53,10 @@ namespace LinearAlgebra {
             //J Position in the matrix (neighbouring free DOF id)
             for (auto &neighbour: *dofGraph) {
                 for (auto &neighbourDof: neighbour.second) {
-                    unsigned positionJ = *neighbourDof->id->value;
-                    _freeDOFMatrix->at(positionI, positionJ) = 1;
+                    if (neighbourDof->id->constraintType() == Free) {
+                        unsigned positionJ = *neighbourDof->id->value;
+                        _freeDOFMatrix->at(positionI, positionJ) = 1;
+                    }
                 }
             }
             delete dofGraph;
@@ -88,40 +88,13 @@ namespace LinearAlgebra {
                     _fixedDOFMatrix->at(positionI, positionJ) = 1;
                 }
             }
-        }
-        cout<<"Fixed DOF Matrix"<<endl;
-        _fixedDOFMatrix->print();
-    }
-    
-    /*void LinearSystem::createAllDOFMatrix() {
-        auto lol  = _analysisDegreesOfFreedom->totalDegreesOfFreedomMap;
-        
-        for (auto &dofMapPair: *_analysisDegreesOfFreedom->totalDegreesOfFreedomMap) {
-            auto dof = dofMapPair.second;
-            //Node with the DOF
-            auto node = _mesh->nodeFromID(*dof->parentNode);
-
-            //I Position in the matrix (free DOF id)
-            auto positionI = (dofMapPair.first);
-            matrix->at(positionI, positionI) = 2;
-
-            //J Position in the matrix (neighbouring free DOF id)
-            auto dofGraph = _isoParametricNeighbourFinder->getIsoParametricNodeGraph(node, 1)
-                    .getSpecificDOFGraph(dof->type());
-
-            for (auto &neighbour: *dofGraph) {
-                for (auto &neighbourDof: neighbour.second) {
-                    auto positionJ = (
-                            _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(neighbourDof));
-                    matrix->at(positionI, positionJ) = +1;
-                }
-                //TODO: DEALLOCATE MAPS!
-            }
             delete dofGraph;
             dofGraph = nullptr;
         }
-        matrix->print();*/
-    
+        cout<<"Fixed DOF Matrix"<<endl;
+        //_fixedDOFMatrix->print();
+    }
+        
     void LinearSystem::_createRHS() {
         //Marching through all the free DOFs
         for (auto &dof: *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
@@ -144,6 +117,9 @@ namespace LinearAlgebra {
             delete dofGraph;
             dofGraph = nullptr;
         }
+        delete _fixedDOFMatrix;
+        _fixedDOFMatrix = nullptr;
+        
         //print vector
         for (auto &value: *RHS) {
             cout << value << endl;
