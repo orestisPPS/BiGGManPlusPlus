@@ -55,6 +55,7 @@ namespace LinearAlgebra {
                 for (auto &neighbourDof: neighbour.second) {
                     if (neighbourDof->id->constraintType() == Free) {
                         unsigned positionJ = *neighbourDof->id->value;
+                        //_freeDOFMatrix->at(positionI, positionJ) = 1;
                         _freeDOFMatrix->at(positionI, positionJ) = 1;
                     }
                 }
@@ -62,8 +63,11 @@ namespace LinearAlgebra {
             delete dofGraph;
             dofGraph = nullptr;
         }
+        matrix = _freeDOFMatrix;
+        _freeDOFMatrix = nullptr;
+        
         cout<<"Free DOF Matrix"<<endl;
-        _freeDOFMatrix->print();
+        matrix->print();
         cout << "  " << endl;
 
     }

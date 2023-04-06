@@ -8,6 +8,7 @@
 #include "../Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.h"
 #include "Array.h"
 #include "../Discretization/Node/IsoParametricNeighbourFinder.h"
+#include "../Utility/Exporters/Exporters.h"
 
 using namespace NumericalAnalysis;
 

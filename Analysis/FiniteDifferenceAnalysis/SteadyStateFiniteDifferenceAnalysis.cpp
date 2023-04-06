@@ -13,6 +13,10 @@ namespace NumericalAnalysis {
         degreesOfFreedom = initiateDegreesOfFreedom();
         auto linearSystem = new LinearSystem(degreesOfFreedom, mesh);
         linearSystem->createLinearSystem();
+        
+        auto fileName = "linearSystem.m";
+        auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
+        Utility::Exporters::exportLinearSystemToMatlabFile(linearSystem->matrix, linearSystem->RHS, filePath, fileName);
     }
     
     //void SteadyStateFiniteDifferenceAnalysis::createLinearSystem() {
