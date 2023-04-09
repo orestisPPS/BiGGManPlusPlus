@@ -14,9 +14,11 @@ namespace NumericalAnalysis {
         auto linearSystem = new LinearSystem(degreesOfFreedom, mesh);
         linearSystem->createLinearSystem();
         
-        auto fileName = "linearSystem.m";
+        auto fileNameMatlab = "linearSystem.m";
+        auto filenameParaview = "mesh.vtk";
         auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
-        Utility::Exporters::exportLinearSystemToMatlabFile(linearSystem->matrix, linearSystem->RHS, filePath, fileName);
+        Utility::Exporters::exportLinearSystemToMatlabFile(linearSystem->matrix, linearSystem->RHS, filePath, fileNameMatlab);
+        Utility::Exporters::saveNodesToParaviewFile(mesh, filePath, filenameParaview);
     }
     
     //void SteadyStateFiniteDifferenceAnalysis::createLinearSystem() {

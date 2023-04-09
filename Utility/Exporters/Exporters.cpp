@@ -5,7 +5,7 @@
 #include "Exporters.h"
 
 namespace Utility {
-    
+    //Author: Chat GPT
     void Exporters::exportLinearSystemToMatlabFile(Array<double> *matrix, vector<double> *vector, const std::string& filePath,
                                                    const std::string& fileName) {
         ofstream outputFile(filePath + fileName);
@@ -51,5 +51,32 @@ namespace Utility {
         
         outputFile.close();
     }
+    
+    void Exporters::saveNodesToParaviewFile(Mesh *mesh, const std::string& filePath, const std::string& fileName) {
+        ofstream outputFile(filePath + fileName);
+        outputFile << "# vtk DataFile Version 3.0 \n";
+        outputFile << "vtk output \n" ;
+        outputFile << "ASCII \n" ;
+        outputFile << "DATASET UNSTRUCTURED_GRID \n";
+        outputFile << "POINTS " << mesh->totalNodesVector->size() << " double\n" ;
+        for (auto &node: *mesh->totalNodesVector) {
+            auto coordinates = node->coordinates.positionVector(Template);
+            outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << "\n" ;
+        }
+
+/*        for (auto &node: *mesh->totalNodesVector) {
+            auto coordinates = node->coordinates.positionVector(Parametric);
+            outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << endl;
+        }
+
+        for (auto &node: *mesh->totalNodesVector) {
+            auto coordinates = node->coordinates.positionVector(Template);
+            outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << endl;
+        }*/
+
+        outputFile.close();
+    }
+    
+    
     
 } // Utility

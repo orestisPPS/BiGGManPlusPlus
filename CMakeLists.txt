@@ -82,6 +82,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/LinearSystem.h 
         LinearAlgebra/LinearSystem.cpp
         Discretization/Node/IsoParametricNeighbourFinder.h
-        Discretization/Node/IsoParametricNeighbourFinder.cpp DegreesOfFreedom/IsoParametricDOFFinder.h DegreesOfFreedom/IsoParametricDOFFinder.cpp Discretization/Node/IsoparametricNodeGraph.h Discretization/Node/IsoparametricNodeGraph.cpp Utility/Exporters/Exporters.h Utility/Exporters/Exporters.cpp)
+        Discretization/Node/IsoParametricNeighbourFinder.cpp DegreesOfFreedom/IsoParametricDOFFinder.h DegreesOfFreedom/IsoParametricDOFFinder.cpp Discretization/Node/IsoparametricNodeGraph.h Discretization/Node/IsoparametricNodeGraph.cpp Utility/Exporters/Exporters.h Utility/Exporters/Exporters.cpp LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.cpp)
         
         

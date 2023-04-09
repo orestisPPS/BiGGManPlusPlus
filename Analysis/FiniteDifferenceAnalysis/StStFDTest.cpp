@@ -18,9 +18,10 @@ namespace NumericalAnalysis {
 
     Mesh* StStFDTest::createMesh() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 5;
-        numberOfNodes[Direction::Two] = 5;
-        auto specs = StructuredMeshGenerator::MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
+        numberOfNodes[Direction::One] =50;
+        numberOfNodes[Direction::Two] = 50;
+        auto specs = StructuredMeshGenerator::MeshSpecs(numberOfNodes, 1, 1,
+                                                        45, 10, 10);
         auto space = (PositioningInSpace::Plane);
         auto mesh = StructuredMeshGenerator::MeshPreProcessor(specs).mesh;
         return mesh;            

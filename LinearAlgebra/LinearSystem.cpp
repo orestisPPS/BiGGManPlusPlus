@@ -6,6 +6,8 @@
 
 namespace LinearAlgebra {
     
+    
+    
     LinearSystem::LinearSystem(AnalysisDegreesOfFreedom* analysisDegreesOfFreedom, Mesh* mesh) {
         this->_analysisDegreesOfFreedom = analysisDegreesOfFreedom;
         this->_mesh = mesh;
@@ -55,7 +57,6 @@ namespace LinearAlgebra {
                 for (auto &neighbourDof: neighbour.second) {
                     if (neighbourDof->id->constraintType() == Free) {
                         unsigned positionJ = *neighbourDof->id->value;
-                        //_freeDOFMatrix->at(positionI, positionJ) = 1;
                         _freeDOFMatrix->at(positionI, positionJ) = 1;
                     }
                 }
@@ -67,7 +68,7 @@ namespace LinearAlgebra {
         _freeDOFMatrix = nullptr;
         
         cout<<"Free DOF Matrix"<<endl;
-        matrix->print();
+        //matrix->print();
         cout << "  " << endl;
 
     }

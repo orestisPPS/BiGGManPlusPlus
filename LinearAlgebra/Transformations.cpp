@@ -75,7 +75,7 @@ namespace LinearAlgebra {
     
     void Transformations::rotate(vector<double> &vector, double angle1) {
         if (vector.size() == 2 || vector.size() == 3)
-            _rotateAroundAxis1(vector, angle1);
+            _rotateAroundAxis3(vector, angle1);
         else
             throw invalid_argument("Input vector should have size 2 or 3.");
     }
