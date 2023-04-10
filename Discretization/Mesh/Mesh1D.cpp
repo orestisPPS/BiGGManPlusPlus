@@ -8,7 +8,6 @@ namespace Discretization {
     
     Mesh1D::Mesh1D(Array<Node *> *nodes) : Mesh(){
         this->_nodesMatrix = nodes;
-        initialize();
         _nodesMap = createNodesMap();
     }
     

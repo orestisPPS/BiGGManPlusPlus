@@ -42,6 +42,8 @@ namespace Discretization {
         
         //-----------------Virtual parent class methods-----------------  
 
+         void initialize(bool categorizeNodes);
+        
         virtual unsigned dimensions();
         
         virtual SpaceEntityType space();
@@ -51,19 +53,26 @@ namespace Discretization {
         virtual Node* node(unsigned i, unsigned j);
     
         virtual Node* node(unsigned i, unsigned j, unsigned k);
-        
-        virtual void createIsoParametricCurves();
+
+         // Creates a mesh that contains ghost nodes beyond the boundary of the mesh for the purpose of
+         // more accurate calculation of the boundary conditions and easier calculation of the mesh metrics.
+         virtual Mesh* createGhostMesh(map<Direction, unsigned> ghostNodesPerDirection);
 
         virtual void printMesh();
         
      protected:
         Array<Node *> *_nodesMatrix;
         
+        Array<Node *> *_ghostedNodesMatrix;
+        
         map<unsigned, Node*>* _nodesMap;
+        
+        map<unsigned, Node*>* _ghostedNodesMap;
         
         map<unsigned, Node*>* createNodesMap() const;
         
-        void initialize();
+        //Creates an array ptr of node ptr that contains both the ghost and the regular nodes of the mesh
+        virtual Mesh* createGhostedSelf();
                   
         //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
         virtual map<Position, vector<Node*>*> *addDBoundaryNodesToMap();

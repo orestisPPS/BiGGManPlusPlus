@@ -21,8 +21,8 @@ add_executable(untitled main.cpp
         MathematicalProblem/SteadyStateMathematicalProblem.h
         MathematicalProblem/TransientMathematicalProblem.cpp
         MathematicalProblem/TransientMathematicalProblem.h
-        StructuredMeshGeneration/MeshPreProcessor.cpp
-        StructuredMeshGeneration/MeshPreProcessor.h
+        StructuredMeshGeneration/MeshFactory.cpp
+        StructuredMeshGeneration/MeshFactory.h
         StructuredMeshGeneration/MeshSpecs.cpp
         StructuredMeshGeneration/MeshSpecs.h
         Discretization/Mesh/Mesh.cpp
@@ -82,6 +82,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/LinearSystem.h 
         LinearAlgebra/LinearSystem.cpp
         Discretization/Node/IsoParametricNeighbourFinder.h
-        Discretization/Node/IsoParametricNeighbourFinder.cpp DegreesOfFreedom/IsoParametricDOFFinder.h DegreesOfFreedom/IsoParametricDOFFinder.cpp Discretization/Node/IsoparametricNodeGraph.h Discretization/Node/IsoparametricNodeGraph.cpp Utility/Exporters/Exporters.h Utility/Exporters/Exporters.cpp LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.cpp)
+        Discretization/Node/IsoParametricNeighbourFinder.cpp DegreesOfFreedom/IsoParametricDOFFinder.h DegreesOfFreedom/IsoParametricDOFFinder.cpp Discretization/Node/IsoparametricNodeGraph.h Discretization/Node/IsoparametricNodeGraph.cpp Utility/Exporters/Exporters.h Utility/Exporters/Exporters.cpp LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.cpp Discretization/Mesh/GhostMesh.h Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.h Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.cpp Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh1D.h Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh1D.cpp)
         
         
