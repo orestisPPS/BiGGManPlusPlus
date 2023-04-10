@@ -17,6 +17,8 @@ namespace NumericalAnalysis {
         fluxDegreesOfFreedom = new vector<tuple<DegreeOfFreedom*, double>>;
         _totalDegreesOfFreedomList = new list<DegreeOfFreedom*>();
         totalDegreesOfFreedom = new vector<DegreeOfFreedom*>();
+        totalDegreesOfFreedomMap = new map<unsigned, DegreeOfFreedom*>();
+        totalDegreesOfFreedomMapInverse = new map<DegreeOfFreedom*, unsigned>();
         
         _initiateInternalNodeDOFs(mesh, degreesOfFreedom);
         _initiateBoundaryNodeDOF(mesh, degreesOfFreedom, domainBoundaryConditions);
@@ -24,25 +26,22 @@ namespace NumericalAnalysis {
         _assignDOFIDs();
         _reconstructTotalDOFList();
         _assignDOFIDsToNodes(mesh);
+        _createTotalDOFMap(mesh);
         _listPtrToVectorPtr(freeDegreesOfFreedom, _freeDegreesOfFreedomList);
         _listPtrToVectorPtr(boundedDegreesOfFreedom, _boundedDegreesOfFreedomList);
         for (auto & fluxDOF : *_fluxDegreesOfFreedomList){
             fluxDegreesOfFreedom->push_back(fluxDOF);
         }
         _listPtrToVectorPtr(totalDegreesOfFreedom, _totalDegreesOfFreedomList);
-
         
         delete _freeDegreesOfFreedomList;
         delete _boundedDegreesOfFreedomList;
         delete _fluxDegreesOfFreedomList;
-        delete _totalDegreesOfFreedomList;
-        
+        delete _totalDegreesOfFreedomList;        
         //printDOFList(_totalDegreesOfFreedomList);
-        
     }
     
     void DOFInitializer::_initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType *degreesOfFreedom) const {
-                
         //March through the mesh nodes
         for (auto & internalNode : *mesh->internalNodesVector){
             for (auto & DOFType : *degreesOfFreedom->DegreesOfFreedom){
@@ -136,8 +135,6 @@ namespace NumericalAnalysis {
         });
         
 
-        
-        
         //Remove the duplicates of the duplicates vector from the bounded or free and flux DOF lists according to
         // the constraint type their value (fixed or free).
         for (auto &dof : duplicates) {
@@ -182,12 +179,27 @@ namespace NumericalAnalysis {
                                            _freeDegreesOfFreedomList->begin(), _freeDegreesOfFreedomList->end());
         _totalDegreesOfFreedomList->insert(_totalDegreesOfFreedomList->end(),
                                            _boundedDegreesOfFreedomList->begin(), _boundedDegreesOfFreedomList->end());
+        _totalDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
+            return (*a->parentNode) > (*b->parentNode);
+        });
     }
     
     void DOFInitializer::_assignDOFIDsToNodes(Mesh *mesh) const {
         for (auto &dof : *_totalDegreesOfFreedomList) {
             auto node = mesh->nodeFromID(((*dof->parentNode)));
             node->degreesOfFreedom->push_back(dof);
+        }
+    }
+    
+    void DOFInitializer::_createTotalDOFMap(Mesh *mesh) const {
+        auto dofId = 0;
+        for (auto &node : *mesh->totalNodesVector) {
+            for (auto &dof : *node->degreesOfFreedom) {
+                totalDegreesOfFreedomMap->insert(pair<unsigned, DegreeOfFreedom*>(dofId, dof));
+                totalDegreesOfFreedomMapInverse->insert(pair<DegreeOfFreedom*, unsigned>(dof, dofId));
+                cout<< "DOF ID: " << dofId << " Node: " << *totalDegreesOfFreedomMap->at(dofId)->parentNode << endl;
+                dofId++;
+            }
         }
     }
     

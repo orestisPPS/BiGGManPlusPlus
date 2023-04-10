@@ -23,9 +23,13 @@ namespace NumericalAnalysis {
 
         vector<DegreeOfFreedom*> *freeDegreesOfFreedom;
 
-        vector<DegreeOfFreedom*> *boundedDegreesOfFreedom;
+        vector<DegreeOfFreedom*> *fixedDegreesOfFreedom;
 
         vector<tuple<DegreeOfFreedom*, double>> *fluxDegreesOfFreedom;
+        
+        map<unsigned, DegreeOfFreedom*> *totalDegreesOfFreedomMap;
+        
+        map<DegreeOfFreedom*, unsigned> *totalDegreesOfFreedomMapInverse;
         
         void printDOFCount() const;
         

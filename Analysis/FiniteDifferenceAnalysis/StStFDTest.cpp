@@ -18,11 +18,12 @@ namespace NumericalAnalysis {
 
     Mesh* StStFDTest::createMesh() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 5;
-        numberOfNodes[Direction::Two] = 5;
-        auto specs = StructuredMeshGenerator::MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
+        numberOfNodes[Direction::One] =50;
+        numberOfNodes[Direction::Two] = 50;
+        auto specs = StructuredMeshGenerator::MeshSpecs(numberOfNodes, 1, 1,
+                                                        0, 10, 10);
         auto space = (PositioningInSpace::Plane);
-        auto mesh = StructuredMeshGenerator::MeshPreProcessor(specs).mesh;
+        auto mesh = StructuredMeshGenerator::MeshFactory(specs).mesh;
         return mesh;            
     }
     
@@ -31,7 +32,7 @@ namespace NumericalAnalysis {
     }
     
     DomainBoundaryConditions* StStFDTest::createBC() {
-        auto dummyBCFunctionForAllBoundaryPositions = function<double (vector<double>*)> ([](vector<double>* x) {return 0;});
+        auto dummyBCFunctionForAllBoundaryPositions = function<double (vector<double>*)> ([](vector<double>* x) {return 1;});
         auto dummyDOFTypeFunctionMap = new map<DOFType, function<double (vector<double>*)>>();
         
         auto BCDummyMapPair = pair<DOFType, function<double (vector<double>*)>> (Temperature, dummyBCFunctionForAllBoundaryPositions);
