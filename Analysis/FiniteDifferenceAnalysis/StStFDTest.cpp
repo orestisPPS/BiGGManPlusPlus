@@ -20,7 +20,7 @@ namespace NumericalAnalysis {
         map<Direction, unsigned> numberOfNodes;
         numberOfNodes[Direction::One] =50;
         numberOfNodes[Direction::Two] = 50;
-        auto specs = StructuredMeshGenerator::MeshSpecs(numberOfNodes, 1, 1,
+        auto specs = new StructuredMeshGenerator::MeshSpecs(numberOfNodes, 1, 1,
                                                         0, 10, 10);
         auto space = (PositioningInSpace::Plane);
         auto mesh = StructuredMeshGenerator::MeshFactory(specs).mesh;

@@ -6,15 +6,16 @@
 
 namespace StructuredMeshGenerator{
     
-    MeshFactory :: MeshFactory(MeshSpecs &meshSpecs) : _meshSpecs(meshSpecs) {
+    MeshFactory :: MeshFactory(MeshSpecs *meshSpecs) : _meshSpecs(meshSpecs) {
         mesh = initiateRegularMesh();
         assignCoordinates();
+        mesh->specs = _meshSpecs;
        // calculateMeshMetrics();
     }
 
     Mesh* MeshFactory::initiateRegularMesh() {
-        auto nodesPerDirection = _meshSpecs.nodesPerDirection;
-        auto nodeFactory = NodeFactory(_meshSpecs.nodesPerDirection);
+        auto nodesPerDirection = _meshSpecs->nodesPerDirection;
+        auto nodeFactory = NodeFactory(_meshSpecs->nodesPerDirection);
         auto space = calculateSpaceEntityType();
         switch (space) {
             case Axis:
@@ -58,7 +59,7 @@ namespace StructuredMeshGenerator{
         for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
             mesh->node(i)->coordinates.addPositionVector(Natural);
             mesh->node(i)->coordinates.setPositionVector({static_cast<double>(i)}, Parametric);
-            mesh->node(i)->coordinates.setPositionVector({static_cast<double>(i) * _meshSpecs.templateStepOne}, Template);
+            mesh->node(i)->coordinates.setPositionVector({static_cast<double>(i) * _meshSpecs->templateStepOne}, Template);
         }
     }
     
@@ -71,12 +72,12 @@ namespace StructuredMeshGenerator{
                 // Parametric coordinates
                 mesh->node(i, j)->coordinates.addPositionVector({static_cast<double>(i), static_cast<double>(j)}, Parametric);
                 // Template coordinates
-                vector<double> templateCoord = {static_cast<double>(i) * _meshSpecs.templateStepOne,
-                                                static_cast<double>(j) * _meshSpecs.templateStepTwo};
+                vector<double> templateCoord = {static_cast<double>(i) * _meshSpecs->templateStepOne,
+                                                static_cast<double>(j) * _meshSpecs->templateStepTwo};
                 // Rotate 
-                Transformations::rotate(templateCoord, _meshSpecs.templateRotAngleOne);
+                Transformations::rotate(templateCoord, _meshSpecs->templateRotAngleOne);
                 // Shear
-                Transformations::shear(templateCoord, _meshSpecs.templateShearOne,_meshSpecs.templateShearTwo);
+                Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
 
                 mesh->node(i, j)->coordinates.setPositionVector(templateCoord, Template);
             }   
@@ -93,13 +94,13 @@ namespace StructuredMeshGenerator{
                     mesh->node(i, j, k)->coordinates.addPositionVector(
                             {static_cast<double>(i), static_cast<double>(j), static_cast<double>(k)}, Parametric);
                     // Template coordinates
-                    vector<double> templateCoord = {static_cast<double>(i) * _meshSpecs.templateStepOne,
-                                                    static_cast<double>(j) * _meshSpecs.templateStepTwo,
-                                                    static_cast<double>(k) * _meshSpecs.templateStepThree};
+                    vector<double> templateCoord = {static_cast<double>(i) * _meshSpecs->templateStepOne,
+                                                    static_cast<double>(j) * _meshSpecs->templateStepTwo,
+                                                    static_cast<double>(k) * _meshSpecs->templateStepThree};
                     // Rotate 
-                    Transformations::rotate(templateCoord, _meshSpecs.templateRotAngleOne);
+                    Transformations::rotate(templateCoord, _meshSpecs->templateRotAngleOne);
                     // Shear
-                    Transformations::shear(templateCoord, _meshSpecs.templateShearOne,_meshSpecs.templateShearTwo);
+                    Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
                 }
             }
         }
@@ -107,9 +108,9 @@ namespace StructuredMeshGenerator{
     
     SpaceEntityType MeshFactory::calculateSpaceEntityType(){
         auto space = NullSpace;
-        if (_meshSpecs.nodesPerDirection[Two]== 1 && _meshSpecs.nodesPerDirection[Three] == 1){
+        if (_meshSpecs->nodesPerDirection[Two]== 1 && _meshSpecs->nodesPerDirection[Three] == 1){
             space = Axis;
-        } else if (_meshSpecs.nodesPerDirection[Three] == 1){
+        } else if (_meshSpecs->nodesPerDirection[Three] == 1){
             space = Plane;
         } else {
             space = Volume;

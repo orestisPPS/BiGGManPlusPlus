@@ -25,8 +25,6 @@ namespace Discretization {
         Node* node(unsigned i, unsigned j) override;
         
         Node* node(unsigned i, unsigned j, unsigned k) override;
-
-        Mesh2D* createGhostMesh(map<Direction, unsigned> ghostNodesPerDirection) override;
         
         void printMesh() override;
         

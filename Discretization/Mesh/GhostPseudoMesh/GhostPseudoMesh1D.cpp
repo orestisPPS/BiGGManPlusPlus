@@ -32,7 +32,7 @@ namespace Discretization {
             } else {
                 auto node = new Node();
                 node->coordinates.setPositionVector(parametricCoords, Parametric);
-                node->coordinates.setPositionVector({static_cast<double>(i) * _meshSpecs.templateStepOne}, Template);
+                node->coordinates.setPositionVector({static_cast<double>(i) *targetMesh->specs->templateStepOne}, Template);
                 (*ghostedNodesMatrix)(nodeArrayPositionI) = node;
                 ghostNodes->push_back(node);
             }
