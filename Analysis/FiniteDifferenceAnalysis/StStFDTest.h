@@ -6,7 +6,7 @@
 #define UNTITLED_STSTFDTEST_H
 
 #include "SteadyStateFiniteDifferenceAnalysis.h"
-#include "../../StructuredMeshGeneration/MeshPreProcessor.h"
+#include "../../StructuredMeshGeneration/MeshFactory.h"
 #include "../../StructuredMeshGeneration/MeshSpecs.h"
 
 

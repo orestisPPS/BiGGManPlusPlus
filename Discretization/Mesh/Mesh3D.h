@@ -25,6 +25,8 @@ namespace Discretization {
 
         Node* node(unsigned i, unsigned j, unsigned k) override;
 
+        Mesh3D* createGhostMesh(map<Direction, unsigned> ghostNodesPerDirection) override;
+
         void printMesh() override;
         
     protected:
@@ -34,7 +36,6 @@ namespace Discretization {
         vector<Node*>* addInternalNodesToVector() override;
 
         vector<Node*>* addTotalNodesToVector() override;
-        
     };
 
 } // Discretization

@@ -75,7 +75,7 @@ namespace LinearAlgebra {
     
     void Transformations::rotate(vector<double> &vector, double angle1) {
         if (vector.size() == 2 || vector.size() == 3)
-            _rotateAroundAxis1(vector, angle1);
+            _rotateAroundAxis3(vector, angle1);
         else
             throw invalid_argument("Input vector should have size 2 or 3.");
     }
@@ -138,7 +138,7 @@ namespace LinearAlgebra {
         result[0] =  vector[0];
         result[1] =  vector[1] * cos(angle) + vector[2] * sin(angle);
         result[2] = -vector[1] * sin(angle) + vector[2] * cos(angle);
-        
+        vector = result;        
     }
     
     void Transformations::_rotateAroundAxis2(vector<double> &vector, double angle) {
@@ -147,7 +147,8 @@ namespace LinearAlgebra {
         result[0] = vector[0] * cos(angle) - vector[2] * sin(angle);
         result[1] = vector[1];
         result[2] = vector[0] * sin(angle) + vector[2] * cos(angle);
-        
+        vector = result;
+
     }
     
     void Transformations::_rotateAroundAxis3(vector<double> &vector, double angle) {
@@ -156,6 +157,8 @@ namespace LinearAlgebra {
         result[0] = vector[0] * cos(angle) - vector[1] * sin(angle);
         result[1] = vector[0] * sin(angle) + vector[1] * cos(angle);
         result[2] = vector[2];
+        vector = result;
+
     }
     
     void Transformations::_shearPlane12(vector<double> &vector, double shear1, double shear2) {
@@ -165,6 +168,8 @@ namespace LinearAlgebra {
         result[0] = vector[0] + shear1 * vector[1];
         result[1] = vector[1] + shear2 * vector[0];
         result[2] = vector[2];
+        vector = result;
+
     }
     
     void Transformations::_shearPlane13(vector<double> &vector, double shear1, double shear3) {
@@ -174,6 +179,7 @@ namespace LinearAlgebra {
         result[0] = vector[0] + shear1 * vector[2];
         result[1] = vector[1];
         result[2] = vector[2] + shear3 * vector[0];
+        vector = result;
     }
     
     void Transformations::_shearPlane23(vector<double> &vector, double shear2, double shear3) {
@@ -183,6 +189,7 @@ namespace LinearAlgebra {
         result[0] = vector[0];
         result[1] = vector[1] + shear2 * vector[2];
         result[2] = vector[2] + shear3 * vector[1];
+        vector = result;
     }
     
     void Transformations::_reflectAboutAxis1(vector<double> &vector) {
@@ -190,6 +197,7 @@ namespace LinearAlgebra {
         result[0] = -vector[0];
         result[1] =  vector[1];
         result[2] =  vector[2];
+        vector = result;
     }
     
     void Transformations::_reflectAboutAxis2(vector<double> &vector) {
@@ -197,6 +205,7 @@ namespace LinearAlgebra {
         result[0] =  vector[0];
         result[1] = -vector[1];
         result[2] =  vector[2];
+        vector = result;
     }
     
     void Transformations::_reflectAboutAxis3(vector<double> &vector) {
@@ -204,6 +213,7 @@ namespace LinearAlgebra {
         result[0] =  vector[0];
         result[1] =  vector[1]; 
         result[2] = -vector[2];
+        vector = result;
     }
     
     void Transformations::_reflectAboutPlane12(vector<double> &vector) {
@@ -211,6 +221,7 @@ namespace LinearAlgebra {
         result[0] =  vector[0];
         result[1] = -vector[1];
         result[2] = -vector[2];
+        vector = result;
     }
     
     void Transformations::_reflectAboutPlane13(vector<double> &vector) {
@@ -218,6 +229,7 @@ namespace LinearAlgebra {
         result[0] = -vector[0];
         result[1] =  vector[1];
         result[2] = -vector[2];
+        vector = result;
     }
     
     void Transformations::_reflectAboutPlane23(vector<double> &vector) {
@@ -225,6 +237,7 @@ namespace LinearAlgebra {
         result[0] = -vector[0];
         result[1] = -vector[1];
         result[2] =  vector[2];
+        vector = result;
     }
     
     void Transformations::_reflectAboutOrigin(vector<double> &vector) {
@@ -232,5 +245,6 @@ namespace LinearAlgebra {
         result[0] = -vector[0];
         result[1] = -vector[1];
         result[2] = -vector[2];
+        vector = result;
     }
 } // LinearAlgebra

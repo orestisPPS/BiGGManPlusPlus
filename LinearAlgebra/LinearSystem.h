@@ -8,6 +8,7 @@
 #include "../Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.h"
 #include "Array.h"
 #include "../Discretization/Node/IsoParametricNeighbourFinder.h"
+#include "../Utility/Exporters/Exporters.h"
 
 using namespace NumericalAnalysis;
 
@@ -23,6 +24,10 @@ namespace LinearAlgebra {
             
             vector<double>* RHS;
             
+            unsigned* numberOfFreeDOFs;
+            
+            unsigned* numberOfFixedDOFs;
+            
             unsigned* numberOfDOFs;
             
             void createLinearSystem();
@@ -36,9 +41,17 @@ namespace LinearAlgebra {
         
         AnalysisDegreesOfFreedom* _analysisDegreesOfFreedom;
         
-        void createMatrix();
+        Array<double>* _freeDOFMatrix;
+
+        // Fixed DOF x Total DOF
+        Array<double>* _fixedDOFMatrix;
+
+        void _createMatrix();
+        void _createFixedDOFSubMatrix();
+        void _createFreeDOFSubMatrix();
+
         
-        void createRHS();
+        void _createRHS();
     };
 
 } // LinearAlgebra

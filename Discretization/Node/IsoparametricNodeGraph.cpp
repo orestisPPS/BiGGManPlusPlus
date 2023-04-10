@@ -38,6 +38,7 @@ namespace Discretization {
         return dofGraph;
     }
     
+    //BUGGY
     map<Position, vector<DegreeOfFreedom*>>* IsoParametricNodeGraph::getSpecificDOFGraph(DOFType dofType, ConstraintType constraint) const {
         auto dofGraph = new map<Position, vector<DegreeOfFreedom*>>();
         for (auto &position : *nodeGraph) {

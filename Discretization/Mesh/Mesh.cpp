@@ -15,6 +15,7 @@ namespace Discretization {
         internalNodesVector = nullptr;
         totalNodesVector = nullptr;
         _nodesMap = nullptr;
+        
     }
         
     Mesh::~Mesh() {
@@ -61,10 +62,11 @@ namespace Discretization {
 
     void Mesh::printMesh() { }
     
-    void Mesh::initialize() {
+    void Mesh::initialize(bool categorizeNodesToEnumerables) {
         isInitialized = true;
         createNumberOfNodesPerDirectionMap();
-        categorizeNodes();
+        if (categorizeNodesToEnumerables)
+            categorizeNodes();
     }
     
     map<Position, vector<Node*>*>* Mesh::addDBoundaryNodesToMap() {
@@ -81,9 +83,7 @@ namespace Discretization {
     
     
     void createNumberOfNodesPerDirectionMap() { }
-    
-    void Mesh::createIsoParametricCurves() {
-    }
+
     
     void Mesh::categorizeNodes() {
         if (isInitialized) {

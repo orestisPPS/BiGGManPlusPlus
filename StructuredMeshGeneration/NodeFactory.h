@@ -28,15 +28,14 @@ namespace StructuredMeshGenerator {
         unsigned _nn3;
         
         //Returns the space type of the mesh.
-        SpaceEntityType FindSpaceEntityType() const;
+        SpaceEntityType findSpaceEntityType() const;
         
         //Creates boundary nodes.
-        void CreateNodesArray(SpaceEntityType space);
+        void createNodesArray(SpaceEntityType space);
         
-               
         //Creates boundary nodes for 1D mesh (nnOne > 0, nnTwo = 0, nnThree = 0)
         //RELATIVE : left node has value 0, right node has value nnOne - 1
-        void Create1DBoundaryNodes(unsigned position) const;
+        void create1DBoundaryNodes(unsigned position) const;
         
         //Creates boundary nodes for 2D mesh (nnOne > 0, nnTwo > 0, nnThree = 0),
         // with the following order in identification starting from (0,0):
@@ -45,7 +44,7 @@ namespace StructuredMeshGenerator {
         // v      ^
         // v      ^
         // ->->->->
-        void Create2DBoundaryNodes(unsigned index1, unsigned index2) const;
+        void create2DBoundaryNodes(unsigned index1, unsigned index2) const;
         
         //Creates boundary nodes for 3D mesh (nnOne > 0, nnTwo > 0, nnThree > 0).
         // with the following order in identification starting from (0,0,0):
@@ -56,28 +55,28 @@ namespace StructuredMeshGenerator {
         // v      ^
         // v      ^
         // ->->->->
-        void Create3DBoundaryNodes() const;
+        void create3DBoundaryNodes() const;
                 
         //Allocates memory for boundary node.
-        static Node *AllocateBoundaryNode(int boundaryId);
+        static Node *allocateBoundaryNode(int boundaryId);
         
         //Creates internal nodes for 1D mesh (nnOne > 0, nnTwo = 0, nnThree = 0).
-        void Create1DInternalNodes(unsigned maxIndex) const;
+        void create1DInternalNodes(unsigned maxIndex) const;
         
         //Creates internal nodes for 2D mesh (nnOne > 0, nnTwo > 0, nnThree = 0).
-        void Create2DInternalNodes(unsigned index1, unsigned index2) const;
+        void create2DInternalNodes(unsigned index1, unsigned index2) const;
         
         //Creates internal nodes for 3D mesh (nnOne > 0, nnTwo > 0, nnThree > 0).
-        void Create3DInternalNodes() const;
+        void create3DInternalNodes() const;
 
         //Allocates memory for internal node.
-        static Node *AllocateInternalNode(unsigned internalId);
+        static Node *allocateInternalNode(unsigned internalId);
         
         //Assigns global value to the nodes of a 1D mesh.        
-        void Assign1DGlobalId() const;
+        void assign1DGlobalId() const;
         
         //Assigns global value to the nodes of a 2D mesh.
-        void Assign2DGlobalId() const;
+        void assign2DGlobalId() const;
         
         //Assigns global value to the nodes of a 3D mesh.
         void Assign3DGlobalId() const;

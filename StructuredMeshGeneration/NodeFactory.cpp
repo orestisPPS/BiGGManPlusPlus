@@ -11,11 +11,11 @@ namespace StructuredMeshGenerator{
         _nn2 = numberOfNodes.at(Direction::Two);
         _nn3 = numberOfNodes.at(Direction::Three);
 
-        auto space = FindSpaceEntityType();
-        CreateNodesArray(space);
+        auto space = findSpaceEntityType();
+        createNodesArray(space);
     }
     
-    SpaceEntityType NodeFactory::FindSpaceEntityType() const  {
+    SpaceEntityType NodeFactory::findSpaceEntityType() const  {
         auto space = NullSpace;
         if (_nn2 == 1 && _nn3 == 1){
             space = Axis;
@@ -27,24 +27,24 @@ namespace StructuredMeshGenerator{
         return space;
     }
     
-    void NodeFactory :: CreateNodesArray(SpaceEntityType space){
+    void NodeFactory :: createNodesArray(SpaceEntityType space){
         switch (space) {
             case SpaceEntityType::Axis:
                 nodesMatrix = new Array<Node*>(_nn1, 1);
-                Create1DBoundaryNodes(_nn1);
-                Create1DInternalNodes(_nn1);
-                Assign1DGlobalId();
+                create1DBoundaryNodes(_nn1);
+                create1DInternalNodes(_nn1);
+                assign1DGlobalId();
                 break;
             case SpaceEntityType::Plane:
                 nodesMatrix = new Array<Node*>(_nn1, _nn2);
-                Create2DBoundaryNodes(_nn1, _nn2);
-                Create2DInternalNodes(_nn1, _nn2);
-                Assign2DGlobalId();
+                create2DBoundaryNodes(_nn1, _nn2);
+                create2DInternalNodes(_nn1, _nn2);
+                assign2DGlobalId();
                 break;
             case SpaceEntityType::Volume:
                 nodesMatrix = new Array<Node*>(_nn1, _nn2, _nn3);
-                Create3DBoundaryNodes();
-                Create3DInternalNodes();
+                create3DBoundaryNodes();
+                create3DInternalNodes();
                 Assign3DGlobalId();
                 break;
             default:
@@ -52,145 +52,145 @@ namespace StructuredMeshGenerator{
         }
     }
 
-    void NodeFactory::Create1DBoundaryNodes(unsigned position) const {
+    void NodeFactory::create1DBoundaryNodes(unsigned position) const {
         int a = 1;
-        Node *node = AllocateBoundaryNode(a);
+        Node *node = allocateBoundaryNode(a);
         (*nodesMatrix)(0) = node;
         (*nodesMatrix)(a) = node;
-        (*nodesMatrix)(0) = AllocateBoundaryNode(0);
-        (*nodesMatrix)(position - 1) = AllocateBoundaryNode(position - 1);
+        (*nodesMatrix)(0) = allocateBoundaryNode(0);
+        (*nodesMatrix)(position - 1) = allocateBoundaryNode(position - 1);
     }
     
-    void NodeFactory::Create2DBoundaryNodes(unsigned index1, unsigned index2) const {
+    void NodeFactory::create2DBoundaryNodes(unsigned index1, unsigned index2) const {
         
         auto boundaryId = 0;
         //Bottom boundary nodes.
         for (auto i = 0; i < index1 ; ++i) {
-            nodesMatrix->at(i, 0) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(i, 0) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, 0) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, 0) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //Right boundary nodes.
         for (auto i = 1; i < index2 ; ++i) {
-            nodesMatrix->at(index1 - 1, i) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(index1 - 1, i) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(index1 - 1, i) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(index1 - 1, i) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //Top boundary nodes.
         for (int i = index1 - 2; i >= 0 ; --i) {
-            nodesMatrix->at(i, index2 - 1) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(i, index2 - 1) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, index2 - 1) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, index2 - 1) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //Left boundary nodes.
         for (auto i = index2 - 2; i >= 1 ; --i) {
-            nodesMatrix->at(0, i) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(0, i) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(0, i) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(0, i) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }         
     }
     
-    void NodeFactory::Create3DBoundaryNodes() const {
+    void NodeFactory::create3DBoundaryNodes() const {
         auto boundaryId = 0;
         //FrontBottom boundary nodes.
         for (int i = 0; i < _nn1 ; ++i) {
-            nodesMatrix->at(i, 0, 0) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(i, 0, 0) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, 0, 0) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, 0, 0) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //FrontRight boundary nodes.
         for (int i = 1; i < _nn2 ; ++i) {
-            nodesMatrix->at(_nn1 - 1, i, 0) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(_nn1 - 1, i, 0) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(_nn1 - 1, i, 0) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(_nn1 - 1, i, 0) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //FrontTop boundary nodes.
         for (int i = _nn1 - 2; i >= 0 ; --i) {
-            nodesMatrix->at(i, _nn2 - 1, 0) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(i, _nn2 - 1, 0) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, _nn2 - 1, 0) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, _nn2 - 1, 0) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //FrontLeft boundary nodes.
         for (auto i = _nn2 - 2; i >= 1 ; --i) {
-            nodesMatrix->at(0, i, 0) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(0, i, 0) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(0, i, 0) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(0, i, 0) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //BackBottom boundary nodes.
         for (int i = 0; i < _nn1 ; ++i) {
-            nodesMatrix->at(i, 0, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(i, 0, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, 0, _nn3 - 1) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, 0, _nn3 - 1) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //BackRight boundary nodes.
         for (int i = 1; i < _nn2 ; ++i) {
-            nodesMatrix->at(_nn1 - 1, i, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(_nn1 - 1, i, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(_nn1 - 1, i, _nn3 - 1) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(_nn1 - 1, i, _nn3 - 1) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //BackTop boundary nodes.
         for (int i = _nn1 - 2; i >= 0 ; --i) {
-            nodesMatrix->at(i, _nn2 - 1, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(i, _nn2 - 1, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, _nn2 - 1, _nn3 - 1) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, _nn2 - 1, _nn3 - 1) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //BackLeft boundary nodes.
         for (auto i = _nn2 - 2; i >= 1 ; --i) {
-            nodesMatrix->at(0, i, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(0, i, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(0, i, _nn3 - 1) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(0, i, _nn3 - 1) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //LeftBottom boundary nodes.
         for (int i = 1; i < _nn3 - 1 ; ++i) {
-            nodesMatrix->at(0, 0, i) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(0, 0, i) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(0, 0, i) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(0, 0, i) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //LeftTop boundary nodes.
         for (int i = 1; i < _nn3 - 1 ; ++i) {
-            nodesMatrix->at(0, _nn2 - 1, i) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(0, _nn2 - 1, i) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(0, _nn2 - 1, i) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(0, _nn2 - 1, i) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //RightBottom boundary nodes.
         for (int i = 1; i < _nn3 - 1 ; ++i) {
-            nodesMatrix->at(_nn1 - 1, 0, i) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(_nn1 - 1, 0, i) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(_nn1 - 1, 0, i) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(_nn1 - 1, 0, i) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //RightTop boundary nodes.
         for (int i = 1; i < _nn3 - 1 ; ++i) {
-            nodesMatrix->at(_nn1 - 1, _nn2 - 1, i) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(_nn1 - 1, _nn2 - 1, i) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(_nn1 - 1, _nn2 - 1, i) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(_nn1 - 1, _nn2 - 1, i) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //BottomFront boundary nodes.
         for (int i = 1; i < _nn1 - 1 ; ++i) {
-            nodesMatrix->at(i, 0, 0) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(i, 0, 0) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, 0, 0) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, 0, 0) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //BottomBack boundary nodes.
         for (int i = 1; i < _nn1 - 1 ; ++i) {
-            nodesMatrix->at(i, 0, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(i, 0, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, 0, _nn3 - 1) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, 0, _nn3 - 1) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //TopFront boundary nodes.
         for (int i = 1; i < _nn1 - 1 ; ++i) {
-            nodesMatrix->at(i, _nn2 - 1, 0) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(i, _nn2 - 1, 0) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, _nn2 - 1, 0) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, _nn2 - 1, 0) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
         //TopBack boundary nodes.
         for (int i = 1; i < _nn1 - 1 ; ++i) {
-            nodesMatrix->at(i, _nn2 - 1, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
-            //(*nodesMatrix)(i, _nn2 - 1, _nn3 - 1) = AllocateBoundaryNode(boundaryId);
+            nodesMatrix->at(i, _nn2 - 1, _nn3 - 1) = allocateBoundaryNode(boundaryId);
+            //(*nodesMatrix)(i, _nn2 - 1, _nn3 - 1) = allocateBoundaryNode(boundaryId);
             boundaryId++;
         }
     }
 
-    Node *NodeFactory::AllocateBoundaryNode(int boundaryId) {
+    Node *NodeFactory::allocateBoundaryNode(int boundaryId) {
         
         Node *node = new Node();
         *node->id.boundary = boundaryId;
@@ -198,52 +198,52 @@ namespace StructuredMeshGenerator{
         return node;
     }
     
-    void NodeFactory::Create1DInternalNodes(unsigned maxIndex) const {
+    void NodeFactory::create1DInternalNodes(unsigned maxIndex) const {
         auto internalId = 0;
         for (int i = 1; i < maxIndex - 1; i++){
-            (*nodesMatrix)(i) = AllocateInternalNode(internalId);
+            (*nodesMatrix)(i) = allocateInternalNode(internalId);
             internalId++;
         }
     }
     
-    void NodeFactory::Create2DInternalNodes(unsigned index1, unsigned index2) const {
+    void NodeFactory::create2DInternalNodes(unsigned index1, unsigned index2) const {
         auto internalId = 0;
         for (int j = 1; j < index2 - 1; j++){
             for (int i = 1; i < index1 - 1; i++){
-                (*nodesMatrix)(i, j) = AllocateInternalNode(internalId);
+                (*nodesMatrix)(i, j) = allocateInternalNode(internalId);
                 //cout << "Internal node " << internalId << " created." << endl;
                 internalId++;
             }
         }
     }
     
-    void NodeFactory::Create3DInternalNodes() const {
+    void NodeFactory::create3DInternalNodes() const {
         auto internalId = 0;
         for (int i = 1; i < _nn3 - 1; i++){
             for (int j = 1; j < _nn2 - 1; j++){
                 for (int k = 1; k < _nn1 - 1; k++){
-                    nodesMatrix->at(i, j, k) = AllocateInternalNode(internalId);
-                    //(*nodesMatrix)(i, j, k) = AllocateInternalNode(internalId);
+                    nodesMatrix->at(i, j, k) = allocateInternalNode(internalId);
+                    //(*nodesMatrix)(i, j, k) = allocateInternalNode(internalId);
                     internalId++;
                 }
             }
         }
     }
     
-    Node *NodeFactory::AllocateInternalNode(unsigned internalId) {
+    Node *NodeFactory::allocateInternalNode(unsigned internalId) {
         Node *node = new Node();
         *node->id.internal = internalId;
         //cout << "Internal node value: " << *node->value->global << endl;
         return node;
     }
     
-    void NodeFactory::Assign1DGlobalId() const {
+    void NodeFactory::assign1DGlobalId() const {
         for (int i = 0; i < _nn1; i++){
             (*nodesMatrix)(i)->id.global = new unsigned(i);
         }
     }
     
-    void NodeFactory::Assign2DGlobalId() const {
+    void NodeFactory::assign2DGlobalId() const {
         auto id = 0;
         for (int j = 0; j < _nn2; j++){
             for (int i = 0; i < _nn1; i++){
