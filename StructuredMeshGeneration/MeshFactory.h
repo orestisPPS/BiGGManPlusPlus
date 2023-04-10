@@ -15,12 +15,12 @@ namespace StructuredMeshGenerator {
     
     class MeshFactory {
     public:
-        MeshFactory(MeshSpecs &meshSpecs);
+        MeshFactory(MeshSpecs *meshSpecs);
         Mesh *mesh;
 
         
     private:
-        MeshSpecs &_meshSpecs;
+        MeshSpecs *_meshSpecs;
 
         Mesh* initiateRegularMesh();
         Mesh* initiateGhostMesh(Mesh* targetMesh, map<Direction, unsigned> depth) const;
