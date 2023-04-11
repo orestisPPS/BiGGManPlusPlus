@@ -20,8 +20,8 @@ namespace NumericalAnalysis {
         
         
         auto ghostNodesPerDirection = new map<Direction, unsigned>();
-        ghostNodesPerDirection->insert(pair<Direction, unsigned>(Direction::One, 3));
-        ghostNodesPerDirection->insert(pair<Direction, unsigned>(Direction::Two, 3));
+        ghostNodesPerDirection->insert(pair<Direction, unsigned>(Direction::One, 1));
+        ghostNodesPerDirection->insert(pair<Direction, unsigned>(Direction::Two, 1));
         ghostNodesPerDirection->insert(pair<Direction, unsigned>(Direction::Two, 0));
         
         auto testGhostMesh =  new GhostPseudoMesh2D(mesh,ghostNodesPerDirection);
