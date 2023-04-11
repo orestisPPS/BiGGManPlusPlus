@@ -19,7 +19,9 @@ namespace Discretization {
         
         Array<Node*>* ghostedNodesMatrix;
         
-        list<Node*>* ghostNodes;
+        list<Node*>* allNodesList;
+        
+        list<Node*>* ghostNodesList;
 
         map<Direction, unsigned>* ghostNodesPerDirection;
         

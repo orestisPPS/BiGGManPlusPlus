@@ -101,6 +101,8 @@ namespace StructuredMeshGenerator{
                     Transformations::rotate(templateCoord, _meshSpecs->templateRotAngleOne);
                     // Shear
                     Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
+                    
+                    mesh->node(i, j, k)->coordinates.setPositionVector(templateCoord, Template);
                 }
             }
         }

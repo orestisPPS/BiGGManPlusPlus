@@ -61,15 +61,11 @@ namespace Discretization {
     }
 
     void Mesh::printMesh() { }
-    
-    void Mesh::initialize() {
-        if (!isInitialized) {
-            categorizeNodes();
-            createNumberOfNodesPerDirectionMap();
-            _nodesMap = createNodesMap();
-            isInitialized = true;
-        }
 
+    void Mesh::initialize() {
+        isInitialized = true;
+        createNumberOfNodesPerDirectionMap();
+        categorizeNodes();
     }
     
     map<Position, vector<Node*>*>* Mesh::addDBoundaryNodesToMap() {

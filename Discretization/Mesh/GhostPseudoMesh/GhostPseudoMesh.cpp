@@ -12,7 +12,7 @@ namespace Discretization {
         ghostedNodesMatrix = nullptr;
         parametricCoordToNodeMap = nullptr;
         this->targetMesh = nullptr;
-        ghostNodes = nullptr;
+        ghostNodesList = nullptr;
     }
     
     GhostPseudoMesh::~GhostPseudoMesh() {

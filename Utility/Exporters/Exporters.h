@@ -11,6 +11,7 @@
 #include <vector>
 #include "../../LinearAlgebra/Array.h"
 #include "../../Discretization/Mesh/Mesh.h"
+#include "../../Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.h"
 
 using namespace std;
 using namespace LinearAlgebra;
@@ -28,7 +29,8 @@ namespace Utility {
         
         // Creates a .vtk file that can be opened in Paraview to visualize the mesh.
         static void saveNodesToParaviewFile(Mesh* mesh, const std::string &filePath, const std::string &fileName);
-
+        
+        static void saveGhostNodesToParaviewFile(GhostPseudoMesh* mesh, const std::string &filePath, const std::string &fileName);
     };
 
 } // Utility

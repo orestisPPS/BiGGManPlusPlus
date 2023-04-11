@@ -3,22 +3,25 @@
 //
 
 #include "GhostPseudoMesh2D.h"
-#include "../../../LinearAlgebra/Transformations.h"
+#include "../../../Utility/Exporters/Exporters.h"
 
 namespace Discretization {
 
 
-    GhostPseudoMesh2D::GhostPseudoMesh2D(Discretization::Mesh *targetMesh,
-                                         map<PositioningInSpace::Direction, unsigned int>* ghostNodesPerDirection) :
+    GhostPseudoMesh2D::GhostPseudoMesh2D(Mesh* targetMesh, map<Direction, unsigned>* ghostNodesPerDirection) :
             GhostPseudoMesh(targetMesh, ghostNodesPerDirection) {
         this->targetMesh = targetMesh;
         this->ghostNodesPerDirection = ghostNodesPerDirection;
-        ghostNodes = new list<Node*>();
+        ghostNodesList = new list<Node*>();
+        allNodesList = new list<Node*>();
         parametricCoordToNodeMap = createParametricCoordToNodeMap();
+        ghostedNodesMatrix = createGhostedNodesMatrix();
+
+
     }
 
     GhostPseudoMesh2D::~GhostPseudoMesh2D() {
-        delete ghostNodes;
+        delete ghostNodesList;
         delete parametricCoordToNodeMap;
         delete ghostedNodesMatrix;
         delete ghostNodesPerDirection;
@@ -27,12 +30,16 @@ namespace Discretization {
     Array<Node*>* GhostPseudoMesh2D::createGhostedNodesMatrix() {
         auto nodeArrayPositionI = 0;
         auto nodeArrayPositionJ = 0;
-        for (unsigned j = -ghostNodesPerDirection->at(Two); j < targetMesh->numberOfNodesPerDirection[Two] + ghostNodesPerDirection->at(Two); j++) {
-            for (unsigned i = -ghostNodesPerDirection->at(One); i < targetMesh->numberOfNodesPerDirection[One] + ghostNodesPerDirection->at(One); i++) {
+        auto nn1 = targetMesh->numberOfNodesPerDirection[One] + ghostNodesPerDirection->at(One) * 2;
+        auto nn2 = targetMesh->numberOfNodesPerDirection[Two] + ghostNodesPerDirection->at(Two) * 2;
+        auto ghostedNodesMatrix = new Array<Node*>(nn1, nn2);
+        for (int j = -static_cast<int>(ghostNodesPerDirection->at(Two)); j < static_cast<int>(nn2) - 1; j++) {
+            for (int i = -static_cast<int>(ghostNodesPerDirection->at(One)); i < static_cast<int>(nn1) - 1; i++) {
                 auto parametricCoords = vector<double>{static_cast<double>(i), static_cast<double>(j)};
                 if (parametricCoordToNodeMap->find(parametricCoords) != parametricCoordToNodeMap->end()) {
                     auto node = parametricCoordToNodeMap->at(parametricCoords);
                     (*ghostedNodesMatrix)(nodeArrayPositionI, nodeArrayPositionJ) = node;
+                    allNodesList->push_back(node);
                 } else {
                     auto node = new Node();
                     node->coordinates.setPositionVector(parametricCoords, Parametric);
@@ -45,12 +52,15 @@ namespace Discretization {
                     
                     node->coordinates.setPositionVector(templateCoord, Template);
                     (*ghostedNodesMatrix)(nodeArrayPositionI, nodeArrayPositionJ) = node;
-                    ghostNodes->push_back(node);
+                    ghostNodesList->push_back(node);
+                    allNodesList->push_back(node);
                 }
                 nodeArrayPositionI++;
+                if (nodeArrayPositionI == nn1) {
+                    nodeArrayPositionI = 0;
+                }
             }
             nodeArrayPositionJ++;
-            nodeArrayPositionI = 0;
         }
         return ghostedNodesMatrix;
     }

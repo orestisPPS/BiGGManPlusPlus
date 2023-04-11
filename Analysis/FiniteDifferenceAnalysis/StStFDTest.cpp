@@ -3,6 +3,9 @@
 //
 
 #include "StStFDTest.h"
+#include "../../Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.h"
+#include "../../Utility/Exporters/Exporters.h"
+#include "../../Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh2D.h"
 
 
 namespace NumericalAnalysis {
@@ -14,12 +17,24 @@ namespace NumericalAnalysis {
         auto problem = new SteadyStateMathematicalProblem(pde, bcs, createDOF());
         auto schemeSpecs = createSchemeSpecs();
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, schemeSpecs);
+        
+        
+        auto ghostNodesPerDirection = new map<Direction, unsigned>();
+        ghostNodesPerDirection->insert(pair<Direction, unsigned>(Direction::One, 3));
+        ghostNodesPerDirection->insert(pair<Direction, unsigned>(Direction::Two, 3));
+        ghostNodesPerDirection->insert(pair<Direction, unsigned>(Direction::Two, 0));
+        
+        auto testGhostMesh =  new GhostPseudoMesh2D(mesh,ghostNodesPerDirection);
+        auto filenameParaview = "ghostMesh.vtk";
+        auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
+        Utility::Exporters::saveGhostNodesToParaviewFile(testGhostMesh, filePath, filenameParaview);
+
     }
 
     Mesh* StStFDTest::createMesh() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] =50;
-        numberOfNodes[Direction::Two] = 50;
+        numberOfNodes[Direction::One] =5;
+        numberOfNodes[Direction::Two] = 5;
         auto specs = new StructuredMeshGenerator::MeshSpecs(numberOfNodes, 1, 1,
                                                         0, 10, 10);
         auto space = (PositioningInSpace::Plane);

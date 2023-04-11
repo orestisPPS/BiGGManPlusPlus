@@ -6,12 +6,12 @@
 #define UNTITLED_GHOSTPSEUDOMESH2D_H
 
 #include "GhostPseudoMesh.h"
+#include "../../../LinearAlgebra/Transformations.h"
+
 
 namespace Discretization {
 
     class GhostPseudoMesh2D : public GhostPseudoMesh {
-
-        GhostPseudoMesh2D(Mesh* targetMesh, map<Direction, unsigned>* ghostNodesPerDirection);
 
         ~GhostPseudoMesh2D();
 
@@ -22,6 +22,9 @@ namespace Discretization {
         Node* node(unsigned i, unsigned j) override;
 
         Node* node(unsigned i, unsigned j, unsigned k) override;
+
+    public:
+        GhostPseudoMesh2D(Mesh* targetMesh, map<Direction, unsigned>* ghostNodesPerDirection);
     };
 
 } // Discretization
