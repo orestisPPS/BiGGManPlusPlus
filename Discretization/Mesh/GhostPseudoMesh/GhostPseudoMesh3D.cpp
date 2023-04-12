@@ -26,14 +26,18 @@ namespace Discretization {
         auto nodeArrayPositionI = 0;
         auto nodeArrayPositionJ = 0;
         auto nodeArrayPositionK = 0;
+
+        auto nn1 = targetMesh->numberOfNodesPerDirection[One];
+        auto nn1Ghost = ghostNodesPerDirection->at(One);
+        auto nn2 = targetMesh->numberOfNodesPerDirection[Two];
+        auto nn2Ghost = ghostNodesPerDirection->at(Two);
+        auto nn3 = targetMesh->numberOfNodesPerDirection[Three];
+        auto nn3Ghost = ghostNodesPerDirection->at(Three);
         
-        auto nn1 = targetMesh->numberOfNodesPerDirection[One] + ghostNodesPerDirection->at(One) * 2;
-        auto nn2 = targetMesh->numberOfNodesPerDirection[Two] + ghostNodesPerDirection->at(Two) * 2;
-        auto nn3 = targetMesh->numberOfNodesPerDirection[Three] + ghostNodesPerDirection->at(Three) * 2;
-        auto ghostedNodesMatrix = new Array<Node*>(nn1, nn2, nn3);
-        for (int k = -static_cast<int>(ghostNodesPerDirection->at(Three)); k < static_cast<int>(nn3) - 1; k++) {
-            for (int j = -static_cast<int>(ghostNodesPerDirection->at(Two)); j < static_cast<int>(nn2) - 1; j++) {
-                for (int i = -static_cast<int>(ghostNodesPerDirection->at(One)); i < static_cast<int>(nn1) - 1; i++) {
+        auto ghostedNodesMatrix = new Array<Node*>(nn1 + 2 * nn1Ghost, nn2 + 2 * nn2Ghost, nn3 + 2 * nn3Ghost);
+        for (int k = -static_cast<int>(nn3Ghost); k < static_cast<int>(nn3) + static_cast<int>(nn3Ghost); k++) {
+            for (int j = -static_cast<int>(nn2Ghost); j < static_cast<int>(nn2) + static_cast<int>(nn2Ghost); j++) {
+                for (int i = -static_cast<int>(nn1Ghost); i < static_cast<int>(nn1) + static_cast<int>(nn1Ghost); i++) {
                     auto parametricCoords = vector<double>{static_cast<double>(i), static_cast<double>(j), static_cast<double>(k)};
                     if (parametricCoordToNodeMap->find(parametricCoords) != parametricCoordToNodeMap->end()) {
                         auto node = parametricCoordToNodeMap->at(parametricCoords);
@@ -42,24 +46,25 @@ namespace Discretization {
                     } else {
                         auto node = new Node();
                         node->coordinates.setPositionVector(parametricCoords, Parametric);
-                        vector<double> templateCoord = {static_cast<double>(i) *targetMesh->specs->templateStepOne,
+                        vector<double> templateCoord = {static_cast<double>(i) * targetMesh->specs->templateStepOne,
                                                         static_cast<double>(j) * targetMesh->specs->templateStepTwo,
                                                         static_cast<double>(k) * targetMesh->specs->templateStepThree};
                         // Rotate 
-                        Transformations::rotate(templateCoord,targetMesh->specs->templateRotAngleOne);
+                        Transformations::rotate(templateCoord, targetMesh->specs->templateRotAngleOne);
                         // Shear
                         Transformations::shear(templateCoord, targetMesh->specs->templateShearOne,targetMesh->specs->templateShearTwo);
-
+                        
                         node->coordinates.setPositionVector(templateCoord, Template);
+                        (*ghostedNodesMatrix)(nodeArrayPositionI, nodeArrayPositionJ, nodeArrayPositionK) = node;
+                        ghostNodesList->push_back(node);
                         allNodesList->push_back(node);
                     }
                     nodeArrayPositionI++;
-                    if (nodeArrayPositionI == nn1) {
-                        nodeArrayPositionI = 0;
-                    }
                 }
+                nodeArrayPositionI = 0;
                 nodeArrayPositionJ++;
             }
+            nodeArrayPositionJ = 0;
             nodeArrayPositionK++;
         }
         return ghostedNodesMatrix;

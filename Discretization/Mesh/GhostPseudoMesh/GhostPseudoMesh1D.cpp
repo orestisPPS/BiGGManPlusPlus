@@ -12,6 +12,7 @@ namespace Discretization {
         this->targetMesh = targetMesh;
         this->ghostNodesPerDirection = ghostNodesPerDirection;
         ghostNodesList = new list<Node*>();
+        allNodesList = new list<Node*>();
         
         parametricCoordToNodeMap = createParametricCoordToNodeMap();
     }
@@ -25,10 +26,11 @@ namespace Discretization {
     
     Array<Node*>* GhostPseudoMesh1D::createGhostedNodesMatrix() {
         auto nodeArrayPositionI = 0;
-        auto nn1 = targetMesh->numberOfNodesPerDirection[One] + ghostNodesPerDirection->at(One) * 2;
-        auto ghostedNodesMatrix = new Array<Node*>(nn1);
-        for (unsigned i = -ghostNodesPerDirection->at(One); i < nn1 - 1; i++) {
-            auto parametricCoords = vector<double>{static_cast<double>(i) };
+        auto nn1 = targetMesh->numberOfNodesPerDirection[One];
+        auto nn1Ghost = ghostNodesPerDirection->at(One);
+        auto ghostedNodesMatrix = new Array<Node*>(nn1 + 2 * nn1Ghost);
+        for (int i = -static_cast<int>(nn1Ghost); i < static_cast<int>(nn1) + static_cast<int>(nn1Ghost); i++) {
+            auto parametricCoords = vector<double>{static_cast<double>(i)};
             if (parametricCoordToNodeMap->find(parametricCoords) != parametricCoordToNodeMap->end()) {
                 auto node = parametricCoordToNodeMap->at(parametricCoords);
                 (*ghostedNodesMatrix)(nodeArrayPositionI) = node;
@@ -36,14 +38,14 @@ namespace Discretization {
             } else {
                 auto node = new Node();
                 node->coordinates.setPositionVector(parametricCoords, Parametric);
-                node->coordinates.setPositionVector({static_cast<double>(i) *targetMesh->specs->templateStepOne}, Template);
+                vector<double> templateCoord = {static_cast<double>(i) * targetMesh->specs->templateStepOne};
+                node->coordinates.setPositionVector(templateCoord, Template);
                 (*ghostedNodesMatrix)(nodeArrayPositionI) = node;
                 ghostNodesList->push_back(node);
                 allNodesList->push_back(node);
             }
             nodeArrayPositionI++;
         }
-        
         return ghostedNodesMatrix;
     }
     
