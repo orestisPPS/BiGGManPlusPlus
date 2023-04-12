@@ -10,7 +10,13 @@ namespace Discretization {
         this->_mesh = mesh;
         this->_parametricCoordinatesToNodeMap = _createParametricCoordinatesToNodeMap();
     }
-
+    
+    IsoParametricNeighbourFinder::IsoParametricNeighbourFinder(Discretization::Mesh *mesh,
+                                                               map<vector<double>, Discretization::Node *> *parametricCoordinatesToNodeMap) {
+        this->_mesh = mesh;
+        this->_parametricCoordinatesToNodeMap = parametricCoordinatesToNodeMap;
+    }
+    
     IsoParametricNeighbourFinder::~IsoParametricNeighbourFinder() {
         cout << "IsoParametricNeighbourFinder destructor called" << endl;
     }

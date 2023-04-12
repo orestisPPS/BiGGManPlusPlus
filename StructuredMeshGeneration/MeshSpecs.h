@@ -27,7 +27,7 @@ namespace StructuredMeshGenerator {
                   double templateRotAngleOne, double templateRotAngleTwo, double templateRotAngleThree,
                   double templateShearOne, double templateShearTwo, double templateShearThree);
         
-        unsigned dimensions;
+        unsigned dimensions, metricsOrder;
         map<Direction, unsigned>& nodesPerDirection;
         double templateStepOne, templateStepTwo, templateStepThree,
                templateRotAngleOne, templateRotAngleTwo, templateRotAngleThree,

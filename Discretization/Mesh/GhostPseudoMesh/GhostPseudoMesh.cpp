@@ -25,6 +25,7 @@ namespace Discretization {
     void GhostPseudoMesh::initialize() {
         parametricCoordToNodeMap = createParametricCoordToNodeMap();
         ghostedNodesMatrix = createGhostedNodesMatrix();
+        updateParametricCoordToNodeMap();
     }
 
     map<vector<double>, Node*> * GhostPseudoMesh::createParametricCoordToNodeMap() {
@@ -33,6 +34,12 @@ namespace Discretization {
             parametricCoordToNodeMap->insert(pair<vector<double>, Node*>
                     (node->coordinates.positionVector(Parametric), node));
         return parametricCoordToNodeMap;
+    }
+    
+    void GhostPseudoMesh::updateParametricCoordToNodeMap() const {
+        for (auto node : *ghostNodesList)
+            parametricCoordToNodeMap->insert(pair<vector<double>, Node*>
+                    (node->coordinates.positionVector(Parametric), node));
     }
     
     Array<Node*>* GhostPseudoMesh::createGhostedNodesMatrix() {

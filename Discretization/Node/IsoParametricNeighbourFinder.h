@@ -21,6 +21,13 @@ namespace Discretization {
         // one of the iso-parametric curves of the node. One can traverse the computational domain by moving
         // in the parametric domain like a king in chess, one step at a time.
         explicit IsoParametricNeighbourFinder(Mesh* mesh);
+
+        // Utility class that finds the neighbours of a node in structured mesh by exploiting iso-parametric
+        // curves of the mesh. Each node belongs in (1-3) iso-parametric curves and its neighbours belong in
+        // one of the iso-parametric curves of the node. One can traverse the computational domain by moving
+        // in the parametric domain like a king in chess, one step at a time. Use this constructor for meshes 
+        // with ghost nodes.
+        IsoParametricNeighbourFinder(Mesh* mesh, map<vector<double>, Node*>* parametricCoordinatesToNodeMap);
         
         // Returns a IsoParametricNodeGraph object that contains all the nodes that are within the graphDepth
         // of the node. Contains properties to get node and dof graphs map pointers.

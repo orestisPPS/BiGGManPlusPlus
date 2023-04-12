@@ -35,6 +35,8 @@ namespace Discretization {
         vector<Node*>* addInternalNodesToVector() override;
 
         vector<Node*>* addTotalNodesToVector() override;
+        
+        Metrics calculateNodeMetrics(Node* node, CoordinateType coordinateSystem) override;
     };
 
 } // Discretization

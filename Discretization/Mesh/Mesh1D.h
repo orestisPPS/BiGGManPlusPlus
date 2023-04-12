@@ -6,6 +6,7 @@
 #define UNTITLED_MESH1D_H
 
 #include "Mesh.h"
+#include "GhostPseudoMesh/GhostPseudoMesh.h"
 
 namespace Discretization {
 
@@ -34,6 +35,10 @@ namespace Discretization {
         vector<Node*>* addInternalNodesToVector() override;
         
         vector<Node*>* addTotalNodesToVector() override;
+        
+        Metrics calculateNodeMetrics(Node* node, CoordinateType coordinateSystem) override;
+        
+        GhostPseudoMesh* createGhostMesh(unsigned ghostLayerDepth) override;
     };
 
 } // Discretization

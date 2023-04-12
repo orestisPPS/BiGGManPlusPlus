@@ -3,6 +3,7 @@
 //
 
 #include "Mesh.h"
+#include "GhostPseudoMesh/GhostPseudoMesh2D.h"
 
 using namespace  Discretization;
 
@@ -132,5 +133,20 @@ namespace Discretization {
         //Deallocate internalNodesVector vector
         delete internalNodesVector;
         internalNodesVector = nullptr;
+    }
+    
+    void Mesh::calculateMeshMetrics(CoordinateType coordinateSystem){
+        if (isInitialized) {
+            metrics = new map<Node*, Metrics>();
+            auto ghostNodesPerDirection = new map<Direction, unsigned>();
+            ghostNodesPerDirection->insert(pair<Direction, unsigned>(One, 1));
+            ghostNodesPerDirection->insert(pair<Direction, unsigned>(Two, 1));
+            auto testGhostMesh =  new GhostPseudoMesh2D(this, ghostNodesPerDirection);
+            for (auto &node : *totalNodesVector) {
+                metrics->insert(pair<Node*, Metrics>(node, calculateNodeMetrics(node, coordinateSystem)));
+            }
+        }
+        else
+            throw std::runtime_error("Mesh has not been initialized");
     }
 } // Discretization

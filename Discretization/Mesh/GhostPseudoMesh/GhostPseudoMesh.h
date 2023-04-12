@@ -13,13 +13,13 @@ namespace Discretization {
         
     public:
         
-        GhostPseudoMesh(Mesh* targetMesh, map<Direction, unsigned>* ghostNodesPerDirection);
+        GhostPseudoMesh(Array<Node*>* ghostedNodesMatrix, list<Node*>* ghostNodesList,
+                        map<Direction, unsigned>* ghostNodesPerDirection,
+                        map<vector<double>, Node*>* parametricCoordToNodeMap);
         
         ~GhostPseudoMesh();
         
         Array<Node*>* ghostedNodesMatrix;
-        
-        list<Node*>* allNodesList;
         
         list<Node*>* ghostNodesList;
 
@@ -27,23 +27,13 @@ namespace Discretization {
         
         map<vector<double>, Node*> *parametricCoordToNodeMap;
         
-        Mesh* targetMesh;
-
-        unsigned dimensions() const;
-
-        SpaceEntityType space() const;
-
-        virtual Node* node(unsigned i);
-
-        virtual Node* node(unsigned i, unsigned j);
-
-        virtual Node* node(unsigned i, unsigned j, unsigned k);
-        
     protected:
         
         virtual Array<Node*>* createGhostedNodesMatrix();
 
         map<vector<double>, Node*> * createParametricCoordToNodeMap();
+        
+        void updateParametricCoordToNodeMap() const;
         
         void initialize();
         

@@ -113,8 +113,15 @@ namespace Discretization {
             }
             return totalNodes;
             //print node id
-
-            
+        }
+        
+        Metrics Mesh2D::calculateNodeMetrics(Discretization::Node *node, CoordinateType coordinateSystem) {
+            auto coords = node->coordinates.positionVector(coordinateSystem);
+            auto metrics = Metrics(node, 2);
+            auto covariant1 = vector<double>(2);
+            auto covariant2 = vector<double>(2);
+            auto contravariant1 = vector<double>(2);
+            auto contravariant2 = vector<double>(2);
         }
         
 }
