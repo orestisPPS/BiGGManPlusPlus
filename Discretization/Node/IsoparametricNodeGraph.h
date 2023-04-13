@@ -6,7 +6,6 @@
 #define UNTITLED_ISOPARAMETRICNODEGRAPH_H
 
 #include "Node.h"
-#include "../Mesh/Mesh.h"
 
 using namespace Discretization;
 
@@ -16,7 +15,8 @@ namespace Discretization {
         
     public:
         
-        IsoParametricNodeGraph(Node* node, unsigned graphDepth, Mesh* mesh, map<vector<double>, Node*> *nodeMap);
+        IsoParametricNodeGraph(Node* node, unsigned graphDepth, map<vector<double>, Node*> *nodeMap,
+                               map<Direction, unsigned>& nodesPerDirection);
 
         // Returns a map ptr of the input node neighbours graph
         // Key : Position Enum representing the position of the neighbour node relative to the input node.
@@ -50,9 +50,9 @@ namespace Discretization {
         
         unsigned int _graphDepth;
         
-        Mesh* _mesh;
-
         map<vector<double>, Node*>* _nodeMap;
+        
+        map<Direction, unsigned> _nodesPerDirection;
                 
         void _findINeighborhoodRecursively();
         

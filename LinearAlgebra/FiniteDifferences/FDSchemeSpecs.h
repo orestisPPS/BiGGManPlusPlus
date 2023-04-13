@@ -26,7 +26,6 @@ namespace LinearAlgebra {
                       SpaceEntityType &space);
         
         map<Direction, tuple<FiniteDifferenceSchemeType, int>> schemeTypeAndOrderAtDirection;
-        SpaceEntityType &space;
     private:
         void checkInput();
     };

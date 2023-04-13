@@ -91,6 +91,53 @@ namespace Discretization {
         return totalNodes;
     }
     
+    GhostPseudoMesh* Mesh1D::createGhostPseudoMesh(unsigned ghostLayerDepth) {
+        //
+        auto ghostNodesPerDirection = createNumberOfGhostNodesPerDirectionMap(ghostLayerDepth);
+
+        auto ghostNodesList = new list<Node*>();
+
+        // Parametric coordinate 1 of nodes in the new ghost mesh
+        auto nodeArrayPositionI = 0;
+        
+        auto nn1 = numberOfNodesPerDirection[One];
+        auto nn1Ghost = ghostNodesPerDirection->at(One);
+
+        //Create parametric coordinates to node map
+        auto parametricCoordToNodeMap =  createParametricCoordToNodesMap();
+        for (int i = -static_cast<int>(nn1Ghost); i < static_cast<int>(nn1) + static_cast<int>(nn1Ghost); i++) {
+                auto parametricCoords = vector<double>{static_cast<double>(i), 0, 0};
+                // If node is inside the original mesh add it to the ghost mesh Array
+                if (parametricCoordToNodeMap->find(parametricCoords) == parametricCoordToNodeMap->end()) {
+                    auto node = new Node();
+                    node->coordinates.setPositionVector(parametricCoords, Parametric);
+                    vector<double> templateCoord = {static_cast<double>(i) * specs->templateStepOne};
+                    node->coordinates.setPositionVector(templateCoord, Template);
+                    ghostNodesList->push_back(node);
+                }
+                nodeArrayPositionI++;
+        }
+        return new GhostPseudoMesh(ghostNodesList, ghostNodesPerDirection, parametricCoordToNodeMap);
+    }
+    
+    map<vector<double>, Node*>* Mesh1D::createParametricCoordToNodesMap() {
+        auto parametricCoordToNodeMap = new map<vector<double>, Node*>();
+        for (auto& node : *totalNodesVector) {
+            auto parametricCoords = node->coordinates.positionVector(Parametric);
+            parametricCoords.push_back(0.0);
+            parametricCoords.push_back(0.0);
+            parametricCoordToNodeMap->insert(pair<vector<double>, Node*>(parametricCoords, node));
+        }
+        return parametricCoordToNodeMap;
+    }
+    
+    Metrics* Mesh1D::calculateNodeMetrics(Discretization::Node *node,
+                                          PositioningInSpace::CoordinateType coordinateSystem) {
+        return nullptr;
+    }
+    
+    
+    
     
     
 } // Discretization

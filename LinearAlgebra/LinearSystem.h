@@ -7,7 +7,7 @@
 
 #include "../Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.h"
 #include "Array.h"
-#include "../Discretization/Node/IsoParametricNeighbourFinder.h"
+#include "../Discretization/Node/IsoparametricNodeGraph.h"
 #include "../Utility/Exporters/Exporters.h"
 
 using namespace NumericalAnalysis;
@@ -36,8 +36,6 @@ namespace LinearAlgebra {
     private:
         
         Mesh* _mesh;
-
-        IsoParametricNeighbourFinder* _isoParametricNeighbourFinder;
         
         AnalysisDegreesOfFreedom* _analysisDegreesOfFreedom;
         
@@ -50,6 +48,7 @@ namespace LinearAlgebra {
         void _createFixedDOFSubMatrix();
         void _createFreeDOFSubMatrix();
 
+        map<vector<double>, Node*>* _parametricCoordToNodeMap;
         
         void _createRHS();
     };

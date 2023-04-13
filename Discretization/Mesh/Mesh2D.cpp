@@ -115,14 +115,72 @@ namespace Discretization {
             //print node id
         }
         
-        Metrics Mesh2D::calculateNodeMetrics(Discretization::Node *node, CoordinateType coordinateSystem) {
+        Metrics* Mesh2D::calculateNodeMetrics(Discretization::Node *node, CoordinateType coordinateSystem) {
             auto coords = node->coordinates.positionVector(coordinateSystem);
             auto metrics = Metrics(node, 2);
             auto covariant1 = vector<double>(2);
             auto covariant2 = vector<double>(2);
             auto contravariant1 = vector<double>(2);
             auto contravariant2 = vector<double>(2);
+            return nullptr;
         }
+
+    GhostPseudoMesh* Mesh2D::createGhostPseudoMesh(unsigned ghostLayerDepth) {
+        //
+        auto ghostNodesPerDirection = createNumberOfGhostNodesPerDirectionMap(ghostLayerDepth);
+
+        auto ghostNodesList = new list<Node*>();
+        
+        // Parametric coordinate 1 of nodes in the new ghost mesh
+        auto nodeArrayPositionI = 0;
+        // Parametric coordinate 2 of nodes in the new ghost mesh
+        auto nodeArrayPositionJ = 0;
+        auto nn1 = numberOfNodesPerDirection[One];
+        auto nn1Ghost = ghostNodesPerDirection->at(One);
+        auto nn2 = numberOfNodesPerDirection[Two];
+        auto nn2Ghost = ghostNodesPerDirection->at(Two);
+        
+        //Create parametric coordinates to node map
+        auto parametricCoordToNodeMap =  createParametricCoordToNodesMap();
+        for (int j = -static_cast<int>(nn2Ghost); j < static_cast<int>(nn2) + static_cast<int>(nn2Ghost); j++) {
+            for (int i = -static_cast<int>(nn1Ghost); i < static_cast<int>(nn1) + static_cast<int>(nn1Ghost); i++) {
+                auto parametricCoords = vector<double>{static_cast<double>(i), static_cast<double>(j), 0};
+
+                // If node is inside the original mesh add it to the ghost mesh Array
+                if (parametricCoordToNodeMap->find(parametricCoords) == parametricCoordToNodeMap->end()) {
+                    auto node = new Node();
+                    node->coordinates.setPositionVector(parametricCoords, Parametric);
+                    vector<double> templateCoord = {static_cast<double>(i) * specs->templateStepOne,
+                                                    static_cast<double>(j) * specs->templateStepTwo};
+                    // Rotate 
+                    Transformations::rotate(templateCoord, specs->templateRotAngleOne);
+                    // Shear
+                    Transformations::shear(templateCoord, specs->templateShearOne,specs->templateShearTwo);
+
+                    node->coordinates.setPositionVector(templateCoord, Template);
+                    ghostNodesList->push_back(node);
+                }
+                nodeArrayPositionI++;
+                if (nodeArrayPositionI == nn1 + 2 * nn1Ghost) {
+                    nodeArrayPositionI = 0;
+                    nodeArrayPositionJ++;
+                }
+            }
+        }
+        return new GhostPseudoMesh(ghostNodesList, ghostNodesPerDirection, parametricCoordToNodeMap);
+    }
+
+    map<vector<double>, Node*>* Mesh2D::createParametricCoordToNodesMap() {
+        auto parametricCoordToNodeMap = new map<vector<double>, Node*>();
+        for (auto& node : *totalNodesVector) {
+            auto parametricCoords = node->coordinates.positionVector(Parametric);
+            parametricCoords.push_back(0.0);
+            parametricCoordToNodeMap->insert(pair<vector<double>, Node*>(parametricCoords, node));
+        }
+        return parametricCoordToNodeMap;
+    }
+    
+    
         
 }
         

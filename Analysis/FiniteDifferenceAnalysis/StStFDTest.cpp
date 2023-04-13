@@ -5,7 +5,6 @@
 #include "StStFDTest.h"
 #include "../../Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.h"
 #include "../../Utility/Exporters/Exporters.h"
-#include "../../Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh2D.h"
 
 
 namespace NumericalAnalysis {
@@ -17,18 +16,6 @@ namespace NumericalAnalysis {
         auto problem = new SteadyStateMathematicalProblem(pde, bcs, createDOF());
         auto schemeSpecs = createSchemeSpecs();
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, schemeSpecs);
-        
-        
-        auto ghostNodesPerDirection = new map<Direction, unsigned>();
-        ghostNodesPerDirection->insert(pair<Direction, unsigned>(Direction::One, 1));
-        ghostNodesPerDirection->insert(pair<Direction, unsigned>(Direction::Two, 1));
-        ghostNodesPerDirection->insert(pair<Direction, unsigned>(Direction::Two, 0));
-        
-        auto testGhostMesh =  new GhostPseudoMesh2D(mesh,ghostNodesPerDirection);
-        auto filenameParaview = "ghostMesh.vtk";
-        auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
-        Utility::Exporters::saveGhostNodesToParaviewFile(testGhostMesh, filePath, filenameParaview);
-
     }
 
     Mesh* StStFDTest::createMesh() {

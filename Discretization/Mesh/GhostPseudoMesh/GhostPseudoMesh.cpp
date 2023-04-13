@@ -8,62 +8,21 @@
 
 namespace Discretization {
     
-    GhostPseudoMesh::GhostPseudoMesh(Mesh* targetMesh, map<Direction, unsigned>* ghostNodesPerDirection) {
-        ghostedNodesMatrix = nullptr;
-        parametricCoordToNodeMap = nullptr;
-        this->targetMesh = nullptr;
-        ghostNodesList = nullptr;
-    }
+
+    GhostPseudoMesh::GhostPseudoMesh(list<Node*>* ghostNodesList,
+                                     map<Direction, unsigned>* ghostNodesPerDirection,
+                                     map<vector<double>, Node*>* parametricCoordToNodeMap) :
+            ghostNodesList(ghostNodesList),
+            ghostNodesPerDirection(ghostNodesPerDirection),
+            parametricCoordToNodeMap(parametricCoordToNodeMap) {}
     
     GhostPseudoMesh::~GhostPseudoMesh() {
-        delete ghostedNodesMatrix;
-        ghostedNodesMatrix = nullptr;
+        for (auto& node : *ghostNodesList)
+            delete node;
+        delete ghostNodesList;
+        delete ghostNodesPerDirection;
         delete parametricCoordToNodeMap;
-        parametricCoordToNodeMap = nullptr;
     }
 
-    void GhostPseudoMesh::initialize() {
-        parametricCoordToNodeMap = createParametricCoordToNodeMap();
-        ghostedNodesMatrix = createGhostedNodesMatrix();
-        updateParametricCoordToNodeMap();
-    }
-
-    map<vector<double>, Node*> * GhostPseudoMesh::createParametricCoordToNodeMap() {
-        parametricCoordToNodeMap = new map<vector<double>, Node*>();
-        for (auto node : *targetMesh->totalNodesVector)
-            parametricCoordToNodeMap->insert(pair<vector<double>, Node*>
-                    (node->coordinates.positionVector(Parametric), node));
-        return parametricCoordToNodeMap;
-    }
-    
-    void GhostPseudoMesh::updateParametricCoordToNodeMap() const {
-        for (auto node : *ghostNodesList)
-            parametricCoordToNodeMap->insert(pair<vector<double>, Node*>
-                    (node->coordinates.positionVector(Parametric), node));
-    }
-    
-    Array<Node*>* GhostPseudoMesh::createGhostedNodesMatrix() {
-        return nullptr;
-    }
-    
-    unsigned GhostPseudoMesh::dimensions() const {
-        return targetMesh->dimensions();
-    }
-    
-    SpaceEntityType GhostPseudoMesh::space() const {
-        return targetMesh->space();
-    }
-    
-    Node* GhostPseudoMesh::node(unsigned i) {
-        return nullptr;
-    }
-    
-    Node* GhostPseudoMesh::node(unsigned i, unsigned j) {
-        return nullptr;
-    }
-    
-    Node* GhostPseudoMesh::node(unsigned i, unsigned j, unsigned k) {
-        return nullptr;
-    }
     
 } // Discretization

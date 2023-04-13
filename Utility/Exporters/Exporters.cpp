@@ -78,7 +78,7 @@ namespace Utility {
     }
     
     void Exporters::saveGhostNodesToParaviewFile(GhostPseudoMesh *mesh, const std::string& filePath, const std::string& fileName) {
-        ofstream outputFile(filePath + fileName);
+/*        ofstream outputFile(filePath + fileName);
         outputFile << "# vtk DataFile Version 3.0 \n";
         outputFile << "vtk output \n" ;
         outputFile << "ASCII \n" ;
@@ -88,7 +88,7 @@ namespace Utility {
             auto coordinates = node->coordinates.positionVector(Template);
             outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << "\n" ;
         }
-        outputFile.close();
+        outputFile.close();*/
     }
     
     

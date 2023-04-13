@@ -25,6 +25,8 @@ namespace Discretization {
         Node* node(unsigned i, unsigned j) override;
         
         Node* node(unsigned i, unsigned j, unsigned k) override;
+
+        map<vector<double>, Node*>* createParametricCoordToNodesMap() override;
         
         void printMesh() override;
         
@@ -36,7 +38,10 @@ namespace Discretization {
 
         vector<Node*>* addTotalNodesToVector() override;
         
-        Metrics calculateNodeMetrics(Node* node, CoordinateType coordinateSystem) override;
+        Metrics* calculateNodeMetrics(Node* node, CoordinateType coordinateSystem) override;
+        
+        GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth) override;
+
     };
 
 } // Discretization

@@ -5,7 +5,12 @@
 #ifndef UNTITLED_GHOSTPSEUDOMESH_H
 #define UNTITLED_GHOSTPSEUDOMESH_H
 
-#include "../Mesh.h"
+#include <map>
+#include "../../Node/Node.h"
+#include "../../../LinearAlgebra/Array.h"
+
+using namespace Discretization;
+using namespace LinearAlgebra;
 
 namespace Discretization {
 
@@ -13,34 +18,18 @@ namespace Discretization {
         
     public:
         
-        GhostPseudoMesh(Array<Node*>* ghostedNodesMatrix, list<Node*>* ghostNodesList,
+        GhostPseudoMesh(list<Node*>* ghostNodesList,
                         map<Direction, unsigned>* ghostNodesPerDirection,
                         map<vector<double>, Node*>* parametricCoordToNodeMap);
         
         ~GhostPseudoMesh();
         
-        Array<Node*>* ghostedNodesMatrix;
-        
         list<Node*>* ghostNodesList;
 
         map<Direction, unsigned>* ghostNodesPerDirection;
         
+        //Contains the parametric coordinates of the nodes in the mesh (real and ghost)
         map<vector<double>, Node*> *parametricCoordToNodeMap;
-        
-    protected:
-        
-        virtual Array<Node*>* createGhostedNodesMatrix();
-
-        map<vector<double>, Node*> * createParametricCoordToNodeMap();
-        
-        void updateParametricCoordToNodeMap() const;
-        
-        void initialize();
-        
-    private:
-        
-
-
     };
 
 } // Discretization

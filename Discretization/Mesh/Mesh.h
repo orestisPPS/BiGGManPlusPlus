@@ -9,6 +9,7 @@
 #include "../../StructuredMeshGeneration/MeshSpecs.h"
 #include "Metrics/Metrics.h"
 #include "GhostPseudoMesh/GhostPseudoMesh.h"
+#include "../../LinearAlgebra/Transformations.h"
 
 using namespace Discretization;
 using namespace StructuredMeshGenerator;
@@ -37,7 +38,7 @@ namespace Discretization {
         
         MeshSpecs* specs;
         
-        map<Node*, Metrics> *metrics;
+        map<Node*, Metrics*> *metrics;
 
 
         //---------------Implemented parent class methods--------------
@@ -62,14 +63,14 @@ namespace Discretization {
         virtual Node* node(unsigned i, unsigned j);
     
         virtual Node* node(unsigned i, unsigned j, unsigned k);
+
+        virtual map<vector<double>, Node*>* createParametricCoordToNodesMap();
         
         virtual void printMesh();
         
      protected:
         Array<Node *> *_nodesMatrix;
-        
-        Array<Node *> *_ghostedNodesMatrix;
-        
+
         map<unsigned, Node*>* _nodesMap;
         
         map<unsigned, Node*>* createNodesMap() const;
@@ -94,9 +95,16 @@ namespace Discretization {
         // the final coordinate system is calculated.
         // If coordinateSystem is Natural then the metrics are calculated based on the final calculated coordinate system.
         void calculateMeshMetrics(CoordinateType coordinateSystem);
+
+        map<Direction, unsigned>* createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth);
         
-        virtual Metrics calculateNodeMetrics(Node* node, CoordinateType coordinateSystem);
+        virtual Metrics* calculateNodeMetrics(Node* node, CoordinateType coordinateSystem);
         
-        virtual GhostPseudoMesh* createGhostMesh(unsigned ghostLayerDepth);
+        virtual GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth);
+
+
+        
+        
+
     };
 }
