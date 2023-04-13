@@ -4,10 +4,13 @@
 
 #include "IsoparametricNodeGraph.h"
 
+#include <utility>
+
 namespace Discretization {
     
-    IsoParametricNodeGraph::IsoParametricNodeGraph(Node* node, unsigned graphDepth, Mesh* mesh,map<vector<double>, Node *> *nodeMap) :
-                            _node(node), _mesh(mesh), _graphDepth(graphDepth), _nodeMap(nodeMap){
+    IsoParametricNodeGraph::IsoParametricNodeGraph(Node* node, unsigned graphDepth, map<vector<double>, Node *> *nodeMap,
+                                                   map<Direction, unsigned>& nodesPerDirection) :
+                            _node(node), _graphDepth(graphDepth), _nodeMap(nodeMap), _nodesPerDirection(nodesPerDirection) {
         nodeGraph = new map<Position, vector<Node*>>();
         _findINeighborhoodRecursively();
     }
@@ -73,9 +76,9 @@ namespace Discretization {
     void IsoParametricNodeGraph::_findIDepthNeighborhood(unsigned int depth, vector<double>& nodeCoords) {
         
 
-        auto nn1 = _mesh->numberOfNodesPerDirection[One];
-        auto nn2 = _mesh->numberOfNodesPerDirection[Two];
-        auto nn3 = _mesh->numberOfNodesPerDirection[Three];
+        auto nn1 = _nodesPerDirection[One];
+        auto nn2 = _nodesPerDirection[Two];
+        auto nn3 = _nodesPerDirection[Three];
         
         auto id = *_node->id.global;
         auto k = id / (nn1 * nn2);

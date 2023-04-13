@@ -5,7 +5,12 @@
 #ifndef UNTITLED_GHOSTPSEUDOMESH_H
 #define UNTITLED_GHOSTPSEUDOMESH_H
 
-#include "../Mesh.h"
+#include <map>
+#include "../../Node/Node.h"
+#include "../../../LinearAlgebra/Array.h"
+
+using namespace Discretization;
+using namespace LinearAlgebra;
 
 namespace Discretization {
 
@@ -13,42 +18,18 @@ namespace Discretization {
         
     public:
         
-        GhostPseudoMesh(Mesh* targetMesh, map<Direction, unsigned>* ghostNodesPerDirection);
+        GhostPseudoMesh(list<Node*>* ghostNodesList,
+                        map<Direction, unsigned>* ghostNodesPerDirection,
+                        map<vector<double>, Node*>* parametricCoordToNodeMap);
         
         ~GhostPseudoMesh();
         
-        Array<Node*>* ghostedNodesMatrix;
-        
-        list<Node*>* ghostNodes;
+        list<Node*>* ghostNodesList;
 
         map<Direction, unsigned>* ghostNodesPerDirection;
         
+        //Contains the parametric coordinates of the nodes in the mesh (real and ghost)
         map<vector<double>, Node*> *parametricCoordToNodeMap;
-        
-        Mesh* targetMesh;
-
-        unsigned dimensions() const;
-
-        SpaceEntityType space() const;
-
-        virtual Node* node(unsigned i);
-
-        virtual Node* node(unsigned i, unsigned j);
-
-        virtual Node* node(unsigned i, unsigned j, unsigned k);
-        
-    protected:
-        
-        virtual Array<Node*>* createGhostedNodesMatrix();
-
-        map<vector<double>, Node*> * createParametricCoordToNodeMap();
-        
-        void initialize();
-        
-    private:
-        
-
-
     };
 
 } // Discretization

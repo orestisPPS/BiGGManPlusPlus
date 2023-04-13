@@ -59,14 +59,17 @@ namespace Discretization {
     Node* Mesh::node(unsigned i, unsigned j, unsigned k) {
         return nullptr;
     }
+    
+    map<vector<double>, Node*>* Mesh::createParametricCoordToNodesMap() {
+        return nullptr;
+    }
 
     void Mesh::printMesh() { }
-    
-    void Mesh::initialize(bool categorizeNodesToEnumerables) {
+
+    void Mesh::initialize() {
         isInitialized = true;
         createNumberOfNodesPerDirectionMap();
-        if (categorizeNodesToEnumerables)
-            categorizeNodes();
+        categorizeNodes();
     }
     
     map<Position, vector<Node*>*>* Mesh::addDBoundaryNodesToMap() {
@@ -134,4 +137,51 @@ namespace Discretization {
         delete internalNodesVector;
         internalNodesVector = nullptr;
     }
+    
+    void Mesh::calculateMeshMetrics(CoordinateType coordinateSystem){
+        if (isInitialized) {
+            metrics = new map<Node*, Metrics*>();
+            auto ghostNodesPerDirection = new map<Direction, unsigned>();
+            ghostNodesPerDirection->insert(pair<Direction, unsigned>(One, specs->metricsOrder - 1));
+            ghostNodesPerDirection->insert(pair<Direction, unsigned>(Two, specs->metricsOrder - 1));
+            auto ghostMesh = createGhostPseudoMesh(specs->metricsOrder - 1);
+            for (auto &node : *totalNodesVector) {
+                metrics->insert(pair<Node*, Metrics*>(node, calculateNodeMetrics(node, coordinateSystem)));
+            }
+        }
+        else
+            throw std::runtime_error("Mesh has not been initialized");
+    }
+    
+
+
+    map<Direction, unsigned>* Mesh:: createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth){
+        auto numberOfGhostNodesPerDirection = new map<Direction, unsigned>();
+        switch (dimensions()) {
+            case 1:
+                numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(One, ghostLayerDepth));
+                break;
+            case 2:
+                numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(One, ghostLayerDepth));
+                numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(Two, ghostLayerDepth));
+                break;
+            case 3:
+                numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(One, ghostLayerDepth));
+                numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(Two, ghostLayerDepth));
+                numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(Three, ghostLayerDepth));
+                break;
+            default:             
+                break;
+        }
+        return numberOfGhostNodesPerDirection;
+    }
+    
+    Metrics* Mesh::calculateNodeMetrics(Node* node, CoordinateType coordinateSystem) {
+        return nullptr;
+    }
+    
+    GhostPseudoMesh* Mesh::createGhostPseudoMesh(unsigned ghostLayerDepth) {
+        return nullptr;
+    }
+    
 } // Discretization

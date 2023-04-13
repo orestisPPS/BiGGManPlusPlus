@@ -11,7 +11,6 @@ namespace LinearAlgebra {
     LinearSystem::LinearSystem(AnalysisDegreesOfFreedom* analysisDegreesOfFreedom, Mesh* mesh) {
         this->_analysisDegreesOfFreedom = analysisDegreesOfFreedom;
         this->_mesh = mesh;
-        this->_isoParametricNeighbourFinder = new IsoParametricNeighbourFinder(mesh);
         numberOfFreeDOFs = new unsigned(_analysisDegreesOfFreedom->freeDegreesOfFreedom->size());
         numberOfFixedDOFs = new unsigned(_analysisDegreesOfFreedom->fixedDegreesOfFreedom->size());
         numberOfDOFs = new unsigned(_analysisDegreesOfFreedom->totalDegreesOfFreedomMap->size());
@@ -19,6 +18,7 @@ namespace LinearAlgebra {
         _freeDOFMatrix = new Array<double>(*numberOfFreeDOFs, *numberOfFreeDOFs);
         _fixedDOFMatrix = new Array<double>(*numberOfFixedDOFs, *numberOfDOFs);
         RHS = new vector<double>(*numberOfFreeDOFs);
+        _parametricCoordToNodeMap = _mesh->createParametricCoordToNodesMap();
         //matrix->print();
     }
         
@@ -28,7 +28,6 @@ namespace LinearAlgebra {
         delete numberOfFreeDOFs;
         delete numberOfFixedDOFs;
         delete numberOfDOFs;
-        delete _isoParametricNeighbourFinder;
         _mesh = nullptr;
     }
     
@@ -46,9 +45,10 @@ namespace LinearAlgebra {
         for (auto &dof: *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
             //Node with the DOF
             auto node = _mesh->nodeFromID(*dof->parentNode);
-            auto dofGraph = _isoParametricNeighbourFinder->getIsoParametricNodeGraph(node, 1)
-                    .getSpecificDOFGraph(dof->type());
-            
+
+            auto dofGraph =
+                    IsoParametricNodeGraph(node, 1, _parametricCoordToNodeMap, _mesh->numberOfNodesPerDirection).
+                    getSpecificDOFGraph(dof->type());
             unsigned positionI = *dof->id->value;
             _freeDOFMatrix->at(positionI, positionI) = 2;
 
@@ -77,9 +77,9 @@ namespace LinearAlgebra {
         for (auto &dof: *_analysisDegreesOfFreedom->fixedDegreesOfFreedom) {
             //Node with the DOF
             auto node = _mesh->nodeFromID(*dof->parentNode);
-            auto dofGraph = _isoParametricNeighbourFinder->getIsoParametricNodeGraph(node, 1)
-                    .getSpecificDOFGraph(dof->type());
-
+            auto dofGraph =
+                    IsoParametricNodeGraph(node, 1, _parametricCoordToNodeMap, _mesh->numberOfNodesPerDirection).
+                            getSpecificDOFGraph(dof->type());
             unsigned positionI;
             unsigned positionJ;
             
@@ -106,8 +106,9 @@ namespace LinearAlgebra {
             auto node = _mesh->nodeFromID(*dof->parentNode);
             
             //Get all the neighbouring DOFs with the same type
-            auto dofGraph = _isoParametricNeighbourFinder->getIsoParametricNodeGraph(node, 1)
-                    .getSpecificDOFGraph(dof->type());
+            auto dofGraph =
+                    IsoParametricNodeGraph(node, 1, _parametricCoordToNodeMap, _mesh->numberOfNodesPerDirection).
+                            getSpecificDOFGraph(dof->type());
             //Marching through all the neighbouring DOFs
             for (auto &neighbour: *dofGraph) {
                 for (auto &neighbourDof: neighbour.second) {

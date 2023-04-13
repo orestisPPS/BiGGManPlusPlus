@@ -81,7 +81,6 @@ add_executable(untitled main.cpp
         DegreesOfFreedom/DegreesOfFreedomCategorization.cpp
         LinearAlgebra/LinearSystem.h 
         LinearAlgebra/LinearSystem.cpp
-        Discretization/Node/IsoParametricNeighbourFinder.h
-        Discretization/Node/IsoParametricNeighbourFinder.cpp DegreesOfFreedom/IsoParametricDOFFinder.h DegreesOfFreedom/IsoParametricDOFFinder.cpp Discretization/Node/IsoparametricNodeGraph.h Discretization/Node/IsoparametricNodeGraph.cpp Utility/Exporters/Exporters.h Utility/Exporters/Exporters.cpp LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.cpp Discretization/Mesh/GhostMesh.h Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.h Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.cpp Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh1D.h Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh1D.cpp)
+        Discretization/Node/IsoparametricNodeGraph.h Discretization/Node/IsoparametricNodeGraph.cpp Utility/Exporters/Exporters.h Utility/Exporters/Exporters.cpp LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.cpp Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.h Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.cpp Discretization/Mesh/Metrics/Metrics.h Discretization/Mesh/Metrics/Metrics.cpp)
         
         
