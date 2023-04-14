@@ -15,6 +15,7 @@ namespace LinearAlgebra {
     //A class containing all the first order finite difference schemes up to Fifth order accuracy
     class FirstOrderDerivativeFDScheme : public FDScheme {
     public:
+        
         FirstOrderDerivativeFDScheme();
         
         //Backward Finite Difference Scheme 1

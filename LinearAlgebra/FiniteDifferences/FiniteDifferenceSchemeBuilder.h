@@ -13,6 +13,10 @@ namespace LinearAlgebra {
     class FiniteDifferenceSchemeBuilder {
     public:
         FiniteDifferenceSchemeBuilder(FDSchemeSpecs* schemeSpecs);
+
+        // Map containing the sum of the weights for each position of the
+        map<Position, double>* schemeWeightAtPosition;
+        
         
     private:
         
@@ -25,10 +29,12 @@ namespace LinearAlgebra {
         
         //Maps the type of the scheme to the appropriate relative positions of the points needed to build it
         //For example, type Forward, (Right, Front, Top)
-        static map<FiniteDifferenceSchemeType, list<Position>> _schemeTypeToPositionsOfPointsNeeded();
-        
-        
+        static map<FiniteDifferenceSchemeType, vector<Position>> _schemeTypeToPositionsOfPointsNeeded();
 
+
+        static map<unsigned int, map<FiniteDifferenceSchemeType, vector<Position>>> positionsForFDSchemeTypeAndDimensions();
+
+        static map<Direction, map<FiniteDifferenceSchemeType, vector<Position>>> positionsForSchemeAtDirection();
     };
 
 } // LinearAlgebra

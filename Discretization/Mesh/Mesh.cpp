@@ -139,18 +139,7 @@ namespace Discretization {
     }
     
     void Mesh::calculateMeshMetrics(CoordinateType coordinateSystem){
-        if (isInitialized) {
-            metrics = new map<Node*, Metrics*>();
-            auto ghostNodesPerDirection = new map<Direction, unsigned>();
-            ghostNodesPerDirection->insert(pair<Direction, unsigned>(One, specs->metricsOrder - 1));
-            ghostNodesPerDirection->insert(pair<Direction, unsigned>(Two, specs->metricsOrder - 1));
-            auto ghostMesh = createGhostPseudoMesh(specs->metricsOrder - 1);
-            for (auto &node : *totalNodesVector) {
-                metrics->insert(pair<Node*, Metrics*>(node, calculateNodeMetrics(node, coordinateSystem)));
-            }
-        }
-        else
-            throw std::runtime_error("Mesh has not been initialized");
+
     }
     
 

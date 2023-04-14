@@ -86,13 +86,13 @@ namespace Discretization {
         auto parametricCoords = vector<double>{0, 0, 0};
         //TopLeft
         parametricCoords = {nodeCoords[0] - depth, nodeCoords[1] + depth, nodeCoords[2]};
-        _addNeighbourNodeIfParametricCoordsExist(TopLeft, parametricCoords, depth);
+        _addNeighbourNodeIfParametricCoordsExist(LeftTop, parametricCoords, depth);
         //Top
         parametricCoords = {nodeCoords[0], nodeCoords[1] + depth, nodeCoords[2]};
         _addNeighbourNodeIfParametricCoordsExist(Top, parametricCoords, depth);
         //TopRight
         parametricCoords = {nodeCoords[0] + depth, nodeCoords[1] + depth, nodeCoords[2]};
-        _addNeighbourNodeIfParametricCoordsExist(TopRight, parametricCoords, depth);
+        _addNeighbourNodeIfParametricCoordsExist(RightTop, parametricCoords, depth);
         //Left
         parametricCoords = {nodeCoords[0] - depth, nodeCoords[1], nodeCoords[2]};
         _addNeighbourNodeIfParametricCoordsExist(Left, parametricCoords, depth);
@@ -101,73 +101,73 @@ namespace Discretization {
         _addNeighbourNodeIfParametricCoordsExist(Right, parametricCoords, depth);
         //BottomRight
         parametricCoords = {nodeCoords[0] + depth, nodeCoords[1] - depth, nodeCoords[2]};
-        _addNeighbourNodeIfParametricCoordsExist(BottomRight, parametricCoords, depth);
+        _addNeighbourNodeIfParametricCoordsExist(RightBottom, parametricCoords, depth);
         //Bottom
         parametricCoords = {nodeCoords[0], nodeCoords[1] - depth, nodeCoords[2]};
         _addNeighbourNodeIfParametricCoordsExist(Bottom, parametricCoords, depth);
         //BottomLeft
         parametricCoords = {nodeCoords[0] - depth, nodeCoords[1] - depth, nodeCoords[2]};
-        _addNeighbourNodeIfParametricCoordsExist(BottomLeft, parametricCoords, depth);
+        _addNeighbourNodeIfParametricCoordsExist(LeftBottom, parametricCoords, depth);
 
         if (k > 0){
             //FrontTopLeft
             parametricCoords = {nodeCoords[0] - depth, nodeCoords[1] + depth, nodeCoords[2] + depth};
-            _addNeighbourNodeIfParametricCoordsExist(FrontTopLeft, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(LeftTopFront, parametricCoords, depth);
 
             //FrontTop
             parametricCoords = {nodeCoords[0], nodeCoords[1] + depth, nodeCoords[2] + depth};
-            _addNeighbourNodeIfParametricCoordsExist(FrontTop, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(TopFront, parametricCoords, depth);
             //FrontTopRight
             parametricCoords = {nodeCoords[0] + depth, nodeCoords[1] + depth, nodeCoords[2] + depth};
-            _addNeighbourNodeIfParametricCoordsExist(FrontTopRight, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(RightTopFront, parametricCoords, depth);
             //FrontRight
             parametricCoords = {nodeCoords[0] + depth, nodeCoords[1], nodeCoords[2] + depth};
-            _addNeighbourNodeIfParametricCoordsExist(FrontRight, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(RightFront, parametricCoords, depth);
             //Front
             parametricCoords = {nodeCoords[0], nodeCoords[1], nodeCoords[2] + depth};
             _addNeighbourNodeIfParametricCoordsExist(Front, parametricCoords, depth);
             //FrontLeft
             parametricCoords = {nodeCoords[0] - depth, nodeCoords[1], nodeCoords[2] + depth};
-            _addNeighbourNodeIfParametricCoordsExist(FrontLeft, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(LeftFront, parametricCoords, depth);
             //FrontBottomRight
             parametricCoords = {nodeCoords[0] + depth, nodeCoords[1] - depth, nodeCoords[2] + depth};
-            _addNeighbourNodeIfParametricCoordsExist(FrontBottomRight, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(RightBottomFront, parametricCoords, depth);
             //FrontBottom
             parametricCoords = {nodeCoords[0], nodeCoords[1] - depth, nodeCoords[2] + depth};
-            _addNeighbourNodeIfParametricCoordsExist(FrontBottom, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(BottomFront, parametricCoords, depth);
             //FrontBottomLeft
             parametricCoords = {nodeCoords[0] - depth, nodeCoords[1] - depth, nodeCoords[2] + depth};
-            _addNeighbourNodeIfParametricCoordsExist(FrontBottomLeft, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(LeftBottomFront, parametricCoords, depth);
         }
         
         if (k < nn3 - 1) {
             //BackTopLeft
             parametricCoords = {nodeCoords[0] - depth, nodeCoords[1] + depth, nodeCoords[2] - depth};
-            _addNeighbourNodeIfParametricCoordsExist(BackTopLeft, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(LeftTopBack, parametricCoords, depth);
             //BackTop
             parametricCoords = {nodeCoords[0], nodeCoords[1] + depth, nodeCoords[2] - depth};
-            _addNeighbourNodeIfParametricCoordsExist(BackTop, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(TopBack, parametricCoords, depth);
             //BackTopRight
             parametricCoords = {nodeCoords[0] + depth, nodeCoords[1] + depth, nodeCoords[2] - depth};
-            _addNeighbourNodeIfParametricCoordsExist(BackTopRight, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(RightTopBack, parametricCoords, depth);
             //BackLeft
             parametricCoords = {nodeCoords[0] - depth, nodeCoords[1], nodeCoords[2] - depth};
-            _addNeighbourNodeIfParametricCoordsExist(BackLeft, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(LeftBack, parametricCoords, depth);
             //Back
             parametricCoords = {nodeCoords[0], nodeCoords[1], nodeCoords[2] - depth};
             _addNeighbourNodeIfParametricCoordsExist(Back, parametricCoords, depth);
             //BackRight
             parametricCoords = {nodeCoords[0] + depth, nodeCoords[1], nodeCoords[2] - depth};
-            _addNeighbourNodeIfParametricCoordsExist(BackRight, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(RightBack, parametricCoords, depth);
             //BackBottomLeft
             parametricCoords = {nodeCoords[0] - depth, nodeCoords[1] - depth, nodeCoords[2] - depth};
-            _addNeighbourNodeIfParametricCoordsExist(BackBottomLeft, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(LeftBottomBack, parametricCoords, depth);
             //BackBottom
             parametricCoords = {nodeCoords[0], nodeCoords[1] - depth, nodeCoords[2] - depth};
-            _addNeighbourNodeIfParametricCoordsExist(BackBottom, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(BottomBack, parametricCoords, depth);
             //BackBottomRight
             parametricCoords = {nodeCoords[0] + depth, nodeCoords[1] - depth, nodeCoords[2] - depth};
-            _addNeighbourNodeIfParametricCoordsExist(BackBottomRight, parametricCoords, depth);
+            _addNeighbourNodeIfParametricCoordsExist(RightBottomBack, parametricCoords, depth);
         }
         
     }

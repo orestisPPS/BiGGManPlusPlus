@@ -130,11 +130,18 @@ namespace Discretization {
         }
         return parametricCoordToNodeMap;
     }
+
+    void Mesh1D::calculateMeshMetrics(CoordinateType coordinateSystem) {
+        for (auto& node : *totalNodesVector) {
+        }
+    }
     
     Metrics* Mesh1D::calculateNodeMetrics(Discretization::Node *node,
                                           PositioningInSpace::CoordinateType coordinateSystem) {
         return nullptr;
     }
+    
+    
     
     
     

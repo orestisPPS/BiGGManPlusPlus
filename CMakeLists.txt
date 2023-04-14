@@ -39,14 +39,10 @@ add_executable(untitled main.cpp
         PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h
         PositioningInSpace/CoordinateVector.cpp
         PositioningInSpace/CoordinateVector.h
-        Discretization/Node/NodeNeighbourFinder.cpp
-        Discretization/Node/NodeNeighbourFinder.h
         LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDScheme.cpp
         LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDScheme.h
         LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.cpp
-        LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.h 
-        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.cpp
-        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeCoefficientCalculator.h
+        LinearAlgebra/FiniteDifferences/SecondOrderDerivativeFDScheme.h
         LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp
         LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h
         Analysis/FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.h
@@ -81,6 +77,6 @@ add_executable(untitled main.cpp
         DegreesOfFreedom/DegreesOfFreedomCategorization.cpp
         LinearAlgebra/LinearSystem.h 
         LinearAlgebra/LinearSystem.cpp
-        Discretization/Node/IsoparametricNodeGraph.h Discretization/Node/IsoparametricNodeGraph.cpp Utility/Exporters/Exporters.h Utility/Exporters/Exporters.cpp LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.cpp Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.h Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.cpp Discretization/Mesh/Metrics/Metrics.h Discretization/Mesh/Metrics/Metrics.cpp)
+        Discretization/Node/IsoparametricNodeGraph.h Discretization/Node/IsoparametricNodeGraph.cpp Utility/Exporters/Exporters.h Utility/Exporters/Exporters.cpp LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.cpp Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.h Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.cpp Discretization/Mesh/Metrics/Metrics.h Discretization/Mesh/Metrics/Metrics.cpp LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFiniteDifferenceScheme.h LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFiniteDifferenceScheme.cpp LinearAlgebra/VectorOperations.h LinearAlgebra/VectorOperations.cpp)
         
         

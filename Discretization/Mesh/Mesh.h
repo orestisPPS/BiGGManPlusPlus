@@ -94,7 +94,7 @@ namespace Discretization {
         // If coordinateSystem is Template then the metrics are calculated based on the template coordinate system before
         // the final coordinate system is calculated.
         // If coordinateSystem is Natural then the metrics are calculated based on the final calculated coordinate system.
-        void calculateMeshMetrics(CoordinateType coordinateSystem);
+        virtual void calculateMeshMetrics(CoordinateType coordinateSystem);
 
         map<Direction, unsigned>* createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth);
         

@@ -10,7 +10,8 @@ namespace LinearAlgebra {
     enum FiniteDifferenceSchemeType{
         Forward,
         Backward,
-        Central
+        Central,
+        Mixed
     };
 
     class FDScheme {
