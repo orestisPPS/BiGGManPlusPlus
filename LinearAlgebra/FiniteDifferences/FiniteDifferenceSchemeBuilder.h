@@ -40,3 +40,4 @@ namespace LinearAlgebra {
 } // LinearAlgebra
 
 #endif //UNTITLED_FINITEDIFFERENCESCHEMEBUILDER_H
+ 

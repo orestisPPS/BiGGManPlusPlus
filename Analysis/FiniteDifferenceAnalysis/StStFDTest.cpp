@@ -16,7 +16,6 @@ namespace NumericalAnalysis {
         auto problem = new SteadyStateMathematicalProblem(pde, bcs, createDOF());
         auto schemeSpecs = createSchemeSpecs();
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, schemeSpecs);
-        auto parallels = findParallelUnitVectors();
     }
 
     Mesh* StStFDTest::createMesh() {

@@ -11,9 +11,11 @@ namespace LinearAlgebra {
         auto dimensions = this->_schemeSpecs->schemeTypeAndOrderAtDirection.size();
         //Contains all the points NEEDED for each input Finite Difference Scheme type at all directions.
         map<FiniteDifferenceSchemeType,int> schemeTypeToPointsNeeded = map<FiniteDifferenceSchemeType,int>();
-        
+      
         //Search all the directions of the scheme.
         for (auto& direction : this->_schemeSpecs->schemeTypeAndOrderAtDirection) {
+            //Direction
+            auto directionI = direction.first;
             //Get the type and order of the scheme at the current direction
             auto schemeTypeAtDirection = get<0>(direction.second);
             auto orderAtDirection = get<1>(direction.second);
@@ -21,6 +23,9 @@ namespace LinearAlgebra {
             // _schemeOrderToSchemeTypePointsNeeded
             auto pointsNeededAtDirection = _schemeOrderToSchemeTypePointsNeeded()[orderAtDirection][schemeTypeAtDirection];
             schemeTypeToPointsNeeded[schemeTypeAtDirection] = pointsNeededAtDirection;
+            
+            //positions for scheme at direction
+            auto positionsForSchemeAtDirectionMap = positionsForSchemeAtDirection()[directionI][schemeTypeAtDirection];
         }
         
         //Create a template map that goes as 
@@ -45,7 +50,8 @@ namespace LinearAlgebra {
         //Cut-off error order O(Δx^3)
         orderToPointsNeededPerDirection[3] = map<FiniteDifferenceSchemeType, int>();
         orderToPointsNeededPerDirection[3][Forward] = 3;
-        orderToPointsNeededPerDirection[3][Backward] = -1;
+        orderToPointsNeededPerDirection[3][Backward] = 3;
+        orderToPointsNeededPerDirection[3][Central] = -1;
         
         //Cut-off error order O(Δx^4)
         orderToPointsNeededPerDirection[4] = map<FiniteDifferenceSchemeType, int>();
@@ -108,7 +114,7 @@ namespace LinearAlgebra {
         auto dimensionOnePositions = map<FiniteDifferenceSchemeType, vector<Position>> {
                 {Central, {Right, Left}},
                 {Forward, {Right}},
-                {Backward, {Left}}
+                {Backward,{Left}}
         };
         //Direction 2
         auto dimensionTwoPositions = map<FiniteDifferenceSchemeType, vector<Position>> {
