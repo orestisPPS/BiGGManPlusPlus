@@ -50,6 +50,7 @@ namespace LinearAlgebra {
                 }
             }
         }
+        
         void FDSchemeComponent::checkInput(map<int, double>* inputFunctionValues, map<int, double>* inputWeights,
                                            map<int, double>* inputStepFractions) {
             if (inputWeights->size() != inputFunctionValues->size() && inputWeights->size() != inputStepFractions->size()) {

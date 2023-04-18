@@ -20,7 +20,7 @@ namespace LinearAlgebra {
 
         FirstOrderDerivativeFDSchemeCalculator();
         
-        static map<int, double> getWeightsOfSchemeTypeAndError(FiniteDifferenceSchemeType schemeType, unsigned errorOrder);
+        static map<int, double> getWeights(FiniteDifferenceSchemeType schemeType, unsigned errorOrder);
         
         // Multiplies the weights with the function values at the points needed for the scheme
         //TODO: create scheme component class

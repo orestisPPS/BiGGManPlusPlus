@@ -12,7 +12,7 @@ namespace LinearAlgebra {
     
     map<int, double> FirstOrderDerivativeFDSchemeCalculator::
     getSchemeValues(FiniteDifferenceSchemeType schemeType, unsigned errorOrder, map<int, double>& functionValues, double stepSize) {
-        auto weights = getWeightsOfSchemeTypeAndError(schemeType, errorOrder);
+        auto weights = getWeights(schemeType, errorOrder);
         if (weights.size() != functionValues.size()) {
             throw invalid_argument("The number of weights and function values must be the same!");
         }
@@ -32,12 +32,13 @@ namespace LinearAlgebra {
     }
     
     map<int, double> FirstOrderDerivativeFDSchemeCalculator::
-    getWeightsOfSchemeTypeAndError(FiniteDifferenceSchemeType schemeType, unsigned int errorOrder) {
+    getWeights(FiniteDifferenceSchemeType schemeType, unsigned int errorOrder) {
         auto schemeTypeAndOrder = make_tuple(schemeType, errorOrder);
         auto schemeTypeAndOrderToSchemeWeightsMap = _schemeTypeAndOrderToSchemeWeights();
         if (schemeTypeAndOrderToSchemeWeightsMap.find(schemeTypeAndOrder) != schemeTypeAndOrderToSchemeWeightsMap.end()) {
             return schemeTypeAndOrderToSchemeWeightsMap[schemeTypeAndOrder];
-        } else {
+        }
+        else {
             throw invalid_argument("The scheme type and error order combination is not supported");
         }
     }

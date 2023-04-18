@@ -75,7 +75,6 @@ namespace Discretization {
     
     void IsoParametricNodeGraph::_findIDepthNeighborhood(unsigned int depth, vector<double>& nodeCoords) {
         
-
         auto nn1 = _nodesPerDirection[One];
         auto nn2 = _nodesPerDirection[Two];
         auto nn3 = _nodesPerDirection[Three];

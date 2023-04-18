@@ -494,7 +494,7 @@ namespace LinearAlgebra {
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "openmp-use-default-none"
         //If the vector size is bigger than 1000 the multiplication will be performed in parallel with OpenMP
-        vector<T> vectorMultiplication(vector<T> vector){
+        vector<T> vectorMultiplication(vector<T> vector, bool diagonal = false
             if (vector.size() == _numberOfColumns){
                 ::vector<T> resultVector;
                 if (vector.size() > 1000){
@@ -510,6 +510,7 @@ namespace LinearAlgebra {
                     for (int i = 0; i < _numberOfRows; ++i) {
                         T result = 0;
                         for (int j = 0; j < _numberOfColumns; ++j) {
+                            //add boolean about diagonal here
                             result += _array[i * _numberOfColumns + j] * vector[j];
                         }
                         resultVector.push_back(result);
