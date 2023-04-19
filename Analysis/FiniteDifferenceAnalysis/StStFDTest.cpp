@@ -7,6 +7,7 @@
 #include "../../Utility/Exporters/Exporters.h"
 
 
+
 namespace NumericalAnalysis {
     
     StStFDTest::StStFDTest() {
@@ -62,7 +63,7 @@ namespace NumericalAnalysis {
     FDSchemeSpecs* StStFDTest::createSchemeSpecs() {
         auto dummyScheme = map<Direction, tuple<FDSchemeType,int>>();
         auto space = PositioningInSpace::Plane;
-        return new FDSchemeSpecs(dummyScheme, space);
+        return new FDSchemeSpecs(dummyScheme);
     }
     
     

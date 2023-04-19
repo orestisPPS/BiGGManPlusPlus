@@ -74,6 +74,23 @@ add_executable(untitled main.cpp
         DegreesOfFreedom/DegreesOfFreedomCategorization.h
         LinearAlgebra/LinearSystem.h 
         LinearAlgebra/LinearSystem.cpp
-        Discretization/Node/IsoparametricNodeGraph.h Discretization/Node/IsoparametricNodeGraph.cpp Utility/Exporters/Exporters.h Utility/Exporters/Exporters.cpp LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.cpp Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.h Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.cpp Discretization/Mesh/Metrics/Metrics.h Discretization/Mesh/Metrics/Metrics.cpp LinearAlgebra/VectorOperations.h LinearAlgebra/VectorOperations.cpp LinearAlgebra/FiniteDifferences/FDSchemeComponent.h LinearAlgebra/FiniteDifferences/FDSchemeComponent.cpp LinearAlgebra/Solvers/Solver.h LinearAlgebra/Solvers/Solver.cpp LinearAlgebra/Norms/VectorNorm.h LinearAlgebra/Norms/VectorNorm.cpp LinearAlgebra/Solvers/Iterative/IterativeSolver.h LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp)
+        Discretization/Node/IsoparametricNodeGraph.h
+        Discretization/Node/IsoparametricNodeGraph.cpp
+        Utility/Exporters/Exporters.h Utility/Exporters/Exporters.cpp
+        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeFactory.cpp
+        Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.h
+        Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.cpp 
+        Discretization/Mesh/Metrics/Metrics.h
+        Discretization/Mesh/Metrics/Metrics.cpp
+        LinearAlgebra/VectorOperations.h
+        LinearAlgebra/VectorOperations.cpp
+        LinearAlgebra/FiniteDifferences/FDSchemeComponent.h 
+        LinearAlgebra/FiniteDifferences/FDSchemeComponent.cpp 
+        LinearAlgebra/Solvers/Solver.h LinearAlgebra/Solvers/Solver.cpp 
+        LinearAlgebra/Norms/VectorNorm.h LinearAlgebra/Norms/VectorNorm.cpp
+        LinearAlgebra/Solvers/Iterative/IterativeSolver.h 
+        LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp
+        LinearAlgebra/FiniteDifferences/FDScheme.cpp 
+        LinearAlgebra/FiniteDifferences/FDSchemeType.h)
         
         

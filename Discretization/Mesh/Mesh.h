@@ -10,6 +10,7 @@
 #include "Metrics/Metrics.h"
 #include "GhostPseudoMesh/GhostPseudoMesh.h"
 #include "../../LinearAlgebra/Transformations.h"
+#include "../Node/IsoparametricNodeGraph.h"
 
 using namespace Discretization;
 using namespace StructuredMeshGenerator;
@@ -58,6 +59,8 @@ namespace Discretization {
         
         virtual SpaceEntityType space();
 
+        virtual vector<Direction> directions();
+
         virtual Node* node(unsigned i);
     
         virtual Node* node(unsigned i, unsigned j);
@@ -67,6 +70,7 @@ namespace Discretization {
         virtual map<vector<double>, Node*>* createParametricCoordToNodesMap();
         
         virtual void printMesh();
+
         
      protected:
         Array<Node *> *_nodesMatrix;
@@ -74,15 +78,6 @@ namespace Discretization {
         map<unsigned, Node*>* _nodesMap;
         
         map<unsigned, Node*>* createNodesMap() const;
-                  
-        //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
-        virtual map<Position, vector<Node*>*> *addDBoundaryNodesToMap();
-        
-        //Adds the internal nodes of the mesh to a vector pointer of node pointers
-        virtual vector<Node*>* addInternalNodesToVector();
-        
-        //Adds the total nodes of the mesh to a vector pointer of node pointers
-        virtual vector<Node*>* addTotalNodesToVector();
         
         void categorizeNodes();
          
@@ -90,17 +85,28 @@ namespace Discretization {
         
         void cleanMeshDataStructures();
         
+        map<Direction, unsigned>* createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth);
+        
+
+        //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
+        virtual map<Position, vector<Node*>*> *addDBoundaryNodesToMap();
+
+        //Adds the internal nodes of the mesh to a vector pointer of node pointers
+        virtual vector<Node*>* addInternalNodesToVector();
+
+        //Adds the total nodes of the mesh to a vector pointer of node pointers
+        virtual vector<Node*>* addTotalNodesToVector();
+         
         // Calculates the metrics of all the nodes based on the given coordinate system.
         // If coordinateSystem is Template then the metrics are calculated based on the template coordinate system before
         // the final coordinate system is calculated.
         // If coordinateSystem is Natural then the metrics are calculated based on the final calculated coordinate system.
         virtual void calculateMeshMetrics(CoordinateType coordinateSystem);
-
-        map<Direction, unsigned>* createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth);
         
-        virtual Metrics* calculateNodeMetrics(Node* node, CoordinateType coordinateSystem);
+        Metrics* calculateNodeMetrics(Node* node, CoordinateType coordinateSystem);
         
         virtual GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth);
+        
 
 
         

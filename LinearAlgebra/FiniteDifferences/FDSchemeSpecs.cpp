@@ -8,8 +8,7 @@
 
 namespace LinearAlgebra {
     
-    FDSchemeSpecs::FDSchemeSpecs(map<Direction,tuple<FDSchemeType, int>> schemeTypeAndOrderAtDirection,
-                                 SpaceEntityType &space){
+    FDSchemeSpecs::FDSchemeSpecs(const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirection){
         schemeTypeAndOrderAtDirectionForDerivativeOrder = new map<unsigned, map<Direction, tuple<FDSchemeType, int>>>();
         schemeTypeAndOrderAtDirectionForDerivativeOrder->
         insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>(1, schemeTypeAndOrderAtDirection));
@@ -19,9 +18,9 @@ namespace LinearAlgebra {
         checkInput();
     }
     
-    FDSchemeSpecs::FDSchemeSpecs(map<Direction,tuple<FDSchemeType, int>> schemeTypeAndOrderAtDirectionFirstDerivative,
-                                 map<Direction,tuple<FDSchemeType, int>> schemeTypeAndOrderAtDirectionSecondDerivative,
-                                 SpaceEntityType &space, bool diagonalTermsCalculated){
+    FDSchemeSpecs::FDSchemeSpecs(const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirectionFirstDerivative,
+                                 const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirectionSecondDerivative,
+                                 bool diagonalTermsCalculated){
         schemeTypeAndOrderAtDirectionForDerivativeOrder = new map<unsigned, map<Direction, tuple<FDSchemeType, int>>>();
         schemeTypeAndOrderAtDirectionForDerivativeOrder->
         insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>(1, schemeTypeAndOrderAtDirectionFirstDerivative));
@@ -32,23 +31,9 @@ namespace LinearAlgebra {
     }
     
     FDSchemeSpecs::FDSchemeSpecs(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder,
-                                 SpaceEntityType &space) {
+                                 const vector<Direction> &directions) {
         schemeTypeAndOrderAtDirectionForDerivativeOrder = new map<unsigned, map<Direction, tuple<FDSchemeType, int>>>();
-        vector<Direction> directions;
-        switch (space) {
-            case Axis:
-                directions = {One};
-                break;
-            case Plane:
-                directions = {One, Two};
-                break;
-            case Volume:
-                directions = {One, Two, Three};
-                break;
-            default:
-                throw std::invalid_argument("Invalid space");
-        }
-        
+        //Insert Specs for first derivative
         schemeTypeAndOrderAtDirectionForDerivativeOrder->insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>
                                                                         (1, map<Direction, tuple<FDSchemeType, int>>()));
         for (auto &direction : directions) {
@@ -59,26 +44,13 @@ namespace LinearAlgebra {
     
     FDSchemeSpecs::FDSchemeSpecs(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder,
                                  FDSchemeType secondDerivativeSchemeType, unsigned secondDerivativeOrder,
-                                 SpaceEntityType &space, bool diagonalTermsCalculated) {
+                                 const vector<Direction> &directions, bool diagonalTermsCalculated) {
+        
         schemeTypeAndOrderAtDirectionForDerivativeOrder = new map<unsigned, map<Direction, tuple<FDSchemeType, int>>>();
-        map<Direction, tuple<FDSchemeType, int>> schemeTypeAndOrderAtDirectionFirstDerivative;
-        vector<Direction> directions;
-        switch (space) {
-            case Axis:
-                directions = {One};
-                break;
-            case Plane:
-                directions = {One, Two};
-                break;
-            case Volume:
-                directions = {One, Two, Three};
-                break;
-            default:
-                throw std::invalid_argument("Invalid space");
-        }
-
+        //Insert Specs for first derivative
         schemeTypeAndOrderAtDirectionForDerivativeOrder->insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>
                                                                         (1, map<Direction, tuple<FDSchemeType, int>>()));
+        //Insert Specs for second derivative
         schemeTypeAndOrderAtDirectionForDerivativeOrder->insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>
                                                                         (2, map<Direction, tuple<FDSchemeType, int>>()));
         for (auto &direction : directions) {
@@ -90,7 +62,7 @@ namespace LinearAlgebra {
     }
 
     
-    void FDSchemeSpecs::checkInput() {
+    void FDSchemeSpecs::checkInput() const {
         for (auto &derivativeOrder : *schemeTypeAndOrderAtDirectionForDerivativeOrder) {
             //Check if the order of the scheme is between the supported values (1,2,3,4,5)
             for (auto &direction : derivativeOrder.second) {

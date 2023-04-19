@@ -32,6 +32,10 @@ namespace Discretization {
     SpaceEntityType Mesh3D::space() {
         return Volume;
     }
+
+    vector<Direction> Mesh3D::directions() {
+        return {One, Two, Three};
+    }
     
     Node* Mesh3D::node(unsigned i) {
         if (isInitialized)

@@ -19,6 +19,8 @@ namespace Discretization {
         unsigned dimensions() override;
         
         SpaceEntityType space() override;
+
+        vector<Direction> directions() override;
         
         Node* node(unsigned i) override;
         

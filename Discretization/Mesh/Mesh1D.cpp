@@ -32,6 +32,10 @@ namespace Discretization {
     SpaceEntityType Mesh1D::space() {
         return Axis;
     }
+    
+    vector<Direction> Mesh1D::directions() {
+        return {One};
+    }
 
     Node* Mesh1D::node(unsigned i) {
         if (_nodesMatrix != nullptr)
@@ -45,7 +49,7 @@ namespace Discretization {
             return (*_nodesMatrix)(i);
         else 
             throw runtime_error("A 1D Mesh can be considered a 2D mesh with 1 Node at Direction 2."
-                                " Second entry must be 0.");
+                                "Second entry must be 0.");
     }
     
     Node* Mesh1D::node(unsigned i, unsigned j, unsigned k) {
@@ -53,7 +57,7 @@ namespace Discretization {
             return (*_nodesMatrix)(i);
         else
             throw runtime_error("A 1D Mesh can be considered a 3D mesh with 1 Node at Directions 2 and 3."
-                                " Second and third entries must be 0.");
+                                "Second and third entries must be 0.");
     }
     
     void Mesh1D::printMesh() {

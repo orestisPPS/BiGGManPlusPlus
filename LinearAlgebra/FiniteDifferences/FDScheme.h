@@ -5,19 +5,29 @@
 #ifndef UNTITLED_FDSCHEME_H
 #define UNTITLED_FDSCHEME_H
 
-namespace LinearAlgebra {
+#include "FDSchemeComponent.h"
 
-    //Finite Difference Scheme Type
-    //The categorization is based on the location of the points used for approximation with respect to the point at
-    // which the derivative is being calculated.
-    enum FDSchemeType{
-        Forward,
-        Backward,
-        Central,
-        Mixed
-    };
+
+namespace LinearAlgebra {
+    
 
     class FDScheme {
+    
+    public:
+        explicit FDScheme(map<unsigned, FDSchemeComponent*>* components);
+        
+        ~FDScheme();
+        
+        FDSchemeComponent* getComponentOfDerivativeOrder(unsigned derivativeOrder);
+        
+        map<Position, double>* schemeValuesAtAllPositions;
+        
+    private:
+        map<unsigned, FDSchemeComponent*>* _components;
+        
+        map<Position, double>* calculateSchemeValuesAtAllPositions();
+        
+        
 
     };
 

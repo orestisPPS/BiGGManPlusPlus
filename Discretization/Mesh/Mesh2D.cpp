@@ -3,7 +3,6 @@
 //
 
 #include "Mesh2D.h"
-#include "../../LinearAlgebra/FiniteDifferences/FDScheme.h"
 
 namespace Discretization {
     
@@ -32,6 +31,10 @@ namespace Discretization {
 
     SpaceEntityType Mesh2D::space() {
         return Plane;
+    }
+
+    vector<Direction> Mesh2D::directions() {
+        return {One, Two};
     }
 
     Node *Mesh2D::node(unsigned i) {
@@ -116,30 +119,7 @@ namespace Discretization {
         //print node id
     }
 
-    void Mesh2D::calculateMeshMetrics(CoordinateType coordinateSystem) {
-        if (isInitialized) {
-            metrics = new map<Node*, Metrics*>();
-            auto ghostNodesPerDirection = new map<Direction, unsigned>();
-            ghostNodesPerDirection->insert(pair<Direction, unsigned>(One, specs->metricsOrder - 1));
-            ghostNodesPerDirection->insert(pair<Direction, unsigned>(Two, specs->metricsOrder - 1));
-            auto ghostMesh = createGhostPseudoMesh(specs->metricsOrder - 1);
-            
-            //Create Scheme Specs. Metrics are calculated by a central ("diamond") scheme
-            //Since the ghost mesh is initialized with a depth metricsOrder - 1, all information are provided.
-            map<Direction, tuple<FDSchemeType, int>> schemeTypeAndOrderAtDirection;
-            schemeTypeAndOrderAtDirection.insert(pair<Direction, tuple<FDSchemeType, int>>
-            (One, make_tuple(FDSchemeType::Central, specs->metricsOrder)));
-            schemeTypeAndOrderAtDirection.insert(pair<Direction, tuple<FDSchemeType, int>>
-            (Two, make_tuple(FDSchemeType::Central, specs->metricsOrder)));
-            
-            
-            for (auto &node : *totalNodesVector) {
-                metrics->insert(pair<Node*, Metrics*>(node, calculateNodeMetrics(node, coordinateSystem)));
-            }
-        }
-        else
-            throw std::runtime_error("Mesh has not been initialized");
-    }
+
         
         Metrics* Mesh2D::calculateNodeMetrics(Discretization::Node *node, CoordinateType coordinateSystem) {
             auto coords = node->coordinates.positionVector(coordinateSystem);

@@ -7,8 +7,8 @@
 
 #include <map>
 #include <stdexcept>
+#include "FDSchemeSpecs.h"
 
-#include "FDScheme.h"
 
 using namespace std;
 namespace LinearAlgebra {

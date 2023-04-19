@@ -19,6 +19,8 @@ namespace Discretization {
         unsigned dimensions() override;
         
         SpaceEntityType space() override;
+        
+        vector<Direction> directions() override;
                 
         Node* node(unsigned i) override;
         
@@ -29,6 +31,7 @@ namespace Discretization {
         map<vector<double>, Node*>* createParametricCoordToNodesMap() override;
         
         void printMesh() override;
+        
         
     protected:
         

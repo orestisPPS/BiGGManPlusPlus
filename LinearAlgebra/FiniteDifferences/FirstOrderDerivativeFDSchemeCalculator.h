@@ -9,7 +9,7 @@
 #include <vector>
 #include <tuple>
 #include <stdexcept>
-#include "FDScheme.h"
+#include "FDSchemeType.h"
 #include "FDSchemeComponent.h"
 #include "../VectorOperations.h"
 
@@ -17,7 +17,7 @@ using namespace std;
 
 namespace LinearAlgebra {
     //A class containing all the first order finite difference schemes up to Fifth order accuracy
-    class FirstOrderDerivativeFDSchemeCalculator : public FDScheme {
+    class FirstOrderDerivativeFDSchemeCalculator{
     public:
 
         FirstOrderDerivativeFDSchemeCalculator();

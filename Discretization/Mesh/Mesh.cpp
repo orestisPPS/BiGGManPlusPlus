@@ -3,6 +3,8 @@
 //
 
 #include "Mesh.h"
+#include "../../LinearAlgebra/FiniteDifferences/FDSchemeType.h"
+#include "../../LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h"
 
 using namespace  Discretization;
 
@@ -48,6 +50,11 @@ namespace Discretization {
     SpaceEntityType Mesh::space() {
         return NullSpace;
     }
+    
+    vector<Direction> Mesh::directions() {
+        return {};
+    }
+    
     Node* Mesh::node(unsigned i) {
         return nullptr;
      }
@@ -86,6 +93,8 @@ namespace Discretization {
     
     
     void createNumberOfNodesPerDirectionMap() { }
+    
+
 
     
     void Mesh::categorizeNodes() {
@@ -146,23 +155,46 @@ namespace Discretization {
 
     map<Direction, unsigned>* Mesh:: createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth){
         auto numberOfGhostNodesPerDirection = new map<Direction, unsigned>();
-        switch (dimensions()) {
-            case 1:
-                numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(One, ghostLayerDepth));
-                break;
-            case 2:
-                numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(One, ghostLayerDepth));
-                numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(Two, ghostLayerDepth));
-                break;
-            case 3:
-                numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(One, ghostLayerDepth));
-                numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(Two, ghostLayerDepth));
-                numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(Three, ghostLayerDepth));
-                break;
-            default:             
-                break;
+        for (auto &direction : directions()) {
+            numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(direction, 2*ghostLayerDepth));
         }
         return numberOfGhostNodesPerDirection;
+
+    }
+
+    void Mesh::calculateMeshMetrics(CoordinateType coordinateSystem) {
+        if (isInitialized) {
+            //Initialize Mesh Metrics map
+            metrics = new map<Node*, Metrics*>();
+
+            // GhostMesh depth for metrics calculation is metricsOrder - 1,
+            // since the boundary nodes need metricsOrder - 1 ghost nodes for central finite difference scheme
+            unsigned depth = specs->metricsOrder - 1;
+            //auto ghostNodesPerDirection = createNumberOfGhostNodesPerDirectionMap(depth);
+
+            auto ghostMesh = createGhostPseudoMesh(specs->metricsOrder - 1);
+
+            //Create Scheme Specs. Metrics are calculated by a central ("diamond") scheme
+            //Since the ghost mesh is initialized with a depth metricsOrder - 1, all information are provided.
+            map<Direction, tuple<FDSchemeType, int>> schemeTypeAndOrderAtDirection;
+            for (auto &direction : directions()) {
+                schemeTypeAndOrderAtDirection.insert(pair<Direction, tuple<FDSchemeType, int>>
+                                                             (direction, make_tuple(FDSchemeType::Central, specs->metricsOrder)));
+            }
+            auto schemeSpecs = new FDSchemeSpecs(schemeTypeAndOrderAtDirection);
+
+            //March through all the nodes of the mesh and calculate its metrics
+            for (auto &node : *totalNodesVector) {
+                metrics->insert(pair<Node*, Metrics*>(node, calculateNodeMetrics(node, coordinateSystem)));
+                
+                //Find Scheme for node
+                
+                
+
+            }
+        }
+        else
+            throw std::runtime_error("Mesh has not been initialized");
     }
     
     Metrics* Mesh::calculateNodeMetrics(Node* node, CoordinateType coordinateSystem) {
