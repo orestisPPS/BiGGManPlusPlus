@@ -17,15 +17,15 @@ namespace LinearAlgebra {
     public:
         
         // Gets the 
-        FDSchemeComponent(FiniteDifferenceSchemeType schemeType, unsigned errorOrder,
+        FDSchemeComponent(FDSchemeType schemeType, unsigned errorOrder,
                           map<int, double>* functionValues, map<int, double>* weights, double stepSize);
 
-        FDSchemeComponent(FiniteDifferenceSchemeType schemeType, unsigned errorOrder,
+        FDSchemeComponent(FDSchemeType schemeType, unsigned errorOrder,
                           map<int, double>* functionValues, map<int, double>* weights, map<int, double>* stepFractions);
         
         ~FDSchemeComponent();
 
-        FiniteDifferenceSchemeType schemeType;
+        FDSchemeType schemeType;
         
         unsigned errorOrder;
         

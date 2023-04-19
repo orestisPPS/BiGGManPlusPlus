@@ -126,11 +126,11 @@ namespace Discretization {
             
             //Create Scheme Specs. Metrics are calculated by a central ("diamond") scheme
             //Since the ghost mesh is initialized with a depth metricsOrder - 1, all information are provided.
-            map<Direction, tuple<FiniteDifferenceSchemeType, int>> schemeTypeAndOrderAtDirection;
-            schemeTypeAndOrderAtDirection.insert(pair<Direction, tuple<FiniteDifferenceSchemeType, int>>
-            (One, make_tuple(FiniteDifferenceSchemeType::Central, specs->metricsOrder)));
-            schemeTypeAndOrderAtDirection.insert(pair<Direction, tuple<FiniteDifferenceSchemeType, int>>
-            (Two, make_tuple(FiniteDifferenceSchemeType::Central, specs->metricsOrder)));
+            map<Direction, tuple<FDSchemeType, int>> schemeTypeAndOrderAtDirection;
+            schemeTypeAndOrderAtDirection.insert(pair<Direction, tuple<FDSchemeType, int>>
+            (One, make_tuple(FDSchemeType::Central, specs->metricsOrder)));
+            schemeTypeAndOrderAtDirection.insert(pair<Direction, tuple<FDSchemeType, int>>
+            (Two, make_tuple(FDSchemeType::Central, specs->metricsOrder)));
             
             
             for (auto &node : *totalNodesVector) {

@@ -10,6 +10,8 @@
 #include <tuple>
 #include <stdexcept>
 #include "FDScheme.h"
+#include "FDSchemeComponent.h"
+#include "../VectorOperations.h"
 
 using namespace std;
 
@@ -20,16 +22,13 @@ namespace LinearAlgebra {
 
         FirstOrderDerivativeFDSchemeCalculator();
         
-        static map<int, double> getWeights(FiniteDifferenceSchemeType schemeType, unsigned errorOrder);
+        static map<int, double>* getWeights(FDSchemeType schemeType, unsigned errorOrder);
         
-        // Multiplies the weights with the function values at the points needed for the scheme
-        //TODO: create scheme component class
-        static map<int, double> getSchemeValues(FiniteDifferenceSchemeType schemeType, unsigned errorOrder,
-                                         map<int, double>& functionValues, double stepSize);
-
-        // TODO: create scheme component class
-        static tuple<FiniteDifferenceSchemeType, int, map<int, double>>
-        getSchemeFromGivenPoints(map<int, double>& functionValues, double stepSize);
+        //Creates a scheme component from the given scheme type and error order at th
+        static FDSchemeComponent getScheme(FDSchemeType schemeType, unsigned errorOrder,
+                                           map<int, double>* functionValues, double stepSize);
+        static FDSchemeComponent getSchemeFromGivenPoints(map<int, double>* functionValues, double stepSize);
+    
     private:
         // First Derivative Forward Difference Scheme 1
         // Numerical Scheme: (u_i+1 - u_i) / h
@@ -97,7 +96,7 @@ namespace LinearAlgebra {
         static map<int, double> _central6();
         
         
-        static map<tuple<FiniteDifferenceSchemeType, unsigned>, map<int, double>> _schemeTypeAndOrderToSchemeWeights();
+        static map<tuple<FDSchemeType, unsigned>, map<int, double>> _schemeTypeAndOrderToSchemeWeights();
         
 
         

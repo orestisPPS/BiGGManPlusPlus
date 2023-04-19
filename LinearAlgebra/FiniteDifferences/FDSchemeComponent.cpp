@@ -6,8 +6,8 @@
 
 namespace LinearAlgebra {
     
-        FDSchemeComponent::FDSchemeComponent(FiniteDifferenceSchemeType schemeType, unsigned errorOrder,
-                                            map<int, double>* functionValues, map<int, double>* weights, double stepSize) {
+        FDSchemeComponent::FDSchemeComponent(FDSchemeType schemeType, unsigned errorOrder,
+                                             map<int, double>* functionValues, map<int, double>* weights, double stepSize) {
             checkInput(functionValues, weights);
             this->schemeType = schemeType;
             this->errorOrder = errorOrder;
@@ -20,9 +20,9 @@ namespace LinearAlgebra {
             this->values = calculateValues();
         }
     
-        FDSchemeComponent::FDSchemeComponent(FiniteDifferenceSchemeType schemeType, unsigned errorOrder,
-                                            map<int, double>* functionValues, map<int, double>* weights,
-                                            map<int, double>* stepFractions) {
+        FDSchemeComponent::FDSchemeComponent(FDSchemeType schemeType, unsigned errorOrder,
+                                             map<int, double>* functionValues, map<int, double>* weights,
+                                             map<int, double>* stepFractions) {
             checkInput(functionValues, weights, stepFractions);
             this->schemeType = schemeType;
             this->errorOrder = errorOrder;

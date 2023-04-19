@@ -8,7 +8,7 @@
 
 namespace LinearAlgebra {
     
-    FDSchemeSpecs::FDSchemeSpecs(map<Direction,tuple<FiniteDifferenceSchemeType, int>> schemeTypeAndOrderAtDirection,
+    FDSchemeSpecs::FDSchemeSpecs(map<Direction,tuple<FDSchemeType, int>> schemeTypeAndOrderAtDirection,
                                  SpaceEntityType &space) :
     schemeTypeAndOrderAtDirection(std::move(schemeTypeAndOrderAtDirection)){
         checkInput();

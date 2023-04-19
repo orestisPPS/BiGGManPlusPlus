@@ -25,16 +25,16 @@ namespace LinearAlgebra {
         //For example Order 2, type central, 3 points
         //If the second item of the tuple is -1, then the scheme is not defined for that order
         //For example Order 1, type central, -1 points
-        static map<unsigned, map<FiniteDifferenceSchemeType, int>> _schemeOrderToSchemeTypePointsNeeded();
+        static map<unsigned, map<FDSchemeType, int>> _schemeOrderToSchemeTypePointsNeeded();
         
         //Maps the type of the scheme to the appropriate relative positions of the points needed to build it
         //For example, type Forward, (Right, Front, Top)
-        static map<FiniteDifferenceSchemeType, vector<Position>> _schemeTypeToPositionsOfPointsNeeded();
+        static map<FDSchemeType, vector<Position>> _schemeTypeToPositionsOfPointsNeeded();
 
 
-        static map<unsigned int, map<FiniteDifferenceSchemeType, vector<Position>>> positionsForFDSchemeTypeAndDimensions();
+        static map<unsigned int, map<FDSchemeType, vector<Position>>> positionsForFDSchemeTypeAndDimensions();
 
-        static map<Direction, map<FiniteDifferenceSchemeType, vector<Position>>> positionsForSchemeAtDirection();
+        static map<Direction, map<FDSchemeType, vector<Position>>> positionsForSchemeAtDirection();
     };
 
 } // LinearAlgebra

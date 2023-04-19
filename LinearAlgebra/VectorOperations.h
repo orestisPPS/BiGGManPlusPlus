@@ -19,6 +19,14 @@ namespace LinearAlgebra {
         static vector<double> crossProduct(vector<double>* vector1, vector<double>* vector2);
         
         static vector<double> crossProduct(vector<double> &vector1, vector<double> &vector2);
+        
+        static bool areEqualVectors(vector<double>* array1, vector<double>* array2);
+
+        static bool areEqualVectors(vector<double> &array1, vector<double> &array2);
+        
+        static bool areEqualVectors(vector<int> &array1, vector<int> &array2);
+        
+        static bool areEqualVectors(vector<int>* array1, vector<int>* array2);
 
     };
 

@@ -7,7 +7,10 @@
 
 namespace LinearAlgebra {
 
-    enum FiniteDifferenceSchemeType{
+    //Finite Difference Scheme Type
+    //The categorization is based on the location of the points used for approximation with respect to the point at
+    // which the derivative is being calculated.
+    enum FDSchemeType{
         Forward,
         Backward,
         Central,
