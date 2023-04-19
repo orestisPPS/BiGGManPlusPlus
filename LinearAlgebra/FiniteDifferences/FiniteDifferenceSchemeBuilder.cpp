@@ -67,64 +67,25 @@ namespace LinearAlgebra {
         
         return orderToPointsNeededPerDirection;
     }
-
-     /**
-     * Builds a map from FDSchemeType to a list of Position enum values
-     * specifying the relative positions of the neighboring nodes needed for finite
-     * difference schemes.
-     */
-     map<FDSchemeType, vector<Position>> FiniteDifferenceSchemeBuilder::_schemeTypeToPositionsOfPointsNeeded() {
-         map<FDSchemeType, vector<Position>> schemeTypeToPositionsOfPointsNeeded;
-
-         // Forward scheme
-         vector<Position> forwardPositions = { Right, Front, Top };
-         schemeTypeToPositionsOfPointsNeeded[Forward] = forwardPositions;
-
-         // Backward scheme
-         vector<Position> backwardPositions = { Left, Back, Bottom };
-         schemeTypeToPositionsOfPointsNeeded[Backward] = backwardPositions;
-
-         // Central scheme
-         vector<Position> centralPositions = {
-            Right, Left, Top, Bottom, Front, Back
-         };
-         schemeTypeToPositionsOfPointsNeeded[Central] = centralPositions;
-         
-         vector<Position> diagonalPositions = {
-            LeftTopBack, TopBack, RightTopBack,
-            LeftTop, RightTop,
-            LeftTopFront, TopFront, RightTopFront,
-            LeftBack, RightBack,
-            LeftFront, RightFront,
-            LeftBottomBack, BottomBack, RightBottomBack,
-            LeftBottom, RightBottom,
-            LeftBottomFront, BottomFront, RightBottomFront
-         };
-        schemeTypeToPositionsOfPointsNeeded[Mixed] = diagonalPositions;
-        return schemeTypeToPositionsOfPointsNeeded;
-     }
-
-
-
-
+    
     map<Direction, map<FDSchemeType, vector<Position>>>
     FiniteDifferenceSchemeBuilder::positionsForSchemeAtDirection(){
         auto positionsForSchemeAtDirection = map<Direction, map<FDSchemeType, vector<Position>>>();
         //Direction 1
         auto dimensionOnePositions = map<FDSchemeType, vector<Position>> {
-                {Central, {Right, Left}},
+                {Central, {Left, Right}},
                 {Forward, {Right}},
                 {Backward,{Left}}
         };
         //Direction 2
         auto dimensionTwoPositions = map<FDSchemeType, vector<Position>> {
-                {Central, {Top, Bottom}},
+                {Central, {Bottom, Top}},
                 {Forward, {Top}},
                 {Backward, {Bottom}}
         };
         //Direction 3
         auto dimensionThreePositions = map<FDSchemeType, vector<Position>> {
-                {Central, {Front, Back}},
+                {Central, {Back, Front}},
                 {Forward, {Front}},
                 {Backward, {Back}}
         }; 
@@ -134,3 +95,36 @@ namespace LinearAlgebra {
         return positionsForSchemeAtDirection;
     };
 } // LinearAlgebra
+
+
+/*
+map<FDSchemeType, vector<Position>> FiniteDifferenceSchemeBuilder::_schemeTypeToPositionsOfPointsNeeded() {
+    map<FDSchemeType, vector<Position>> schemeTypeToPositionsOfPointsNeeded;
+
+    // Forward scheme
+    vector<Position> forwardPositions = { Right, Front, Top };
+    schemeTypeToPositionsOfPointsNeeded[Forward] = forwardPositions;
+
+    // Backward scheme
+    vector<Position> backwardPositions = { Left, Back, Bottom };
+    schemeTypeToPositionsOfPointsNeeded[Backward] = backwardPositions;
+
+    // Central scheme
+    vector<Position> centralPositions = {
+            Right, Left, Top, Bottom, Front, Back
+    };
+    schemeTypeToPositionsOfPointsNeeded[Central] = centralPositions;
+
+    vector<Position> diagonalPositions = {
+            LeftTopBack, TopBack, RightTopBack,
+            LeftTop, RightTop,
+            LeftTopFront, TopFront, RightTopFront,
+            LeftBack, RightBack,
+            LeftFront, RightFront,
+            LeftBottomBack, BottomBack, RightBottomBack,
+            LeftBottom, RightBottom,
+            LeftBottomFront, BottomFront, RightBottomFront
+    };
+    schemeTypeToPositionsOfPointsNeeded[Mixed] = diagonalPositions;
+    return schemeTypeToPositionsOfPointsNeeded;
+}*/

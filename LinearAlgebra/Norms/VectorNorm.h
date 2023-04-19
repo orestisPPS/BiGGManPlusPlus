@@ -3,7 +3,7 @@
 //
 
 #ifndef UNTITLED_VECTORNORM_H
-#define UNTITLED_VECTORNORM_H]
+#define UNTITLED_VECTORNORM_H
 
 #include <map>
 #include <cmath>

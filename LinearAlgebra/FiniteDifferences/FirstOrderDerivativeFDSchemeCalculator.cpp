@@ -29,26 +29,26 @@ namespace LinearAlgebra {
     FDSchemeComponent FirstOrderDerivativeFDSchemeCalculator::
     getSchemeFromGivenPoints(map<int, double> *functionValues,double stepSize) {
         
-        
         auto points = vector<int>();
         for (auto& functionValue : *functionValues) {
             points.push_back(functionValue.first);
         }
 
         //central2
-        auto targetVector = vector<int>() = {1, 0, -1};
+        auto targetVector = vector<int>() = {-1, 0, 1};
         if (VectorOperations::areEqualVectors(points, targetVector))
             return getScheme(Central, 2, functionValues, stepSize);
 
         //central4
-        targetVector = vector<int>() = {2, 1, 0, -1, -2};
+        targetVector = vector<int>() = {-2, -1, 0, 1, 2};
         if (VectorOperations::areEqualVectors(points, targetVector))
             return getScheme(Central, 4, functionValues, stepSize);
 
         //central6
-        targetVector = vector<int>() = {3, 2, 1, 0, -1, -2, -3};
+        targetVector = vector<int>() = {-3, -2, -1, 0, 1, 2, 3};
         if (VectorOperations::areEqualVectors(points, targetVector))
             return getScheme(Central, 6, functionValues, stepSize);
+        
         //backward1
         targetVector = vector<int>() = {-1, 0};
         if (VectorOperations::areEqualVectors(points, targetVector))

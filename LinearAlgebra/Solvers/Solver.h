@@ -20,7 +20,7 @@ namespace LinearAlgebra {
         
         Solver(Array<double>* Matrix, vector<double>* RHS);
         
-        const & SolverType type();
+        SolverType type();
         
     private:
         Array<double>* _matrix;
