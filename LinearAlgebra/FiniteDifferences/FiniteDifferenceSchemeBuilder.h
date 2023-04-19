@@ -22,19 +22,20 @@ namespace LinearAlgebra {
         
         FDSchemeSpecs* _schemeSpecs;
         //Maps the order of the scheme to the type of the scheme and the neighbouring points needed to build it
+        // for a first derivative finite difference scheme.
         //For example Order 2, type central, 3 points
         //If the second item of the tuple is -1, then the scheme is not defined for that order
         //For example Order 1, type central, -1 points
-        static map<unsigned, map<FDSchemeType, int>> _schemeOrderToSchemeTypePointsNeeded();
+        static map<unsigned, map<FDSchemeType, int>> _schemeOrderToSchemeTypePointsNeededFirstDerivative();
+
+        //Maps the order of the scheme to the type of the scheme and the neighbouring points needed to build it
+        // for a second derivative finite difference scheme.
+        //For example Order 2, type central, 3 points
+        //If the second item of the tuple is -1, then the scheme is not defined for that order
+        //For example Order 1, type central, -1 points
+        static map<unsigned, map<FDSchemeType, int>> _schemeOrderToSchemeTypePointsNeededSeconddDerivative();
         
-        //Maps the type of the scheme to the appropriate relative positions of the points needed to build it
-        //For example, type Forward, (Right, Front, Top)
-        static map<FDSchemeType, vector<Position>> _schemeTypeToPositionsOfPointsNeeded();
-
-
-        static map<unsigned int, map<FDSchemeType, vector<Position>>> positionsForFDSchemeTypeAndDimensions();
-
-        static map<Direction, map<FDSchemeType, vector<Position>>> positionsForSchemeAtDirection();
+        static map<Direction, map<FDSchemeType, vector<Position>>> _positionsForSchemeAtDirection();
     };
 
 } // LinearAlgebra

@@ -27,6 +27,7 @@ namespace LinearAlgebra {
         //Creates a scheme component from the given scheme type and error order at th
         static FDSchemeComponent getScheme(FDSchemeType schemeType, unsigned errorOrder,
                                            map<int, double>* functionValues, double stepSize);
+        
         static FDSchemeComponent getSchemeFromGivenPoints(map<int, double>* functionValues, double stepSize);
     
     private:

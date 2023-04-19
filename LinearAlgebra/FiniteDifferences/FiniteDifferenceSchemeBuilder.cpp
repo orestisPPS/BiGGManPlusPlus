@@ -20,19 +20,19 @@ namespace LinearAlgebra {
             auto schemeTypeAtDirection = get<0>(direction.second);
             auto orderAtDirection = get<1>(direction.second);
             // Get the points needed for the scheme at the current direction and the corresponding order from 
-            // _schemeOrderToSchemeTypePointsNeeded
-            auto pointsNeededAtDirection = _schemeOrderToSchemeTypePointsNeeded()[orderAtDirection][schemeTypeAtDirection];
+            // _schemeOrderToSchemeTypePointsNeededFirstDerivative
+            auto pointsNeededAtDirection = _schemeOrderToSchemeTypePointsNeededFirstDerivative()[orderAtDirection][schemeTypeAtDirection];
             schemeTypeToPointsNeeded[schemeTypeAtDirection] = pointsNeededAtDirection;
             
             //positions for scheme at direction
-            auto positionsForSchemeAtDirectionMap = positionsForSchemeAtDirection()[directionI][schemeTypeAtDirection];
+            auto positionsForSchemeAtDirectionMap = _positionsForSchemeAtDirection()[directionI][schemeTypeAtDirection];
         }
         
         //Create a template map that goes as 
     }
 
     map<unsigned int, map<FDSchemeType, int>>
-    FiniteDifferenceSchemeBuilder::_schemeOrderToSchemeTypePointsNeeded() {
+    FiniteDifferenceSchemeBuilder::_schemeOrderToSchemeTypePointsNeededFirstDerivative() {
         
         auto orderToPointsNeededPerDirection = map<unsigned int, map<FDSchemeType, int>>();
         //Cut-off error order O(Δx)
@@ -69,7 +69,7 @@ namespace LinearAlgebra {
     }
     
     map<Direction, map<FDSchemeType, vector<Position>>>
-    FiniteDifferenceSchemeBuilder::positionsForSchemeAtDirection(){
+    FiniteDifferenceSchemeBuilder::_positionsForSchemeAtDirection(){
         auto positionsForSchemeAtDirection = map<Direction, map<FDSchemeType, vector<Position>>>();
         //Direction 1
         auto dimensionOnePositions = map<FDSchemeType, vector<Position>> {
