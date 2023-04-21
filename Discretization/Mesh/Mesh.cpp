@@ -180,6 +180,8 @@ namespace Discretization {
                 //provided by the scheme builder
                 auto nodeGraph = graph->getNodeGraph(neighbors);
                 
+                auto coLinearNodes = graph->getCoLinearNodes();
+                
                 //Create finite difference scheme
                 
                 

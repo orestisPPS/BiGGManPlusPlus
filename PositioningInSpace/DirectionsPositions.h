@@ -114,6 +114,12 @@ namespace PositioningInSpace {
             {RightBottomBack, {1,  -1, -1}},
             {LeftBottomBack,  {-1, -1, -1}}
     };
+    
+    static map<Direction, map<Position, short int>> normalPositionSigns = {
+            {One, {{Left, -1}, {Right, 1}}},
+            {Two, {{Bottom, -1}, {Top, 1}}},
+            {Three, {{Back, -1}, {Front, 1}}}
+    };
 
     // Consider position vectors A, B, C. They are co-linear if and only if
     // AC x BC = 0

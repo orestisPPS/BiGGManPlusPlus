@@ -5,6 +5,7 @@
 #include "IsoparametricNodeGraph.h"
 
 #include <utility>
+#include <algorithm>
 
 namespace Discretization {
     
@@ -16,11 +17,11 @@ namespace Discretization {
         _findINeighborhoodRecursively(includeDiagonalNeighbours);
     }
     
-    map<Position, vector<Node*>>* IsoParametricNodeGraph::getNodeGraph() const {
+    map<Position, vector<Node*>>* IsoParametricNodeGraph::getNodeGraph() {
         return nodeGraph;
     }
     
-    map<Position, vector<Node*>>* IsoParametricNodeGraph::getNodeGraph(const map<Position, short unsigned>& customDepth) const {
+    map<Position, vector<Node*>>* IsoParametricNodeGraph::getNodeGraph(const map<Position, short unsigned>& customDepth) {
         for (auto &position : customDepth) {
             auto currentPosition = position.first;
             if (nodeGraph->find(currentPosition) != nodeGraph->end()) {
@@ -69,8 +70,57 @@ namespace Discretization {
                 dofGraph->erase(emptyPosition.first);
             }
         }
-        
         return dofGraph;
+    }
+    
+    map<Direction, vector<Node*>>* IsoParametricNodeGraph::getCoLinearNodes() const{
+        auto coLinearNodes = new map<Direction, vector<Node*>>();
+
+        for (auto &position1 : *nodeGraph) {
+            for (auto &position2: *nodeGraph) {
+                auto n1 = normalUnitVectorsOfPositions.at(position1.first);
+                auto n2 = normalUnitVectorsOfPositions.at(position2.first);
+                if (VectorOperations::dotProduct(n1, n2) == -1) {
+                    if ((n1[0] == n2[0]) != 0){
+                        auto mergedNodes = vector<Node*>(position1.second.size() + position2.second.size());
+                        std::merge(position1.second.begin(), position1.second.end(),
+                                   position2.second.begin(), position2.second.end(),
+                                   mergedNodes.begin());
+                        coLinearNodes->insert(pair<Direction, vector<Node*>>(One, mergedNodes));
+                    }
+                    else if ((n1[1] == n2[1]) != 0){
+                        auto mergedNodes = vector<Node*>(position1.second.size() + position2.second.size());
+                        std::merge(position1.second.begin(), position1.second.end(),
+                                   position2.second.begin(), position2.second.end(),
+                                   mergedNodes.begin());
+                        coLinearNodes->insert(pair<Direction, vector<Node*>>(Two, mergedNodes));
+                    }
+                    else if ((n1[2] == n2[2]) != 0){
+                        auto mergedNodes = vector<Node*>(position1.second.size() + position2.second.size());
+                        std::merge(position1.second.begin(), position1.second.end(),
+                                   position2.second.begin(), position2.second.end(),
+                                   mergedNodes.begin());
+                        coLinearNodes->insert(pair<Direction, vector<Node*>>(Three, mergedNodes));
+                    }
+                }
+            }
+        }
+        
+        for (auto &direction : *coLinearNodes) {
+            auto i = 0;
+            if (direction.second.empty())
+                coLinearNodes->erase(direction.first);
+            
+            std::sort(coLinearNodes->
+            at(direction.first).begin(), coLinearNodes->at(direction.first).end(), [i](Node* a, Node* b) {
+                auto coords1 = a->coordinates.positionVector(Parametric);
+                auto coords2 = b->coordinates.positionVector(Parametric);
+                return coords1[i] < coords2[i];
+            });
+            i++;
+        }
+
+        return coLinearNodes;
     }
     
     void IsoParametricNodeGraph::_findINeighborhoodRecursively(bool includeDiagonalNeighbours) {
@@ -225,8 +275,6 @@ namespace Discretization {
         }
 
     }
-    
-    
     
     void IsoParametricNodeGraph:: _addNeighbourNodeIfParametricCoordsExist(Position position,
                                                                            vector<double>& parametricCoords, unsigned currentDepth){
