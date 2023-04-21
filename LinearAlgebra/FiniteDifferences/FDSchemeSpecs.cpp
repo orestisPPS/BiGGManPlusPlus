@@ -60,6 +60,10 @@ namespace LinearAlgebra {
                     direction,make_tuple(secondDerivativeSchemeType,secondDerivativeOrder)));
         }
     }
+    
+    FDSchemeSpecs::~FDSchemeSpecs() {
+        delete schemeTypeAndOrderAtDirectionForDerivativeOrder;
+    }
 
     
     void FDSchemeSpecs::checkInput() const {

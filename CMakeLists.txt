@@ -32,10 +32,10 @@ add_executable(untitled main.cpp
         StructuredMeshGeneration/MeshTest2D.cpp
         StructuredMeshGeneration/MeshTest2D.h
         LinearAlgebra/Array.h
-        LinearAlgebra/TransformationTensors.h 
+        LinearAlgebra/Operations/TransformationTensors.h 
         Utility/Calculators.h
-        LinearAlgebra/Transformations.cpp
-        LinearAlgebra/Transformations.h
+        LinearAlgebra/Operations/Transformations.cpp
+        LinearAlgebra/Operations/Transformations.h
         PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h
         PositioningInSpace/CoordinateVector.cpp
         PositioningInSpace/CoordinateVector.h
@@ -77,13 +77,13 @@ add_executable(untitled main.cpp
         Discretization/Node/IsoparametricNodeGraph.h
         Discretization/Node/IsoparametricNodeGraph.cpp
         Utility/Exporters/Exporters.h Utility/Exporters/Exporters.cpp
-        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeFactory.cpp
+        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.cpp
         Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.h
         Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.cpp 
         Discretization/Mesh/Metrics/Metrics.h
         Discretization/Mesh/Metrics/Metrics.cpp
-        LinearAlgebra/VectorOperations.h
-        LinearAlgebra/VectorOperations.cpp
+        LinearAlgebra/Operations/VectorOperations.h
+        LinearAlgebra/Operations/VectorOperations.cpp
         LinearAlgebra/FiniteDifferences/FDSchemeComponent.h 
         LinearAlgebra/FiniteDifferences/FDSchemeComponent.cpp 
         LinearAlgebra/Solvers/Solver.h LinearAlgebra/Solvers/Solver.cpp 

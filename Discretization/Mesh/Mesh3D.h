@@ -39,8 +39,6 @@ namespace Discretization {
 
         vector<Node*>* addTotalNodesToVector() override;
         
-        void calculateMeshMetrics(CoordinateType coordinateSystem) override;
-        
         Metrics* calculateNodeMetrics(Node* node, CoordinateType coordinateSystem) override;
         
         GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth) override;

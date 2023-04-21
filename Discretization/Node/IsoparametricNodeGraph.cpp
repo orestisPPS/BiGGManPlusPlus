@@ -9,13 +9,27 @@
 namespace Discretization {
     
     IsoParametricNodeGraph::IsoParametricNodeGraph(Node* node, unsigned graphDepth, map<vector<double>, Node *> *nodeMap,
-                                                   map<Direction, unsigned>& nodesPerDirection) :
-                            _node(node), _graphDepth(graphDepth), _nodeMap(nodeMap), _nodesPerDirection(nodesPerDirection) {
+                                                   map<Direction, unsigned>& nodesPerDirection, bool includeDiagonalNeighbours) :
+                            _node(node), _graphDepth(graphDepth), _nodesPerDirection(nodesPerDirection) {
+        _nodeMap = nodeMap;
         nodeGraph = new map<Position, vector<Node*>>();
-        _findINeighborhoodRecursively();
+        _findINeighborhoodRecursively(includeDiagonalNeighbours);
     }
     
     map<Position, vector<Node*>>* IsoParametricNodeGraph::getNodeGraph() const {
+        return nodeGraph;
+    }
+    
+    map<Position, vector<Node*>>* IsoParametricNodeGraph::getNodeGraph(const map<Position, short unsigned>& customDepth) const {
+        for (auto &position : customDepth) {
+            auto currentPosition = position.first;
+            if (nodeGraph->find(currentPosition) != nodeGraph->end()) {
+                auto currentDepth = position.second;
+                if (currentDepth < nodeGraph->at(currentPosition).size()) {
+                    nodeGraph->at(currentPosition).erase(nodeGraph->at(currentPosition).begin() + currentDepth, nodeGraph->at(currentPosition).end());
+                }
+            }
+        }
         return nodeGraph;
     }
     
@@ -59,7 +73,7 @@ namespace Discretization {
         return dofGraph;
     }
     
-    void IsoParametricNodeGraph::_findINeighborhoodRecursively() {
+    void IsoParametricNodeGraph::_findINeighborhoodRecursively(bool includeDiagonalNeighbours) {
         auto nodeCoords = _node->coordinates.positionVector(Parametric);
         if (nodeCoords.size() == 2) {
             nodeCoords.push_back(0.0);
@@ -69,11 +83,14 @@ namespace Discretization {
             nodeCoords.push_back(0.0);
         }
         for (int i = 1; i < _graphDepth + 1; ++i) {
-            _findIDepthNeighborhood(i, nodeCoords);
+            if (includeDiagonalNeighbours)
+                _findIDepthNeighborhood(i, nodeCoords);
+            else
+                _findIDepthNeighborhoodOnlyDiagonals(i, nodeCoords);
         }
     }
     
-    void IsoParametricNodeGraph::_findIDepthNeighborhood(unsigned int depth, vector<double>& nodeCoords) {
+    void IsoParametricNodeGraph::_findIDepthNeighborhoodOnlyDiagonals(unsigned int depth, vector<double>& nodeCoords) {
         
         auto nn1 = _nodesPerDirection[One];
         auto nn2 = _nodesPerDirection[Two];
@@ -82,6 +99,44 @@ namespace Discretization {
         auto id = *_node->id.global;
         auto k = id / (nn1 * nn2);
         
+        auto parametricCoords = vector<double>{0, 0, 0};
+
+        //Top
+        parametricCoords = {nodeCoords[0], nodeCoords[1] + depth, nodeCoords[2]};
+        _addNeighbourNodeIfParametricCoordsExist(Top, parametricCoords, depth);
+        //Left
+        parametricCoords = {nodeCoords[0] - depth, nodeCoords[1], nodeCoords[2]};
+        _addNeighbourNodeIfParametricCoordsExist(Left, parametricCoords, depth);
+        //Right
+        parametricCoords = {nodeCoords[0] + depth, nodeCoords[1], nodeCoords[2]};
+        _addNeighbourNodeIfParametricCoordsExist(Right, parametricCoords, depth);
+        //Bottom
+        parametricCoords = {nodeCoords[0], nodeCoords[1] - depth, nodeCoords[2]};
+        _addNeighbourNodeIfParametricCoordsExist(Bottom, parametricCoords, depth);
+        
+        if (k > 0){
+            //Front
+            parametricCoords = {nodeCoords[0], nodeCoords[1], nodeCoords[2] + depth};
+            _addNeighbourNodeIfParametricCoordsExist(Front, parametricCoords, depth);
+        }
+        if (k < nn3 - 1) {
+            //Back
+            parametricCoords = {nodeCoords[0], nodeCoords[1], nodeCoords[2] - depth};
+            _addNeighbourNodeIfParametricCoordsExist(Back, parametricCoords, depth);
+        }
+        
+    }
+
+
+    void IsoParametricNodeGraph::_findIDepthNeighborhood(unsigned int depth, vector<double>& nodeCoords) {
+
+        auto nn1 = _nodesPerDirection[One];
+        auto nn2 = _nodesPerDirection[Two];
+        auto nn3 = _nodesPerDirection[Three];
+
+        auto id = *_node->id.global;
+        auto k = id / (nn1 * nn2);
+
         auto parametricCoords = vector<double>{0, 0, 0};
         //TopLeft
         parametricCoords = {nodeCoords[0] - depth, nodeCoords[1] + depth, nodeCoords[2]};
@@ -138,7 +193,7 @@ namespace Discretization {
             parametricCoords = {nodeCoords[0] - depth, nodeCoords[1] - depth, nodeCoords[2] + depth};
             _addNeighbourNodeIfParametricCoordsExist(LeftBottomFront, parametricCoords, depth);
         }
-        
+
         if (k < nn3 - 1) {
             //BackTopLeft
             parametricCoords = {nodeCoords[0] - depth, nodeCoords[1] + depth, nodeCoords[2] - depth};
@@ -168,8 +223,10 @@ namespace Discretization {
             parametricCoords = {nodeCoords[0] + depth, nodeCoords[1] - depth, nodeCoords[2] - depth};
             _addNeighbourNodeIfParametricCoordsExist(RightBottomBack, parametricCoords, depth);
         }
-        
+
     }
+    
+    
     
     void IsoParametricNodeGraph:: _addNeighbourNodeIfParametricCoordsExist(Position position,
                                                                            vector<double>& parametricCoords, unsigned currentDepth){

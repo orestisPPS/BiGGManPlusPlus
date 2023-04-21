@@ -40,19 +40,11 @@ namespace Discretization {
         vector<Node*>* addInternalNodesToVector() override;
         
         vector<Node*>* addTotalNodesToVector() override;
-
-        // Calculates the metrics of all the nodes based on the given coordinate system.
-        // If coordinateSystem is Template then the metrics are calculated based on the template coordinate system before
-        // the final coordinate system is calculated.
-        // If coordinateSystem is Natural then the metrics are calculated based on the final calculated coordinate system.
-        void calculateMeshMetrics(CoordinateType coordinateSystem) override;
         
         Metrics* calculateNodeMetrics(Node* node, CoordinateType coordinateSystem) override;
         
         GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth) override;
         
-        
-
     };
 
 } // Discretization

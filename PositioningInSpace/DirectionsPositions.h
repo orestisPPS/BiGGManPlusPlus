@@ -6,7 +6,7 @@
 #include <list>
 #include <vector>
 #include <set>
-#include "../LinearAlgebra/VectorOperations.h"
+#include "../LinearAlgebra/Operations/VectorOperations.h"
 using namespace std;
 using namespace LinearAlgebra;
 namespace PositioningInSpace {
@@ -87,7 +87,7 @@ namespace PositioningInSpace {
         LeftBottomBack,
     };
 
-    static std::map<Position, vector<double>> normalUnitVectorsAtPosition = {
+    static std::map<Position, vector<double>> normalUnitVectorsOfPositions = {
             {Right,           {1,  0,  0}},
             {Left,            {-1, 0,  0}},
             {Top,             {0,  1,  0}},

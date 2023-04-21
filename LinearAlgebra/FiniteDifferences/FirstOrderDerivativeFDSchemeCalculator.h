@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include "FDSchemeType.h"
 #include "FDSchemeComponent.h"
-#include "../VectorOperations.h"
+#include "../Operations/VectorOperations.h"
 
 using namespace std;
 

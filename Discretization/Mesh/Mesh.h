@@ -2,15 +2,15 @@
 // Created by hal9000 on 12/17/22.
 //
 #pragma once
-
-#include "../Node/Node.h"
 #include<vector>
+#include "../Node/Node.h"
 #include "../../LinearAlgebra/Array.h"
 #include "../../StructuredMeshGeneration/MeshSpecs.h"
 #include "Metrics/Metrics.h"
 #include "GhostPseudoMesh/GhostPseudoMesh.h"
-#include "../../LinearAlgebra/Transformations.h"
+#include "../../LinearAlgebra/Operations/Transformations.h"
 #include "../Node/IsoparametricNodeGraph.h"
+#include "../../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
 
 using namespace Discretization;
 using namespace StructuredMeshGenerator;
@@ -86,7 +86,11 @@ namespace Discretization {
         void cleanMeshDataStructures();
         
         map<Direction, unsigned>* createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth);
-        
+        // Calculates the metrics of all the nodes based on the given coordinate system.
+        // If coordinateSystem is Template then the metrics are calculated based on the template coordinate system before
+        // the final coordinate system is calculated.
+        // If coordinateSystem is Natural then the metrics are calculated based on the final calculated coordinate system.
+        void calculateMeshMetrics(CoordinateType coordinateSystem);
 
         //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
         virtual map<Position, vector<Node*>*> *addDBoundaryNodesToMap();
@@ -97,13 +101,9 @@ namespace Discretization {
         //Adds the total nodes of the mesh to a vector pointer of node pointers
         virtual vector<Node*>* addTotalNodesToVector();
          
-        // Calculates the metrics of all the nodes based on the given coordinate system.
-        // If coordinateSystem is Template then the metrics are calculated based on the template coordinate system before
-        // the final coordinate system is calculated.
-        // If coordinateSystem is Natural then the metrics are calculated based on the final calculated coordinate system.
-        virtual void calculateMeshMetrics(CoordinateType coordinateSystem);
+
         
-        Metrics* calculateNodeMetrics(Node* node, CoordinateType coordinateSystem);
+        virtual Metrics* calculateNodeMetrics(Node* node, CoordinateType coordinateSystem);
         
         virtual GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth);
         

@@ -146,12 +146,6 @@ namespace Discretization {
         delete internalNodesVector;
         internalNodesVector = nullptr;
     }
-    
-    void Mesh::calculateMeshMetrics(CoordinateType coordinateSystem){
-
-    }
-    
-
 
     map<Direction, unsigned>* Mesh:: createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth){
         auto numberOfGhostNodesPerDirection = new map<Direction, unsigned>();
@@ -166,32 +160,40 @@ namespace Discretization {
         if (isInitialized) {
             //Initialize Mesh Metrics map
             metrics = new map<Node*, Metrics*>();
-
-            // GhostMesh depth for metrics calculation is metricsOrder - 1,
-            // since the boundary nodes need metricsOrder - 1 ghost nodes for central finite difference scheme
-            unsigned depth = specs->metricsOrder - 1;
-            //auto ghostNodesPerDirection = createNumberOfGhostNodesPerDirectionMap(depth);
-
-            auto ghostMesh = createGhostPseudoMesh(specs->metricsOrder - 1);
-
+            
             //Create Scheme Specs. Metrics are calculated by a central ("diamond") scheme
-            //Since the ghost mesh is initialized with a depth metricsOrder - 1, all information are provided.
-            map<Direction, tuple<FDSchemeType, int>> schemeTypeAndOrderAtDirection;
-            for (auto &direction : directions()) {
-                schemeTypeAndOrderAtDirection.insert(pair<Direction, tuple<FDSchemeType, int>>
-                                                             (direction, make_tuple(FDSchemeType::Central, specs->metricsOrder)));
-            }
-            auto schemeSpecs = new FDSchemeSpecs(schemeTypeAndOrderAtDirection);
-
+            auto schemeSpecs = new FDSchemeSpecs(Central, specs->metricsOrder - 1, directions());
+            //Create Scheme Builder to gain access to utility functions for the scheme creation
+            auto schemeBuilder = new FiniteDifferenceSchemeBuilder(schemeSpecs);
+            // Initiate GhostPseudoMesh
+            auto ghostMesh = createGhostPseudoMesh(schemeBuilder->getNumberOfGhostNodesNeeded());
+            
             //March through all the nodes of the mesh and calculate its metrics
             for (auto &node : *totalNodesVector) {
-                metrics->insert(pair<Node*, Metrics*>(node, calculateNodeMetrics(node, coordinateSystem)));
+                //Find Neighbors in a manner that applies the same numerical scheme to all nodes
+                auto neighbors = schemeBuilder->getNumberOfDiagonalNeighboursNeeded();
+                //Initiate Node Graph
+                auto graph = new IsoParametricNodeGraph(node, schemeBuilder->getNumberOfGhostNodesNeeded(),
+                                                ghostMesh->parametricCoordToNodeMap, numberOfNodesPerDirection);
                 
-                //Find Scheme for node
+                //Get the adjusted node graph that contains only the nodes that are needed to calculate the FD scheme
+                //provided by the scheme builder
+                auto nodeGraph = graph->getNodeGraph(neighbors);
+                
+                //Create finite difference scheme
                 
                 
-
+                //Deallocate memory
+                delete nodeGraph;
+                nodeGraph = nullptr;
+                delete graph;
+                graph = nullptr;
+                
             }
+            delete schemeBuilder;
+            schemeBuilder = nullptr;
+            delete schemeSpecs;
+            schemeSpecs = nullptr;
         }
         else
             throw std::runtime_error("Mesh has not been initialized");

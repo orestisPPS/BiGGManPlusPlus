@@ -2,15 +2,38 @@
 // Created by hal9000 on 4/7/23.
 //
 
-#include "FiniteDifferenceSchemeFactory.h"
+#include "FiniteDifferenceSchemeBuilder.h"
 
 namespace LinearAlgebra {
     
     //Creates a Finite Difference Scheme For an input 
-    FiniteDifferenceSchemeFactory::FiniteDifferenceSchemeFactory(FDSchemeSpecs* schemeSpecs, IsoParametricNodeGraph* nodeGraph) {
+    FiniteDifferenceSchemeBuilder::FiniteDifferenceSchemeBuilder(FDSchemeSpecs* schemeSpecs) {
         this->_schemeSpecs = schemeSpecs;
-        auto dimensions = this->_schemeSpecs->schemeTypeAndOrderAtDirectionForDerivativeOrder->size();
-        
+    }
+    
+    short unsigned FiniteDifferenceSchemeBuilder::getNumberOfGhostNodesNeeded() {
+        short unsigned max = 0;
+        // March through all derivative orders
+        for (auto &derivativeOrder: *this->_schemeSpecs->schemeTypeAndOrderAtDirectionForDerivativeOrder) {
+            //March through all directions
+            for (auto &direction: derivativeOrder.second) {
+                //Scheme Type at direction
+                auto schemeType = get<0>(direction.second);
+                //Scheme Order at directionI
+                auto order = get<1>(direction.second);
+
+                // Get the points needed for the scheme at the current direction and the corresponding order from 
+                // _schemeOrderToSchemeTypePointsNeededFirstDerivative
+                auto pointsNeededAtDirection = _schemeOrderToSchemeTypePointsNeededFirstDerivative()[order][schemeType];
+                if (pointsNeededAtDirection > max)
+                    max = pointsNeededAtDirection;
+            }
+        }
+        return max;
+    }
+
+    map<Position, short unsigned> FiniteDifferenceSchemeBuilder:: getNumberOfDiagonalNeighboursNeeded() {
+        auto numberOfDiagonalNeighboursNeeded = map<Position, short unsigned>();
         //March through all derivative orders
         for (auto& derivativeOrder : *this->_schemeSpecs->schemeTypeAndOrderAtDirectionForDerivativeOrder) {
             //Derivative Order
@@ -35,20 +58,18 @@ namespace LinearAlgebra {
                 //Get the positions for the scheme at the current direction
                 auto positionsForSchemeAtDirection =
                         _positionsForSchemeAtDirection()[directionI][schemeTypeAtDirection];
-
-                //Create a scheme component for the current derivative order and direction
-
-                //Add the scheme component to the scheme components map
+                
+                for (auto &position : positionsForSchemeAtDirection) {
+                    numberOfDiagonalNeighboursNeeded[position] = pointsNeededAtDirection;
+                }
             }
         }
-            //Create a map that goes as
-            
-        
-        //Create a template map that goes as 
+        return numberOfDiagonalNeighboursNeeded;
     }
+    
 
     map<unsigned int, map<FDSchemeType, int>>
-    FiniteDifferenceSchemeFactory::_schemeOrderToSchemeTypePointsNeededFirstDerivative() {
+    FiniteDifferenceSchemeBuilder::_schemeOrderToSchemeTypePointsNeededFirstDerivative() {
         
         auto orderToPointsNeededPerDirection = map<unsigned int, map<FDSchemeType, int>>();
         //Cut-off error order O(Δx)
@@ -85,7 +106,7 @@ namespace LinearAlgebra {
     }
     
     map<Direction, map<FDSchemeType, vector<Position>>>
-    FiniteDifferenceSchemeFactory::_positionsForSchemeAtDirection(){
+    FiniteDifferenceSchemeBuilder::_positionsForSchemeAtDirection(){
         auto positionsForSchemeAtDirection = map<Direction, map<FDSchemeType, vector<Position>>>();
         //Direction 1
         auto dimensionOnePositions = map<FDSchemeType, vector<Position>> {
@@ -114,7 +135,7 @@ namespace LinearAlgebra {
 
 
 /*
-map<FDSchemeType, vector<Position>> FiniteDifferenceSchemeFactory::_schemeTypeToPositionsOfPointsNeeded() {
+map<FDSchemeType, vector<Position>> FiniteDifferenceSchemeBuilder::_schemeTypeToPositionsOfPointsNeeded() {
     map<FDSchemeType, vector<Position>> schemeTypeToPositionsOfPointsNeeded;
 
     // Forward scheme

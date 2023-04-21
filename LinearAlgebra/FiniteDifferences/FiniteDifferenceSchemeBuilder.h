@@ -13,10 +13,10 @@ using namespace LinearAlgebra;
 
 namespace LinearAlgebra {
 
-    class FiniteDifferenceSchemeFactory {
+    class FiniteDifferenceSchemeBuilder {
     public:
         //
-        FiniteDifferenceSchemeFactory(FDSchemeSpecs* schemeSpecs, IsoParametricNodeGraph* nodeGraph);
+        FiniteDifferenceSchemeBuilder(FDSchemeSpecs* schemeSpecs);
 
         // Map containing the sum of the weights for each position of the
         map<Position, double>* schemeWeightAtPosition;
@@ -27,6 +27,18 @@ namespace LinearAlgebra {
         // For example, (Central, 2) will impose a central difference scheme of order 2 all directions and nodes/DOFs. 
         // In most cases a GhostPseudoMesh is needed. 
         void createConsistentScheme();
+        
+        // The maximum number of points needed for any scheme in any direction.
+        short unsigned getNumberOfGhostNodesNeeded();
+        
+        // Can be implemented for more efficient node graph creation.
+        // Returns a map with all positions needed for the scheme and the number of points needed for each position.
+        // Use this when creating a scheme that is consistent across the whole domain.
+        map<Position, short unsigned> getNumberOfDiagonalNeighboursNeeded();
+        
+        double calculateDerivative(IsoParametricNodeGraph* nodeGraph, Direction direction, unsigned derivativeOrder);
+        
+        
     private:
         
         FDSchemeSpecs* _schemeSpecs;
@@ -36,6 +48,9 @@ namespace LinearAlgebra {
         //If the second item of the tuple is -1, then the scheme is not defined for that order
         //For example Order 1, type central, -1 points
         static map<unsigned, map<FDSchemeType, int>> _schemeOrderToSchemeTypePointsNeededFirstDerivative();
+        
+        //Helper function for creating the neighbours of the scheme with increasing order (left-to-right, bottom-to-top, back-to-front)
+        static map<Position, short int> _positionSign();
 
         //Maps the order of the scheme to the type of the scheme and the neighbouring points needed to build it
         // for a second derivative finite difference scheme.
