@@ -35,6 +35,7 @@ namespace LinearAlgebra {
     map<Position, double> FiniteDifferenceSchemeBuilder::calculateDerivativeVector(
             Discretization::IsoParametricNodeGraph *nodeGraph, unsigned int derivativeOrder) {
         auto derivativeVector = map<Position, double>();
+        auto neighboursInAllDirections = nodeGraph->getCoLinearNodes();
         //March through all derivative orders
         for (auto& direction : 
         }

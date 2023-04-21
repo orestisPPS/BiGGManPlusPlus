@@ -3,11 +3,12 @@
 //
 
 
-#include "FDScheme.h"
+#include "FiniteDifferenceScheme.h"
 
+/*
 namespace LinearAlgebra{
             
-        FDScheme::FDScheme(map<unsigned, FDSchemeComponent*>* components) {
+        FiniteDifferenceScheme::FiniteDifferenceScheme(map<unsigned, FDSchemeComponent*>* components) {
             if (components->size() > 2) {
                 throw invalid_argument("Only 1st and 2nd derivative schemes are supported.");
             }
@@ -23,7 +24,7 @@ namespace LinearAlgebra{
         }
         
         
-        FDScheme::~FDScheme() {
+        FiniteDifferenceScheme::~FiniteDifferenceScheme() {
             for (auto & component : *_components) {
                 delete component.second;
             }
@@ -32,11 +33,11 @@ namespace LinearAlgebra{
             delete schemeValuesAtAllPositions;
         }
 
-        FDSchemeComponent* FDScheme::getComponentOfDerivativeOrder(unsigned derivativeOrder) {
+        FDSchemeComponent* FiniteDifferenceScheme::getComponentOfDerivativeOrder(unsigned derivativeOrder) {
             return _components->at(derivativeOrder);
         }
 
-    map<Position, double> *FDScheme::calculateSchemeValuesAtAllPositions() {
+    map<Position, double> *FiniteDifferenceScheme::calculateSchemeValuesAtAllPositions() {
         for (auto & component : *_components) {
             auto derivativeOrder = component.first;
             auto schemeComponent = component.second;
@@ -44,6 +45,7 @@ namespace LinearAlgebra{
         }
         return nullptr;
     }
+*/
 
 }
 

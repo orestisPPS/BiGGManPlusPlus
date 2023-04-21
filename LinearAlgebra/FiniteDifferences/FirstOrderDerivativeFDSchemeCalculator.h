@@ -24,6 +24,8 @@ namespace LinearAlgebra {
         
         static map<int, double>* getWeights(FDSchemeType schemeType, unsigned errorOrder);
         
+        static vector<double> getWeightsVector(FDSchemeType schemeType, unsigned errorOrder);
+        
         //Creates a scheme component from the given scheme type and error order at th
         static FDSchemeComponent getScheme(FDSchemeType schemeType, unsigned errorOrder,
                                            map<int, double>* functionValues, double stepSize);
@@ -98,6 +100,8 @@ namespace LinearAlgebra {
         
         
         static map<tuple<FDSchemeType, unsigned>, map<int, double>> _schemeTypeAndOrderToSchemeWeights();
+        
+
         
     };
 

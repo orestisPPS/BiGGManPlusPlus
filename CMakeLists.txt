@@ -90,7 +90,7 @@ add_executable(untitled main.cpp
         LinearAlgebra/Norms/VectorNorm.h LinearAlgebra/Norms/VectorNorm.cpp
         LinearAlgebra/Solvers/Iterative/IterativeSolver.h 
         LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp
-        LinearAlgebra/FiniteDifferences/FDScheme.cpp 
+        LinearAlgebra/FiniteDifferences/FiniteDifferenceScheme.cpp 
         LinearAlgebra/FiniteDifferences/FDSchemeType.h)
         
         

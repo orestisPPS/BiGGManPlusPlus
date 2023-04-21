@@ -20,6 +20,11 @@ namespace PositioningInSpace {
         Three,
         Time
     };
+    
+    static map<Direction, short unsigned> spatialDirectionToShortUnsigned =
+            {{Direction::One,   1},
+             {Direction::Two,   2},
+             {Direction::Three, 3}};
 
     //static list<Direction> directions = {Direction::One, Direction::Two, Direction::Three};
 
