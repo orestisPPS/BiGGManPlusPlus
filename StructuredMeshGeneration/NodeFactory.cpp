@@ -6,7 +6,7 @@
 
 namespace StructuredMeshGenerator{
     
-    NodeFactory :: NodeFactory(map<Direction, unsigned> &numberOfNodes){
+    NodeFactory :: NodeFactory(map<Direction,  short unsigned> &numberOfNodes){
         _nn1 = numberOfNodes.at(Direction::One);
         _nn2 = numberOfNodes.at(Direction::Two);
         _nn3 = numberOfNodes.at(Direction::Three);

@@ -38,7 +38,7 @@ namespace LinearAlgebra {
         
         double calculateDerivative(IsoParametricNodeGraph* nodeGraph, Direction direction, unsigned derivativeOrder);
         
-        
+        map<Position, double> calculateDerivativeVector(IsoParametricNodeGraph* nodeGraph, unsigned derivativeOrder);
     private:
         
         FDSchemeSpecs* _schemeSpecs;
@@ -49,8 +49,6 @@ namespace LinearAlgebra {
         //For example Order 1, type central, -1 points
         static map<unsigned, map<FDSchemeType, int>> _schemeOrderToSchemeTypePointsNeededFirstDerivative();
         
-        //Helper function for creating the neighbours of the scheme with increasing order (left-to-right, bottom-to-top, back-to-front)
-        static map<Position, short int> _positionSign();
 
         //Maps the order of the scheme to the type of the scheme and the neighbouring points needed to build it
         // for a second derivative finite difference scheme.

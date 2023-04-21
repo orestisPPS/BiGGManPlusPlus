@@ -99,8 +99,6 @@ namespace LinearAlgebra {
         
         static map<tuple<FDSchemeType, unsigned>, map<int, double>> _schemeTypeAndOrderToSchemeWeights();
         
-
-        
     };
 
 } // LinearAlgebra

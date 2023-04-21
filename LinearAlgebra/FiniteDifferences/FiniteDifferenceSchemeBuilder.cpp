@@ -31,6 +31,14 @@ namespace LinearAlgebra {
         }
         return max;
     }
+    
+    map<Position, double> FiniteDifferenceSchemeBuilder::calculateDerivativeVector(
+            Discretization::IsoParametricNodeGraph *nodeGraph, unsigned int derivativeOrder) {
+        auto derivativeVector = map<Position, double>();
+        //March through all derivative orders
+        for (auto& direction : 
+        }
+    }
 
     map<Position, short unsigned> FiniteDifferenceSchemeBuilder:: getNumberOfDiagonalNeighboursNeeded() {
         auto numberOfDiagonalNeighboursNeeded = map<Position, short unsigned>();

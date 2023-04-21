@@ -15,7 +15,7 @@ namespace StructuredMeshGenerator {
     
     class MeshFactory {
     public:
-        MeshFactory(MeshSpecs *meshSpecs);
+        explicit MeshFactory(MeshSpecs *meshSpecs);
         Mesh *mesh;
 
         
@@ -23,12 +23,10 @@ namespace StructuredMeshGenerator {
         MeshSpecs *_meshSpecs;
 
         Mesh* initiateRegularMesh();
-        Mesh* initiateGhostMesh(Mesh* targetMesh, map<Direction, unsigned> depth) const;
         void assignCoordinates();
         void assign1DCoordinates() const;
         void assign2DCoordinates() const;
         void assign3DCoordinates() const;
-        void calculateMeshMetrics();
         SpaceEntityType calculateSpaceEntityType();
     };
 

@@ -6,8 +6,8 @@
 
 namespace StructuredMeshGenerator {
     
-        MeshSpecs::MeshSpecs(map<Direction, unsigned> &nodesPerDirection,
-                            double templateStepOne) : nodesPerDirection(nodesPerDirection) {
+        MeshSpecs::MeshSpecs(map<Direction, short unsigned> &nodesPerDirection,
+                            double templateStepOne, short unsigned metricsOrder) : nodesPerDirection(nodesPerDirection) {
             this->nodesPerDirection = nodesPerDirection;
             nodesPerDirection[Direction::Two] = 1;
             nodesPerDirection[Direction::Three] = 1;
@@ -21,12 +21,13 @@ namespace StructuredMeshGenerator {
             this->templateShearTwo = 0;
             this->templateShearThree = 0;
             this->dimensions = 1;
+            this->metricsOrder = metricsOrder;
         }
     
-        MeshSpecs::MeshSpecs(map<Direction, unsigned> &nodesPerDirection,
+        MeshSpecs::MeshSpecs(map<Direction, short unsigned> &nodesPerDirection,
                             double templateStepOne, double templateStepTwo,
                             double templateRotAngle,
-                            double templateShearOne, double templateShearTwo) : nodesPerDirection(nodesPerDirection) {
+                            double templateShearOne, double templateShearTwo, short unsigned metricsOrder) : nodesPerDirection(nodesPerDirection) {
             this->nodesPerDirection = nodesPerDirection;
             nodesPerDirection[Direction::Three] = 1;
             this->templateStepOne = templateStepOne;
@@ -39,12 +40,13 @@ namespace StructuredMeshGenerator {
             this->templateShearTwo = templateShearTwo;
             this->templateShearThree = 0;
             this->dimensions = 2;
+            this->metricsOrder = metricsOrder;
         }
         
-        MeshSpecs::MeshSpecs(map<Direction, unsigned> &nodesPerDirection,
+        MeshSpecs::MeshSpecs(map<Direction, short unsigned> &nodesPerDirection,
                             double templateStepOne, double templateStepTwo, double templateStepThree,
                             double templateRotAngleOne, double templateRotAngleTwo, double templateRotAngleThree,
-                            double templateShearOne, double templateShearTwo, double templateShearThree)
+                            double templateShearOne, double templateShearTwo, double templateShearThree, short unsigned metricsOrder)
                             : nodesPerDirection(nodesPerDirection) {
             this->nodesPerDirection = nodesPerDirection;
             this->templateStepOne = templateStepOne;
@@ -57,6 +59,7 @@ namespace StructuredMeshGenerator {
             this->templateShearTwo = templateShearTwo;
             this->templateShearThree = templateShearThree;
             this->dimensions = 3;
+            this->metricsOrder = metricsOrder;
         }
     
 

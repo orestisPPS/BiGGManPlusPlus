@@ -49,6 +49,13 @@ namespace Discretization {
         //Returns the node pointer of the node with the given global ID
         //Ιf the node does not exist, returns nullptr
         Node* nodeFromID(unsigned ID);
+
+         // Calculates the metrics of all the nodes based on the given coordinate system.
+         // If coordinateSystem is Template then the metrics are calculated based on the template coordinate system before
+         // the final coordinate system is calculated.
+         // If coordinateSystem is Natural then the metrics are calculated based on the final calculated coordinate system.
+         void calculateMeshMetrics(CoordinateType coordinateSystem);
+        
         
         
         //-----------------Virtual parent class methods-----------------  
@@ -86,11 +93,6 @@ namespace Discretization {
         void cleanMeshDataStructures();
         
         map<Direction, unsigned>* createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth);
-        // Calculates the metrics of all the nodes based on the given coordinate system.
-        // If coordinateSystem is Template then the metrics are calculated based on the template coordinate system before
-        // the final coordinate system is calculated.
-        // If coordinateSystem is Natural then the metrics are calculated based on the final calculated coordinate system.
-        void calculateMeshMetrics(CoordinateType coordinateSystem);
 
         //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
         virtual map<Position, vector<Node*>*> *addDBoundaryNodesToMap();

@@ -165,6 +165,8 @@ namespace Discretization {
 
                     node->coordinates.setPositionVector(templateCoord, Template);
                     ghostNodesList->push_back(node);
+                    parametricCoordToNodeMap->insert(pair<vector<double>, Node*>(parametricCoords, node));
+                    
                 }
                 nodeArrayPositionI++;
                 if (nodeArrayPositionI == nn1 + 2 * nn1Ghost) {

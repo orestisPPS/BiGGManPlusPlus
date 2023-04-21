@@ -13,7 +13,7 @@ namespace StructuredMeshGenerator {
 
     class NodeFactory {
     public:
-        NodeFactory(map<Direction, unsigned> &nodesPerDirection);
+        NodeFactory(map<Direction, short unsigned> &nodesPerDirection);
                 
         Array<Node*> *nodesMatrix;
         

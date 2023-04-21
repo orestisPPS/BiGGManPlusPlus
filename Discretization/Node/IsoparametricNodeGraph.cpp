@@ -74,45 +74,50 @@ namespace Discretization {
     }
     
     map<Direction, vector<Node*>>* IsoParametricNodeGraph::getCoLinearNodes() const{
-        auto coLinearNodes = new map<Direction, vector<Node*>>();
+         auto coLinearNodes = new map<Direction, vector<Node*>>();
 
         for (auto &position1 : *nodeGraph) {
             for (auto &position2: *nodeGraph) {
                 auto n1 = normalUnitVectorsOfPositions.at(position1.first);
                 auto n2 = normalUnitVectorsOfPositions.at(position2.first);
                 if (VectorOperations::dotProduct(n1, n2) == -1) {
-                    if ((n1[0] == n2[0]) != 0){
-                        auto mergedNodes = vector<Node*>(position1.second.size() + position2.second.size());
+                    if (n1[0] + n2[0] == 0 && n1[0] != 0){
+                        auto mergedNodes = vector<Node*>(position1.second.size() + position2.second.size() + 1);
                         std::merge(position1.second.begin(), position1.second.end(),
                                    position2.second.begin(), position2.second.end(),
                                    mergedNodes.begin());
                         coLinearNodes->insert(pair<Direction, vector<Node*>>(One, mergedNodes));
+                        coLinearNodes->at(One)[position1.second.size() + position2.second.size()] = _node;
                     }
-                    else if ((n1[1] == n2[1]) != 0){
-                        auto mergedNodes = vector<Node*>(position1.second.size() + position2.second.size());
+                    else if (n1[1] + n2[1] == 0 && n1[1] != 0){
+                        auto mergedNodes = vector<Node*>(position1.second.size() + position2.second.size() + 1);
                         std::merge(position1.second.begin(), position1.second.end(),
                                    position2.second.begin(), position2.second.end(),
                                    mergedNodes.begin());
                         coLinearNodes->insert(pair<Direction, vector<Node*>>(Two, mergedNodes));
+                        coLinearNodes->at(Two)[position1.second.size() + position2.second.size()] = _node;
                     }
-                    else if ((n1[2] == n2[2]) != 0){
-                        auto mergedNodes = vector<Node*>(position1.second.size() + position2.second.size());
+                    else if (n1[2] + n1[2] == 0 && n1[2] != 0){
+                        auto mergedNodes = vector<Node*>(position1.second.size() + position2.second.size() + 1);
                         std::merge(position1.second.begin(), position1.second.end(),
                                    position2.second.begin(), position2.second.end(),
                                    mergedNodes.begin());
                         coLinearNodes->insert(pair<Direction, vector<Node*>>(Three, mergedNodes));
+                        coLinearNodes->at(Three)[position1.second.size() + position2.second.size()] = _node;
                     }
+                    
                 }
             }
         }
-        
+
+
+        auto i = 0;
         for (auto &direction : *coLinearNodes) {
-            auto i = 0;
             if (direction.second.empty())
                 coLinearNodes->erase(direction.first);
-            
-            std::sort(coLinearNodes->
-            at(direction.first).begin(), coLinearNodes->at(direction.first).end(), [i](Node* a, Node* b) {
+            //coLinearNodes->at(direction.first).push_back(_node);
+            std::sort(
+                    coLinearNodes->at(direction.first).begin(), coLinearNodes->at(direction.first).end(), [i](Node* a, Node* b) {
                 auto coords1 = a->coordinates.positionVector(Parametric);
                 auto coords2 = b->coordinates.positionVector(Parametric);
                 return coords1[i] < coords2[i];

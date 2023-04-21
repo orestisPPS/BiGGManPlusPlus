@@ -150,7 +150,7 @@ namespace Discretization {
     map<Direction, unsigned>* Mesh:: createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth){
         auto numberOfGhostNodesPerDirection = new map<Direction, unsigned>();
         for (auto &direction : directions()) {
-            numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(direction, 2*ghostLayerDepth));
+            numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(direction, ghostLayerDepth));
         }
         return numberOfGhostNodesPerDirection;
 
@@ -162,7 +162,7 @@ namespace Discretization {
             metrics = new map<Node*, Metrics*>();
             
             //Create Scheme Specs. Metrics are calculated by a central ("diamond") scheme
-            auto schemeSpecs = new FDSchemeSpecs(Central, specs->metricsOrder - 1, directions());
+            auto schemeSpecs = new FDSchemeSpecs(Central, specs->metricsOrder, directions());
             //Create Scheme Builder to gain access to utility functions for the scheme creation
             auto schemeBuilder = new FiniteDifferenceSchemeBuilder(schemeSpecs);
             // Initiate GhostPseudoMesh
@@ -171,18 +171,26 @@ namespace Discretization {
             //March through all the nodes of the mesh and calculate its metrics
             for (auto &node : *totalNodesVector) {
                 //Find Neighbors in a manner that applies the same numerical scheme to all nodes
-                auto neighbors = schemeBuilder->getNumberOfDiagonalNeighboursNeeded();
+                auto neighbours = schemeBuilder->getNumberOfDiagonalNeighboursNeeded();
                 //Initiate Node Graph
                 auto graph = new IsoParametricNodeGraph(node, schemeBuilder->getNumberOfGhostNodesNeeded(),
-                                                ghostMesh->parametricCoordToNodeMap, numberOfNodesPerDirection);
+                                                ghostMesh->parametricCoordToNodeMap, numberOfNodesPerDirection, false);
                 
                 //Get the adjusted node graph that contains only the nodes that are needed to calculate the FD scheme
                 //provided by the scheme builder
-                auto nodeGraph = graph->getNodeGraph(neighbors);
-                
+                auto nodeGraph = graph->getNodeGraph(neighbours);
+                //Get the co-linear nodes (Left-Right -> 1, Up-Down -> 2, Front-Back -> 3)
                 auto coLinearNodes = graph->getCoLinearNodes();
                 
-                //Create finite difference scheme
+                //March through all the directions and calculate the metrics
+                for (auto &direction : directions()) {
+                    //Get the FD scheme for the current direction
+                    auto scheme = schemeBuilder->getFDScheme(direction);
+                    //Calculate the metrics
+                    auto metric = scheme->calculateMetric(nodeGraph, coLinearNodes, direction);
+                    //Add the metric to the metrics map
+                    metrics->insert(pair<Node*, Metrics*>(node, metric));
+                }
                 
                 
                 //Deallocate memory
