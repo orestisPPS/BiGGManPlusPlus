@@ -32,14 +32,10 @@ namespace LinearAlgebra {
         return max;
     }
     
-    map<Position, double> FiniteDifferenceSchemeBuilder::calculateDerivativeVector(
-            Discretization::IsoParametricNodeGraph *nodeGraph, unsigned int derivativeOrder) {
-        auto derivativeVector = map<Position, double>();
-        auto neighboursInAllDirections = nodeGraph->getCoLinearNodes();
-        //March through all derivative orders
-        for (auto& direction : 
-        }
-    }
+/*    typedef 
+    map<Direction, double> FiniteDifferenceSchemeBuilder::calculateDerivativeVector(
+
+    }*/
 
     map<Position, short unsigned> FiniteDifferenceSchemeBuilder:: getNumberOfDiagonalNeighboursNeeded() {
         auto numberOfDiagonalNeighboursNeeded = map<Position, short unsigned>();
@@ -75,6 +71,14 @@ namespace LinearAlgebra {
         }
         return numberOfDiagonalNeighboursNeeded;
     }
+    
+    vector<double> FiniteDifferenceSchemeBuilder::getSchemeWeightsAtDirection(Direction direction) {
+        auto schemeTypeAndOrder = this->_schemeSpecs->
+                schemeTypeAndOrderAtDirectionForDerivativeOrder->at(1)[direction];
+        return FirstOrderDerivativeFDSchemeCalculator::getWeightsVector(
+                    get<0>(schemeTypeAndOrder), get<1>(schemeTypeAndOrder));
+    }
+    
     
 
     map<unsigned int, map<FDSchemeType, int>>

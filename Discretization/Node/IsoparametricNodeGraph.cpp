@@ -73,7 +73,7 @@ namespace Discretization {
         return dofGraph;
     }
     
-    map<Direction, vector<Node*>>* IsoParametricNodeGraph::getCoLinearNodes() const{
+    map<Direction, vector<Node*>>* IsoParametricNodeGraph::getColinearNodes() const{
          auto coLinearNodes = new map<Direction, vector<Node*>>();
 
         for (auto &position1 : *nodeGraph) {
@@ -109,8 +109,7 @@ namespace Discretization {
                 }
             }
         }
-
-
+        
         auto i = 0;
         for (auto &direction : *coLinearNodes) {
             if (direction.second.empty())
@@ -124,8 +123,66 @@ namespace Discretization {
             });
             i++;
         }
-
         return coLinearNodes;
+    }
+
+    vector<Node*> IsoParametricNodeGraph::getColinearNodes(Direction direction) const {
+        auto coLinearNodes = getColinearNodes();
+        auto nodes = coLinearNodes->at(direction);
+        delete coLinearNodes;
+        return nodes;
+    }
+    
+    map<Direction, vector<double>> IsoParametricNodeGraph::
+    getColinearNodalCoordinate(CoordinateType coordinateType) const {
+        map<Direction, vector<double>> coLinearNodalCoordinates;
+        auto coLinearNodes = getColinearNodes();
+        for(auto& direction : *coLinearNodes){
+            coLinearNodalCoordinates.insert({direction.first, vector<double>(direction.second.size())});
+            auto iDirection = spatialDirectionToUnsigned[direction.first];
+            auto iPoint = 0;
+            for(auto& node : direction.second){
+                coLinearNodalCoordinates.at(direction.first)[iPoint]=
+                        node->coordinates.positionVector(coordinateType)[iDirection];
+                iPoint++;
+            }
+        }
+        delete coLinearNodes;
+        return coLinearNodalCoordinates;
+    }
+    
+    vector<double> IsoParametricNodeGraph::getColinearNodalCoordinate(CoordinateType coordinateType, Direction direction) const {
+        auto coLinearNodalCoordinates = getColinearNodalCoordinate(coordinateType);
+        auto coordinates = coLinearNodalCoordinates.at(direction);
+        return coordinates;
+    }
+    
+    
+    map<Direction, vector<DegreeOfFreedom*>> IsoParametricNodeGraph::
+    getColinearDOF(DOFType dofType) const {
+        map<Direction, vector<DegreeOfFreedom*>> coLinearDOF;
+        auto coLinearNodes = getColinearNodes();
+        for(auto& direction : *coLinearNodes){
+            coLinearDOF.insert({direction.first, vector<DegreeOfFreedom*>(direction.second.size())});
+            auto iPoint = 0;
+            for(auto& node : direction.second){
+                coLinearDOF.at(direction.first)[iPoint] = node->getDegreeOfFreedomPtr(dofType);
+                iPoint++;
+            }
+        }
+        delete coLinearNodes;
+        return coLinearDOF;
+    }
+
+    vector<double> IsoParametricNodeGraph::getColinearDOF(DOFType dofType, Direction direction) const {
+        auto coLinearDOF = getColinearDOF(dofType).at(direction);;
+        auto dofValues = vector<double>(coLinearDOF.size());
+        auto iDof = 0;
+        for (auto &dof : coLinearDOF) {
+            dofValues[iDof] = dof->value();
+            iDof++;
+        }
+        return dofValues;
     }
     
     void IsoParametricNodeGraph::_findINeighborhoodRecursively(bool includeDiagonalNeighbours) {

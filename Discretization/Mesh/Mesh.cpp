@@ -179,17 +179,50 @@ namespace Discretization {
                 //Get the adjusted node graph that contains only the nodes that are needed to calculate the FD scheme
                 //provided by the scheme builder
                 auto nodeGraph = graph->getNodeGraph(neighbours);
-                //Get the co-linear nodes (Left-Right -> 1, Up-Down -> 2, Front-Back -> 3)
-                auto coLinearNodes = graph->getCoLinearNodes();
+
+                //Get the co-linear nodal coordinates (Left-Right -> 1, Up-Down -> 2, Front-Back -> 3)
+                auto templateCoordsMap= graph->getColinearNodalCoordinate(coordinateSystem);
+                auto parametricCoordsMap = graph->getColinearNodalCoordinate(Parametric);
                 
+                auto nodeMetrics = new Metrics(node, dimensions());
                 //March through all the directions and calculate the metrics
                 for (auto &direction : directions()) {
-                    //Get the FD scheme for the current direction
-                    auto scheme = schemeBuilder->getFDScheme(direction);
-                    //Calculate the metrics
-                    auto metric = scheme->calculateMetric(nodeGraph, coLinearNodes, direction);
-                    //Add the metric to the metrics map
-                    metrics->insert(pair<Node*, Metrics*>(node, metric));
+                    //Get the FD scheme weights for the current direction
+                    auto weights = schemeBuilder->getSchemeWeightsAtDirection(direction);
+                    
+                    //Check if the number of weights and the number of nodes match
+                    if (weights.size() != templateCoordsMap[direction].size())
+                        throw std::runtime_error("Number of weights and number of template nodal coords do not match"
+                                                       " for node " + to_string(*node->id.global) +
+                                                       " in direction " + to_string(direction) +
+                                                       "Cannot calculate covariant base vectors");
+                    
+                    if (weights.size() != parametricCoordsMap[direction].size())
+                        throw std::runtime_error("Number of weights and number of parametric nodal coords do not match"
+                                                       " for node " + to_string(*node->id.global) +
+                                                       " in direction " + to_string(direction) +
+                                                       "Cannot calculate contravariant base vectors");
+ 
+                    auto g_i = vector<double>(weights.size());
+                    
+                    //Covariant base vectors (dr_i/dξ_i)
+                    //g_1 = {dx/dξ, dy/dξ, dz/dξ}
+                    //g_2 = {dx/dη, dy/dη, dz/dη}
+                    //g_3 = {dx/dζ, dy/dζ, dz/dζ}
+                    for (auto i = 0; i < weights.size(); i++) {
+                        g_i[i] = weights[i] * (templateCoordsMap[direction][i]);
+                    }
+                    nodeMetrics->covariantBaseVectors->at(direction) = g_i;
+                    
+                    //Contravariant base vectors (dξ_i/dr_i)
+                    //g^1 = {dξ/dx, dξ/dy, dξ/dz}
+                    //g^2 = {dη/dx, dη/dy, dη/dz}
+                    //g^3 = {dζ/dx, dζ/dy, dζ/dz}
+                    for (auto i = 0; i < weights.size(); i++) {
+                        g_i[i] = weights[i] * (parametricCoordsMap[direction][i]);
+                    }
+                    
+
                 }
                 
                 
@@ -200,6 +233,7 @@ namespace Discretization {
                 graph = nullptr;
                 
             }
+            delete ghostMesh;
             delete schemeBuilder;
             schemeBuilder = nullptr;
             delete schemeSpecs;
@@ -210,7 +244,9 @@ namespace Discretization {
     }
     
     Metrics* Mesh::calculateNodeMetrics(Node* node, CoordinateType coordinateSystem) {
-        return nullptr;
+        auto nodalMetrics = new Metrics(node, dimensions());
+        nodalMetrics->contravariantBaseVectors;
+        return nodalMetrics;
     }
     
     GhostPseudoMesh* Mesh::createGhostPseudoMesh(unsigned ghostLayerDepth) {

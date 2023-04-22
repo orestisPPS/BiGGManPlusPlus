@@ -45,6 +45,8 @@ namespace Discretization {
         
         //Returns a pointer to the natural position vector of the Node
         vector<double>* positionVectorPtr();
+        
+        double coordinateValue(Direction direction, CoordinateType type);
 
         //Returns the input position vector of the Node
         const vector<double>& positionVector(CoordinateType type);

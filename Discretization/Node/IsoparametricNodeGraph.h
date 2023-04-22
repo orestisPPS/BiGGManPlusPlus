@@ -49,8 +49,21 @@ namespace Discretization {
         // Key : Direction Enum representing the direction of the parametric coordinate line.
         // Value : Vector of Node ptr at all depth nodes. They are ordered with increasing parametric coordinate value.
         //         The input node is included in the vector.
-        map<Direction, vector<Node*>>* getCoLinearNodes() const;
+        map<Direction, vector<Node*>>* getColinearNodes() const;
         
+        vector<Node*> getColinearNodes(Direction direction) const;
+
+        map<Direction, vector<double>> getColinearNodalCoordinate(CoordinateType coordinateType) const;
+        
+        vector<double> getColinearNodalCoordinate(CoordinateType coordinateType, Direction direction) const;
+        
+        map<Direction, vector<DegreeOfFreedom*>> getColinearDOF(DOFType dofType) const;
+
+        vector<double> getColinearDOF(DOFType dofType, Direction direction) const;
+        
+        
+
+
         map<Position, vector<Node*>>* nodeGraph;
                 
     private:

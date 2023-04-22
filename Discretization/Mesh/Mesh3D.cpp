@@ -188,13 +188,5 @@ namespace Discretization {
         }
         return parametricCoordToNodeMap;
     }
-    
-    Metrics* Mesh3D::calculateNodeMetrics(Discretization::Node *node,
-                                          PositioningInSpace::CoordinateType coordinateSystem) {
-        return nullptr;
-    }
-
-    
-
 
 } // Discretization

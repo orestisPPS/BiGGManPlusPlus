@@ -72,6 +72,10 @@ namespace Discretization {
         return _positionVectors.at(type).getCoordinateVector();
     }
     
+    double NodalCoordinates::coordinateValue(Direction direction, CoordinateType type) {
+        return _positionVectors.at(type)(direction);
+    }
+    
     //Size of the natural position vector
     unsigned NodalCoordinates::size() {
     return  _positionVectors.at(CoordinateType::Natural).dimensions();

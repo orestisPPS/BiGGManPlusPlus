@@ -6,6 +6,7 @@
 #define UNTITLED_FIBITEDIFFERENCESCHEMEBUILDER_H
 
 #include "FDSchemeSpecs.h"
+#include "FirstOrderDerivativeFDSchemeCalculator.h"
 #include "../../Discretization/Node/IsoparametricNodeGraph.h"
 using namespace Discretization;
 
@@ -36,9 +37,13 @@ namespace LinearAlgebra {
         // Use this when creating a scheme that is consistent across the whole domain.
         map<Position, short unsigned> getNumberOfDiagonalNeighboursNeeded();
         
-        double calculateDerivative(IsoParametricNodeGraph* nodeGraph, Direction direction, unsigned derivativeOrder);
+        double calculateDerivative(IsoParametricNodeGraph* nodeGraph,  unsigned derivativeOrder, Direction direction);
         
-        map<Position, double> calculateDerivativeVector(IsoParametricNodeGraph* nodeGraph, unsigned derivativeOrder);
+        map<Direction, double> calculateDerivativeVector(IsoParametricNodeGraph* nodeGraph, unsigned derivativeOrder);
+        
+        vector<double> getSchemeWeightsAtDirection(Direction direction);
+        
+        
     private:
         
         FDSchemeSpecs* _schemeSpecs;

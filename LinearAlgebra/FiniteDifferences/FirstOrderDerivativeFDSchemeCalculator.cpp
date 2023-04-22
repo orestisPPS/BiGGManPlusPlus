@@ -115,6 +115,15 @@ namespace LinearAlgebra {
             throw invalid_argument("The scheme type and error order combination is not supported");
         }
     }
+
+    vector<double> FirstOrderDerivativeFDSchemeCalculator::getWeightsVector(FDSchemeType schemeType, unsigned int errorOrder) {
+        auto weights = getWeights(schemeType, errorOrder);
+        auto weightsVector = vector<double>();
+        for (auto& weight : *weights) {
+            weightsVector.push_back(weight.second);
+        }
+        return weightsVector;
+    }
     
     map<int, double> FirstOrderDerivativeFDSchemeCalculator :: _forward1() {
         auto weights = map<int, double>();

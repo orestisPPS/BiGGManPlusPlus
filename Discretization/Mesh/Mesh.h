@@ -89,8 +89,10 @@ namespace Discretization {
         void categorizeNodes();
          
         void createNumberOfNodesPerDirectionMap();
-        
-        void cleanMeshDataStructures();
+
+         Metrics* calculateNodeMetrics(Node* node, CoordinateType coordinateSystem);
+         
+         void cleanMeshDataStructures();
         
         map<Direction, unsigned>* createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth);
 
@@ -102,10 +104,6 @@ namespace Discretization {
 
         //Adds the total nodes of the mesh to a vector pointer of node pointers
         virtual vector<Node*>* addTotalNodesToVector();
-         
-
-        
-        virtual Metrics* calculateNodeMetrics(Node* node, CoordinateType coordinateSystem);
         
         virtual GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth);
         
