@@ -221,7 +221,10 @@ namespace Discretization {
                     for (auto i = 0; i < weights.size(); i++) {
                         g_i[i] = weights[i] * (parametricCoordsMap[direction][i]);
                     }
-                    
+                    nodeMetrics->contravariantBaseVectors->at(direction) = g_i;
+                    auto testCoords = vector<double>{-1, 0.5};
+                    FiniteDifferenceSchemeWeightsCalculator::calculateWeights(1, testCoords);
+                    //FiniteDifferenceSchemeWeightsCalculator::calculateWeights(2, templateCoordsMap[direction]);
 
                 }
                 

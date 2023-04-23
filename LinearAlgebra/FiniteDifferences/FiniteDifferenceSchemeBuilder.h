@@ -7,6 +7,7 @@
 
 #include "FDSchemeSpecs.h"
 #include "FirstOrderDerivativeFDSchemeCalculator.h"
+#include "FiniteDifferenceSchemeWeightsCalculator.h"
 #include "../../Discretization/Node/IsoparametricNodeGraph.h"
 using namespace Discretization;
 

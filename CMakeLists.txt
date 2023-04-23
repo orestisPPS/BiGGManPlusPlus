@@ -91,6 +91,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Iterative/IterativeSolver.h 
         LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp
         LinearAlgebra/FiniteDifferences/FiniteDifferenceScheme.cpp 
-        LinearAlgebra/FiniteDifferences/FDSchemeType.h)
+        LinearAlgebra/FiniteDifferences/FDSchemeType.h LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeWeightsCalculator.h LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeWeightsCalculator.cpp)
         
         
