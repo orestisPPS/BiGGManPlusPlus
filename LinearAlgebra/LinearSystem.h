@@ -6,7 +6,7 @@
 #define UNTITLED_LINEARSYSTEM_H
 
 #include "../Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.h"
-#include "Array.h"
+#include "Array/Array.h"
 #include "../Discretization/Node/IsoparametricNodeGraph.h"
 #include "../Utility/Exporters/Exporters.h"
 

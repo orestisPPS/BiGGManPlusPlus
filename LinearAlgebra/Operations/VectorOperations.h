@@ -5,7 +5,7 @@
 #ifndef UNTITLED_VECTOROPERATIONS_H
 #define UNTITLED_VECTOROPERATIONS_H
 
-#include "../Array.h"
+#include "../Array/Array.h"
 
 namespace LinearAlgebra {
 

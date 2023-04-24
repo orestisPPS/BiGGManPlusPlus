@@ -8,7 +8,7 @@
 #include <map>
 #include <cmath>
 #include <functional>
-#include "../Array.h"
+#include "../Array/Array.h"
 
 namespace LinearAlgebra {
 

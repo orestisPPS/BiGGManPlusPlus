@@ -5,7 +5,7 @@
 #ifndef UNTITLED_SOLVER_H
 #define UNTITLED_SOLVER_H
 
-#include "../Array.h"
+#include "../Array/Array.h"
 #include "../Norms/VectorNorm.h"
 
 namespace LinearAlgebra {

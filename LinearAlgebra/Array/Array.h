@@ -18,38 +18,40 @@ namespace LinearAlgebra {
 
 
     template<typename T> class Array {
-
+    
     public:
         //Custom constructor that takes the size of a 1D array 
         // and allocates the memory in the heap
-        Array(unsigned rows) : _numberOfRows(rows), _numberOfColumns(1), _numberOfAisles(1), parallelizationThreshold(1000) {
+        Array(unsigned rows, bool isPositiveDefinite = false) :
+        _numberOfRows(rows), _numberOfColumns(1), _numberOfAisles(1), parallelizationThreshold(1000), _isPositiveDefinite(isPositiveDefinite) {
             _array = new T[rows];
         }
         //Custom constructor that takes the size of a 2D array
         // and allocates the memory in the heap
-
-        Array(unsigned rows, unsigned  columns) :
-        _numberOfRows(rows), _numberOfColumns(columns), _numberOfAisles(1), parallelizationThreshold(1000) {
+    
+        Array(unsigned rows, unsigned  columns, bool isPositiveDefinite = false) :
+        _numberOfRows(rows), _numberOfColumns(columns), _numberOfAisles(1), parallelizationThreshold(1000), _isPositiveDefinite(isPositiveDefinite) {
             _array = new T[rows * columns];
         }
         //Custom constructor that takes the size of a 3D array
         // and allocates the memory in the heap
-
-        Array(unsigned rows, unsigned  columns, unsigned aisles) :
-        _numberOfRows(rows), _numberOfColumns(columns), _numberOfAisles(aisles), parallelizationThreshold(1000){
+    
+        Array(unsigned rows, unsigned  columns, unsigned aisles, bool isPositiveDefinite = false) :
+        _numberOfRows(rows), _numberOfColumns(columns), _numberOfAisles(aisles), parallelizationThreshold(1000), _isPositiveDefinite(isPositiveDefinite) {
             _array = new T[rows * columns * aisles];
         }
-
+    
         //Copy constructor
         Array(const Array<T>& matrix){
             _numberOfRows = matrix._numberOfRows;
             _numberOfColumns = matrix._numberOfColumns;
             _numberOfAisles = matrix._numberOfAisles;
             parallelizationThreshold = matrix.parallelizationThreshold;
+            _isPositiveDefinite = matrix._isPositiveDefinite;
             
             _array = new T[matrix._numberOfRows * matrix._numberOfColumns * matrix._numberOfAisles];
             if (size() >= parallelizationThreshold){
-/*                #pragma omp parallel for default(none) 
+    /*                #pragma omp parallel for default(none) 
                 for (unsigned i = 0; i < _numberOfRows * _numberOfColumns; i++){
                     _array[i] = matrix._array[i];
                 }*/
@@ -121,7 +123,7 @@ namespace LinearAlgebra {
             return _array[i];
         }
         
-
+    
         T& at(unsigned i, unsigned j) {
             if (i >= size()){
                 throw out_of_range("Index out of range");
@@ -135,7 +137,7 @@ namespace LinearAlgebra {
             }
             return _array[ i * _numberOfColumns + j];
         }
-
+    
         T& at(unsigned i, unsigned j, unsigned k) {
             if (i >= size()){
                 throw out_of_range("Index out of range");
@@ -151,9 +153,7 @@ namespace LinearAlgebra {
         }
         
         
-        
-        
-
+    
         // Overloaded assignment operator
         Array<T>& operator = (const Array<T>& matrix){
             if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns || _numberOfAisles != matrix._numberOfAisles) {
@@ -162,11 +162,12 @@ namespace LinearAlgebra {
                 _numberOfRows = matrix.numberOfRows();
                 _numberOfColumns = matrix.numberOfColumns();
                 _numberOfAisles = matrix.numberOfAisles();
+                _isPositiveDefinite = matrix._isPositiveDefinite;
                 delete [] _array;
                 _array = new T[_numberOfRows * _numberOfColumns * _numberOfAisles];
                 auto size = this->size();
                 if (this->size() >= parallelizationThreshold){
-/*                    #pragma omp parallel for  firstprivate(matrix) default(none) 
+    /*                    #pragma omp parallel for  firstprivate(matrix) default(none) 
                     for (unsigned i = 0; i < size(); i++){
                         _array[i] = matrix.vectorElement(i);
                     }*/
@@ -185,7 +186,7 @@ namespace LinearAlgebra {
                 return false;
             }
             if (this->size() >= parallelizationThreshold){
-/*                auto areEqual = true;
+    /*                auto areEqual = true;
                 #pragma omp parallel for default(none) 
                 for (unsigned i = 0; i < _numberOfRows * _numberOfColumns * _numberOfAisles; i++){
                     if (_array[i] != matrix._array[i]){
@@ -202,21 +203,21 @@ namespace LinearAlgebra {
                 }
             }
         }
-
+    
         // Overloaded inequality operator
         bool operator != (const Array<T>& matrix) const {
             return !(*this == matrix);
         }
-
+    
         // Overloaded operator for matrix addition
         Array<T> operator + (const Array<T>& matrix) const {
             if (_numberOfRows != matrix._numberOfRows && _numberOfColumns != matrix._numberOfColumns && _numberOfAisles != matrix._numberOfAisles){
                throw out_of_range("The dimensions of the matrices do not match");
             }
             Array<T> result(_numberOfRows, _numberOfColumns, _numberOfAisles);
-
+    
             if (_numberOfRows * _numberOfColumns >= parallelizationThreshold){
-/*                #pragma omp parallel for default(none) firstprivate(result)
+    /*                #pragma omp parallel for default(none) firstprivate(result)
                 for (unsigned i = 0; i < _numberOfRows * _numberOfColumns * _numberOfAisles; i++){
                     result._array[i] = _array[i] + matrix.vectorElement(i);
                 }*/
@@ -236,7 +237,7 @@ namespace LinearAlgebra {
             }
             Array<T> result(_numberOfRows, _numberOfColumns, _numberOfAisles);
             if (this->size() >= parallelizationThreshold){
-/*                #pragma omp parallel for default(none) firstprivate(result)
+    /*                #pragma omp parallel for default(none) firstprivate(result)
                 for (unsigned i = 0; i < _numberOfRows * _numberOfColumns * _numberOfAisles; i++){
                     result._array[i] = _array[i] - matrix.vectorElement(i);
                 }*/
@@ -256,7 +257,7 @@ namespace LinearAlgebra {
             }
             Array<T> result(_numberOfRows, matrix.numberOfColumns(), _numberOfAisles);
             if (this->size() >= parallelizationThreshold){
-/*                #pragma omp parallel for default(none)
+    /*                #pragma omp parallel for default(none)
                 for (unsigned i = 0; i < _numberOfRows; i++){
                     for (unsigned j = 0; j < matrix.numberOfColumns(); j++){
                         for (unsigned k = 0; k < _numberOfColumns; k++){
@@ -281,7 +282,7 @@ namespace LinearAlgebra {
         Array<T> operator * (const T& scalar) const {
             Array<T> result(_numberOfRows, _numberOfColumns, _numberOfAisles);
             if (this->size() >= parallelizationThreshold){
-/*                #pragma omp parallel for default(none)
+    /*                #pragma omp parallel for default(none)
                 for (unsigned i = 0; i < _numberOfRows * _numberOfColumns * _numberOfAisles; i++){
                     result._array[i] = _array[i] * scalar;
                 }*/
@@ -318,7 +319,7 @@ namespace LinearAlgebra {
                 }
             }
         }
-
+    
         void SubtractIntoThis(const Array<T>& matrix){
             if (_numberOfRows == matrix.numberOfRows() && _numberOfColumns == matrix.numberOfColumns() && _numberOfAisles == matrix.numberOfAisles()){
                 for (int i = 0; i < _numberOfRows * _numberOfColumns * _numberOfAisles; ++i) {
@@ -326,7 +327,7 @@ namespace LinearAlgebra {
                 }
             }
         }
-
+    
         void MultiplyIntoThis(const Array<T>& matrix){
             if (_numberOfColumns == matrix.numberOfRows()){
                 Array<T> *product = new Array<T>(_numberOfRows, matrix.numberOfColumns(), _numberOfAisles);
@@ -346,7 +347,7 @@ namespace LinearAlgebra {
                 _array = product->array();
             }
         }
-
+    
         T& vectorElement(unsigned i){
             if (i >= size() || i < 0){
                 throw out_of_range ("Index should be between 0 and " + to_string(size()));
@@ -360,18 +361,18 @@ namespace LinearAlgebra {
             }
             return _array[i];
         }
-
+    
         
         //Number of Rows. Array size : Height
         const unsigned &numberOfRows() const {
             return _numberOfRows;
         }
-
+    
         //Number of Columns.Array size : Width
         const unsigned &numberOfColumns() const {
             return _numberOfColumns;
         }
-
+    
         //Number of Aisles. Array size : Depth
         const unsigned &numberOfAisles() const {
             return _numberOfAisles;
@@ -381,22 +382,26 @@ namespace LinearAlgebra {
             return _numberOfRows * _numberOfColumns * _numberOfAisles;
         }
         
-
+    
         //Boolean defining if 2d array is square
         bool isSquare(){
             return _numberOfRows == _numberOfColumns;
         }
-
+    
         //Boolean defining if the 3d array is cubic
         bool isCubic(){
             return _numberOfRows == _numberOfColumns && _numberOfColumns == _numberOfAisles;
         }
-
+    
         //Boolean defining if the matrix is a vector
         bool isVector(){
             return _numberOfColumns == _numberOfAisles == 1;
         }
-
+        
+        bool isPositiveDefinite(){
+            return isSymmetric() && isPositiveDefinite();
+        }
+    
         //Boolean defining if the matrix is symmetric
         bool isSymmetric(){
             if (isSquare()){
@@ -411,7 +416,7 @@ namespace LinearAlgebra {
             }
             return false;
         }
-
+    
         //Boolean defining if the matrix is diagonal
         bool isDiagonal(){
             if (isSquare()){
@@ -426,7 +431,7 @@ namespace LinearAlgebra {
             }
             return false;
         }
-
+    
         // Returns the pointer of the transpose of the matrix
         Array<T> transpose(){
             Array<T> transpose(_numberOfColumns, _numberOfRows, _numberOfAisles);
@@ -448,6 +453,16 @@ namespace LinearAlgebra {
             return *transpose;
         }
 
+        Array<T>* transposePtr(){
+            auto transpose = new Array<T>(_numberOfColumns, _numberOfRows, _numberOfAisles);
+            for (unsigned i = 0; i < _numberOfRows; i++){
+                for (unsigned j = 0; j < _numberOfColumns; j++){
+                    transpose->at(j,i) = _array[i * _numberOfColumns + j];
+                }
+            }
+            return transpose;
+        }
+    
         // Stores the transpose of the matrix in the given matrix
         void transposeIntoThis(){
             auto *transpose = new Array<T>(_numberOfColumns, _numberOfRows);
@@ -462,9 +477,9 @@ namespace LinearAlgebra {
             delete [] _array;
             _array = transpose->array();
         }
-
-
-
+    
+    
+    
         vector<T> getRow(unsigned row){
             vector<T> rowVector;
             for (int i = 0; i < _numberOfColumns; ++i) {
@@ -472,7 +487,7 @@ namespace LinearAlgebra {
             }
             return rowVector;
         }
-
+    
         vector<T> getColumn(unsigned column){
             vector<T> columnVector;
             for (int i = 0; i < _numberOfRows; ++i) {
@@ -480,7 +495,7 @@ namespace LinearAlgebra {
             }
             return columnVector;
         }
-
+    
         vector<T> getAisle(unsigned aisle){
             vector<T> aisleVector;
             for (int i = 0; i < _numberOfRows; ++i) {
@@ -491,8 +506,8 @@ namespace LinearAlgebra {
             return aisleVector;
         }
         
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "openmp-use-default-none"
+        #pragma clang diagnostic push
+        #pragma ide diagnostic ignored "openmp-use-default-none"
         //If the vector size is bigger than 1000 the multiplication will be performed in parallel with OpenMP
         vector<T> vectorMultiplication(vector<T> vector){
             if (vector.size() == _numberOfColumns){
@@ -520,10 +535,10 @@ namespace LinearAlgebra {
             }
             return vector;
         }
-#pragma clang diagnostic pop
+        #pragma clang diagnostic pop
             
-
-
+    
+    
         // Prints the matrix in the console
         void print(){
             for (int i = 0; i < _numberOfRows; ++i) {
@@ -532,9 +547,140 @@ namespace LinearAlgebra {
                 }
                 cout << endl;
             }
+    
+        }
+        
+        
+        //Returns a tuple with two Array<double> ptr with the decomposed matrices L and U.
+        tuple<Array<double>*, Array<double>*>LUdecomposition(){
+            if (!isSquare()){
+                throw invalid_argument("The matrix is not square");
+            }
+            auto n = _numberOfRows;
+            auto l = new Array<double>(_numberOfRows, _numberOfColumns);
+            auto u = new Array<double>(_numberOfRows, _numberOfColumns);
+            
+            //March through rows of A and L
+            for (int i = 0; i < n; ++i) {
+                //Calculate Upper Triangular Matrix U
+                //March through columns of A and U
+                for (int j = i; j < n; j++) {
+                    auto sum = 0.0;
+                    //March through columns of L and rows of U
+                    for (int k = 0; k < i; ++k) {
+                        sum += l->at(i, k) * u->at(k, j);
+                    }
+                    u->at(i, j) = _array[i * n + j] - sum;
+                }
+                //Calculate Lower Triangular Matrix L
+                for (int j = i; j < n ; ++j) {
+                    if (i == j){
+                        l->at(i, i) = 1;
+                    } else {
+                        auto sum = 0.0;
+                        for (int k = 0; k < i; ++k) {
+                            sum += l->at(j, k) * u->at(k, i);
+                        }
+                        l->at(j, i) = (_array[j * n + i] - sum) / u->at(i, i);
+                    }
+                }
+            }
+            return make_tuple(l, u);
+        }
+        
+        //Stores the decomposed matrices L and U in this matrix
+        void LUdecompositionOnMatrix(){
+            if (!isSquare()){
+                throw invalid_argument("The matrix is not square");
+            }
+            auto n = _numberOfRows;
+    
+            //March through rows of A and L
+            for (int i = 0; i < n; ++i) {
+                //Calculate Upper Triangular Matrix U
+                for (int j = i; j < n; j++) {
+                    auto sum = 0.0;
+                    //March through columns of L and rows of U
+                    for (int k = 0; k < i; ++k) {
+                        sum += _array[i * n + k] * _array[k * n + j];
+                    }
+                    _array[i * n + j] = _array[i * n + j] - sum;
+                }
+                //Calculate Lower Triangular Matrix L
+                for (int j = i + 1; j < n ; ++j) {
+                    auto sum = 0.0;
+                    for (int k = 0; k < i; ++k) {
+                        sum += _array[j * n + k] * _array[k * n + i];
+                    }
+                    _array[j * n + i] = (_array[j * n + i] - sum) / _array[i * n + i];
+                }
+                _array[i * n + i] = 1;
+            }
+        }
+        
+        //Performs the cholesky decomposition (A=LL^T) and returns L and L^T.
+        //Applies only to symmetric positive definite matrices
+        tuple<Array<double>*, Array<double>*> CholeskyDecomposition(){
+            if (!_isPositiveDefinite){
+                throw invalid_argument("The matrix is not square");
+            }
 
+            auto n = _numberOfRows;
+            auto l = new Array<double>(_numberOfRows, _numberOfColumns);
+
+            for (int i = 0; i < n; i++) {
+                double sum = 0.0;
+                for (int k = 0; k < i; k++) {
+                    sum += l->at(i, k) * l->at(i, k);
+                }
+                l->at(i, i) = sqrt(_array[i * n + i] - sum);
+
+                for (int j = i + 1; j < n; j++) {
+                    sum = 0.0;
+                    for (int k = 0; k < i; k++) {
+                        sum += l->at(j, k) * l->at(i, k);
+                    }
+                    l->at(j, i) = (_array[j * n + i] - sum) / l->at(i, i);
+                }
+            }
+            //Return the Cholesky Decomposition of the matrix (A=LL^T)
+            return make_tuple(l, l->transposePtr());
         }
 
+        void choleskyDecompositionOnMatrix(){
+            if (!_isPositiveDefinite){
+                throw std::invalid_argument("The matrix is not square");
+            }
+            auto n = _numberOfRows;
+
+            // March through rows of A and L
+            for (int i = 0; i < n; ++i) {
+                // Compute diagonal element
+                auto sum = 0.0;
+                for (int k = 0; k < i; ++k) {
+                    sum += _array[i * n + k] * _array[i * n + k];
+                }
+                _array[i * n + i] = sqrt(_array[i * n + i] - sum);
+
+                // Compute sub-diagonal elements
+                for (int j = i + 1; j < n ; ++j) {
+                    sum = 0.0;
+                    for (int k = 0; k < i; ++k) {
+                        sum += _array[j * n + k] * _array[i * n + k];
+                    }
+                    _array[j * n + i] = (_array[j * n + i] - sum) / _array[i * n + i];
+                }
+            }
+
+            // Store L and LT in the original object
+            for (int i = 0; i < n; ++i) {
+                for (int j = 0; j <= i; ++j) {
+                    _array[i * n + j] = _array[j * n + i];
+                }
+            }
+        }
+
+        
     private:
         // The 1D array that stores the matrix. It is stored in the heap
         T* _array;
@@ -544,123 +690,11 @@ namespace LinearAlgebra {
         unsigned _numberOfColumns;
         //Number of Aisles. Array size : Depth
         unsigned _numberOfAisles;
+        //Boolean that stores if the matrix is symmetric and has positive eigenvalues
+        bool _isPositiveDefinite;
     };
 
 } // Numerics
 
 #endif //UNTITLED_ARRAY_H
 
-
-
-/*
-        // Returns the value at the given row
-        T& element(unsigned row){
-            return _array[row];
-        }
-
-        // Returns the value at the given row and column
-        T& element(unsigned row, unsigned column){
-            return _array[row * _numberOfColumns + column];
-        }
-
-        // Returns the value at the given row, column and aisle
-        T& element(unsigned row, unsigned column, unsigned aisle){
-            return _array[row * _numberOfColumns * _numberOfAisles + column * _numberOfAisles + aisle];
-        }
-
-        //Populates the array element by value
-        void populateElement(unsigned row, T value){
-            _array[row] = value;
-        }
-
-*/
-/*        //Populates the array element by reference
-        void populateElement(unsigned row, T &value){
-            _array[row] = value;
-        }
-
-        //Populates the array element by pointer
-        void populateElement(unsigned row, T *value){
-            _array[row] = *value;
-        }*//*
-
-
-        //Populates the array element by value
-        void populateElement(unsigned row, unsigned column, T value){
-            _array[row * _numberOfColumns + column] = value;
-        }
-
-*/
-/*        //Populates the array element by reference
-        void populateElement(unsigned row, unsigned column, T &value){
-            _array[row * _numberOfColumns + column] = value;
-        }
-
-        //Populates the array element by pointer
-        void populateElement(unsigned row, unsigned column, T *value){
-            _array[row * _numberOfColumns + column] = *value;
-        }*//*
-
-
-        //Populates the array element by value
-        void populateElement(unsigned row, unsigned column, unsigned aisle, T value){
-            _array[row * _numberOfColumns * _numberOfAisles + column * _numberOfAisles + aisle] = value;
-        }
-
-*/
-/*        //Populates the array element by reference
-        void populateElement(unsigned row, unsigned column, unsigned aisle, T &value){
-            _array[row * _numberOfColumns * _numberOfAisles + column * _numberOfAisles + aisle] = value;
-        }
-
-        //Populates the array element by pointer
-        void populateElement(unsigned row, unsigned column, unsigned aisle, T *value){
-            _array[row * _numberOfColumns * _numberOfAisles + column * _numberOfAisles + aisle] = *value;
-        }*//*
-
-
-        //Returns the array element by value
-        T element_byValue (unsigned row){
-            return _array[row];
-        }
-
-        //Returns array[row] by reference
-        T &element_byReference (unsigned row){
-            return &_array[row];
-        }
-
-        //Returns array[row] by pointer
-        T *element_byPointer (unsigned row){
-            return *_array[row];
-        }
-
-        //Returns the array element by value
-        T element_byValue (unsigned row, unsigned column){
-            return _array[row * _numberOfColumns + column];
-        }
-
-        //Returns array[row][column] by reference
-        T &element_byReference (unsigned row, unsigned column){
-            return &_array[row * _numberOfColumns + column];
-        }
-
-        //Returns array[row][column] by pointer
-        T *element_byPointer (unsigned row, unsigned column){
-            return *_array[row * _numberOfColumns + column];
-        }
-
-        //Returns the array element by value
-        T element_byValue (unsigned row, unsigned column, unsigned aisle){
-            return _array[row * _numberOfColumns * _numberOfAisles + column * _numberOfAisles + aisle];
-        }
-
-        //Returns array[row][column][aisle] by reference
-        T &element_byReference (unsigned row, unsigned column, unsigned aisle){
-            return &_array[row * _numberOfColumns * _numberOfAisles + column * _numberOfAisles + aisle];
-        }
-
-        //Returns array[row][column][aisle] by pointer
-        T *element_byPointer (unsigned row, unsigned column, unsigned aisle){
-            return *_array[row * _numberOfColumns * _numberOfAisles + column * _numberOfAisles + aisle];
-        }
-*/

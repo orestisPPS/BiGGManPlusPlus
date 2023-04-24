@@ -9,7 +9,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "../../LinearAlgebra/Array.h"
+#include "../../LinearAlgebra/Array/Array.h"
 //#include "../../Discretization/Mesh/Mesh.h"
 
 using namespace std;

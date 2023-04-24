@@ -7,7 +7,7 @@
 
 
 #include "../../Node/Node.h"
-#include "../../../LinearAlgebra/Array.h"
+#include "../../../LinearAlgebra/Array/Array.h"
 using namespace LinearAlgebra;
 
 namespace Discretization{

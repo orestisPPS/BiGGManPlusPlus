@@ -4,7 +4,7 @@
 #pragma once
 #include<vector>
 #include "../Node/Node.h"
-#include "../../LinearAlgebra/Array.h"
+#include "../../LinearAlgebra/Array/Array.h"
 #include "../../StructuredMeshGeneration/MeshSpecs.h"
 #include "Metrics/Metrics.h"
 #include "GhostPseudoMesh/GhostPseudoMesh.h"

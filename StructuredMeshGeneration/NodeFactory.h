@@ -2,7 +2,7 @@
 // Created by hal9000 on 12/21/22.
 //
 #pragma once
-#include "/home/hal9000/code/BiGGMan++/LinearAlgebra/Array.h"
+#include "../LinearAlgebra/Array/Array.h"
 #include <utility>
 #include "../Discretization/Node/Node.h"
 #include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"

@@ -31,7 +31,7 @@ add_executable(untitled main.cpp
         StructuredMeshGeneration/NodeFactory.h
         StructuredMeshGeneration/MeshTest2D.cpp
         StructuredMeshGeneration/MeshTest2D.h
-        LinearAlgebra/Array.h
+        LinearAlgebra/Array/Array.h
         LinearAlgebra/Operations/TransformationTensors.h 
         Utility/Calculators.h
         LinearAlgebra/Operations/Transformations.cpp

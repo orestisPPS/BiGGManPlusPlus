@@ -8,7 +8,7 @@
 #include <vector>
 #include <cmath>
 #include <limits>
-#include "../Array.h"
+#include "../Array/Array.h"
 #include "../../PositioningInSpace/DirectionsPositions.h"
 using namespace PositioningInSpace;
 #include "../../Utility/Calculators.h"
