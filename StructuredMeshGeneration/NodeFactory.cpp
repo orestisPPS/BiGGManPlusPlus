@@ -30,7 +30,7 @@ namespace StructuredMeshGenerator{
     void NodeFactory :: createNodesArray(SpaceEntityType space){
         switch (space) {
             case SpaceEntityType::Axis:
-                nodesMatrix = new Array<Node*>(_nn1, 1);
+                nodesMatrix = new Array<Node*>(_nn1, unsigned (1));
                 create1DBoundaryNodes(_nn1);
                 create1DInternalNodes(_nn1);
                 assign1DGlobalId();

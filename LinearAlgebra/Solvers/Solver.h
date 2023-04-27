@@ -7,6 +7,7 @@
 
 #include "../Array/Array.h"
 #include "../Norms/VectorNorm.h"
+#include "../AnalysisLinearSystem.h"
 
 namespace LinearAlgebra {
     
@@ -18,17 +19,19 @@ namespace LinearAlgebra {
 
     class Solver {
         
-        Solver(Array<double>* Matrix, vector<double>* RHS);
+    public:
         
+        void setLinearSystem(AnalysisLinearSystem* linearSystem);
+
         SolverType type();
-        
-    private:
-        Array<double>* _matrix;
-        
-        vector<double>* _rhs;
+
+        virtual void solve();
+
+
+    protected:
+        AnalysisLinearSystem* _linearSystem;        
         
         SolverType _solverType;
-        
     };
 
 } // LinearAlgebra

@@ -72,8 +72,8 @@ add_executable(untitled main.cpp
         Analysis/FiniteDifferenceAnalysis/StStFDTest.h
         Analysis/FiniteDifferenceAnalysis/StStFDTest.cpp
         DegreesOfFreedom/DegreesOfFreedomCategorization.h
-        LinearAlgebra/LinearSystem.h 
-        LinearAlgebra/LinearSystem.cpp
+        LinearAlgebra/AnalysisLinearSystem.h
+        LinearAlgebra/AnalysisLinearSystem.cpp
         Discretization/Node/IsoparametricNodeGraph.h
         Discretization/Node/IsoparametricNodeGraph.cpp
         Utility/Exporters/Exporters.h Utility/Exporters/Exporters.cpp
@@ -91,6 +91,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Iterative/IterativeSolver.h 
         LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp
         LinearAlgebra/FiniteDifferences/FiniteDifferenceScheme.cpp 
-        LinearAlgebra/FiniteDifferences/FDSchemeType.h LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeWeightsCalculator.h LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeWeightsCalculator.cpp)
+        LinearAlgebra/FiniteDifferences/FDSchemeType.h LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeWeightsCalculator.h LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeWeightsCalculator.cpp LinearAlgebra/Solvers/Direct/LU.h LinearAlgebra/Solvers/Direct/LU.cpp LinearAlgebra/Solvers/Direct/DirectSolver.h LinearAlgebra/Solvers/Direct/DirectSolver.cpp LinearAlgebra/LinearSystem.h LinearAlgebra/LinearSystem.cpp LinearAlgebra/Solvers/Direct/Cholesky.h LinearAlgebra/Solvers/Direct/Cholesky.cpp LinearAlgebra/Array/DecompositionMethods/LUP.h LinearAlgebra/Array/DecompositionMethods/LUP.cpp)
         
         

@@ -3,7 +3,7 @@
 //
 
 #include "SteadyStateFiniteDifferenceAnalysis.h"
-#include "../../LinearAlgebra/LinearSystem.h"
+#include "../../LinearAlgebra/AnalysisLinearSystem.h"
 
 namespace NumericalAnalysis {
     
@@ -11,7 +11,7 @@ namespace NumericalAnalysis {
         SteadyStateMathematicalProblem *mathematicalProblem, Mesh *mesh, FDSchemeSpecs *schemeSpecs) :
         FiniteDifferenceAnalysis(mathematicalProblem, mesh, schemeSpecs){
         degreesOfFreedom = initiateDegreesOfFreedom();
-        auto linearSystem = new LinearSystem(degreesOfFreedom, mesh);
+        auto linearSystem = new AnalysisLinearSystem(degreesOfFreedom, mesh);
         linearSystem->createLinearSystem();
         
         auto fileNameMatlab = "linearSystem.m";

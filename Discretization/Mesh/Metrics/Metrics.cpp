@@ -6,7 +6,7 @@
 
 namespace Discretization{
     
-        Metrics::Metrics(Node* node, short unsigned dimensions) {
+        Metrics::Metrics(Node* node, unsigned dimensions) {
             this->node = node;
             covariantBaseVectors = new map<Direction, vector<double>>();
             contravariantBaseVectors = new map<Direction, vector<double>>();

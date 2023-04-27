@@ -12,7 +12,7 @@ namespace LinearAlgebra {
     
     vector<double> FiniteDifferenceSchemeWeightsCalculator::calculateWeights(unsigned derivativeOrder, vector<double>& positions) {
         auto weights = vector<double>();
-        auto numberOfPoints = positions.size();
+        auto numberOfPoints = static_cast<unsigned >(positions.size());
 
         
         auto A = Array<double>(numberOfPoints, numberOfPoints);

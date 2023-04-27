@@ -1,134 +1,77 @@
 //
-// Created by hal9 000 on 3/28/23.
+// Created by hal9000 on 4/25/23.
 //
 
+#include <fstream>
 #include "LinearSystem.h"
 
 namespace LinearAlgebra {
     
-    
-    
-    LinearSystem::LinearSystem(AnalysisDegreesOfFreedom* analysisDegreesOfFreedom, Mesh* mesh) {
-        this->_analysisDegreesOfFreedom = analysisDegreesOfFreedom;
-        this->_mesh = mesh;
-        numberOfFreeDOFs = new unsigned(_analysisDegreesOfFreedom->freeDegreesOfFreedom->size());
-        numberOfFixedDOFs = new unsigned(_analysisDegreesOfFreedom->fixedDegreesOfFreedom->size());
-        numberOfDOFs = new unsigned(_analysisDegreesOfFreedom->totalDegreesOfFreedomMap->size());
-        matrix = new Array<double>(*numberOfDOFs, *numberOfDOFs);
-        _freeDOFMatrix = new Array<double>(*numberOfFreeDOFs, *numberOfFreeDOFs);
-        _fixedDOFMatrix = new Array<double>(*numberOfFixedDOFs, *numberOfDOFs);
-        RHS = new vector<double>(*numberOfFreeDOFs);
-        _parametricCoordToNodeMap = _mesh->createParametricCoordToNodesMap();
-        //matrix->print();
+    LinearSystem::LinearSystem() {
+        matrix = nullptr;
+        RHS = nullptr;
+        solution = nullptr;
     }
-        
+    
     LinearSystem::~LinearSystem() {
         delete matrix;
         delete RHS;
-        delete numberOfFreeDOFs;
-        delete numberOfFixedDOFs;
-        delete numberOfDOFs;
-        _mesh = nullptr;
+        delete solution;
     }
     
-    void LinearSystem::createLinearSystem() {
-        _createMatrix();
-        _createRHS();
+    void LinearSystem::setLinearSystem(Array<double> *inputMatrix, vector<double> *inputRHS) {
+        this->matrix = inputMatrix;
+        this->RHS = inputRHS;
     }
-    
-    void LinearSystem::_createMatrix() {
-        _createFixedDOFSubMatrix();
-        _createFreeDOFSubMatrix();
-    }
-    
-    void LinearSystem::_createFreeDOFSubMatrix() {
-        for (auto &dof: *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
-            //Node with the DOF
-            auto node = _mesh->nodeFromID(*dof->parentNode);
 
-            auto dofGraph =
-                    IsoParametricNodeGraph(node, 1, _parametricCoordToNodeMap, _mesh->numberOfNodesPerDirection).
-                    getSpecificDOFGraph(dof->type());
-            unsigned positionI = *dof->id->value;
-            _freeDOFMatrix->at(positionI, positionI) = 2;
+    void LinearSystem::exportToMatlabFile(const string& fileName, const string& filePath, bool printSolution) const {
 
-            //J Position in the matrix (neighbouring free DOF id)
-            for (auto &neighbour: *dofGraph) {
-                for (auto &neighbourDof: neighbour.second) {
-                    if (neighbourDof->id->constraintType() == Free) {
-                        unsigned positionJ = *neighbourDof->id->value;
-                        _freeDOFMatrix->at(positionI, positionJ) = 1;
-                    }
-                }
+        ofstream outputFile(filePath + fileName);
+
+        // Write the matrix to the file
+        outputFile << "A = [";
+        for (int i = 0; i < matrix->numberOfRows(); i++) {
+            for (int j = 0; j < matrix->numberOfColumns(); j++) {
+                outputFile << matrix->at(i, j) << " ";
             }
-            delete dofGraph;
-            dofGraph = nullptr;
-        }
-        matrix = _freeDOFMatrix;
-        _freeDOFMatrix = nullptr;
-        
-        cout<<"Free DOF Matrix"<<endl;
-        //matrix->print();
-        cout << "  " << endl;
-
-    }
-    
-    void LinearSystem::_createFixedDOFSubMatrix() {
-        for (auto &dof: *_analysisDegreesOfFreedom->fixedDegreesOfFreedom) {
-            //Node with the DOF
-            auto node = _mesh->nodeFromID(*dof->parentNode);
-            auto dofGraph =
-                    IsoParametricNodeGraph(node, 1, _parametricCoordToNodeMap, _mesh->numberOfNodesPerDirection).
-                            getSpecificDOFGraph(dof->type());
-            unsigned positionI;
-            unsigned positionJ;
-            
-            positionI = *dof->id->value;
-            positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
-            _fixedDOFMatrix->at(positionI, positionJ) = 2;
-            
-            for (auto &neighbour: *dofGraph) {
-                for (auto &neighbourDof: neighbour.second) {
-                    positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(neighbourDof);
-                    _fixedDOFMatrix->at(positionI, positionJ) = 1;
-                }
+            if (i < matrix->size() - 1) {
+                outputFile << "; ";
             }
-            delete dofGraph;
-            dofGraph = nullptr;
         }
-        cout<<"Fixed DOF Matrix"<<endl;
-        //_fixedDOFMatrix->print();
+        outputFile << "];" << endl;
+
+        // Write the vector to the file
+        outputFile << "b = [";
+        for (double i: *RHS) {
+            outputFile << i << " ";
+        }
+        outputFile << "]';" << endl;
+
+        // Write the command to solve the system
+        outputFile << "x = A \\ b;" << endl;
+
+        // Write the command to solve the system
+        outputFile << "x = A \\ b;" << endl;
+
+        outputFile << "[L, U] = lu(A);" << endl;
+
+
+        if (printSolution) {
+/*            // Write the command to create a grid for evaluating the solution
+            outputFile << "[X,Y] = meshgrid(0:0.1:1, 0:0.1:1);" << endl;
+
+            // Write the command to evaluate the solution at each point on the grid
+            outputFile << "Z = x(1)*X + x(2)*Y + x(3);" << endl;
+
+            // Write the command to plot the solution
+            outputFile << "figure;" << endl;
+            outputFile << "surf(X,Y,Z);" << endl;
+            outputFile << "xlabel('x');" << endl;
+            outputFile << "ylabel('y');" << endl;
+            outputFile << "zlabel('z');" << endl;
+            outputFile << "colorbar;" << endl;
+        }*/
+            outputFile.close();
+        }
     }
-        
-    void LinearSystem::_createRHS() {
-        //Marching through all the free DOFs
-        for (auto &dof: *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
-            auto node = _mesh->nodeFromID(*dof->parentNode);
-            
-            //Get all the neighbouring DOFs with the same type
-            auto dofGraph =
-                    IsoParametricNodeGraph(node, 1, _parametricCoordToNodeMap, _mesh->numberOfNodesPerDirection).
-                            getSpecificDOFGraph(dof->type());
-            //Marching through all the neighbouring DOFs
-            for (auto &neighbour: *dofGraph) {
-                for (auto &neighbourDof: neighbour.second) {
-                    //Check if the neighbouring DOF is fixed 
-                    if (neighbourDof->id->constraintType() == Fixed) {
-                        unsigned i = *neighbourDof->id->value;
-                        unsigned j = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
-                        RHS->at(*dof->id->value) -= _fixedDOFMatrix->at(i, j) * neighbourDof->value();
-                    }
-                }
-            }            
-            delete dofGraph;
-            dofGraph = nullptr;
-        }
-        delete _fixedDOFMatrix;
-        _fixedDOFMatrix = nullptr;
-        
-        //print vector
-        for (auto &value: *RHS) {
-            cout << value << endl;
-        }
-    }
-}// LinearAlgebra
+} // LinearAlgebra

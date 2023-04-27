@@ -8,9 +8,12 @@
 #define UNTITLED_ARRAY_H
 
 #include <iostream>
+#include <tuple>
 #include <vector>
+#include "cmath"
 #include <limits>
 #include <omp.h>
+#include <memory>
 
 using namespace std;
 
@@ -157,7 +160,7 @@ namespace LinearAlgebra {
         // Overloaded assignment operator
         Array<T>& operator = (const Array<T>& matrix){
             if (_numberOfRows != matrix._numberOfRows || _numberOfColumns != matrix._numberOfColumns || _numberOfAisles != matrix._numberOfAisles) {
-                throw out_of_range("Matrix dimensions do not match");
+                throw out_of_range("matrix dimensions do not match");
             }
                 _numberOfRows = matrix.numberOfRows();
                 _numberOfColumns = matrix.numberOfColumns();
@@ -330,7 +333,7 @@ namespace LinearAlgebra {
     
         void MultiplyIntoThis(const Array<T>& matrix){
             if (_numberOfColumns == matrix.numberOfRows()){
-                Array<T> *product = new Array<T>(_numberOfRows, matrix.numberOfColumns(), _numberOfAisles);
+                auto *product = new Array<T>(_numberOfRows, matrix.numberOfColumns(), _numberOfAisles);
                 for (int i = 0; i < _numberOfRows; ++i) {
                     for (int j = 0; j < matrix.numberOfColumns(); ++j) {
                         T sum = 0;
@@ -347,16 +350,38 @@ namespace LinearAlgebra {
                 _array = product->array();
             }
         }
+
+        // Swap the elements of the i-th and j-th rows of the matrix
+        void swapRows(unsigned i, unsigned j) {
+            if (i == j) return; // No need to swap if i and j are the same
+            // Swap the elements of the i-th and j-th rows
+            for (unsigned k = 0; k < _numberOfColumns; ++k) {
+                T temp = (*this)(i, k);
+                (*this)(i, k) = (*this)(j, k);
+                (*this)(j, k) = temp;
+            }
+        }
+        
+        // Swap the elements of the i-th and j-th columns of the matrix
+        void swapColumns(unsigned i, unsigned j) {
+            if (i == j) return; // No need to swap if i and j are the same
+            // Swap the elements of the i-th and j-th columns
+            for (unsigned k = 0; k < _numberOfRows; ++k) {
+                T temp = (*this)(k, i);
+                (*this)(k, i) = (*this)(k, j);
+                (*this)(k, j) = temp;
+            }
+        }
     
         T& vectorElement(unsigned i){
-            if (i >= size() || i < 0){
+            if (i >= size()){
                 throw out_of_range ("Index should be between 0 and " + to_string(size()));
             }
             return _array[i];
         }
         
         const T &vectorElement(unsigned i) const {
-            if (i >= size() || i < 0){
+            if (i >= size()){
                 throw out_of_range ("Index should be between 0 and " + to_string(size()));
             }
             return _array[i];
@@ -549,43 +574,44 @@ namespace LinearAlgebra {
             }
     
         }
-        
-        
-        //Returns a tuple with two Array<double> ptr with the decomposed matrices L and U.
-        tuple<Array<double>*, Array<double>*>LUdecomposition(){
-            if (!isSquare()){
+
+
+// LU decomposition of a square matrix using Doolittle's algorithm
+// Returns a tuple with two Array<double> pointers for the decomposed matrices L and U
+        tuple<Array<double>*, Array<double>*> LUdecomposition() {
+            if (!isSquare()) {
                 throw invalid_argument("The matrix is not square");
             }
-            auto n = _numberOfRows;
-            auto l = new Array<double>(_numberOfRows, _numberOfColumns);
-            auto u = new Array<double>(_numberOfRows, _numberOfColumns);
-            
-            //March through rows of A and L
-            for (int i = 0; i < n; ++i) {
-                //Calculate Upper Triangular Matrix U
-                //March through columns of A and U
+            unsigned n = _numberOfRows;
+            auto l = new Array<double>(n, n);
+            auto u = new Array<double>(n, n);
+
+            for (int i = 0; i < n; i++) {
+                // Upper Triangular matrix U
                 for (int j = i; j < n; j++) {
-                    auto sum = 0.0;
-                    //March through columns of L and rows of U
-                    for (int k = 0; k < i; ++k) {
+                    double sum = 0;
+                    for (int k = 0; k < i; k++) {
                         sum += l->at(i, k) * u->at(k, j);
                     }
                     u->at(i, j) = _array[i * n + j] - sum;
                 }
-                //Calculate Lower Triangular Matrix L
-                for (int j = i; j < n ; ++j) {
-                    if (i == j){
-                        l->at(i, i) = 1;
+
+                // Lower Triangular matrix L
+                for (int j = i; j < n; j++) {
+                    if (i == j) {
+                        l->at(i, j) = 1;
                     } else {
-                        auto sum = 0.0;
-                        for (int k = 0; k < i; ++k) {
+                        double sum = 0;
+                        for (int k = 0; k < i; k++) {
                             sum += l->at(j, k) * u->at(k, i);
                         }
                         l->at(j, i) = (_array[j * n + i] - sum) / u->at(i, i);
                     }
                 }
             }
-            return make_tuple(l, u);
+
+            auto LU = make_tuple(l, u);
+            return LU;
         }
         
         //Stores the decomposed matrices L and U in this matrix
@@ -597,7 +623,7 @@ namespace LinearAlgebra {
     
             //March through rows of A and L
             for (int i = 0; i < n; ++i) {
-                //Calculate Upper Triangular Matrix U
+                //Calculate Upper Triangular matrix U
                 for (int j = i; j < n; j++) {
                     auto sum = 0.0;
                     //March through columns of L and rows of U
@@ -606,7 +632,7 @@ namespace LinearAlgebra {
                     }
                     _array[i * n + j] = _array[i * n + j] - sum;
                 }
-                //Calculate Lower Triangular Matrix L
+                //Calculate Lower Triangular matrix L
                 for (int j = i + 1; j < n ; ++j) {
                     auto sum = 0.0;
                     for (int k = 0; k < i; ++k) {
@@ -627,7 +653,7 @@ namespace LinearAlgebra {
 
             auto n = _numberOfRows;
             auto l = new Array<double>(_numberOfRows, _numberOfColumns);
-
+            auto lT = new Array<double>(_numberOfRows, _numberOfColumns);
             for (int i = 0; i < n; i++) {
                 double sum = 0.0;
                 for (int k = 0; k < i; k++) {
@@ -643,11 +669,18 @@ namespace LinearAlgebra {
                     l->at(j, i) = (_array[j * n + i] - sum) / l->at(i, i);
                 }
             }
+            //Compute LT
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    lT->at(i, j) = l->at(j, i);
+                }
+            }
             //Return the Cholesky Decomposition of the matrix (A=LL^T)
-            return make_tuple(l, l->transposePtr());
+            auto LLT = tuple<Array<double>*, Array<double>*>(l, lT);
+            return LLT;
         }
 
-        void choleskyDecompositionOnMatrix(){
+        void CholeskyDecompositionOnMatrix(){
             if (!_isPositiveDefinite){
                 throw std::invalid_argument("The matrix is not square");
             }

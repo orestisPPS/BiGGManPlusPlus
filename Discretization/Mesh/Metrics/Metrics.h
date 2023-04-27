@@ -14,7 +14,7 @@ namespace Discretization{
     class Metrics {
         
     public:
-        Metrics(Node* node, short unsigned dimensions);
+        Metrics(Node* node, unsigned dimensions);
         
         // Contains the covariant base vectors at all Directions of the domain.
         // In mathematics, a set of covariant base vectors is a set of basis vectors used to define a coordinate system 
