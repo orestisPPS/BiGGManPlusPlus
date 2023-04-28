@@ -6,6 +6,7 @@
 #define UNTITLED_DIRECTSOLVER_H
 
 #include "../Solver.h"
+#include "../../Array/DecompositionMethods/MatrixDecomposition.h"
 
 namespace LinearAlgebra {
 
@@ -14,27 +15,20 @@ namespace LinearAlgebra {
     public:
         
         explicit DirectSolver(bool storeDecompositionOnMatrix);
+
+        unique_ptr<LinearSystem> getLinearSystem();
+
+        virtual void setLinearSystem(LinearSystem* linearSystem);
+
+        virtual unique_ptr<MatrixDecomposition> getDecomposition();
+        
+        virtual void solve();
         
     protected:
         
-        bool _storeDecompositionOnMatrix;
-
-        /**
-         * @brief _forwardSubstitution
-         * @param L (lower triangular matrix)
-         * @param RHS (right hand side vector of the linear system)
-         * @return solution vector (y) -> L*y = RHS
-        */
-        static vector<double>* _forwardSubstitution(Array<double>* L, const vector<double>* RHS);
+        LinearSystem* _linearSystem;
         
-        /**
-         * @brief _backwardSubstitution
-         * @param U (upper triangular matrix)
-         * @param RHS (right hand side vector of the linear system)
-         * @return b (solution vector) -> U*b = RHS
-        */
-        static vector<double>* _backwardSubstitution(Array<double>* U, const vector<double>* RHS);
-
+        bool _storeDecompositionOnMatrix;
     };
 
 } // LinearAlgebra

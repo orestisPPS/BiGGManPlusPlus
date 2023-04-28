@@ -6,36 +6,24 @@
 
 namespace LinearAlgebra {
     
-    DirectSolver::DirectSolver(bool storeDecompositionOnMatrix) : Solver() {
-        _storeDecompositionOnMatrix = storeDecompositionOnMatrix;
-        _solverType = SolverType::Direct;
+    DirectSolver::DirectSolver(bool storeDecompositionOnMatrix) :
+                    Solver(),
+                    _storeDecompositionOnMatrix(storeDecompositionOnMatrix),
+                    _linearSystem(nullptr){}
 
-    }
-
-
-    vector<double>* DirectSolver:: _forwardSubstitution(Array<double>* L, const vector<double>* RHS) {
-     unsigned int n = L->numberOfRows();
-     auto y = new vector<double>(n, 0.0);
-     for (int i = 0; i < n; ++i) {
-         y->at(i) = RHS->at(i);
-         for (int j = 0; j < i; ++j) {
-             y->at(i) -= L->at(i, j) * y->at(j);
-         }
-         y->at(i) /= L->at(i, i);
-     }   
-     return y;
-    }
-     
-    vector<double>* DirectSolver:: _backwardSubstitution(Array<double>* U, const vector<double>* RHS) {
-        unsigned int n = U->numberOfRows();
-        auto y = new vector<double>(n, 0.0);
-        for (int i = n - 1; i >= 0; --i) {
-            y->at(i) = RHS->at(i);
-            for (int j = i + 1; j < n; ++j) {
-                y->at(i) -= U->at(i, j) * y->at(j);
-            }
-            y->at(i) /= U->at(i, i);
+    unique_ptr<LinearSystem> DirectSolver::getLinearSystem() {
+        if (_linearSystem == nullptr) {
+            throw runtime_error("LinearSystem is not set");
         }
-        return y;
+        return unique_ptr<LinearSystem>(_linearSystem);
     }
+    
+    unique_ptr<MatrixDecomposition> DirectSolver::getDecomposition() {
+        return nullptr;
+    }
+    
+    void DirectSolver::solve() { }
+    
+    void DirectSolver::setLinearSystem(LinearSystem* linearSystem) { }
+    
 } // LinearAlgebra

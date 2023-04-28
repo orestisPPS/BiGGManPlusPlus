@@ -8,6 +8,7 @@
 
 #include "../../Node/Node.h"
 #include "../../../LinearAlgebra/Array/Array.h"
+#include "../../../LinearAlgebra/Operations/VectorOperations.h"
 using namespace LinearAlgebra;
 
 namespace Discretization{
@@ -28,11 +29,11 @@ namespace Discretization{
         
         Array<double> *covariantTensor;
 
-        void calculateCovariantTensor();
+        void calculateCovariantTensor() const;
 
         Array<double> *contravariantTensor;
         
-        void calculateContravariantTensor();
+        void calculateContravariantTensor() const;
         
         double* jacobian;
         

@@ -6,7 +6,7 @@
 
 namespace LinearAlgebra {
     
-    void Solver::setLinearSystem(AnalysisLinearSystem* linearSystem){
+    void Solver::setLinearSystem(AnalysisLinearSystemInitializer* linearSystem){
         _linearSystem = linearSystem;
     }
     

@@ -576,7 +576,7 @@ namespace LinearAlgebra {
         }
 
 
-// LU decomposition of a square matrix using Doolittle's algorithm
+// SolverLUP decomposition of a square matrix using Doolittle's algorithm
 // Returns a tuple with two Array<double> pointers for the decomposed matrices L and U
         tuple<Array<double>*, Array<double>*> LUdecomposition() {
             if (!isSquare()) {

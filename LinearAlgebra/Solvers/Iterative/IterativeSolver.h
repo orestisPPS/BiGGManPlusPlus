@@ -6,19 +6,19 @@
 #define UNTITLED_ITERATIVESOLVER_H
 
 #include "../Solver.h"
-#include "../../AnalysisLinearSystem.h"
+#include "../../AnalysisLinearSystemInitializer.h"
 #include "../../Norms/VectorNorm.h"
 
 namespace LinearAlgebra {
 
     class IterativeSolver : public Solver {
     public:
-        IterativeSolver(AnalysisLinearSystem* linearSystem,
+        IterativeSolver(AnalysisLinearSystemInitializer* linearSystem,
                         VectorNormType normType, double tolerance, unsigned maxIterations);
 
         ~IterativeSolver();
         
-        AnalysisLinearSystem* linearSystem;
+        AnalysisLinearSystemInitializer* linearSystem;
         
         VectorNormType normType;
         

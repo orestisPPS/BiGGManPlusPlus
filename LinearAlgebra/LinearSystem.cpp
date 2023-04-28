@@ -7,22 +7,17 @@
 
 namespace LinearAlgebra {
     
-    LinearSystem::LinearSystem() {
-        matrix = nullptr;
-        RHS = nullptr;
-        solution = nullptr;
-    }
+    LinearSystem::LinearSystem(Array<double> *inputMatrix, vector<double> *inputRHS) :
+            matrix(inputMatrix),
+            RHS(inputRHS),
+            solution(nullptr) {}
     
     LinearSystem::~LinearSystem() {
         delete matrix;
         delete RHS;
         delete solution;
     }
-    
-    void LinearSystem::setLinearSystem(Array<double> *inputMatrix, vector<double> *inputRHS) {
-        this->matrix = inputMatrix;
-        this->RHS = inputRHS;
-    }
+
 
     void LinearSystem::exportToMatlabFile(const string& fileName, const string& filePath, bool printSolution) const {
 

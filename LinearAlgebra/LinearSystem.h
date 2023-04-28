@@ -13,12 +13,10 @@ namespace LinearAlgebra {
         
     public:
         
-        LinearSystem();
+        LinearSystem(Array<double> *matrix, vector<double> *rhs);
         
         ~LinearSystem();
-        
-        void setLinearSystem(Array<double> *matrix, vector<double> *rhs);
-        
+
         Array<double>* matrix;
         
         vector<double>* RHS;

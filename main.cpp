@@ -9,15 +9,15 @@ using namespace LinearAlgebra;
 #include "BoundaryConditions/DomainBoundaryConditions.h"
 #include "DegreesOfFreedom/DegreeOfFreedomTypes.h"
 #include "Analysis/FiniteDifferenceAnalysis/StStFDTest.h"
-#include "LinearAlgebra/Array/DecompositionMethods/LUP.h"
+#include "LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.h"
 #include <functional>
 #include <list>
 int main() {
 
-    //auto test = new StructuredMeshGenerator::MeshTest2D();
-    //auto analysisTest = new NumericalAnalysis::StStFDTest();
+    auto test = new StructuredMeshGenerator::MeshTest2D();
+    auto analysisTest = new NumericalAnalysis::StStFDTest();
     
-    unsigned int n = 3;
+/*    unsigned int n = 3;
     auto LU = new Array<double>(n, n);
     LU->at(0, 0) = 2;
     LU->at(0, 1) = 1;
@@ -29,7 +29,7 @@ int main() {
     LU->at(2, 1) = 3;
     LU->at(2, 2) = 5;
     
-    auto lup = new LUP(LU);
+    auto lup = new DecompositionLUP(LU);
     lup->decompose(false);
     auto l = lup->getL();
     l->print();
@@ -42,7 +42,7 @@ int main() {
     auto solution = lup->solve(new vector<double>(n, 1));
     for (auto i = 0; i < n; i++){
         cout << solution->at(i) << endl;
-    }
+    }*/
     
     
     

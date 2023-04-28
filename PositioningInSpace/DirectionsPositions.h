@@ -25,6 +25,11 @@ namespace PositioningInSpace {
         {{Direction::One,   0},
          {Direction::Two,   1},
          {Direction::Three, 2}};
+    
+    static map<unsigned, Direction> unsignedToSpatialDirection =
+        {{0, Direction::One},
+         {1, Direction::Two},
+         {2, Direction::Three}};
 
     //static list<Direction> directions = {Direction::One, Direction::Two, Direction::Three};
 

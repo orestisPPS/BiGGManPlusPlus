@@ -26,7 +26,7 @@ namespace NumericalAnalysis {
         auto specs = new StructuredMeshGenerator::MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto space = (PositioningInSpace::Plane);
         auto mesh = StructuredMeshGenerator::MeshFactory(specs).mesh;
-        mesh->calculateMeshMetrics(PositioningInSpace::Template);
+        mesh->calculateMeshMetrics(PositioningInSpace::Template, false);
         return mesh;            
     }
     
