@@ -72,7 +72,7 @@ namespace Discretization {
         }
         return dofGraph;
     }
-    
+    //TODO Debug this
     map<Direction, vector<Node*>>* IsoParametricNodeGraph::getColinearNodes() const{
          auto coLinearNodes = new map<Direction, vector<Node*>>();
 
@@ -97,7 +97,7 @@ namespace Discretization {
                         coLinearNodes->insert(pair<Direction, vector<Node*>>(Two, mergedNodes));
                         coLinearNodes->at(Two)[position1.second.size() + position2.second.size()] = _node;
                     }
-                    else if (n1[2] + n1[2] == 0 && n1[2] != 0){
+                    else if (n1[2] + n2[2] == 0 && n1[2] != 0){
                         auto mergedNodes = vector<Node*>(position1.second.size() + position2.second.size() + 1);
                         std::merge(position1.second.begin(), position1.second.end(),
                                    position2.second.begin(), position2.second.end(),
@@ -116,11 +116,11 @@ namespace Discretization {
                 coLinearNodes->erase(direction.first);
             //coLinearNodes->at(direction.first).push_back(_node);
             std::sort(
-                    coLinearNodes->at(direction.first).begin(), coLinearNodes->at(direction.first).end(), [i](Node* a, Node* b) {
-                auto coords1 = a->coordinates.positionVector(Parametric);
-                auto coords2 = b->coordinates.positionVector(Parametric);
-                return coords1[i] < coords2[i];
-            });
+                    coLinearNodes->at(direction.first).begin(), coLinearNodes->at(direction.first).end(), [direction](Node* a, Node* b) {
+                        auto coords1 = a->coordinates.positionVector(Parametric);
+                        auto coords2 = b->coordinates.positionVector(Parametric);
+                        return coords1[spatialDirectionToUnsigned[direction.first]] < coords2[spatialDirectionToUnsigned[direction.first]];
+                    });
             i++;
         }
         return coLinearNodes;
