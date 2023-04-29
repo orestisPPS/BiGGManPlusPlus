@@ -131,8 +131,6 @@ namespace Discretization {
             throw std::runtime_error("Mesh has not been initialized");
     }
     
-    
-    
     void Mesh::cleanMeshDataStructures() {
         //search all boundaryNodes map and deallocate all vector pointer values
         for (auto &boundary : *boundaryNodes) {
@@ -184,62 +182,59 @@ namespace Discretization {
                 auto templateCoordsMap= graph->getColinearNodalCoordinate(coordinateSystem);
                 auto parametricCoordsMap = graph->getColinearNodalCoordinate(Parametric);
                 
+                cout<<"Node : "<<*node->id.global<<endl;
+
                 auto nodeMetrics = new Metrics(node, dimensions());
+                auto directionsVector = directions();
                 //March through all the directions and calculate the metrics
-                for (auto &direction : directions()) {
-                    if (isUniformMesh){
-                        //Get the FD scheme weights for the current direction
-                        auto weights = schemeBuilder->getSchemeWeightsAtDirection(direction);
+                for (auto &directionI : directionsVector) {
+                    auto covariantWeights = FiniteDifferenceSchemeWeightsCalculator::
+                         calculateWeights(1, templateCoordsMap[directionI]);
+                    auto contravariantWeights = FiniteDifferenceSchemeWeightsCalculator::
+                         calculateWeights(1, parametricCoordsMap[directionI]);
+                    
+                    for (auto &directionJ : directionsVector){
+                        if (isUniformMesh){
+                            //Get the FD scheme weights for the current direction
+                            auto weights = schemeBuilder->getSchemeWeightsAtDirection(directionI);
 
-                        //Check if the number of weights and the number of nodes match
-                        if (weights.size() != templateCoordsMap[direction].size())
-                            throw std::runtime_error("Number of weights and number of template nodal coords do not match"
-                                                     " for node " + to_string(*node->id.global) +
-                                                     " in direction " + to_string(direction) +
-                                                     "Cannot calculate covariant base vectors");
+                            //Check if the number of weights and the number of nodes match
+                            if (weights.size() != templateCoordsMap[directionI].size())
+                                throw std::runtime_error("Number of weights and number of template nodal coords do not match"
+                                                         " for node " + to_string(*node->id.global) +
+                                                         " in direction " + to_string(directionI) +
+                                                         "Cannot calculate covariant base vectors");
 
-                        if (weights.size() != parametricCoordsMap[direction].size())
-                            throw std::runtime_error("Number of weights and number of parametric nodal coords do not match"
-                                                     " for node " + to_string(*node->id.global) +
-                                                     " in direction " + to_string(direction) +
-                                                     "Cannot calculate contravariant base vectors");
+                            if (weights.size() != parametricCoordsMap[directionI].size())
+                                throw std::runtime_error("Number of weights and number of parametric nodal coords do not match"
+                                                         " for node " + to_string(*node->id.global) +
+                                                         " in direction " + to_string(directionI) +
+                                                         "Cannot calculate contravariant base vectors");
 
-                        auto g_i = vector<double>(weights.size());
+                            auto covariant_g_i = vector<double>(weights.size());
+                            auto contravariant_g_i = vector<double>(weights.size());
 
-                        //Covariant base vectors (dr_i/dξ_i)
-                        //g_1 = {dx/dξ, dy/dξ, dz/dξ}
-                        //g_2 = {dx/dη, dy/dη, dz/dη}
-                        //g_3 = {dx/dζ, dy/dζ, dz/dζ}
-                        for (auto i = 0; i < weights.size(); i++) {
-                            g_i[i] += weights[i] * (templateCoordsMap[direction][i]);
+                            //Covariant base vectors (dr_i/dξ_i)
+                            //g_1 = {dx/dξ, dy/dξ, dz/dξ}
+                            //g_2 = {dx/dη, dy/dη, dz/dη}
+                            //g_3 = {dx/dζ, dy/dζ, dz/dζ}
+                            for (auto i = 0; i < weights.size(); i++) {
+                                covariant_g_i[i] = weights[i] * (templateCoordsMap[directionI][i]);
+                                contravariant_g_i[i] = weights[i] * (parametricCoordsMap[directionI][i]);
+                            }
+                            nodeMetrics->covariantBaseVectors->at(directionI) = covariant_g_i;
+                            nodeMetrics->contravariantBaseVectors->at(directionI) = contravariant_g_i;
                         }
-                        nodeMetrics->covariantBaseVectors->at(direction) = g_i;
-
-                        //Contravariant base vectors (dξ_i/dr_i)
-                        //g^1 = {dξ/dx, dξ/dy, dξ/dz}
-                        //g^2 = {dη/dx, dη/dy, dη/dz}
-                        //g^3 = {dζ/dx, dζ/dy, dζ/dz}
-                        for (auto i = 0; i < weights.size(); i++) {
-                            g_i[i] += weights[i] * (parametricCoordsMap[direction][i]);
-                        }
-                        nodeMetrics->contravariantBaseVectors->at(direction) = g_i;
-                    }
-                    else{
-                        auto weights = FiniteDifferenceSchemeWeightsCalculator::
-                                calculateWeights(1, templateCoordsMap[direction]);
-                        auto g_i = vector<double>(weights.size());
-                        for (auto i = 0; i < weights.size(); i++) {
-                            g_i[i] += weights[i] * (templateCoordsMap[direction][i]);
-                        }
-                        nodeMetrics->covariantBaseVectors->at(direction) = g_i;
                         
-                        weights = FiniteDifferenceSchemeWeightsCalculator::
-                                calculateWeights(1, parametricCoordsMap[direction]);
-                        g_i = vector<double>(weights.size());
-                        for (auto i = 0; i < weights.size(); i++) {
-                            g_i[i] += weights[i] * (parametricCoordsMap[direction][i]);
+                        else{
+                            //Covariant base vectors (dr_i/dξ_i)
+                            nodeMetrics->covariantBaseVectors->at(directionJ)[spatialDirectionToUnsigned[directionJ]] =
+                                    VectorOperations::dotProduct(covariantWeights, templateCoordsMap[directionJ]);
+                            
+                            //Contravariant base vectors (dξ_i/dr_i)
+                            nodeMetrics->contravariantBaseVectors->at(directionJ)[spatialDirectionToUnsigned[directionJ]] =
+                                    VectorOperations::dotProduct(contravariantWeights, parametricCoordsMap[directionJ]);
                         }
-                        nodeMetrics->contravariantBaseVectors->at(direction) = g_i;
                     }
                 }
                 nodeMetrics->calculateCovariantTensor();
@@ -259,13 +254,14 @@ namespace Discretization {
             schemeSpecs = nullptr;
             
             for (auto &node : *metrics) {
+                //node.first->printNode();
                 cout<<"Node "<<*node.first->id.global<<endl;
                 cout<<"contravariant tensor"<<endl;
                 node.second->covariantTensor->print();
-                cout<<"---------------------------------"<<endl;
                 cout<<"contravariant tensor"<<endl;
                 node.second->contravariantTensor->print();
-                
+                cout<<"---------------------------------"<<endl;
+
             }
             
             

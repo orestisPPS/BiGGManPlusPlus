@@ -30,10 +30,7 @@ namespace Utility {
         outputFile << "]';" << endl;
 
         // Write the command to solve the system
-        outputFile << "x = A \\ b;" << endl;
-
-        // Write the command to solve the system
-        outputFile << "x = A \\ b;" << endl;
+        outputFile << "x = A \\ b" << endl;
 
         if (print){
             // Write the command to create a grid for evaluating the solution

@@ -25,15 +25,16 @@ namespace LinearAlgebra {
                 A->at(row, column) =  pow(positions[column], row);
             }
         }
+        A->print();
         b->at(derivativeOrder) = 1.0;
         
         auto linearSystem = new LinearSystem(A, b);
         auto solver = new SolverLUP(1e-10, true);
         solver->setLinearSystem(linearSystem);
         solver->solve();
-/*      auto fileNameMatlab = "linearSystem.m";
+        auto fileNameMatlab = "linearSystem.m";
         auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
-        Utility::Exporters::exportLinearSystemToMatlabFile(A, b, filePath, fileNameMatlab, false);*/
+        Utility::Exporters::exportLinearSystemToMatlabFile(A, b, filePath, fileNameMatlab, false);
         auto solution = *linearSystem->solution;
         delete solver;
         delete linearSystem;
