@@ -32,7 +32,7 @@ int main() {
     auto lup = new DecompositionLUP(LU);
     lup->decompose(false);
     auto l = lup->getL();
-    l->print();
+    l->;
     cout<<"------------------" << endl;
     auto u = lup->getU();
     u->print();

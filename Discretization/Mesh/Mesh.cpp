@@ -168,6 +168,7 @@ namespace Discretization {
             
             //March through all the nodes of the mesh and calculate its metrics
             for (auto &node : *totalNodesVector) {
+                cout<<"Node : "<<*node->id.global<<endl;
                 //Find Neighbors in a manner that applies the same numerical scheme to all nodes
                 auto neighbours = schemeBuilder->getNumberOfDiagonalNeighboursNeeded();
                 //Initiate Node Graph
@@ -181,60 +182,57 @@ namespace Discretization {
                 //Get the co-linear nodal coordinates (Left-Right -> 1, Up-Down -> 2, Front-Back -> 3)
                 auto templateCoordsMap= graph->getColinearNodalCoordinate(coordinateSystem);
                 auto parametricCoordsMap = graph->getColinearNodalCoordinate(Parametric);
-                
-                cout<<"Node : "<<*node->id.global<<endl;
-
+                //Initialize Metrics class for the current node.
                 auto nodeMetrics = new Metrics(node, dimensions());
+                
                 auto directionsVector = directions();
-                //March through all the directions and calculate the metrics
+                //March through all the directions I (g_i = d(x_j)/d(x_i))
                 for (auto &directionI : directionsVector) {
-                    auto covariantWeights = FiniteDifferenceSchemeWeightsCalculator::
-                         calculateWeights(1, templateCoordsMap[directionI]);
-                    auto contravariantWeights = FiniteDifferenceSchemeWeightsCalculator::
-                         calculateWeights(1, parametricCoordsMap[directionI]);
                     
+                    //Initialize the weights vector. Their values depend on whether the mesh is uniform or not.
+                    //For uniform meshes, the weights are the same for all nodes in all directions and for non-uniform
+                    //meshes, the weights are different for each node in each direction. (Linear System Solution needed)
+                    auto covariantWeights = vector<double>();
+                    auto contravariantWeights = vector<double>();
+                    
+                    if (isUniformMesh){
+                        //Get the FD scheme weights for the current direction
+                        covariantWeights = schemeBuilder->getSchemeWeightsAtDirection(directionI);
+                        contravariantWeights = covariantWeights;
+                        //Check if the number of weights and the number of nodes match
+                        if (covariantWeights.size() != templateCoordsMap[directionI].size()){
+                            throw std::runtime_error("Number of weights and number of template nodal coords do not match"
+                                                     " for node " + to_string(*node->id.global) +
+                                                     " in direction " + to_string(directionI) +
+                                                     "Cannot calculate covariant base vectors");
+                        }
+
+                        if (covariantWeights.size() != parametricCoordsMap[directionI].size()){
+                            throw std::runtime_error("Number of weights and number of parametric nodal coords do not match"
+                                                     " for node " + to_string(*node->id.global) +
+                                                     " in direction " + to_string(directionI) +
+                                                     "Cannot calculate contravariant base vectors");
+                        }
+                    }
+                    else{
+                        covariantWeights = FiniteDifferenceSchemeWeightsCalculator::
+                        calculateWeights(1, templateCoordsMap[directionI]);
+                        contravariantWeights = FiniteDifferenceSchemeWeightsCalculator::
+                        calculateWeights(1, parametricCoordsMap[directionI]);
+                    }
                     for (auto &directionJ : directionsVector){
-                        if (isUniformMesh){
-                            //Get the FD scheme weights for the current direction
-                            auto weights = schemeBuilder->getSchemeWeightsAtDirection(directionI);
-
-                            //Check if the number of weights and the number of nodes match
-                            if (weights.size() != templateCoordsMap[directionI].size())
-                                throw std::runtime_error("Number of weights and number of template nodal coords do not match"
-                                                         " for node " + to_string(*node->id.global) +
-                                                         " in direction " + to_string(directionI) +
-                                                         "Cannot calculate covariant base vectors");
-
-                            if (weights.size() != parametricCoordsMap[directionI].size())
-                                throw std::runtime_error("Number of weights and number of parametric nodal coords do not match"
-                                                         " for node " + to_string(*node->id.global) +
-                                                         " in direction " + to_string(directionI) +
-                                                         "Cannot calculate contravariant base vectors");
-
-                            auto covariant_g_i = vector<double>(weights.size());
-                            auto contravariant_g_i = vector<double>(weights.size());
-
-                            //Covariant base vectors (dr_i/dξ_i)
-                            //g_1 = {dx/dξ, dy/dξ, dz/dξ}
-                            //g_2 = {dx/dη, dy/dη, dz/dη}
-                            //g_3 = {dx/dζ, dy/dζ, dz/dζ}
-                            for (auto i = 0; i < weights.size(); i++) {
-                                covariant_g_i[i] = weights[i] * (templateCoordsMap[directionI][i]);
-                                contravariant_g_i[i] = weights[i] * (parametricCoordsMap[directionI][i]);
-                            }
-                            nodeMetrics->covariantBaseVectors->at(directionI) = covariant_g_i;
-                            nodeMetrics->contravariantBaseVectors->at(directionI) = contravariant_g_i;
-                        }
-                        
-                        else{
-                            //Covariant base vectors (dr_i/dξ_i)
-                            nodeMetrics->covariantBaseVectors->at(directionJ)[spatialDirectionToUnsigned[directionJ]] =
-                                    VectorOperations::dotProduct(covariantWeights, templateCoordsMap[directionJ]);
-                            
-                            //Contravariant base vectors (dξ_i/dr_i)
-                            nodeMetrics->contravariantBaseVectors->at(directionJ)[spatialDirectionToUnsigned[directionJ]] =
-                                    VectorOperations::dotProduct(contravariantWeights, parametricCoordsMap[directionJ]);
-                        }
+                        //Covariant base vectors (dr_i/dξ_i)
+                        //g_1 = {dx/dξ, dy/dξ, dz/dξ}
+                        //g_2 = {dx/dη, dy/dη, dz/dη}
+                        //g_3 = {dx/dζ, dy/dζ, dz/dζ}
+                        nodeMetrics->covariantBaseVectors->at(directionJ)[spatialDirectionToUnsigned[directionJ]] =
+                                VectorOperations::dotProduct(covariantWeights, templateCoordsMap[directionJ]);
+                        //Contravariant base vectors (dξ_i/dr_i)
+                        //g^1 = {dξ/dx, dξ/dy, dξ/dz}
+                        //g^2 = {dη/dx, dη/dy, dη/dz}
+                        //g^3 = {dζ/dx, dζ/dy, dζ/dz}
+                        nodeMetrics->contravariantBaseVectors->at(directionJ)[spatialDirectionToUnsigned[directionJ]] =
+                                VectorOperations::dotProduct(contravariantWeights, parametricCoordsMap[directionJ]);
                     }
                 }
                 nodeMetrics->calculateCovariantTensor();
