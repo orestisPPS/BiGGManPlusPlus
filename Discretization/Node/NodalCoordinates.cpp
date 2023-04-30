@@ -31,8 +31,7 @@ namespace Discretization {
         return _positionVectors->at(type)->at(i);
     }
     
-    //Adds the input coordinate set type into the node coordinate vector map.
-    //Initiated with input vector.
+
     void NodalCoordinates::addPositionVector(vector<double>* positionVector, CoordinateType type) {
         _positionVectors->insert(pair<CoordinateType, vector<double>*>(type, positionVector));
     }
@@ -50,8 +49,6 @@ namespace Discretization {
     }
     
 
-    //Replaces the coordinate set of the input type with the input coordinate vector.
-    //The coordinates can be natural, parametric or template.
     void NodalCoordinates::setPositionVector(vector<double>*positionVector, CoordinateType type) {
         if (positionVector->empty() && positionVector->size()<= 3)
             _positionVectors->insert(pair<CoordinateType, vector<double>*>(type, positionVector));
@@ -59,8 +56,6 @@ namespace Discretization {
             _positionVectors->insert(pair<CoordinateType, vector<double>*>(type, positionVector));
     }
     
-    //Replaces the Natural Coordinate set of the input type with the input coordinate vector.
-    //The coordinates can be natural, parametric or template.
     void NodalCoordinates::setPositionVector(vector<double>* positionVector) {
         if (positionVector->empty() && positionVector->size()<= 3)
             _positionVectors->insert(pair<CoordinateType, vector<double>*>(Natural, positionVector));
@@ -68,30 +63,90 @@ namespace Discretization {
             _positionVectors->insert(pair<CoordinateType, vector<double>*>(Natural, positionVector));
     }
     
-    //Removes the input coordinate set from the node coordinate vector map.
     void NodalCoordinates::removePositionVector(CoordinateType type) {
         _positionVectors->at(type)->clear();
         delete _positionVectors->at(type);
         _positionVectors->erase(type);
     }
     
-    //Returns the natural position vector of the Node 
     const vector<double>& NodalCoordinates::positionVector() {
         return *( _positionVectors->at(Natural));
     }
-    
+
     vector<double>* NodalCoordinates::positionVectorPtr() {
         return _positionVectors->at(Natural);
     }
         
-    //Returns the input position vector of the Node 
     const vector<double>& NodalCoordinates::positionVector(CoordinateType type) {
         return *( _positionVectors->at(type));
     }
     
-    //Returns a pointer to the input position vector of the Node
     vector<double>* NodalCoordinates::positionVectorPtr(CoordinateType type) {
         return _positionVectors->at(type);
     }
+    
+    vector<double> NodalCoordinates::positionVector3D() {
+
+        auto coords = positionVector();
+        switch (coords.size()) {
+            case 1:
+                return {coords[0], 0.0, 0.0};
+            case 2:
+                return {coords[0], coords[1], 0.0};
+            case 3:
+                return {coords[0], coords[1], coords[2]};
+            default:
+                throw runtime_error("Node coordinate not found!");
+            
+        }
+    }
+    
+    vector<double> NodalCoordinates::positionVector3D(CoordinateType type) {
+        auto coords = positionVector(type);
+        switch (coords.size()) {
+            case 1:
+                return {coords[0], 0.0, 0.0};
+            case 2:
+                return {coords[0], coords[1], 0.0};
+            case 3:
+                return {coords[0], coords[1], coords[2]};
+            default:
+                throw runtime_error("Node coordinate not found!");
+            
+        }
+    }
+    
+    unique_ptr<vector<double>> NodalCoordinates::positionVector3DPtr() {
+        auto coords = positionVector();
+        switch (coords.size()) {
+            case 1:
+                return unique_ptr<vector<double>>(new vector<double>{coords[0], 0.0, 0.0});
+            case 2:
+                return unique_ptr<vector<double>>(new vector<double>{coords[0], coords[1], 0.0});
+            case 3:
+                return unique_ptr<vector<double>>(new vector<double>{coords[0], coords[1], coords[2]});
+            default:
+                throw runtime_error("Node coordinate not found!");
+            
+        }
+    }
+    
+    unique_ptr<vector<double>> NodalCoordinates::positionVector3DPtr(CoordinateType type) {
+        auto coords = positionVector(type);
+        switch (coords.size()) {
+            case 1:
+                return unique_ptr<vector<double>>(new vector<double>{coords[0], 0.0, 0.0});
+            case 2:
+                return unique_ptr<vector<double>>(new vector<double>{coords[0], coords[1], 0.0});
+            case 3:
+                return unique_ptr<vector<double>>(new vector<double>{coords[0], coords[1], coords[2]});
+            default:
+                throw runtime_error("Node coordinate not found!");
+            
+        }
+    }
+    
+    
+    
     
 } // Discretization

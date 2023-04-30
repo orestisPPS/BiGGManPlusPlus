@@ -32,7 +32,7 @@ namespace BoundaryConditions {
         
         //Returns the double value of the boundary condition for the given degree of freedom
         //at the given boundary node coordinates vector pointer.
-        double scalarValueOfDOFAt(DOFType type, vector<double> *coordinates);
+        double scalarValueOfDOFAt(DOFType type, vector<double>* coordinates);
         
         //Returns the vector value of all boundary conditions for all degrees of freedom 
         //at the given boundary node coordinates vector pointer.

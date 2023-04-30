@@ -19,7 +19,7 @@ namespace BoundaryConditions {
         }
     }
     
-    double BoundaryCondition::scalarValueOfDOFAt(DOFType type, vector<double> *coordinates) {
+    double BoundaryCondition::scalarValueOfDOFAt(DOFType type, vector<double>* coordinates) {
         return bcForDof->at(type)(coordinates);
     }
 

@@ -136,33 +136,23 @@ namespace Discretization {
         delete coLinearNodes;
         return nodes;
     }
-    
-    map<Direction, vector<double>> IsoParametricNodeGraph::
-    getColinearNodalCoordinate(CoordinateType coordinateType) const {
-        map<Direction, vector<double>> coLinearNodalCoordinates;
+
+    map<Direction, vector<vector<double>>> IsoParametricNodeGraph::
+    getColinearNodalCoordinateVectors(CoordinateType coordinateType) const {
+        
+        map<Direction, vector<vector<double>>> coLinearNodalCoordinates;
         auto coLinearNodes = getColinearNodes();
-        auto iPoint = 0;
-        for(auto& direction : *coLinearNodes){
-            coLinearNodalCoordinates.insert(pair<Direction, vector<double>>(
-                    direction.first, vector<double>(direction.second.size())));
-            auto iDirection = spatialDirectionToUnsigned[direction.first];
-            for (auto& node : direction.second) {
-                auto coords = node->coordinates(coordinateType, iDirection);
-                coLinearNodalCoordinates.at(direction.first)[iPoint] = coords;
-                ++iPoint;
+        for(auto& direction : *coLinearNodes) {
+            coLinearNodalCoordinates.insert({direction.first, vector<vector<double>>(direction.second.size())});
+            auto iPoint = 0;
+            auto coords = vector<vector<double>>(direction.second.size());
+            for (auto &node: direction.second) {
+                coLinearNodalCoordinates.at(direction.first)[iPoint] = node->coordinates.positionVector3D(coordinateType);
+                iPoint++;   
             }
-            iPoint = 0;
         }
-        delete coLinearNodes;
         return coLinearNodalCoordinates;
     }
-    
-    vector<double> IsoParametricNodeGraph::getColinearNodalCoordinate(CoordinateType coordinateType, Direction direction) const {
-        auto coLinearNodalCoordinates = getColinearNodalCoordinate(coordinateType);
-        auto coordinates = coLinearNodalCoordinates.at(direction);
-        return coordinates;
-    }
-    
     
     map<Direction, vector<DegreeOfFreedom*>> IsoParametricNodeGraph::
     getColinearDOF(DOFType dofType) const {

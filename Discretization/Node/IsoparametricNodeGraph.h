@@ -53,9 +53,7 @@ namespace Discretization {
         
         vector<Node*> getColinearNodes(Direction direction) const;
 
-        map<Direction, vector<double>> getColinearNodalCoordinate(CoordinateType coordinateType) const;
-        
-        vector<double> getColinearNodalCoordinate(CoordinateType coordinateType, Direction direction) const;
+        map<Direction, vector<vector<double>>> getColinearNodalCoordinateVectors(CoordinateType coordinateType) const;
         
         map<Direction, vector<DegreeOfFreedom*>> getColinearDOF(DOFType dofType) const;
 
