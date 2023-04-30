@@ -18,7 +18,7 @@ namespace PositioningInSpace {
         One,
         Two,
         Three,
-        Time
+        Time,
     };
     
     static map<Direction, unsigned> spatialDirectionToUnsigned =
@@ -97,7 +97,7 @@ namespace PositioningInSpace {
         LeftBottomBack,
     };
 
-    static std::map<Position, vector<double>> normalUnitVectorsOfPositions = {
+    static std::map<Position, vector<int>> normalUnitVectorsOfPositions = {
             {Right,           {1,  0,  0}},
             {Left,            {-1, 0,  0}},
             {Top,             {0,  1,  0}},

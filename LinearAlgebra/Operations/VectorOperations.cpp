@@ -24,6 +24,24 @@ namespace LinearAlgebra {
             return result;
         }
         
+        int VectorOperations::dotProduct(vector<int> *vector1, vector<int> *vector2) {
+            auto result = 0;
+            if (vector1->size() != vector2->size())
+                throw std::invalid_argument("Vectors must have the same size");
+            for (auto i = 0; i < vector1->size(); i++)
+                result += vector1->at(i) * vector2->at(i);
+            return result;
+        }
+        
+        int VectorOperations::dotProduct(vector<int> &vector1, vector<int> &vector2) {
+            auto result = 0;
+            if (vector1.size() != vector2.size())
+                throw std::invalid_argument("Vectors must have the same size");
+            for (auto i = 0; i < vector1.size(); i++)
+                result += vector1.at(i) * vector2.at(i);
+            return result;
+        }
+        
         vector<double> VectorOperations::crossProduct(vector<double>* vector1, vector<double>* vector2) {
             switch (vector1->size()) {
                 case 2:

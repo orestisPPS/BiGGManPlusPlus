@@ -25,7 +25,7 @@ namespace Discretization {
         // Warning : Always deallocate the returned pointer.
         map<Position, vector<Node*>>* getNodeGraph() ;
         
-        map<Position, vector<Node*>>* getNodeGraph(const map<Position,short unsigned>& customDepth) ;
+        map<Position, vector<Node*>>* getNodeGraph(const map<Position,short unsigned>& customDepth) const ;
 
         // Returns a map ptr graph with all the Degrees Of Freedom of the input node neighbours.
         // Key : Position Enum representing the position of the neighbour node relative to the input node.
@@ -61,8 +61,6 @@ namespace Discretization {
 
         vector<double> getColinearDOF(DOFType dofType, Direction direction) const;
         
-        
-
 
         map<Position, vector<Node*>>* nodeGraph;
                 
@@ -83,6 +81,8 @@ namespace Discretization {
         void _findIDepthNeighborhoodOnlyDiagonals(unsigned int depth, vector<double>& nodeCoords);
 
         void _addNeighbourNodeIfParametricCoordsExist(Position position, vector<double>& parametricCoords,  unsigned depthSize);
+        
+        static vector<Node*> _mergeAndSortColinearNodes(vector<Node*>& nodesDirection1, vector<Node*>& nodesDirection2, Node* node);
     };
 
 } // Node

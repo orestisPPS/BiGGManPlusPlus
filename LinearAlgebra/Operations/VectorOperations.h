@@ -43,6 +43,12 @@ namespace LinearAlgebra {
         */
         static double dotProduct(vector<double> &vector1, vector<double> &vector2);
         
+        
+        static int dotProduct(vector<int> *vector1, vector<int> *vector2);
+        
+        static int dotProduct(vector<int> &vector1, vector<int> &vector2);
+
+
         /**
         Calculates the cross product of two 3-dimensional vectors.
         @param vector1 The first vector.

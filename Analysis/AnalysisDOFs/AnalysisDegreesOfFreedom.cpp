@@ -16,7 +16,7 @@ namespace NumericalAnalysis {
         totalDegreesOfFreedomMap = dofInitializer.totalDegreesOfFreedomMap;
         totalDegreesOfFreedomMapInverse = dofInitializer.totalDegreesOfFreedomMapInverse;
 
-        printDOFCount();
+        //printDOFCount();
     }
     
     AnalysisDegreesOfFreedom::~AnalysisDegreesOfFreedom() {

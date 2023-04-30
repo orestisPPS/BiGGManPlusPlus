@@ -13,30 +13,30 @@ namespace Discretization{
             covariantTensor = new Array<double>(dimensions, dimensions);
             contravariantTensor = new Array<double>(dimensions, dimensions);
 
-            switch (dimensions) {
+/*            switch (dimensions) {
                 case 1:
-                    covariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>(dimensions)));
-                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>(dimensions)));
+                    covariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>()));
+                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>()));
                     break;
                 case 2:
-                    covariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>(dimensions)));
-                    covariantBaseVectors->insert(pair<Direction, vector<double>>(Two, vector<double>(dimensions)));
+                    covariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>()));
+                    covariantBaseVectors->insert(pair<Direction, vector<double>>(Two, vector<double>()));
                     
-                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>(dimensions)));
-                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(Two, vector<double>(dimensions)));
+                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>()));
+                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(Two, vector<double>()));
                     break;
                 case 3:
-                    covariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>(dimensions)));
-                    covariantBaseVectors->insert(pair<Direction, vector<double>>(Two, vector<double>(dimensions)));
-                    covariantBaseVectors->insert(pair<Direction, vector<double>>(Three, vector<double>(dimensions)));
+                    covariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>()));
+                    covariantBaseVectors->insert(pair<Direction, vector<double>>(Two, vector<double>()));
+                    covariantBaseVectors->insert(pair<Direction, vector<double>>(Three, vector<double>()));
                     
-                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>(dimensions)));
-                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(Two, vector<double>(dimensions)));
-                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(Three, vector<double>(dimensions)));
+                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>()));
+                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(Two, vector<double>()));
+                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(Three, vector<double>()));
                     break;
                 default:
                     throw runtime_error("Invalid number of dimensions! You are getting into Einsteins field->");
-            }
+            }*/
 
             covariantTensor = new Array<double>(dimensions, dimensions);
             contravariantTensor = new Array<double>(dimensions, dimensions);
