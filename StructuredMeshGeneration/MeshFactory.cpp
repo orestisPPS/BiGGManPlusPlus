@@ -58,8 +58,10 @@ namespace StructuredMeshGenerator{
     void MeshFactory::assign1DCoordinates() const {
         for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
             mesh->node(i)->coordinates.addPositionVector(Natural);
-            mesh->node(i)->coordinates.setPositionVector({static_cast<double>(i)}, Parametric);
-            mesh->node(i)->coordinates.setPositionVector({static_cast<double>(i) * _meshSpecs->templateStepOne}, Template);
+            mesh->node(i)->coordinates.setPositionVector(
+                    new vector<double>{static_cast<double>(i)}, Parametric);
+            mesh->node(i)->coordinates.setPositionVector(
+                    new vector<double>{static_cast<double>(i) * _meshSpecs->templateStepOne}, Template);
         }
     }
     
@@ -70,7 +72,8 @@ namespace StructuredMeshGenerator{
                 // Natural coordinates
                 mesh->node(i, j)->coordinates.addPositionVector(Natural);
                 // Parametric coordinates
-                mesh->node(i, j)->coordinates.addPositionVector({static_cast<double>(i), static_cast<double>(j)}, Parametric);
+                mesh->node(i, j)->coordinates.addPositionVector(
+                        new vector<double>{static_cast<double>(i), static_cast<double>(j)}, Parametric);
                 // Template coordinates
                 vector<double> templateCoord = {static_cast<double>(i) * _meshSpecs->templateStepOne,
                                                 static_cast<double>(j) * _meshSpecs->templateStepTwo};
@@ -79,7 +82,7 @@ namespace StructuredMeshGenerator{
                 // Shear
                 Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
 
-                mesh->node(i, j)->coordinates.setPositionVector(templateCoord, Template);
+                mesh->node(i, j)->coordinates.setPositionVector(new vector<double>(templateCoord), Template);
             }   
         }
     }
@@ -92,7 +95,7 @@ namespace StructuredMeshGenerator{
                     mesh->node(i, j, k)->coordinates.addPositionVector(Natural);
                     // Parametric coordinates
                     mesh->node(i, j, k)->coordinates.addPositionVector(
-                            {static_cast<double>(i), static_cast<double>(j), static_cast<double>(k)}, Parametric);
+                            new vector<double>{static_cast<double>(i), static_cast<double>(j), static_cast<double>(k)}, Parametric);
                     // Template coordinates
                     vector<double> templateCoord = {static_cast<double>(i) * _meshSpecs->templateStepOne,
                                                     static_cast<double>(j) * _meshSpecs->templateStepTwo,
@@ -102,7 +105,7 @@ namespace StructuredMeshGenerator{
                     // Shear
                     Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
                     
-                    mesh->node(i, j, k)->coordinates.setPositionVector(templateCoord, Template);
+                    mesh->node(i, j, k)->coordinates.setPositionVector(new vector<double>(templateCoord), Template);
                 }
             }
         }

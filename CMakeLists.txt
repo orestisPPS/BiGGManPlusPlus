@@ -38,8 +38,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/Operations/Transformations.cpp
         LinearAlgebra/Operations/Transformations.h
         PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h
-        PositioningInSpace/CoordinateVector.cpp
-        PositioningInSpace/CoordinateVector.h
         LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDSchemeCalculator.cpp
         LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDSchemeCalculator.h
         LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp

@@ -78,8 +78,6 @@ namespace Discretization {
         return dofGraph;
     }
 
-
-    //TODO Debug this
     map<Direction, vector<Node*>>* IsoParametricNodeGraph::getColinearNodes() const {
         auto coLinearNodes = new map<Direction, vector<Node *>>();
         auto direction = -1;
@@ -122,11 +120,11 @@ namespace Discretization {
             auto coords1 = a->coordinates.positionVector(Parametric);
             auto coords2 = b->coordinates.positionVector(Parametric);
             return coords1 < coords2;
-        });
+        });  /*;
         for (auto &node: mergedNodes) {
             node->printNode();
         }
-        cout<<"-------------------------"<<endl;
+        cout<<"-------------------------"<<endl;*/
         return mergedNodes;
     }
         
@@ -143,15 +141,17 @@ namespace Discretization {
     getColinearNodalCoordinate(CoordinateType coordinateType) const {
         map<Direction, vector<double>> coLinearNodalCoordinates;
         auto coLinearNodes = getColinearNodes();
+        auto iPoint = 0;
         for(auto& direction : *coLinearNodes){
-            coLinearNodalCoordinates.insert({direction.first, vector<double>(direction.second.size())});
+            coLinearNodalCoordinates.insert(pair<Direction, vector<double>>(
+                    direction.first, vector<double>(direction.second.size())));
             auto iDirection = spatialDirectionToUnsigned[direction.first];
-            auto iPoint = 0;
-            for(auto& node : direction.second){
-                coLinearNodalCoordinates.at(direction.first)[iPoint]=
-                        node->coordinates.positionVector(coordinateType)[iDirection];
-                iPoint++;
+            for (auto& node : direction.second) {
+                auto coords = node->coordinates(coordinateType, iDirection);
+                coLinearNodalCoordinates.at(direction.first)[iPoint] = coords;
+                ++iPoint;
             }
+            iPoint = 0;
         }
         delete coLinearNodes;
         return coLinearNodalCoordinates;

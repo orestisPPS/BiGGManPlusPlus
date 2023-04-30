@@ -143,7 +143,7 @@ namespace Discretization {
                 // If node is inside the original mesh add it to the ghost mesh Array
                 if (parametricCoordToNodeMap->find(parametricCoords) == parametricCoordToNodeMap->end()) {
                     auto node = new Node();
-                    node->coordinates.setPositionVector(parametricCoords, Parametric);
+                    node->coordinates.setPositionVector(new vector<double>(parametricCoords), Parametric);
                     vector<double> templateCoord = {static_cast<double>(i) * specs->templateStepOne,
                                                     static_cast<double>(j) * specs->templateStepTwo};
                     // Rotate 
@@ -151,7 +151,7 @@ namespace Discretization {
                     // Shear
                     Transformations::shear(templateCoord, specs->templateShearOne,specs->templateShearTwo);
 
-                    node->coordinates.setPositionVector(templateCoord, Template);
+                    node->coordinates.setPositionVector(new vector<double>(templateCoord), Template);
                     ghostNodesList->push_back(node);
                     parametricCoordToNodeMap->insert(pair<vector<double>, Node*>(parametricCoords, node));
                     
