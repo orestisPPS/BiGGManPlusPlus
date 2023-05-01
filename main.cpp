@@ -23,8 +23,8 @@ int main() {
     //std::vector<double> x {0, 1, -1, 2, -2};  // Fourth order of accuracy
     std::vector<double> x {1,2,3};  // Fourth order of accuracy
     std::vector<double> f {2,2,2};
-    auto coeffs = LinearAlgebra::generate_weights(x, max_deriv, 2.0);
-    auto values = LinearAlgebra::calculateDerivative(x, f, max_deriv, 2.0);
+    auto coeffs = LinearAlgebra::calculateWeights(x, max_deriv, 2.0);
+    auto values = LinearAlgebra::calculateDerivatives(x, f, max_deriv, 2.0);
     for (unsigned deriv_i = 0; deriv_i <= max_deriv; deriv_i++){
         std::cout << labels[deriv_i] << ": ";
         for (unsigned idx = 0; idx < x.size(); idx++){

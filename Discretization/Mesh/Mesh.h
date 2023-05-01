@@ -11,12 +11,13 @@
 #include "../../LinearAlgebra/Operations/Transformations.h"
 #include "../Node/IsoparametricNodeGraph.h"
 #include "../../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
-#include "../../LinearAlgebra/FiniteDifferences/FD.h"
+#include "../../LinearAlgebra/FiniteDifferences/FDWeightCalculator.h"
 
 
 using namespace Discretization;
 using namespace StructuredMeshGenerator;
 using namespace LinearAlgebra;
+
 
 namespace Discretization {
 
@@ -83,36 +84,36 @@ namespace Discretization {
         
      protected:
         Array<Node *> *_nodesMatrix;
-
+        
         map<unsigned, Node*>* _nodesMap;
         
         map<unsigned, Node*>* createNodesMap() const;
         
         void categorizeNodes();
-         
+        
         void createNumberOfNodesPerDirectionMap();
-
-         Metrics* calculateNodeMetrics(Node* node, CoordinateType coordinateSystem);
-         
-         void cleanMeshDataStructures();
+        
+        void cleanMeshDataStructures();
         
         map<Direction, unsigned>* createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth);
-
+        
         //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
         virtual map<Position, vector<Node*>*> *addDBoundaryNodesToMap();
-
+        
         //Adds the internal nodes of the mesh to a vector pointer of node pointers
         virtual vector<Node*>* addInternalNodesToVector();
-
+        
         //Adds the total nodes of the mesh to a vector pointer of node pointers
         virtual vector<Node*>* addTotalNodesToVector();
         
         virtual GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth);
         
-
-
-        
-        
-
+     private:
+         void _arbitrarilySpacedMeshMetrics(CoordinateType coordinateSystem);
+         
+         void _uniformlySpacedMetrics(CoordinateType coordinateSystem);
     };
 }
+
+rbitrarily
+// Spaced Grids

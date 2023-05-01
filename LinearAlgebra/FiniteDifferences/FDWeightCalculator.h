@@ -41,7 +41,7 @@ namespace LinearAlgebra {
         for (unsigned i=1; i < len_g*(max_deriv+1); ++i)
             weights[i] = 0;  // clear weights
         for (unsigned i=1; i < len_g; ++i){
-            const int mn = std::min(i, max_deriv);
+            const unsigned mn = min(i, max_deriv);
             Real_t c2 = 1;
             c5 = c4;
             c4 = grid[i] - around;
@@ -51,7 +51,7 @@ namespace LinearAlgebra {
                 c2 = c2*c3;
                 if (j == i-1){
                     const Real_t c2_r = 1/c2;
-                    for (int k=mn; k>=1; --k){
+                    for (unsigned k=mn; k>=1; --k){
                         const Real_t tmp1 = weights[i - 1 + (k-1)*len_g];
                         const Real_t tmp2 = weights[i - 1 + k*len_g];
                         weights[i + k*len_g] = c1*(k*tmp1 - c5*tmp2)*c2_r;
@@ -69,96 +69,12 @@ namespace LinearAlgebra {
         }
     }
 
-    // populate_weights is deprecated due to counter-intuitive parameter "nd"
-    template <typename Real_t>
-    void populate_weights(const Real_t z, const Real_t * const __restrict__ x, const int nd,
-                          const int m, Real_t * const __restrict__ c) {
-        // Parameters
-        // ----------
-        // z: location where approximations are to be accurate
-        // x(0:nd): grid point locations
-        // nd: dimension of x- and c-arrays (len(x) - 1)
-        // c(0:nd, 0:m) derivatives weights of order 0:m (column major order)
-        // m: highest derivative.
-        //
-        // References
-        // ----------
-        // Generation of Finite Difference Formulas on Arbitrarily
-        // Spaced Grids, Bengt Fornberg,
-        // Mathematics of compuation, 51, 184, 1988, 699-706
-
-        Real_t c1, c4, c5;
-        c1 = 1;
-        c4 = x[0] - z;
-        for (unsigned i=0; i < (unsigned)(nd+1)*(m+1); ++i)
-            c[i] = 0;
-        c[0] = 1;
-        for (unsigned i=1; i <= (unsigned)nd; ++i){
-            const int mn = std::min(i, (unsigned)m);
-            Real_t c2 = 1;
-            c5 = c4;
-            c4 = x[i] - z;
-            for (unsigned j=0; j<i; ++j){
-                const Real_t c3 = x[i] - x[j];
-                const Real_t c3_r = 1/c3;
-                c2 = c2*c3;
-                if (j == i-1){
-                    const Real_t c2_r = 1/c2;
-                    for (unsigned k=mn; k>=1; --k){
-                        const Real_t tmp1 = c[i - 1 + (k-1)*(nd+1)];
-                        const Real_t tmp2 = c[i - 1 + k*(nd+1)];
-                        c[i + k*(nd+1)] = c1*(k*tmp1 - c5*tmp2)*c2_r;
-                    }
-                    c[i] = -c1*c5*c[i-1]*c2_r;
-                }
-                for (unsigned k=mn; k>=1; --k){
-                    const Real_t tmp1 = c[j + k*(nd+1)];
-                    const Real_t tmp2 = c[j + (k-1)*(nd+1)];
-                    c[j + k*(nd+1)] = (c4*tmp1 - k*tmp2)*c3_r;
-                }
-                c[j] = c4*c[j]*c3_r;
-            }
-            c1 = c2;
-        }
-    }
-
-    template <typename Real_t>
-    void apply_fd(const int nin, const int maxorder,
-                  const Real_t * const __restrict__ xdata,
-                  const Real_t * const __restrict__ ydata,
-                  const Real_t xtgt,
-                  Real_t * const __restrict__ out){
-        std::vector<Real_t> c(nin * (maxorder+1));
-        calculate_weights<Real_t>(xdata, nin, maxorder, &c[0], xtgt);
-        for (int j=0; j <= maxorder; ++j){
-            out[j] = 0;
-            for (int i=0; i<nin; ++i)
-                out[j] += c[i + j*nin] * ydata[i];
-        }
-    }
-
-    template <typename Real_t>
-    void calculateExpression(const std::vector<Real_t>& grid, const std::vector<Real_t>& values,
-                             const unsigned max_deriv, Real_t* const __restrict__ weights,
-                             const Real_t around = 0) {
-        if (grid.size() != values.size()) {
-            throw std::logic_error("size of grid and values mismatch");
-        }
-        calculate_weights<Real_t>(&grid[0], grid.size(), max_deriv, weights, around);
-        for (unsigned j = 0; j <= max_deriv; ++j) {
-            weights[j] = 0;
-            for (unsigned i = 0; i < grid.size(); ++i) {
-                weights[j] += weights[i + j * grid.size()] * values[i];
-            }
-        }
-    }
-
     // Pre-processor macro __cplusplus == 201103L in ISO C++11 compliant compilers. (e.g. GCC >= 4.7.0)
     #if __cplusplus > 199711L
         template<typename Real_t, template<typename, typename...> class Cont, typename... Args>
-        Cont<Real_t, Args...> generate_weights(const Cont<Real_t, Args...>& grid, int maxorder=-1, const Real_t around=0){
+        Cont<Real_t, Args...> calculateWeights(const Cont<Real_t, Args...>& grid, int maxOrder=-1, const Real_t around=0){
             // Cont<Real_t, Args...> must have contiguous memory storage (e.g. std::vector)
-            const unsigned maxorder_ = (maxorder < 0) ? (grid.size()+1)/2 : maxorder;
+            const unsigned maxorder_ = (maxOrder < 0) ? (grid.size()+1)/2 : maxOrder;
             Cont<Real_t, Args...> coeffs(grid.size()*(maxorder_+1));
             if (grid.size() < maxorder_ + 1){
                 throw std::logic_error("size of grid insufficient");
@@ -168,30 +84,48 @@ namespace LinearAlgebra {
         }
     #endif
 
-#if __cplusplus > 199711L
-    template<typename Real_t, template<typename, typename...> class Cont, typename... Args>
-    Cont<Cont<Real_t, Args...>> calculateDerivative(const Cont<Real_t, Args...>& grid, const Cont<Real_t, Args...>& values,
-                                                    int maxOrder=-1, const Real_t around=0){
-        // Cont<Real_t, Args...> must have contiguous memory storage (e.g. std::vector)
-        const unsigned maxOrder_ = (maxOrder < 0) ? (grid.size()+1)/2 : maxOrder;
-        Cont<Real_t, Args...> weights(grid.size()*(maxOrder_+1));
-        Cont<Cont<Real_t, Args...>> result(2, Cont<Real_t, Args...>(grid.size()));
-        if (grid.size() != values.size()){
-            throw std::logic_error("size of grid and values mismatch");
-        }
-        if (grid.size() < maxOrder_ + 1){
-            throw std::logic_error("size of grid insufficient");
-        }
-        calculate_weights<Real_t>(&grid[0], grid.size(), maxOrder_, &weights[0], around);
-        for (unsigned j=1; j <= maxOrder_; ++j){
-            for (unsigned i=0; i<grid.size(); ++i){
-                result[j-1][i] += weights[i + j*grid.size()] * values[i];
+    #if __cplusplus > 199711L
+        template<typename Real_t, template<typename, typename...> class Cont, typename... Args>
+        Cont<Real_t, Args...> calculateWeightsOfDerivativeOrder(const Cont<Real_t, Args...>& grid, int order, const Real_t around=0){
+            // Cont<Real_t, Args...> must have contiguous memory storage (e.g. std::vector)
+            const unsigned order_ = (order < 0) ? (grid.size()+1)/2 : order;
+            Cont<Real_t, Args...> weights(grid.size()*(order_+1));
+            if (grid.size() < order_ + 1){
+                throw std::logic_error("size of grid insufficient");
             }
+            calculate_weights<Real_t>(&grid[0], grid.size(), order_, &weights[0], around);
+            auto weightsOfOrder = Cont<Real_t, Args...>(grid.size());
+            for (unsigned i=0; i<grid.size(); ++i){
+                weightsOfOrder[i] = weights[i + order_*grid.size()];
+            }
+            return weightsOfOrder;
         }
-        return result;
-    }
-#endif
-
+    #endif
+    
+    #if __cplusplus > 199711L
+        template<typename Real_t, template<typename, typename...> class Cont, typename... Args>
+        Cont<Cont<Real_t, Args...>> calculateDerivatives(const Cont<Real_t, Args...>& grid, const Cont<Real_t, Args...>& values,
+                                                        int maxOrder = -1, const Real_t around=0){
+            // Cont<Real_t, Args...> must have contiguous memory storage (e.g. std::vector)
+            const unsigned maxOrder_ = (maxOrder < 0) ? (grid.size()+1)/2 : maxOrder;
+            Cont<Real_t, Args...> weights(grid.size()*(maxOrder_+1));
+            Cont<Cont<Real_t, Args...>> result(2, Cont<Real_t, Args...>(grid.size()));
+            if (grid.size() != values.size()){
+                throw std::logic_error("size of grid and values mismatch");
+            }
+            if (grid.size() < maxOrder_ + 1){
+                throw std::logic_error("size of grid insufficient");
+            }
+            calculate_weights<Real_t>(&grid[0], grid.size(), maxOrder_, &weights[0], around);
+            for (unsigned j=1; j <= maxOrder_; ++j){
+                for (unsigned i=0; i<grid.size(); ++i){
+                    result[j-1][i] += weights[i + j*grid.size()] * values[i];
+                }
+            }
+            return result;
+        }
+    #endif
+    
 
 } // LinearAlgebra
 
