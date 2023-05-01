@@ -112,8 +112,6 @@ namespace Discretization {
          void _arbitrarilySpacedMeshMetrics(CoordinateType coordinateSystem);
          
          void _uniformlySpacedMetrics(CoordinateType coordinateSystem);
+         
     };
 }
-
-rbitrarily
-// Spaced Grids

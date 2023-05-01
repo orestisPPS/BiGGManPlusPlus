@@ -15,10 +15,10 @@ using namespace LinearAlgebra;
 #include <list>
 int main() {
 
-/*    auto test = new StructuredMeshGenerator::MeshTest2D();
-    auto analysisTest = new NumericalAnalysis::StStFDTest();*/
+    auto test = new StructuredMeshGenerator::MeshTest2D();
+    auto analysisTest = new NumericalAnalysis::StStFDTest();
 
-    const unsigned max_deriv = 2;
+/*    const unsigned max_deriv = 2;
     std::vector<std::string> labels {"0th derivative (interpolation)", "1st derivative", "2nd derivative"};
     //std::vector<double> x {0, 1, -1, 2, -2};  // Fourth order of accuracy
     std::vector<double> x {1,2,3};  // Fourth order of accuracy
@@ -31,7 +31,7 @@ int main() {
             std::cout << values[deriv_i][idx] << " ";
         }
         std::cout << std::endl;
-    }
+    }*/
     
     
     
