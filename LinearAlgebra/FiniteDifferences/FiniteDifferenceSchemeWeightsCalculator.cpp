@@ -3,41 +3,60 @@
 //
 
 #include "FiniteDifferenceSchemeWeightsCalculator.h"
-#include "../LinearSystem.h"
-#include "../Solvers/Direct/SolverLUP.h"
+
 
 namespace LinearAlgebra {
-    FiniteDifferenceSchemeWeightsCalculator::
-    FiniteDifferenceSchemeWeightsCalculator(){
+
+    
+    //Least squares polynomial fitting using the Vandermonde matrix
+    vector<double> FiniteDifferenceSchemeWeightsCalculator::calculateVandermondeCoefficients(unsigned derivativeOrder, vector<double>& positions) {
+        auto n = static_cast<unsigned >(positions.size());
+        
+        //Vandermonde matrix
+        auto V = new Array<double>(n, n);
+        // March through all rows
+        for (auto row = 0; row < n; row++) {
+            // March through all columns
+            for (auto column = 0; column < n; column++) {
+                V->at(row, column) = pow(positions[column], row);
+                if (abs(V->at(row, column)) == 0 && row == column) {
+                    V->at(row, column) = 1E-18;
+                }
+            }
+        }
+        V->print();
+        
+        //Right hand side vector
+        auto b = new vector<double>(n, 0);
+        b->at(derivativeOrder) = 1;
+
+        auto linearSystem = new LinearSystem(V, b);
+        auto solver = new SolverLUP(1E-9, true);
+        solver->setLinearSystem(linearSystem);
+        solver->solve();
+
+        auto weights = vector<double>(*linearSystem->solution);
+        delete linearSystem;
+        delete solver;
+        
+/*        //Calculate the weights using the undetermined coefficient method
+        vector<double> weights(n, 0);
+
+        for (int i = 0; i < n; ++i) {
+            auto weight = b->at(i);
+            for (int j = 0; j < n; ++j) {
+                if (i != j) {
+                    weight /= (positions[i] - positions[j]);
+                }
+            }
+            weights[i] = weight;
+        }
+        return weights;*/
+        
+        
+
+        return weights;
         
     }
     
-    vector<double> FiniteDifferenceSchemeWeightsCalculator::calculateWeights(unsigned derivativeOrder, vector<double>& positions) {
-        auto numberOfPoints = static_cast<unsigned >(positions.size());
-        
-        auto A = new Array<double>(numberOfPoints, numberOfPoints);
-        auto b = new vector<double>(numberOfPoints, 0);
-        
-        // March through all rows
-        for (auto row = 0; row < numberOfPoints; row++) {
-            // March through all columns
-            for (auto column = 0; column < numberOfPoints; column++) {
-                A->at(row, column) =  pow(positions[column], row);
-            }
-        }
-        //A->print();
-        b->at(derivativeOrder) = 1.0;
-        
-        auto linearSystem = new LinearSystem(A, b);
-        auto solver = new SolverLUP(1e-10, true);
-        solver->setLinearSystem(linearSystem);
-        solver->solve();
-/*        auto fileNameMatlab = "linearSystem.m";
-        auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
-        Utility::Exporters::exportLinearSystemToMatlabFile(A, b, filePath, fileNameMatlab, false);*/
-        auto solution = *linearSystem->solution;
-        delete solver;
-        delete linearSystem;
-        return solution;
-    }
-} // LinearAlgebra
+}// LinearAlgebra

@@ -6,6 +6,9 @@
 #define UNTITLED_FINITEDIFFERENCESCHEMEWEIGHTSCALCULATOR_H
 #include <cmath>
 #include "../../Utility/Exporters/Exporters.h"
+#include "../LinearSystem.h"
+#include "../Solvers/Direct/SolverLUP.h"
+#include "../Operations/NumberOperations.h"
 
 using namespace std;
 
@@ -13,9 +16,9 @@ namespace LinearAlgebra {
 
     class FiniteDifferenceSchemeWeightsCalculator {
     public:
-        FiniteDifferenceSchemeWeightsCalculator();
+
+        static vector<double> calculateVandermondeCoefficients(unsigned derivativeOrder, vector<double>& positions);
         
-        static vector<double> calculateWeights(unsigned derivativeOrder, vector<double>& positions);
 
     };
 

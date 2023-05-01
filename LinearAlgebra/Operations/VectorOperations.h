@@ -328,8 +328,16 @@ namespace LinearAlgebra {
         corr(X, Y) = cov(X, Y) / (stdDev(X) * stdDev(Y)), where cov(X, Y) is the covariance between X and Y, and stdDev(X) and stdDev(Y)
         are the standard deviations of X and Y, respectively.
         */
-        static double correlation(vector<int> &vector1, vector<int> &vector2);        
+        static double correlation(vector<int> &vector1, vector<int> &vector2);
         
+        /**
+        Calculates the correlation between two vectors of integers.
+        @param vector1 Reference to the vector.
+        @return The absolute average difference between the elements of the vector./
+         AAD = 1/(n - ) * sum(abs(x_i+1 - x_i))
+         Suitable for the average distance between the same coordinate component of different nodes.
+        */
+        static double averageAbsoluteDifference(vector<double>& vector1);
     };
 
 } // LinearAlgebra

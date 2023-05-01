@@ -8,7 +8,6 @@
 #include "../../MathematicalProblem/SteadyStateMathematicalProblem.h"
 #include "../../DegreesOfFreedom/DegreeOfFreedom.h"
 #include "DOFInitializer.h"
-#include "../../Discretization/Mesh/Mesh.h"
 
 namespace NumericalAnalysis {
 

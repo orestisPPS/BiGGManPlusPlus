@@ -11,6 +11,7 @@
 #include "../../LinearAlgebra/Operations/Transformations.h"
 #include "../Node/IsoparametricNodeGraph.h"
 #include "../../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
+#include "../../LinearAlgebra/FiniteDifferences/FD.h"
 
 
 using namespace Discretization;

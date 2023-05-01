@@ -7,7 +7,6 @@
 
 #include "../LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h"
 #include "../MathematicalProblem/MathematicalProblem.h"
-#include "../Discretization/Mesh/Mesh.h"
 #include "AnalysisDOFs/AnalysisDegreesOfFreedom.h"
 
 using namespace LinearAlgebra;

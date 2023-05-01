@@ -10,40 +10,28 @@ using namespace LinearAlgebra;
 #include "DegreesOfFreedom/DegreeOfFreedomTypes.h"
 #include "Analysis/FiniteDifferenceAnalysis/StStFDTest.h"
 #include "LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.h"
+#include "LinearAlgebra/FiniteDifferences/FDWeightCalculator.h"
 #include <functional>
 #include <list>
 int main() {
 
-    auto test = new StructuredMeshGenerator::MeshTest2D();
-    auto analysisTest = new NumericalAnalysis::StStFDTest();
-    
-/*    unsigned int n = 3;
-    auto LU = new Array<double>(n, n);
-    LU->at(0, 0) = 2;
-    LU->at(0, 1) = 1;
-    LU->at(0, 2) = -1;
-    LU->at(1, 0) = -4;
-    LU->at(1, 1) = 2;
-    LU->at(1, 2) = 3;
-    LU->at(2, 0) = -4;
-    LU->at(2, 1) = 3;
-    LU->at(2, 2) = 5;
-    
-    auto lup = new DecompositionLUP(LU);
-    lup->decompose(false);
-    auto l = lup->getL();
-    l->;
-    cout<<"------------------" << endl;
-    auto u = lup->getU();
-    u->print();
-    auto det = lup->determinant();
-    cout << "det = " << det << endl;
-    
-    auto solution = lup->solve(new vector<double>(n, 1));
-    for (auto i = 0; i < n; i++){
-        cout << solution->at(i) << endl;
-    }*/
-    
+/*    auto test = new StructuredMeshGenerator::MeshTest2D();
+    auto analysisTest = new NumericalAnalysis::StStFDTest();*/
+
+    const unsigned max_deriv = 2;
+    std::vector<std::string> labels {"0th derivative (interpolation)", "1st derivative", "2nd derivative"};
+    //std::vector<double> x {0, 1, -1, 2, -2};  // Fourth order of accuracy
+    std::vector<double> x {1,2,3};  // Fourth order of accuracy
+    std::vector<double> f {2,2,2};
+    auto coeffs = LinearAlgebra::generate_weights(x, max_deriv, 2.0);
+    auto values = LinearAlgebra::calculateDerivative(x, f, max_deriv, 2.0);
+    for (unsigned deriv_i = 0; deriv_i <= max_deriv; deriv_i++){
+        std::cout << labels[deriv_i] << ": ";
+        for (unsigned idx = 0; idx < x.size(); idx++){
+            std::cout << values[deriv_i][idx] << " ";
+        }
+        std::cout << std::endl;
+    }
     
     
     

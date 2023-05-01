@@ -285,8 +285,13 @@ namespace LinearAlgebra {
             return covariance / (standardDeviation1 * standardDeviation2);
         }
         
-
-        
+        double VectorOperations::averageAbsoluteDifference(vector<double>& vector1) {
+            auto numOfSpaces = static_cast<double>(vector1.size() - 1);
+            auto result = 0.0;
+            for(auto i = 0; i < numOfSpaces; i++)
+                result += abs(vector1[i + 1] - vector1[i]);
+            return result / numOfSpaces;
+        }
         
         
         

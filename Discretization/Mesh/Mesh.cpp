@@ -195,11 +195,12 @@ namespace Discretization {
                     auto covariantBaseVectorI = vector<double>(directionsVector.size(), 0);
                     auto contravariantBaseVectorI = vector<double>(directionsVector.size(), 0);
                     
-                    isUniformMesh = false;
+                    isUniformMesh = true;
                     if (isUniformMesh) {
                         //Get the FD scheme weights for the current direction
                         covariantWeights = schemeBuilder->getSchemeWeightsAtDirection(directionI);
                         contravariantWeights = covariantWeights;
+                        
                         //Check if the number of weights and the number of nodes match
                         if (covariantWeights.size() != parametricCoords[directionI][i].size()) {
                             throw std::runtime_error(
@@ -208,7 +209,7 @@ namespace Discretization {
                                     " in direction " + to_string(directionI) +
                                     "Cannot calculate covariant base vectors");
                         }
-    
+                        
                         if (covariantWeights.size() != parametricCoords[directionI][i].size()) {
                             throw std::runtime_error(
                                     "Number of weights and number of parametric nodal coords do not match"
@@ -216,13 +217,23 @@ namespace Discretization {
                                     " in direction " + to_string(directionI) +
                                     "Cannot calculate contravariant base vectors");
                         }
+
+                        auto covariantStep = 1.0;
+                        auto contravariantStep = VectorOperations::averageAbsoluteDifference(templateCoords[directionI][i]);
+
+                        for (int weight = 0; weight < covariantWeights.size(); weight++) {
+                            covariantWeights[weight] /= covariantStep;
+                            contravariantWeights[weight] /= contravariantStep;
+                        }
+                        auto lolipop = 0;
                     }
                     else {
                         covariantWeights = FiniteDifferenceSchemeWeightsCalculator::
-                        calculateWeights(1, parametricCoords[directionI][i]);
+                        calculateVandermondeCoefficients(1, parametricCoords[directionI][i]);
                         contravariantWeights = FiniteDifferenceSchemeWeightsCalculator::
-                        calculateWeights(1, templateCoords[directionI][i]);
+                        calculateVandermondeCoefficients(1, templateCoords[directionI][i]);
                     }
+                    
                     for (auto &directionJ: directionsVector){
                         auto j = spatialDirectionToUnsigned[directionJ];
                         

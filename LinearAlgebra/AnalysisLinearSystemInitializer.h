@@ -5,11 +5,12 @@
 #ifndef UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
 #define UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
 
-#include "../Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.h"
 #include "Array/Array.h"
 #include "../Discretization/Node/IsoparametricNodeGraph.h"
 #include "../Utility/Exporters/Exporters.h"
 #include "LinearSystem.h"
+#include "../Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.h"
+#include "../Discretization/Mesh/Mesh.h"
 
 using namespace NumericalAnalysis;
 

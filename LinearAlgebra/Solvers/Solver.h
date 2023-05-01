@@ -5,9 +5,9 @@
 #ifndef UNTITLED_SOLVER_H
 #define UNTITLED_SOLVER_H
 
-#include "../Array/Array.h"
+
 #include "../Norms/VectorNorm.h"
-#include "../AnalysisLinearSystemInitializer.h"
+#include "../LinearSystem.h"
 
 namespace LinearAlgebra {
     
@@ -21,7 +21,7 @@ namespace LinearAlgebra {
         
     public:
         
-        void setLinearSystem(AnalysisLinearSystemInitializer* linearSystem);
+        void setLinearSystem(LinearSystem* linearSystem);
 
         SolverType type();
 
@@ -29,7 +29,7 @@ namespace LinearAlgebra {
 
 
     protected:
-        AnalysisLinearSystemInitializer* _linearSystem;        
+        LinearSystem* _linearSystem;        
         
         SolverType _solverType;
     };

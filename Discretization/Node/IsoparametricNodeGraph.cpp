@@ -353,6 +353,8 @@ namespace Discretization {
             nodeGraph->at(position).push_back(_nodeMap->at(parametricCoords));
         }
     }
+    
+    
 
 
 
