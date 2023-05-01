@@ -138,23 +138,30 @@ namespace Discretization {
     }
 
     map<Direction, vector<vector<double>>> IsoParametricNodeGraph::
-    getColinearNodalCoordinateVectors(CoordinateType coordinateType) const {
-        
+    getSameColinearNodalCoordinates(CoordinateType coordinateType) const {
+
         map<Direction, vector<vector<double>>> coLinearNodalCoordinates;
         auto coLinearNodes = getColinearNodes();
-        for(auto& direction : *coLinearNodes) {
-            coLinearNodalCoordinates.insert({direction.first, vector<vector<double>>(direction.second.size())});
-            auto iPoint = 0;
-            auto coords = vector<vector<double>>(direction.second.size());
-            for (auto &node: direction.second) {
-                coLinearNodalCoordinates.at(direction.first)[iPoint] = node->coordinates.positionVector3D(coordinateType);
-                iPoint++;   
+        auto numberOfDirections = coLinearNodes->size();
+        for (auto &direction: *coLinearNodes) {
+            auto directionI = direction.first;
+            auto nodeVector = direction.second;
+            coLinearNodalCoordinates.insert({directionI, vector<vector<double>>(numberOfDirections)});
+            for (int i = 0; i < numberOfDirections; ++i) {
+                coLinearNodalCoordinates.at(directionI)[i] = vector<double>(nodeVector.size());
+                auto iNode = 0;
+                for (auto &node: nodeVector) {
+                    coLinearNodalCoordinates.at(directionI)[i][iNode] = node->coordinates.positionVector(coordinateType)[i];
+                    iNode++;
+                }
+
             }
         }
+        delete coLinearNodes;
         return coLinearNodalCoordinates;
     }
-    
-    map<Direction, vector<DegreeOfFreedom*>> IsoParametricNodeGraph::
+
+   map<Direction, vector<DegreeOfFreedom*>> IsoParametricNodeGraph::
     getColinearDOF(DOFType dofType) const {
         map<Direction, vector<DegreeOfFreedom*>> coLinearDOF;
         auto coLinearNodes = getColinearNodes();
@@ -346,6 +353,8 @@ namespace Discretization {
             nodeGraph->at(position).push_back(_nodeMap->at(parametricCoords));
         }
     }
+
+
 
 
 } // Node

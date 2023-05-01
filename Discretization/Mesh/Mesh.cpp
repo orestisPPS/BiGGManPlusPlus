@@ -169,14 +169,8 @@ namespace Discretization {
                 //Find Neighbors in a manner that applies the same numerical scheme to all nodes
                 auto neighbours = schemeBuilder->getNumberOfDiagonalNeighboursNeeded();
                 //Initiate Node Graph
-                auto graph = new IsoParametricNodeGraph(node, schemeBuilder->getNumberOfGhostNodesNeeded(),
-                                                        ghostMesh->parametricCoordToNodeMap, numberOfNodesPerDirection,
-                                                        false);
-
-                //Get the co-linear nodal coordinates (Left-Right -> 1, Up-Down -> 2, Front-Back -> 3)
-                auto templateCoords  = graph->getColinearNodalCoordinateVectors(
-                        coordinateSystem);
-                auto parametricCoords = graph->getColinearNodalCoordinateVectors(Parametric);
+                auto graph = new IsoParametricNodeGraph(node, schemeBuilder->getNumberOfGhostNodesNeeded(),ghostMesh->parametricCoordToNodeMap,
+                                                        numberOfNodesPerDirection,false);
                 
                 //Get the adjusted node graph that contains only the nodes that are needed to calculate the FD scheme
                 auto nodeGraph = graph->getNodeGraph(neighbours);
@@ -184,26 +178,30 @@ namespace Discretization {
                 //Initialize Metrics class for the current node.
                 auto nodeMetrics = new Metrics(node, dimensions());
 
+                //Get the co-linear nodal coordinates (Left-Right -> 1, Up-Down -> 2, Front-Back -> 3)
+                auto parametricCoords = graph->getSameColinearNodalCoordinates(Parametric);
+                auto templateCoords = graph->getSameColinearNodalCoordinates(coordinateSystem);
+
+
                 auto directionsVector = directions();
                 //March through all the directions I (g_i = d(x_j)/d(x_i))
                 for (auto&  directionI : directionsVector){//Initialize the weights vector. Their values depend on whether the mesh is uniform or not.
+                    
                     auto i = spatialDirectionToUnsigned[directionI];
                     
-                    //For uniform meshes, the weights are the same for all nodes in all directions and for non-uniform
-                    //meshes, the weights are different for each node in each direction. (Linear System Solution needed)
                     auto covariantWeights = vector<double>(directionsVector.size(), 0);
                     auto contravariantWeights = vector<double>(directionsVector.size(), 0);
 
                     auto covariantBaseVectorI = vector<double>(directionsVector.size(), 0);
                     auto contravariantBaseVectorI = vector<double>(directionsVector.size(), 0);
-
-                    //isUniformMesh = true;
+                    
+                    isUniformMesh = false;
                     if (isUniformMesh) {
                         //Get the FD scheme weights for the current direction
                         covariantWeights = schemeBuilder->getSchemeWeightsAtDirection(directionI);
                         contravariantWeights = covariantWeights;
                         //Check if the number of weights and the number of nodes match
-                        if (covariantWeights.size() != templateCoords[directionI].size()) {
+                        if (covariantWeights.size() != parametricCoords[directionI][i].size()) {
                             throw std::runtime_error(
                                     "Number of weights and number of template nodal coords do not match"
                                     " for node " + to_string(*node->id.global) +
@@ -211,7 +209,7 @@ namespace Discretization {
                                     "Cannot calculate covariant base vectors");
                         }
     
-                        if (covariantWeights.size() != templateCoords[directionI].size()) {
+                        if (covariantWeights.size() != parametricCoords[directionI][i].size()) {
                             throw std::runtime_error(
                                     "Number of weights and number of parametric nodal coords do not match"
                                     " for node " + to_string(*node->id.global) +
@@ -221,7 +219,7 @@ namespace Discretization {
                     }
                     else {
                         covariantWeights = FiniteDifferenceSchemeWeightsCalculator::
-                        calculateWeights(1, templateCoords[directionI][i]);
+                        calculateWeights(1, parametricCoords[directionI][i]);
                         contravariantWeights = FiniteDifferenceSchemeWeightsCalculator::
                         calculateWeights(1, templateCoords[directionI][i]);
                     }
@@ -233,29 +231,28 @@ namespace Discretization {
                         //g_2 = {dx/dη, dy/dη, dz/dη}
                         //g_3 = {dx/dζ, dy/dζ, dz/dζ}
                         //auto gi = VectorOperations::dotProduct(covariantWeights, templateCoordsMap[directionJ]);
-                        covariantBaseVectorI[directionJ] = VectorOperations::dotProduct(covariantWeights, templateCoords[directionJ][j]);
+                        covariantBaseVectorI[j] = VectorOperations::dotProduct(covariantWeights, templateCoords[directionI][j]);
 
                         //Contravariant base vectors (dξ_i/dr_i)
                         //g^1 = {dξ/dx, dξ/dy, dξ/dz}
                         //g^2 = {dη/dx, dη/dy, dη/dz}
                         //g^3 = {dζ/dx, dζ/dy, dζ/dz}
-                        contravariantBaseVectorI[directionJ] = VectorOperations::dotProduct(contravariantWeights, parametricCoords[directionJ][j]);
+                        contravariantBaseVectorI[j] = VectorOperations::dotProduct(contravariantWeights, parametricCoords[directionI][j]);
                     }
                     nodeMetrics->covariantBaseVectors->insert(pair<Direction, vector<double>>(directionI, covariantBaseVectorI));
                     nodeMetrics->contravariantBaseVectors->insert(pair<Direction, vector<double>>(directionI, contravariantBaseVectorI));
                 }
-    
-                        
-                    nodeMetrics->calculateCovariantTensor();
-                    nodeMetrics->calculateContravariantTensor();
-                    metrics->insert(pair<Node *, Metrics *>(node, nodeMetrics));
-    
-                    //Deallocate memory
-                    delete nodeGraph;
-                    nodeGraph = nullptr;
-                    delete graph;
-                    graph = nullptr;
-                }
+                
+                nodeMetrics->calculateCovariantTensor();
+                nodeMetrics->calculateContravariantTensor();
+                metrics->insert(pair<Node *, Metrics *>(node, nodeMetrics));
+
+                //Deallocate memory
+                delete nodeGraph;
+                nodeGraph = nullptr;
+                delete graph;
+                graph = nullptr;
+            }
             delete ghostMesh;
             delete schemeBuilder;
             schemeBuilder = nullptr;
@@ -265,7 +262,7 @@ namespace Discretization {
             for (auto &node: *metrics) {
                 //node.first->printNode();
                 cout << "Node " << *node.first->id.global << endl;
-                cout << "contravariant tensor" << endl;
+                cout << "covariant tensor" << endl;
                 node.second->covariantTensor->print();
                 cout << "contravariant tensor" << endl;
                 node.second->contravariantTensor->print();
