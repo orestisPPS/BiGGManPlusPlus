@@ -4,8 +4,6 @@
 
 #include "IsoparametricNodeGraph.h"
 
-#include <utility>
-#include <algorithm>
 
 namespace Discretization {
 

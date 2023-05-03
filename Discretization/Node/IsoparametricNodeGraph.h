@@ -6,6 +6,8 @@
 #define UNTITLED_ISOPARAMETRICNODEGRAPH_H
 
 #include "Node.h"
+#include <utility>
+#include <algorithm>
 #include "../../LinearAlgebra/Operations/VectorOperations.h"
 
 using namespace Discretization;

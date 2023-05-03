@@ -9,6 +9,7 @@
 #include "map"
 using namespace std;
 using namespace LinearAlgebra;
+using namespace Discretization;
 
 using namespace Discretization;
 
@@ -20,48 +21,62 @@ namespace PartialDifferentialEquations {
         LocallyAnisotropic
     };
     class SecondOrderLinearPDEProperties {
+        
     public :
-        SecondOrderLinearPDEProperties(Array<double> *secondOrderCoefficients,
-                                       vector<double> *firstOrderCoefficients,
-                                       double *zerothOrderCoefficient,
-                                       double *sourceTerm, bool *isTransient);
-            
-        SecondOrderLinearPDEProperties(map<int*, Array<double>> *secondOrderCoefficients,
-                                       map<int*, vector<double>> *firstOrderCoefficients,
-                                       map<int*, double> *zerothOrderCoefficients,
-                                       map<int*, double> *sourceTerms, bool *isTransient);
+        SecondOrderLinearPDEProperties(unsigned short physicalSpaceDimensions, bool isTransient,
+                                       PropertiesDistributionType type);
         
         PropertiesDistributionType Type();
         
-        bool IsTransient();
+        bool IsTransient() const;
+        
+        short unsigned totalDimensions() const;
+        
+        void setIsotropicProperties(double secondOrderCoefficient, double firstOrderCoefficient,
+                                    double zerothOrderCoefficient, double sourceTerm);
+        
+        void setFieldAnisotropicProperties(Array<double> *secondOrderCoefficients,
+                                           vector<double> *firstOrderCoefficients,
+                                           double zerothOrderCoefficient, double sourceTerm);
+        
+        void setLocallyAnisotropicProperties(map<unsigned, Array<double>*> *secondOrderCoefficients,
+                                             map<unsigned, vector<double>*> *firstOrderCoefficients,
+                                             map<unsigned, double*> *zerothOrderCoefficients,
+                                             map<unsigned, double*> *sourceTerms);
+        struct localProperties
+        {
+            Array<double> *secondOrderCoefficients;
+            vector<double> *firstOrderCoefficients;
+            double *zerothOrderCoefficient;
+            double *sourceTerm;
+        };
+        localProperties getLocalProperties(unsigned nodeId);
+        
+        localProperties getLocalProperties();
+        
 
-        template<class T>
-        T *SecondOrderCoefficients();
-        
-        template<class T>
-        T *FirstOrderCoefficients();
-        
-        template<class T>
-        T *ZerothOrderCoefficient();
-        
-        template<class T>
-        T *SourceTerm();
 
+
+    protected:
         
-    
-    private:
         PropertiesDistributionType _type;
-        bool *_isTransient;
         
-        Array<double> *_secondDerivativeIsotropicProperties;
-        vector<double> *_firstDerivativeIsotropicProperties;
-        double *_zeroDerivativeIsotropicProperties;
-        double *_sourceProperties;
-                
-        map<int*, Array<double>> *_secondDerivativeLocallyAnisotropicProperties;
-        map<int*, vector<double>> *_firstDerivativeLocallyAnisotropicProperties;
-        map<int*, double> *_zeroDerivativeLocallyAnisotropicProperties;
-        map<int*, double> *_sourceLocallyAnisotropicProperties;
+        bool _isTransient;
+        
+        short unsigned _physicalSpaceDimensions;
+        
+        Array<double> *_secondDerivativeProperties;
+        
+        vector<double> *_firstDerivativeProperties;
+        
+        double *_zeroDerivativeProperties;
+        
+        double *_sourceTerm;
+        
+        map<unsigned, localProperties> *_localProperties{};  
+        
+        bool _isInitialized;
+
     };
 
 } // PartialDifferentialEquations
