@@ -14,6 +14,7 @@
 #include <limits>
 #include <omp.h>
 #include <memory>
+#include <stdexcept>
 
 using namespace std;
 
@@ -40,14 +41,25 @@ namespace LinearAlgebra {
          * @param isPositiveDefinite Boolean indicating whether the matrix is symmetric and has positive eigenvalues. Defaults to false.
          */
         explicit Array(short unsigned numberOfRows, short unsigned numberOfColumns = 1, short unsigned numberOfAisles = 1,
-                       T initialValue = 0, bool isPositiveDefinite = false);
-
+                       T initialValue = 0, bool isPositiveDefinite = false) :
+                _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _numberOfAisles(numberOfAisles),
+                _array(vector<T>(numberOfRows * numberOfColumns * numberOfAisles, initialValue)),
+                _isPositiveDefinite(isPositiveDefinite), _isSquare(false),
+                parallelizationThreshold(1E4) {
+            if (numberOfRows == numberOfColumns and numberOfColumns == numberOfAisles)
+                _isSquare = true;
+        }
+        
         /**
          * Copy constructor for creating a new `Array` object.
          * 
          * @param array The `Array` object to be copied.
          */
-        Array(const Array<T> &array);
+        Array(const Array<T> &array) :
+                _numberOfRows(array._numberOfRows), _numberOfColumns(array._numberOfColumns),
+                _numberOfAisles(array._numberOfAisles),
+                _array(array._array), _isPositiveDefinite(array._isPositiveDefinite), _isSquare(array._isSquare),
+                parallelizationThreshold(array.parallelizationThreshold) {}
 
         /**
          * The threshold number of elements after which operations on the matrix will be parallelized.
@@ -62,8 +74,15 @@ namespace LinearAlgebra {
         * @throws std::out_of_range if the index is out of bounds.
         *@throws std::invalid_argument if the matrix is not 1D.
         */
-        T& operator()(unsigned i);
-        
+        T& operator()(unsigned i) {
+            if (i >= _numberOfRows * _numberOfColumns * _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfAisles == 1 && _numberOfColumns == 1)
+                return _array[i];
+            else
+                throw invalid_argument("The matrix is not one-dimensional.");
+        }
+
         /**
         * () operator overloading. Allows to set the elements of the matrix and returns a reference to the element at position (i).
         *
@@ -72,8 +91,15 @@ namespace LinearAlgebra {
         * @throws std::out_of_range if the index is out of bounds.
         *@throws std::invalid_argument if the matrix is not 1D.
         */
-        const T& operator()(unsigned i) const;
-        
+        const T& operator()(unsigned i) const {
+            if (i >= _numberOfRows * _numberOfColumns * _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfAisles == 1 and _numberOfColumns == 1)
+                return _array[i];
+            else
+                throw invalid_argument("The matrix is not one-dimensional.");
+        }
+
         /**
         * () operator overloading. Allows to read the elements of the matrix and returns a constant reference to the element at position (i, j).
         *
@@ -83,8 +109,15 @@ namespace LinearAlgebra {
         * @throws std::out_of_range if the index is out of bounds.
         *@throws std::invalid_argument if the matrix is not 2D.
         */
-        T& operator()(unsigned i, unsigned j);
-        
+        T& operator()(unsigned i, unsigned j) {
+            if (i >= _numberOfRows or j >= _numberOfColumns)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfAisles == 1)
+                return _array[i * _numberOfColumns + j];
+            else
+                throw invalid_argument("The matrix is not two-dimensional.");
+        }
+
         /**
         * () operator overloading. Allows to set the elements of the matrix and returns a reference to the element at position (i, j, k).
         *
@@ -94,8 +127,15 @@ namespace LinearAlgebra {
         * @throws std::out_of_range if the index is out of bounds.
         *@throws std::invalid_argument if the matrix is not 2D.
         */
-        const T& operator()(unsigned i, unsigned j) const;
-        
+        const T& operator()(unsigned i, unsigned j) const {
+            if (i >= _numberOfRows or j >= _numberOfColumns)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles == 1)
+                return _array[i * _numberOfColumns + j];
+            else
+                throw invalid_argument("The matrix is not two-dimensional.");
+        }
+
         /**
         * () operator overloading. Allows to read the elements of the matrix and returns a constant reference to the element at position (i, j, k).
         *
@@ -106,8 +146,15 @@ namespace LinearAlgebra {
         * @throws std::out_of_range if the index is out of bounds.
         *@throws std::invalid_argument if the matrix is not 3D.
         */
-        T& operator()(unsigned i, unsigned j, unsigned k);
-        
+        T& operator()(unsigned i, unsigned j, unsigned k){
+            if (i >= _numberOfRows or j >= _numberOfColumns or k >= _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles > 1)
+                return _array[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k];
+            else
+                throw invalid_argument("The matrix is not three-dimensional.");
+        }
+
         /**
         * () operator overloading. Allows to read the elements of the matrix and returns a constant reference to the element at position (i, j, k).
         *
@@ -118,8 +165,15 @@ namespace LinearAlgebra {
         * @throws std::out_of_range if the index is out of bounds.
         *@throws std::invalid_argument if the matrix is not 3D.
         */
-        const T& operator()(unsigned i, unsigned j, unsigned k) const;
-        
+        const T& operator()(unsigned i, unsigned j, unsigned k) const{
+            if (i >= _numberOfRows or j >= _numberOfColumns or k >= _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles > 1)
+                return _array[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k];
+            else
+                throw invalid_argument("The matrix is not three-dimensional.");
+        }
+
         /**
         * at() function to read and write the elements of the matrix and returns a reference to the element at position (i).
         * Throws an `out_of_range` exception if the index is out of bounds.
@@ -129,8 +183,15 @@ namespace LinearAlgebra {
         * @throws std::out_of_range if i is out of bounds.
         * @throws std::invalid_argument if the matrix is not 1D.
         */
-        T& at(unsigned i);
-        
+        T& at(unsigned i) {
+            if (i >= _numberOfRows * _numberOfColumns * _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfAisles == 1 and _numberOfColumns == 1)
+                return _array[i];
+            else
+                throw invalid_argument("The matrix is not one-dimensional.");
+        }
+
         /**
         * at() function to read the elements of the matrix and returns a constant reference to the element at position (i).
         * Throws an `out_of_range` exception if the index is out of bounds.
@@ -140,8 +201,15 @@ namespace LinearAlgebra {
         * @throws std::out_of_range if i is out of bounds.
         * @throws std::invalid_argument if the matrix is not 1D.
          * */
-        const T& at(unsigned i) const;
-        
+        const T& at(unsigned i) const {
+            if (i >= _numberOfRows * _numberOfColumns * _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfAisles == 1 and _numberOfColumns == 1)
+                return _array[i];
+            else
+                throw invalid_argument("The matrix is not one-dimensional.");
+        }
+
         /**
         * at() function to read and write the elements of the matrix and returns a reference to the element at position (i, j).
         * Throws an `out_of_range` exception if the index is out of bounds.
@@ -152,8 +220,15 @@ namespace LinearAlgebra {
         * @throws std::out_of_range if the index is out of bounds.
         * @throws std::invalid_argument if the matrix is not 2D.
         */
-        T& at(unsigned i, unsigned j);
-        
+        T& at(unsigned i, unsigned j) {
+            if (i >= _numberOfRows or j >= _numberOfColumns)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles == 1)
+                return _array[i * _numberOfColumns + j];
+            else
+                throw invalid_argument("The matrix is not two-dimensional.");
+        }
+
         /**
         * at() function to read the elements of the matrix and returns a constant reference to the element at position (i, j).
         * Throws an `out_of_range` exception if the index is out of bounds.
@@ -164,8 +239,15 @@ namespace LinearAlgebra {
         * @throws std::out_of_range if the index is out of bounds.
         * @throws std::invalid_argument if the matrix is not 2D.
         */
-        const T& at(unsigned i, unsigned j) const;
-        
+        const T& at(unsigned i, unsigned j) const {
+            if (i >= _numberOfRows or j >= _numberOfColumns)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles == 1)
+                return _array[i * _numberOfColumns + j];
+            else
+                throw invalid_argument("The matrix is not two-dimensional.");
+        }
+
         /**
         * at() function to read and write the elements of the matrix and returns a reference to the element at position (i, j, k).
         * Throws an `out_of_range` exception if the index is out of bounds.
@@ -177,8 +259,15 @@ namespace LinearAlgebra {
         * @throws std::out_of_range if the index is out of bounds.
         * @throws std::invalid_argument if the matrix is not 3D.
         */
-        T& at(unsigned i, unsigned j, unsigned k);
-        
+        T& at(unsigned i, unsigned j, unsigned k) {
+            if (i >= _numberOfRows or j >= _numberOfColumns or k >= _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles > 1)
+                return _array[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k];
+            else
+                throw invalid_argument("The matrix is not three-dimensional.");
+        }
+
         /**
         * at() function to read the elements of the matrix and returns a constant reference to the element at position (i, j, k).
         * Throws an `out_of_range` exception if the index is out of bounds.
@@ -190,81 +279,242 @@ namespace LinearAlgebra {
         * @throws std::out_of_range if the index is out of bounds.
         * @throws std::invalid_argument if the matrix is not 3D.
         */
-        const T& at(unsigned i, unsigned j, unsigned k) const;
-        
+        const T& at(unsigned i, unsigned j, unsigned k) const{
+            if (i >= _numberOfRows or j >= _numberOfColumns or k >= _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles > 1)
+                return _array[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k];
+            else
+                throw invalid_argument("The matrix is not three-dimensional.");
+        }
+
         /**
         * Overloads the assignment operator to copy the values of the provided `array` array into the current array.
         * 
         * @param array The array to copy.
         * @return A reference to the current array.
         */
-        Array<T>& operator=(const Array<T>& array);
-        
+        Array<T>& operator=(const Array<T>& array) {
+            if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
+                _numberOfAisles != array._numberOfAisles)
+                throw invalid_argument("The dimensions of the arrays are not the same.");
+            _isSquare = array._isSquare;
+            _isPositiveDefinite = array._isPositiveDefinite;
+            for (int i = 0; i < array._array.size(); ++i) {
+                _array[i] = array._array[i];
+            }
+            return *this;
+        }
+
         /**
         * Overloads the equality operator to compare two arrays for equality.
         * 
         * @param array The array to compare with.
         * @return `true` if the arrays are equal, `false` otherwise.
         */
-        bool operator==(const Array<T>& array) const;
-        
+        bool operator==(const Array<T>& array) const {
+            if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
+                _numberOfAisles != array._numberOfAisles)
+                return false;
+            for (int i = 0; i < array._array.size(); ++i) {
+                if (_array[i] != array._array[i])
+                    return false;
+            }
+            return true;
+        }
+
         /**
         * Overloads the inequality operator to compare two arrays for inequality.
         * 
         * @param array The array to compare with.
         * @return `true` if the arrays are not equal, `false` otherwise.
         */
-        bool operator!=(const Array<T>& array) const;
-        
-        Array<T> add(const Array<T>& array) const;
-        
-        void addIntoThis(const Array<T>& array);
-        
-        Array<T> subtract(const Array<T>& array) const;
-        
-        void subtractIntoThis(const Array<T>& array);
-        
+        bool operator!=(const Array<T>& array) const {
+            return !(*this == array);
+        }
+
+        Array<T> add(const Array<T>& array) const{
+            if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
+                _numberOfAisles != array._numberOfAisles)
+                throw invalid_argument("The dimensions of the arrays are not the same.");
+            Array<T> result(_numberOfRows, _numberOfColumns, _numberOfAisles);
+            for (int i = 0; i < _array.size(); ++i) {
+                result._array[i] = _array[i] + array._array[i];
+            }
+            return result;
+        }
+
+        void addIntoThis(const Array<T>& array){
+            if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
+                _numberOfAisles != array._numberOfAisles)
+                throw invalid_argument("The dimensions of the arrays are not the same.");
+            for (int i = 0; i < _array.size(); ++i) {
+                _array[i] += array._array[i];
+            }
+        }
+
+        Array<T> subtract(const Array<T>& array) const{
+            if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
+                _numberOfAisles != array._numberOfAisles)
+                throw invalid_argument("The dimensions of the arrays are not the same.");
+            Array<T> result(_numberOfRows, _numberOfColumns, _numberOfAisles);
+            for (int i = 0; i < _array.size(); ++i) {
+                result._array[i] = _array[i] - array._array[i];
+            }
+            return result;
+        }
+
+        void subtractIntoThis(const Array<T>& array){
+            if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
+                _numberOfAisles != array._numberOfAisles)
+                throw invalid_argument("The dimensions of the arrays are not the same.");
+            for (int i = 0; i < _array.size(); ++i) {
+                _array[i] -= array._array[i];
+            }
+        }
+
         Array<T> multiply(const Array<T>& array, unsigned minRow, unsigned maxRow, unsigned minCol, unsigned maxCol) const;
 
-        Array<T> multiply(const Array<T>& array) const;
-        
-        vector<T> multiplyWithVector(const vector<T>& vector) const;
-        
-        Array<T> transpose() const;
-        
-        void transposeIntoThis();
-        
-        bool isSquare() const;
-        
-        bool isSymmetric() const;
-        
-        bool isPositiveDefinite() const;
-        
-        void setPositiveDefinite(bool isPositiveDefinite);
-        
-        bool isDiagonal() const;
-        
-        unsigned numberOfRows() const;
+        Array<T> multiply(const Array<T>& array) const{
+            return multiply(array, 0, _numberOfRows - 1, 0, _numberOfColumns - 1);
+        }
 
-        unsigned numberOfColumns() const;
+        vector<T> multiplyWithVector(const vector<T>& vector) const {
+            if (_numberOfColumns != vector.size())
+                throw invalid_argument("The dimensions of the array and the vector are not the same.");
+            auto result = std::vector<T>(_numberOfRows);
+            for (int i = 0; i < _numberOfRows; ++i) {
+                for (int j = 0; j < _numberOfColumns; ++j) {
+                    result[i] += _array[i * _numberOfColumns + j] * vector[j];
+                }
+            }
+        }
 
-        unsigned numberOfAisles() const; 
-        
-        unsigned int size();
+        Array<T> transpose() const{
+            if (_numberOfRows != _numberOfColumns)
+                throw invalid_argument("The matrix is not square.");
+            for (int i = 0; i < _numberOfRows; ++i) {
+                for (int j = i + 1; j < _numberOfColumns; ++j) {
+                    swap(_array[i * _numberOfColumns + j], _array[j * _numberOfColumns + i]);
+                }
+            }
+        }
 
-        vector<T> getRow(unsigned row);
+        void transposeIntoThis(){
+            if (_numberOfRows != _numberOfColumns)
+                throw invalid_argument("The matrix is not square.");
+            for (int i = 0; i < _numberOfRows; ++i) {
+                for (int j = i + 1; j < _numberOfColumns; ++j) {
+                    swap(_array[i * _numberOfColumns + j], _array[j * _numberOfColumns + i]);
+                }
+            }
+        }
 
-        vector<T> getColumn(unsigned column);
+        bool isSquare() const {
+            return _isSquare;
+        }
 
-        vector<T> getAisle(unsigned aisle);
-        
+        bool isSymmetric() const {
+            if (_numberOfRows != _numberOfColumns)
+                throw invalid_argument("The matrix is not square.");
+            for (int i = 0; i < _numberOfRows; ++i) {
+                for (int j = i + 1; j < _numberOfColumns; ++j) {
+                    if (_array[i * _numberOfColumns + j] != _array[j * _numberOfColumns + i])
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        bool isPositiveDefinite() const {
+            return _isPositiveDefinite;
+        }
+
+        void setPositiveDefinite(bool isPositiveDefinite) {
+            _isPositiveDefinite = isPositiveDefinite;
+        }
+
+        bool isDiagonal() const {
+            for (int i = 0; i < size(); ++i) {
+                for (int j = 0; j < size(); ++j) {
+                    if (i != j and _array[i * _numberOfColumns + j] != 0)
+                        return false;
+                }
+            }
+        }
+
+        unsigned numberOfRows() const {
+            return _numberOfRows;
+        }
+
+        unsigned numberOfColumns() const {
+            return _numberOfColumns;
+        }
+
+        unsigned numberOfAisles() const {
+            return _numberOfAisles;
+        }
+
+        unsigned int size() {
+            return _array.size();
+        }
+
+        vector<T> getRow(unsigned row){
+            vector<T> rowVector;
+            for (int i = 0; i < _numberOfColumns; ++i) {
+                rowVector.push_back(_array[row * _numberOfColumns + i]);
+            }
+            return rowVector;
+        }
+
+        vector<T> getColumn(unsigned column){
+            vector<T> columnVector;
+            for (int i = 0; i < _numberOfRows; ++i) {
+                columnVector.push_back(_array[i * _numberOfColumns + column]);
+            }
+            return columnVector;
+        }
+
+        vector<T> getAisle(unsigned aisle){
+            vector<T> aisleVector;
+            for (int i = 0; i < _numberOfRows; ++i) {
+                for (int j = 0; j < _numberOfColumns; ++j) {
+                    aisleVector.push_back(_array[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + aisle]);
+                }
+            }
+            return aisleVector;
+        }
+
         // Swap the elements of the i-th and j-th rows of the matrix
-        void swapRows(unsigned i, unsigned j);
+        void swapRows(unsigned i, unsigned j) {
+            if (i == j) return; // No need to swap if i and j are the same
+            // Swap the elements of the i-th and j-th rows
+            for (auto k = 0; k < _numberOfColumns; k++) {
+                T temp = (*this)(i, k);
+                (*this)(i, k) = (*this)(j, k);
+                (*this)(j, k) = temp;
+            }
+        }
 
         // Swap the elements of the i-th and j-th columns of the matrix
-        void swapColumns(unsigned i, unsigned j);
-        
-        void print() const;
+        void swapColumns(unsigned i, unsigned j) {
+            if (i == j) return; // No need to swap if i and j are the same
+            // Swap the elements of the i-th and j-th columns
+            for (auto k = 0; k < _numberOfRows; k++) {
+                T temp = (*this)(k, i);
+                (*this)(k, i) = (*this)(k, j);
+                (*this)(k, j) = temp;
+            }
+        }
+
+        void print() const {
+            for (int i = 0; i < _numberOfRows; ++i) {
+                for (int j = 0; j < _numberOfColumns; ++j) {
+                    cout << _array[i * _numberOfColumns + j] << " ";
+                }
+                cout << endl;
+            }
+        }
 
     private:
         // The 1D array that stores the matrix. The elements are stored in row-major order.
