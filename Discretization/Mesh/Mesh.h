@@ -103,7 +103,6 @@ namespace Discretization {
         //Adds the internal nodes of the mesh to a vector pointer of node pointers
         virtual vector<Node*>* addInternalNodesToVector();
         
-        //Adds the total nodes of the mesh to a vector pointer of node pointers
         virtual vector<Node*>* addTotalNodesToVector();
         
         virtual GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth);

@@ -26,7 +26,8 @@ namespace LinearAlgebra {
  * 
  * @tparam T The type of the elements stored in the matrix.
  */
-    template<typename T> class Array {
+    template<typename T>
+    class Array {
 
     public:
         /**
@@ -51,7 +52,7 @@ namespace LinearAlgebra {
         /**
          * The threshold number of elements after which operations on the matrix will be parallelized.
          */
-        unsigned parallelizationThreshold{};
+        unsigned parallelizationThreshold;
 
         /**
         * () operator overloading. Allows to set the elements of the matrix and returns a constant reference to the element at position (i).
@@ -137,8 +138,9 @@ namespace LinearAlgebra {
         * @param i The row index of the element.
         * @return A constant reference to the element at position (i).
         * @throws std::out_of_range if i is out of bounds.
-        * @throws std::invalid_argument if the matrix is not 1D.         */
-        T& at(unsigned i) const;
+        * @throws std::invalid_argument if the matrix is not 1D.
+         * */
+        const T& at(unsigned i) const;
         
         /**
         * at() function to read and write the elements of the matrix and returns a reference to the element at position (i, j).
@@ -162,7 +164,7 @@ namespace LinearAlgebra {
         * @throws std::out_of_range if the index is out of bounds.
         * @throws std::invalid_argument if the matrix is not 2D.
         */
-        T& at(unsigned i, unsigned j) const;
+        const T& at(unsigned i, unsigned j) const;
         
         /**
         * at() function to read and write the elements of the matrix and returns a reference to the element at position (i, j, k).
@@ -188,7 +190,7 @@ namespace LinearAlgebra {
         * @throws std::out_of_range if the index is out of bounds.
         * @throws std::invalid_argument if the matrix is not 3D.
         */
-        T& at(unsigned i, unsigned j, unsigned k) const;
+        const T& at(unsigned i, unsigned j, unsigned k) const;
         
         /**
         * Overloads the assignment operator to copy the values of the provided `array` array into the current array.
@@ -226,6 +228,8 @@ namespace LinearAlgebra {
 
         Array<T> multiply(const Array<T>& array) const;
         
+        vector<T> multiplyWithVector(const vector<T>& vector) const;
+        
         Array<T> transpose() const;
         
         void transposeIntoThis();
@@ -248,11 +252,19 @@ namespace LinearAlgebra {
         
         unsigned int size();
 
+        vector<T> getRow(unsigned row);
+
+        vector<T> getColumn(unsigned column);
+
+        vector<T> getAisle(unsigned aisle);
+        
         // Swap the elements of the i-th and j-th rows of the matrix
         void swapRows(unsigned i, unsigned j);
 
         // Swap the elements of the i-th and j-th columns of the matrix
         void swapColumns(unsigned i, unsigned j);
+        
+        void print() const;
 
     private:
         // The 1D array that stores the matrix. The elements are stored in row-major order.
@@ -268,115 +280,14 @@ namespace LinearAlgebra {
 
         bool _isSquare;
 
-        };
+    };
 
-    } // Numerics
+} // Numerics
 
 #endif //UNTITLED_ARRAY_H
 
 
-
-
-
-
-
-
-//Boolean defining if the matrix is diagonal
-bool isDiagonal(){
-    if (isSquare()){
-        for (int i = 0; i < _numberOfRows; ++i) {
-            for (int j = 0; j < _numberOfColumns; ++j) {
-                if (i != j && _array[i * _numberOfColumns + j] != 0){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    return false;
-}
-
-
 /*
-
-vector<T> getRow(unsigned row){
-    vector<T> rowVector;
-    for (int i = 0; i < _numberOfColumns; ++i) {
-        rowVector.push_back(_array[row * _numberOfColumns + i]);
-    }
-    return rowVector;
-}
-
-vector<T> getColumn(unsigned column){
-    vector<T> columnVector;
-    for (int i = 0; i < _numberOfRows; ++i) {
-        columnVector.push_back(_array[i * _numberOfColumns + column]);
-    }
-    return columnVector;
-}
-
-vector<T> getAisle(unsigned aisle){
-    vector<T> aisleVector;
-    for (int i = 0; i < _numberOfRows; ++i) {
-        for (int j = 0; j < _numberOfColumns; ++j) {
-            aisleVector.push_back(_array[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + aisle]);
-        }
-    }
-    return aisleVector;
-}
-
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "openmp-use-default-none"
-//If the vector size is bigger than 1000 the multiplication will be performed in parallel with OpenMP
-vector<T> vectorMultiplication(vector<T> vector){
-    if (vector.size() == _numberOfColumns){
-        ::vector<T> resultVector;
-        if (vector.size() > 1000){
-#pragma omp parallel for
-            for (int i = 0; i < _numberOfRows; ++i) {
-                T result = 0;
-                for (int j = 0; j < _numberOfColumns; ++j) {
-                    result += _array[i * _numberOfColumns + j] * vector[j];
-                }
-                resultVector.push_back(result);
-            }    // NOLINT(openmp-use-default-none)
-        } else {
-            for (int i = 0; i < _numberOfRows; ++i) {
-                T result = 0;
-                for (int j = 0; j < _numberOfColumns; ++j) {
-                    //add boolean about diagonal here
-                    result += _array[i * _numberOfColumns + j] * vector[j];
-                }
-                resultVector.push_back(result);
-            }
-        }
-        return resultVector;
-    }
-    return vector;
-}
-#pragma clang diagnostic pop
-
-
-
-// Prints the matrix in the console
-void print(){
-    for (int i = 0; i < _numberOfRows; ++i) {
-        for (int j = 0; j < _numberOfColumns; ++j) {
-            cout << _array[i * _numberOfColumns + j] << " ";
-        }
-        cout << endl;
-    }
-
-}
-
-
-} // Numerics
-
-#endif //UNTITLED_ARRAY_H*/
-
-
-    
-
 
 
 
@@ -448,4 +359,4 @@ void print(){
                     _array[i * n + j] = _array[j * n + i];
                 }
             }
-        }
+        }*/

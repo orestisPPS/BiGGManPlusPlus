@@ -31,6 +31,7 @@ add_executable(untitled main.cpp
         StructuredMeshGeneration/NodeFactory.h
         StructuredMeshGeneration/MeshTest2D.cpp
         StructuredMeshGeneration/MeshTest2D.h
+        LinearAlgebra/Array/Array.cpp
         LinearAlgebra/Array/Array.h
         LinearAlgebra/Operations/TransformationTensors.h 
         Utility/Calculators.h
@@ -102,6 +103,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Direct/Cholesky.cpp
         LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.h
         LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.cpp
-        LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp LinearAlgebra/Operations/NumberOperations.h LinearAlgebra/Operations/NumberOperations.cpp LinearAlgebra/FiniteDifferences/FDWeightCalculator.h LinearAlgebra/Array/Array.cpp)
+        LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp LinearAlgebra/Operations/NumberOperations.h LinearAlgebra/Operations/NumberOperations.cpp LinearAlgebra/FiniteDifferences/FDWeightCalculator.h )
         
         
