@@ -55,9 +55,9 @@ namespace StructuredMeshGenerator{
     void NodeFactory::create1DBoundaryNodes(unsigned position) const {
         int a = 1;
         Node *node = allocateBoundaryNode(a);
-        (*nodesMatrix)(0) = node;
-        (*nodesMatrix)(a) = node;
-        (*nodesMatrix)(0) = allocateBoundaryNode(0);
+        nodesMatrix -> at (0) = node;
+        nodesMatrix -> at (a) = node;
+        nodesMatrix -> at (0) = allocateBoundaryNode(0);
         (*nodesMatrix)(position - 1) = allocateBoundaryNode(position - 1);
     }
     

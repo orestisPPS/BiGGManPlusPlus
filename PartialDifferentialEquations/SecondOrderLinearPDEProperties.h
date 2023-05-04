@@ -5,7 +5,6 @@
 #include "../LinearAlgebra/Array/Array.h"
 #include "../Discretization/Node/Node.h"
 #include "iostream"
-#include "vector"
 #include "map"
 using namespace std;
 using namespace LinearAlgebra;
