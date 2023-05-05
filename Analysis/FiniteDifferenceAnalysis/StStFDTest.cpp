@@ -11,29 +11,25 @@
 namespace NumericalAnalysis {
     
     StStFDTest::StStFDTest() {
-        auto mesh = createMesh();
-        auto pde = createPDE();
+        map<Direction, short unsigned> numberOfNodes;
+        numberOfNodes[Direction::One] = 5;
+        numberOfNodes[Direction::Two] = 5;
+        auto specs = new StructuredMeshGenerator::MeshSpecs(numberOfNodes, 2, 1, 0, 10, 10);
+        auto space = (PositioningInSpace::Plane);
+        auto meshFactory = new MeshFactory(specs);
+        auto mesh = meshFactory->mesh;
+
+        auto meshProperties = new SecondOrderLinearPDEProperties(
+                2, false, LocallyAnisotropic);
+        meshProperties->setLocallyAnisotropicProperties(meshFactory->pdePropertiesFromMetrics);
+        auto pde = new PartialDifferentialEquation(meshProperties, GeneralizedSecondOrderLinear);
+
         auto bcs = createBC();
         auto problem = new SteadyStateMathematicalProblem(pde, bcs, createDOF());
         auto schemeSpecs = createSchemeSpecs();
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, schemeSpecs);
     }
 
-    Mesh* StStFDTest::createMesh() {
-        map<Direction, short unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 5;
-        numberOfNodes[Direction::Two] = 5;
-        auto specs = new StructuredMeshGenerator::MeshSpecs(numberOfNodes, 2, 1, 0, 10, 10);
-        auto space = (PositioningInSpace::Plane);
-        auto mesh = StructuredMeshGenerator::MeshFactory(specs).mesh;
-        mesh->calculateMeshMetrics(Template, true);
-        return mesh;            
-    }
-    
-    PartialDifferentialEquation* StStFDTest::createPDE() {
-        return new PartialDifferentialEquation(Laplace);
-    }
-    
     DomainBoundaryConditions* StStFDTest::createBC() {
         auto dummyBCFunctionForAllBoundaryPositions = function<double (vector<double>*)> ([](vector<double>* x) {return 1;});
         auto dummyDOFTypeFunctionMap = new map<DOFType, function<double (vector<double>*)>>();

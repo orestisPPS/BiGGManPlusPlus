@@ -32,7 +32,25 @@ namespace PartialDifferentialEquations {
         _firstDerivativeProperties = nullptr;
         _zeroDerivativeProperties = nullptr;
         _sourceTerm = nullptr;
-        _localProperties = nullptr;
+        _locallyAnisotropic1Properties = nullptr;
+    }
+    
+    SecondOrderLinearPDEProperties::~SecondOrderLinearPDEProperties() {
+        if (_secondDerivativeProperties != nullptr){
+            delete _secondDerivativeProperties;
+        }
+        if (_firstDerivativeProperties != nullptr){
+            delete _firstDerivativeProperties;
+        }
+        if (_zeroDerivativeProperties != nullptr){
+            delete _zeroDerivativeProperties;
+        }
+        if (_sourceTerm != nullptr){
+            delete _sourceTerm;
+        }
+        if (_locallyAnisotropic1Properties != nullptr){
+            delete _locallyAnisotropic1Properties;
+        }
     }
     
     PropertiesDistributionType SecondOrderLinearPDEProperties::Type(){
@@ -73,14 +91,12 @@ namespace PartialDifferentialEquations {
         }
     }
     
-    void SecondOrderLinearPDEProperties::setFieldAnisotropicProperties(Array<double> *secondOrderCoefficients,
-                                                                       vector<double> *firstOrderCoefficients,
-                                                                       double zerothOrderCoefficient, double sourceTerm) {
+    void SecondOrderLinearPDEProperties::setFieldAnisotropicProperties(FieldProperties globalProperties) {
         if (_type == FieldAnisotropic and not _isInitialized){
-            _firstDerivativeProperties = firstOrderCoefficients;
-            _secondDerivativeProperties = secondOrderCoefficients;
-            *_zeroDerivativeProperties = zerothOrderCoefficient;
-            *_sourceTerm = sourceTerm;
+            _firstDerivativeProperties = globalProperties.firstOrderCoefficients;
+            _secondDerivativeProperties = globalProperties.secondOrderCoefficients;
+            *_zeroDerivativeProperties = *globalProperties.zerothOrderCoefficient; 
+            *_sourceTerm = *globalProperties.sourceTerm;
             _isInitialized = true;
         } else {
             //throw argument
@@ -88,45 +104,25 @@ namespace PartialDifferentialEquations {
         }
     }
     
-    void SecondOrderLinearPDEProperties::setLocallyAnisotropicProperties(map<unsigned, Array<double>*> *secondOrderCoefficients,
-                                                                         map<unsigned, vector<double>*> *firstOrderCoefficients,
-                                                                         map<unsigned, double*> *zerothOrderCoefficients,
-                                                                         map<unsigned, double*> *sourceTerms) {
-        if (_type == LocallyAnisotropic &&
-            secondOrderCoefficients->size() == firstOrderCoefficients->size() &&
-            firstOrderCoefficients->size() == zerothOrderCoefficients->size() &&
-            zerothOrderCoefficients->size() == sourceTerms->size() && 
-            !_isInitialized){
-            
-            _localProperties = new map<unsigned, localProperties>();
-            for (auto const& node : *secondOrderCoefficients){
-                auto nodeId = node.first;
-                _localProperties->insert(pair<unsigned, localProperties>(nodeId, localProperties()));
-                _localProperties->at(nodeId).secondOrderCoefficients = node.second;
-                _localProperties->at(nodeId).firstOrderCoefficients = firstOrderCoefficients->at(nodeId);
-                _localProperties->at(nodeId).zerothOrderCoefficient = zerothOrderCoefficients->at(nodeId);
-                _localProperties->at(nodeId).sourceTerm = sourceTerms->at(nodeId);
-            }
-            _isInitialized = true;
-        } else {
-            //throw argument
-            throw std::invalid_argument("Cannot set locally anisotropic properties to a non-locally anisotropic PDE");
+    void SecondOrderLinearPDEProperties::setLocallyAnisotropicProperties(map<unsigned, FieldProperties>* properties) {
+        if (_type == LocallyAnisotropic and not _isInitialized) {
+            _locallyAnisotropic1Properties = properties;
         }
     }
 
-    SecondOrderLinearPDEProperties::localProperties SecondOrderLinearPDEProperties::getLocalProperties(unsigned nodeId) {
+    FieldProperties SecondOrderLinearPDEProperties::getLocalProperties(unsigned nodeId) {
         if (_type == LocallyAnisotropic){
-            return _localProperties->at(nodeId);
+            return _locallyAnisotropic1Properties->at(nodeId);
         } else {
             throw std::invalid_argument("Cannot get local properties from a non-locally anisotropic PDE");
         }
     }
 
-    SecondOrderLinearPDEProperties::localProperties SecondOrderLinearPDEProperties::getLocalProperties() {
+    FieldProperties SecondOrderLinearPDEProperties::getLocalProperties() {
         if (_type == LocallyAnisotropic){
             throw std::invalid_argument("The PDE is locally anisotropic. Node ID must be specified");
         } else {
-            auto localProperties = SecondOrderLinearPDEProperties::localProperties();
+            auto localProperties = FieldProperties();
             localProperties.secondOrderCoefficients = _secondDerivativeProperties;
             localProperties.firstOrderCoefficients = _firstDerivativeProperties;
             localProperties.zerothOrderCoefficient = _zeroDerivativeProperties;

@@ -6,9 +6,8 @@
 
 namespace PartialDifferentialEquations {
     
-        PartialDifferentialEquation::PartialDifferentialEquation(PDEType type){
-            _type = type;
-        }
+        PartialDifferentialEquation::PartialDifferentialEquation(SecondOrderLinearPDEProperties* properties, PDEType type) :
+        properties(properties), _type(type) { }
         
         PartialDifferentialEquation::~PartialDifferentialEquation() {
             delete properties;

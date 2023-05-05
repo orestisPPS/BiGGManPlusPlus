@@ -158,7 +158,7 @@ namespace Discretization {
         
         for (auto &node: *metrics) {
             //node.first->printNode();
-            cout << "Node " << *node.first->id.global << endl;
+            cout << "Node " << node.first << endl;
             cout << "covariant tensor" << endl;
             node.second->covariantTensor->print();
             cout << "contravariant tensor" << endl;
@@ -174,7 +174,7 @@ namespace Discretization {
     void Mesh::_arbitrarilySpacedMeshMetrics(CoordinateType coordinateSystem) {
         if (isInitialized) {
             //Initialize Mesh Metrics map
-            metrics = new map<Node *, Metrics *>();
+            metrics = new map<unsigned, Metrics *>();
 
             //Create Scheme Specs. Metrics are calculated by a central ("diamond") scheme
             auto schemeSpecs = new FDSchemeSpecs(Central, specs->metricsOrder, directions());
@@ -239,7 +239,7 @@ namespace Discretization {
 
                 nodeMetrics->calculateCovariantTensor();
                 nodeMetrics->calculateContravariantTensor();
-                metrics->insert(pair<Node *, Metrics *>(node, nodeMetrics));
+                metrics->insert(pair<unsigned, Metrics *>(*node->id.global, nodeMetrics));
 
                 //Deallocate memory
                 delete nodeGraph;
@@ -261,7 +261,7 @@ namespace Discretization {
     void Mesh::_uniformlySpacedMetrics(CoordinateType coordinateSystem) {
         if (isInitialized) {
             //Initialize Mesh Metrics map
-            metrics = new map<Node *, Metrics *>();
+            metrics = new map<unsigned, Metrics *>();
 
             //Create Scheme Specs. Metrics are calculated by a central ("diamond") scheme
             auto schemeSpecs = new FDSchemeSpecs(Central, specs->metricsOrder, directions());
@@ -349,7 +349,7 @@ namespace Discretization {
 
                 nodeMetrics->calculateCovariantTensor();
                 nodeMetrics->calculateContravariantTensor();
-                metrics->insert(pair<Node *, Metrics *>(node, nodeMetrics));
+                metrics->insert(pair<unsigned, Metrics *>(*node->id.global, nodeMetrics));
 
                 //Deallocate memory
                 delete nodeGraph;

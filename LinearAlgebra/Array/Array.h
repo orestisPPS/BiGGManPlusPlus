@@ -443,7 +443,7 @@ namespace LinearAlgebra {
             }
         }
 
-        unsigned numberOfRows() const {
+        unsigned numberOfRows() const{
             return _numberOfRows;
         }
 

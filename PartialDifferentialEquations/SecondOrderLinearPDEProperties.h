@@ -2,10 +2,11 @@
 // Created by hal9000 on 12/6/22.
 //
 #pragma once
-#include "../LinearAlgebra/Array/Array.h"
+
 #include "../Discretization/Node/Node.h"
 #include "iostream"
 #include "map"
+#include "FieldProperties.h"
 using namespace std;
 using namespace LinearAlgebra;
 using namespace Discretization;
@@ -24,6 +25,8 @@ namespace PartialDifferentialEquations {
     public :
         SecondOrderLinearPDEProperties(unsigned short physicalSpaceDimensions, bool isTransient,
                                        PropertiesDistributionType type);
+    
+        ~SecondOrderLinearPDEProperties();
         
         PropertiesDistributionType Type();
         
@@ -31,27 +34,20 @@ namespace PartialDifferentialEquations {
         
         short unsigned totalDimensions() const;
         
+        
+
+        
         void setIsotropicProperties(double secondOrderCoefficient, double firstOrderCoefficient,
                                     double zerothOrderCoefficient, double sourceTerm);
         
-        void setFieldAnisotropicProperties(Array<double> *secondOrderCoefficients,
-                                           vector<double> *firstOrderCoefficients,
-                                           double zerothOrderCoefficient, double sourceTerm);
+        void setFieldAnisotropicProperties(FieldProperties globalProperties);
         
-        void setLocallyAnisotropicProperties(map<unsigned, Array<double>*> *secondOrderCoefficients,
-                                             map<unsigned, vector<double>*> *firstOrderCoefficients,
-                                             map<unsigned, double*> *zerothOrderCoefficients,
-                                             map<unsigned, double*> *sourceTerms);
-        struct localProperties
-        {
-            Array<double> *secondOrderCoefficients;
-            vector<double> *firstOrderCoefficients;
-            double *zerothOrderCoefficient;
-            double *sourceTerm;
-        };
-        localProperties getLocalProperties(unsigned nodeId);
+        void setLocallyAnisotropicProperties(map<unsigned, FieldProperties> *localProperties);
         
-        localProperties getLocalProperties();
+
+        FieldProperties getLocalProperties(unsigned nodeId);
+        
+        FieldProperties getLocalProperties();
         
 
 
@@ -72,7 +68,7 @@ namespace PartialDifferentialEquations {
         
         double *_sourceTerm;
         
-        map<unsigned, localProperties> *_localProperties{};  
+        map<unsigned, FieldProperties> *_locallyAnisotropic1Properties;
         
         bool _isInitialized;
 

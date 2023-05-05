@@ -42,7 +42,7 @@ namespace Discretization {
         
         MeshSpecs* specs;
         
-        map<Node*, Metrics*> *metrics;
+        map<unsigned, Metrics*> *metrics;
 
 
         //---------------Implemented parent class methods--------------

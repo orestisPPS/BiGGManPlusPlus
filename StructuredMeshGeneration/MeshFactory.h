@@ -11,23 +11,35 @@
 #include "../LinearAlgebra/Operations/Transformations.h"
 #include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 #include "NodeFactory.h"
+#include "../PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
+using namespace PartialDifferentialEquations;
 namespace StructuredMeshGenerator {
     
     class MeshFactory {
     public:
         explicit MeshFactory(MeshSpecs *meshSpecs);
+        
         Mesh *mesh;
 
+        map<unsigned, FieldProperties>* pdePropertiesFromMetrics;
         
     private:
         MeshSpecs *_meshSpecs;
 
-        Mesh* initiateRegularMesh();
-        void assignCoordinates();
-        void assign1DCoordinates() const;
-        void assign2DCoordinates() const;
-        void assign3DCoordinates() const;
-        SpaceEntityType calculateSpaceEntityType();
+        Mesh* _initiateRegularMesh();
+        
+        void _assignCoordinates();
+        
+        void _assign1DCoordinates() const;
+        
+        void _assign2DCoordinates() const;
+        
+        void _assign3DCoordinates() const;
+        
+        SpaceEntityType _calculateSpaceEntityType();
+
+        void _calculatePDEPropertiesFromMetrics();
+
     };
 
 };

@@ -16,11 +16,11 @@ namespace NumericalAnalysis {
     class StStFDTest {
 public:
         StStFDTest();
-        static Mesh* createMesh();
-        static PartialDifferentialEquation* createPDE();
+
         static DomainBoundaryConditions* createBC();
         static Field_DOFType* createDOF();
         static FDSchemeSpecs* createSchemeSpecs();
+        
     };
 
 } // NumericalAnalysis

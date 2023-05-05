@@ -15,7 +15,6 @@ using namespace LinearAlgebra;
 #include <list>
 int main() {
 
-    auto test = new StructuredMeshGenerator::MeshTest2D();
     auto analysisTest = new NumericalAnalysis::StStFDTest();
 
 /*    const unsigned max_deriv = 2;

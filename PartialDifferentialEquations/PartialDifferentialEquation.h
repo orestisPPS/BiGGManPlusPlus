@@ -23,7 +23,7 @@ namespace PartialDifferentialEquations {
     
     class PartialDifferentialEquation {
     public:
-        PartialDifferentialEquation(PDEType type);
+        PartialDifferentialEquation(SecondOrderLinearPDEProperties* properties, PDEType type);
         ~PartialDifferentialEquation();
         SecondOrderLinearPDEProperties *properties;
         PDEType Type();

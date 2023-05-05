@@ -7,16 +7,21 @@
 namespace StructuredMeshGenerator{
     
     MeshFactory :: MeshFactory(MeshSpecs *meshSpecs) : _meshSpecs(meshSpecs) {
-        mesh = initiateRegularMesh();
-        assignCoordinates();
+        mesh = _initiateRegularMesh();
+        _assignCoordinates();
         mesh->specs = _meshSpecs;
-       // calculateMeshMetrics();
+        cout<<mesh->dimensions()<<endl;
+        mesh->calculateMeshMetrics(Template, true);
+        _calculatePDEPropertiesFromMetrics();
     }
 
-    Mesh* MeshFactory::initiateRegularMesh() {
+
+
+
+    Mesh* MeshFactory::_initiateRegularMesh() {
         auto nodesPerDirection = _meshSpecs->nodesPerDirection;
         auto nodeFactory = NodeFactory(_meshSpecs->nodesPerDirection);
-        auto space = calculateSpaceEntityType();
+        auto space = _calculateSpaceEntityType();
         switch (space) {
             case Axis:
                 return new Mesh1D(nodeFactory.nodesMatrix);
@@ -30,32 +35,32 @@ namespace StructuredMeshGenerator{
     }
 
     
-    void MeshFactory::assignCoordinates() {
-        switch (calculateSpaceEntityType()) {
+    void MeshFactory::_assignCoordinates() {
+        switch (_calculateSpaceEntityType()) {
             case Axis:
-                assign1DCoordinates();
+                _assign1DCoordinates();
                 break;
             case Plane:
-                assign2DCoordinates();
+                _assign2DCoordinates();
                 break;
             case Volume:
-                assign3DCoordinates();
+                _assign3DCoordinates();
                 break;
             default:
                 throw runtime_error("Invalid space type");
         }
         
-        auto space = calculateSpaceEntityType();
+        auto space = _calculateSpaceEntityType();
         if (space == Axis) {
-            assign1DCoordinates();
+            _assign1DCoordinates();
         } else if (space == Plane) {
-            assign2DCoordinates();
+            _assign2DCoordinates();
         } else {
-            assign3DCoordinates();
+            _assign3DCoordinates();
         }
     }
     
-    void MeshFactory::assign1DCoordinates() const {
+    void MeshFactory::_assign1DCoordinates() const {
         for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
             mesh->node(i)->coordinates.addPositionVector(Natural);
             mesh->node(i)->coordinates.setPositionVector(
@@ -65,7 +70,7 @@ namespace StructuredMeshGenerator{
         }
     }
     
-    void MeshFactory::assign2DCoordinates() const {
+    void MeshFactory::_assign2DCoordinates() const {
         for (unsigned j = 0; j < mesh->numberOfNodesPerDirection.at(Two); ++j) {
             for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
                 
@@ -87,7 +92,7 @@ namespace StructuredMeshGenerator{
         }
     }
     
-    void MeshFactory::assign3DCoordinates() const {
+    void MeshFactory::_assign3DCoordinates() const {
         for (unsigned k = 0; k < mesh->numberOfNodesPerDirection.at(Three); ++k) {
             for (unsigned j = 0; j < mesh->numberOfNodesPerDirection.at(Two); ++j) {
                 for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
@@ -111,7 +116,7 @@ namespace StructuredMeshGenerator{
         }
     }
     
-    SpaceEntityType MeshFactory::calculateSpaceEntityType(){
+    SpaceEntityType MeshFactory::_calculateSpaceEntityType(){
         auto space = NullSpace;
         if (_meshSpecs->nodesPerDirection[Two]== 1 && _meshSpecs->nodesPerDirection[Three] == 1){
             space = Axis;
@@ -122,6 +127,25 @@ namespace StructuredMeshGenerator{
         }
         return space;
     }
+
+    void MeshFactory::_calculatePDEPropertiesFromMetrics() {
+        pdePropertiesFromMetrics = new map<unsigned, FieldProperties>();
+        for (auto &node : *mesh->totalNodesVector) {
+            auto nodeFieldProperties = FieldProperties();
+            auto loliti = *mesh->metrics->at(*node->id.global)->contravariantTensor;
+            nodeFieldProperties.secondOrderCoefficients = mesh->metrics->at(*node->id.global)->contravariantTensor;
+            nodeFieldProperties.firstOrderCoefficients = new vector<double>{0, 0};
+            nodeFieldProperties.zerothOrderCoefficient = new double(0);
+            nodeFieldProperties.sourceTerm = new double(0);
+            pdePropertiesFromMetrics->insert(pair<unsigned, FieldProperties>(*node->id.global, nodeFieldProperties));
+        }
+/*        for (auto &metrics : *mesh->metrics) {
+            delete metrics.second;
+        }
+        delete mesh->metrics;*/
+    }
+
+
 
 }// StructuredMeshGenerator
 
