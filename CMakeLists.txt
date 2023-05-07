@@ -38,8 +38,8 @@ add_executable(untitled main.cpp
         LinearAlgebra/Operations/Transformations.cpp
         LinearAlgebra/Operations/Transformations.h
         PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h
-        LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDSchemeCalculator.cpp
-        LinearAlgebra/FiniteDifferences/FirstOrderDerivativeFDSchemeCalculator.h
+        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeWeightsStructuredGrid.cpp
+        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeWeightsStructuredGrid.h
         LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp
         LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h
         Analysis/FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.h
@@ -83,16 +83,11 @@ add_executable(untitled main.cpp
         Discretization/Mesh/Metrics/Metrics.cpp
         LinearAlgebra/Operations/VectorOperations.h
         LinearAlgebra/Operations/VectorOperations.cpp
-        LinearAlgebra/FiniteDifferences/FDSchemeComponent.h 
-        LinearAlgebra/FiniteDifferences/FDSchemeComponent.cpp 
         LinearAlgebra/Solvers/Solver.h LinearAlgebra/Solvers/Solver.cpp 
         LinearAlgebra/Norms/VectorNorm.h LinearAlgebra/Norms/VectorNorm.cpp
         LinearAlgebra/Solvers/Iterative/IterativeSolver.h 
         LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp
-        LinearAlgebra/FiniteDifferences/FiniteDifferenceScheme.cpp
         LinearAlgebra/FiniteDifferences/FDSchemeType.h
-        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeWeightsCalculator.h
-        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeWeightsCalculator.cpp
         LinearAlgebra/Solvers/Direct/SolverLUP.h LinearAlgebra/Solvers/Direct/SolverLUP.cpp
         LinearAlgebra/Solvers/Direct/DirectSolver.h
         LinearAlgebra/Solvers/Direct/DirectSolver.cpp

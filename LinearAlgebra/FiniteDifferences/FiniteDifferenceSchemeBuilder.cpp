@@ -23,19 +23,14 @@ namespace LinearAlgebra {
                 auto order = get<1>(direction.second);
 
                 // Get the points needed for the scheme at the current direction and the corresponding order from 
-                // _schemeOrderToSchemeTypePointsNeededFirstDerivative
-                auto pointsNeededAtDirection = _schemeOrderToSchemeTypePointsNeededFirstDerivative()[order][schemeType];
+                // _schemeOrderToSchemeTypePointsDerivative1
+                auto pointsNeededAtDirection = _schemeOrderToSchemeTypePointsDerivative1()[order][schemeType];
                 if (pointsNeededAtDirection > max)
                     max = pointsNeededAtDirection;
             }
         }
         return max;
     }
-    
-/*    typedef 
-    map<Direction, double> FiniteDifferenceSchemeBuilder::calculateDerivativeVector(
-
-    }*/
 
     map<Position, short unsigned> FiniteDifferenceSchemeBuilder:: getNumberOfDiagonalNeighboursNeeded() {
         auto numberOfDiagonalNeighboursNeeded = map<Position, short unsigned>();
@@ -56,13 +51,13 @@ namespace LinearAlgebra {
                 auto orderAtDirection = get<1>(direction.second);
 
                 // Get the points needed for the scheme at the current direction and the corresponding order from 
-                // _schemeOrderToSchemeTypePointsNeededFirstDerivative
+                // _schemeOrderToSchemeTypePointsDerivative1
                 auto pointsNeededAtDirection =
-                        _schemeOrderToSchemeTypePointsNeededFirstDerivative()[orderAtDirection][schemeTypeAtDirection];
+                        _schemeOrderToSchemeTypePointsDerivative1()[orderAtDirection][schemeTypeAtDirection];
 
                 //Get the positions for the scheme at the current direction
                 auto positionsForSchemeAtDirection =
-                        _positionsForSchemeAtDirection()[directionI][schemeTypeAtDirection];
+                        _schemeToPositions()[directionI][schemeTypeAtDirection];
                 
                 for (auto &position : positionsForSchemeAtDirection) {
                     numberOfDiagonalNeighboursNeeded[position] = pointsNeededAtDirection;
@@ -75,14 +70,14 @@ namespace LinearAlgebra {
     vector<double> FiniteDifferenceSchemeBuilder::getSchemeWeightsAtDirection(Direction direction) {
         auto schemeTypeAndOrder = this->_schemeSpecs->
                 schemeTypeAndOrderAtDirectionForDerivativeOrder->at(1)[direction];
-        return FirstOrderDerivativeFDSchemeCalculator::getWeightsVector(
-                    get<0>(schemeTypeAndOrder), get<1>(schemeTypeAndOrder));
+        return FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative1(
+                get<0>(schemeTypeAndOrder), get<1>(schemeTypeAndOrder));
     }
     
     
 
     map<unsigned int, map<FDSchemeType, int>>
-    FiniteDifferenceSchemeBuilder::_schemeOrderToSchemeTypePointsNeededFirstDerivative() {
+    FiniteDifferenceSchemeBuilder::_schemeOrderToSchemeTypePointsDerivative1() {
         
         auto orderToPointsNeededPerDirection = map<unsigned int, map<FDSchemeType, int>>();
         //Cut-off error order O(Δx)
@@ -117,9 +112,41 @@ namespace LinearAlgebra {
         
         return orderToPointsNeededPerDirection;
     }
+
+    map<unsigned int, map<FDSchemeType, int>>
+    FiniteDifferenceSchemeBuilder::_schemeOrderToSchemeTypePointsDerivative2() {
+
+        auto orderToPointsNeededPerDirection = map<unsigned int, map<FDSchemeType, int>>();
+        
+        //Cut-off error order O(Δx^2)
+        orderToPointsNeededPerDirection[2] = map<FDSchemeType, int>();
+        orderToPointsNeededPerDirection[2][Forward] = 3;
+        orderToPointsNeededPerDirection[2][Backward] = 3;
+        orderToPointsNeededPerDirection[2][Central] = 2 / 2;
+        
+        //Cut-off error order O(Δx^3)
+        orderToPointsNeededPerDirection[3] = map<FDSchemeType, int>();
+        orderToPointsNeededPerDirection[3][Forward] = 4;
+        orderToPointsNeededPerDirection[3][Backward] = 4;
+        orderToPointsNeededPerDirection[3][Central] =-1;
+        
+        //Cut-off error order O(Δx^4)
+        orderToPointsNeededPerDirection[4] = map<FDSchemeType, int>();
+        orderToPointsNeededPerDirection[4][Forward] = 4;
+        orderToPointsNeededPerDirection[4][Backward] = 4;
+        orderToPointsNeededPerDirection[4][Central] = 4  / 2;
+        
+        //Cut-off error order O(Δx^5)
+        orderToPointsNeededPerDirection[5] = map<FDSchemeType, int>();
+        orderToPointsNeededPerDirection[5][Forward] = 5;
+        orderToPointsNeededPerDirection[5][Backward] = 5;
+        orderToPointsNeededPerDirection[5][Central] = -1;
+        
+        return orderToPointsNeededPerDirection;
+    }
     
     map<Direction, map<FDSchemeType, vector<Position>>>
-    FiniteDifferenceSchemeBuilder::_positionsForSchemeAtDirection(){
+    FiniteDifferenceSchemeBuilder::_schemeToPositions(){
         auto positionsForSchemeAtDirection = map<Direction, map<FDSchemeType, vector<Position>>>();
         //Direction 1
         auto dimensionOnePositions = map<FDSchemeType, vector<Position>> {
@@ -143,6 +170,62 @@ namespace LinearAlgebra {
         positionsForSchemeAtDirection[Two] = dimensionTwoPositions;
         positionsForSchemeAtDirection[Three] = dimensionThreePositions;
         return positionsForSchemeAtDirection;
+    };
+
+    map<Direction, map<vector<Position>, FDSchemeType>>
+    FiniteDifferenceSchemeBuilder::_positionsToScheme(){
+        auto positionsForSchemeAtDirection = map<Direction, map<vector<Position>, FDSchemeType>>();
+        //Direction 1
+        auto dimensionOnePositions = map<vector<Position>, FDSchemeType> {
+                {{Left, Right}, Central},
+                {{Right}, Forward},
+                {{Left}, Backward}
+        };
+        //Direction 2
+        auto dimensionTwoPositions = map<vector<Position>, FDSchemeType>{
+                {{Bottom, Top}, Central},
+                {{Top}, Forward},
+                {{Bottom}, Backward}
+        };
+        //Direction 3
+        auto dimensionThreePositions = map<vector<Position>, FDSchemeType>{
+                {{Back, Front}, Central},
+                {{Front}, Forward},
+                {{Back}, Backward}
+        };
+        positionsForSchemeAtDirection[One] = dimensionOnePositions;
+        positionsForSchemeAtDirection[Two] = dimensionTwoPositions;
+        positionsForSchemeAtDirection[Three] = dimensionThreePositions;
+        return positionsForSchemeAtDirection;
+    }
+
+    unsigned FiniteDifferenceSchemeBuilder::getMaximumNumberOfPointsForArbitrarySchemeType() {
+        auto maxDerivativeOrder =
+                static_cast<unsigned int>(_schemeSpecs->schemeTypeAndOrderAtDirectionForDerivativeOrder->size());
+        auto maxOrder = -1;
+        auto maxPoints = 0;
+        for (auto &derivativeOrder :
+             *_schemeSpecs->schemeTypeAndOrderAtDirectionForDerivativeOrder) {
+            for (auto &direction: derivativeOrder.second) {
+                auto errorOrder = get<1>(direction.second);
+                if (errorOrder > maxOrder) {
+                    maxOrder = errorOrder;
+                }
+            }
+        }
+        auto maxOrderScheme = map<FDSchemeType, int>();
+        if (maxDerivativeOrder == 1){
+            maxOrderScheme = _schemeOrderToSchemeTypePointsDerivative1()[maxOrder];
+        }
+        else if (maxDerivativeOrder == 2) {
+            maxOrderScheme = _schemeOrderToSchemeTypePointsDerivative2()[maxOrder];
+        }
+        for (auto &schemeType : maxOrderScheme) {
+            if (schemeType.second > maxPoints) {
+                maxPoints = schemeType.second;
+            }
+        }
+        return maxPoints;
     };
 } // LinearAlgebra
 

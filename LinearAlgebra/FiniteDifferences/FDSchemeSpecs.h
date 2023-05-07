@@ -18,6 +18,17 @@
 using namespace std;
 using namespace PositioningInSpace;
 
+
+/*//Finite Difference Scheme Type
+//The categorization is based on the location of the points used for approximation with respect to the point at
+// which the derivative is being calculated.
+enum FDSchemeType{
+    Forward,
+    Backward,
+    Central,
+    Mixed
+};*/
+
 namespace LinearAlgebra {
 
     
@@ -48,16 +59,27 @@ namespace LinearAlgebra {
         // Use this constructor for first order equations where the scheme type and order are the same for all directions.
         FDSchemeSpecs(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder, const vector<Direction> &directions);
         
+        
+        
         // Specifications of a first and second derivative finite difference scheme.
         // Use this constructor for equations up to second order where the scheme type and order are 
         // the same for all directions.
         FDSchemeSpecs(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder,
                       FDSchemeType secondDerivativeSchemeType, unsigned secondDerivativeOrder,
                       const vector<Direction> &directions, bool diagonalTermsCalculated = false);
+
+        // Specifications of a first and second derivative finite difference scheme.
+        // Use this constructor for equations up to second order where the scheme type and order are 
+        // the same for all directions.
+        FDSchemeSpecs(unsigned firstDerivativeOrder, unsigned secondDerivativeOrder,
+                      const vector<Direction> &directions, bool diagonalTermsCalculated = false);
         
         ~FDSchemeSpecs();
         
         map<unsigned, map<Direction, tuple<FDSchemeType, int>>>* schemeTypeAndOrderAtDirectionForDerivativeOrder;
+    
+        bool schemeTypeFixed;
+        
     private:
         void checkInput() const;
     };

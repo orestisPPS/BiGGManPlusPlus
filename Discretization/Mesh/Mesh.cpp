@@ -106,10 +106,10 @@ namespace Discretization {
 
     void Mesh::createNumberOfNodesPerDirectionMap() {
         if (isInitialized) {
-            numberOfNodesPerDirection = map<Direction, unsigned>();
-            numberOfNodesPerDirection[One] = _nodesMatrix->numberOfColumns();
-            numberOfNodesPerDirection[Two] = _nodesMatrix->numberOfRows();
-            numberOfNodesPerDirection[Three] = _nodesMatrix->numberOfAisles();
+            nodesPerDirection = map<Direction, unsigned>();
+            nodesPerDirection[One] = _nodesMatrix->numberOfColumns();
+            nodesPerDirection[Two] = _nodesMatrix->numberOfRows();
+            nodesPerDirection[Three] = _nodesMatrix->numberOfAisles();
         } else
             throw std::runtime_error("Mesh has not been initialized");
     }
@@ -189,8 +189,8 @@ namespace Discretization {
                 //Find Neighbors in a manner that applies the same numerical scheme to all nodes
                 auto neighbours = schemeBuilder->getNumberOfDiagonalNeighboursNeeded();
                 //Initiate Node Graph
-                auto graph = new IsoParametricNodeGraph(node, schemeBuilder->getNumberOfGhostNodesNeeded(),ghostMesh->parametricCoordToNodeMap,
-                                                        numberOfNodesPerDirection,false);
+                auto graph = new IsoParametricNodeGraph(node, schemeBuilder->getNumberOfGhostNodesNeeded(), ghostMesh->parametricCoordToNodeMap,
+                                                        nodesPerDirection, false);
 
                 //Get the adjusted node graph that contains only the nodes that are needed to calculate the FD scheme
                 auto nodeGraph = graph->getNodeGraph(neighbours);
@@ -276,8 +276,8 @@ namespace Discretization {
                 //Find Neighbors in a manner that applies the same numerical scheme to all nodes
                 auto neighbours = schemeBuilder->getNumberOfDiagonalNeighboursNeeded();
                 //Initiate Node Graph
-                auto graph = new IsoParametricNodeGraph(node, schemeBuilder->getNumberOfGhostNodesNeeded(),ghostMesh->parametricCoordToNodeMap,
-                                                        numberOfNodesPerDirection,false);
+                auto graph = new IsoParametricNodeGraph(node, schemeBuilder->getNumberOfGhostNodesNeeded(), ghostMesh->parametricCoordToNodeMap,
+                                                        nodesPerDirection, false);
 
                 //Get the adjusted node graph that contains only the nodes that are needed to calculate the FD scheme
                 auto nodeGraph = graph->getNodeGraph(neighbours);

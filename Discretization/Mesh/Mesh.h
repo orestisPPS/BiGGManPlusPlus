@@ -24,13 +24,13 @@ namespace Discretization {
      class Mesh {
      
      public:
-        //Mesh(Array<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection);
+        //Mesh(Array<Node *> *nodes, map<Direction, int> nodesPerDirection);
         Mesh();
         
         virtual ~Mesh();
                 
-        //map<Direction, unsigned > *numberOfNodesPerDirection;
-        map<Direction, unsigned > numberOfNodesPerDirection;
+        //map<Direction, unsigned > *nodesPerDirection;
+        map<Direction, unsigned > nodesPerDirection;
 
         map<Position, vector<Node*>*>* boundaryNodes;
         

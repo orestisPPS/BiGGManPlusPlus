@@ -57,9 +57,8 @@ namespace NumericalAnalysis {
     }
     
     FDSchemeSpecs* StStFDTest::createSchemeSpecs() {
-        auto dummyScheme = map<Direction, tuple<FDSchemeType,int>>();
-        auto space = PositioningInSpace::Plane;
-        return new FDSchemeSpecs(dummyScheme);
+
+        return new FDSchemeSpecs(3, 3, {One, Two});
     }
     
     

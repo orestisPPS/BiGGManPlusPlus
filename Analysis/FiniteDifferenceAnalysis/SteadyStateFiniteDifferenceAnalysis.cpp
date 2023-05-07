@@ -11,7 +11,8 @@ namespace NumericalAnalysis {
         SteadyStateMathematicalProblem *mathematicalProblem, Mesh *mesh, FDSchemeSpecs *schemeSpecs) :
         FiniteDifferenceAnalysis(mathematicalProblem, mesh, schemeSpecs){
         degreesOfFreedom = initiateDegreesOfFreedom();
-        auto linearSystem = new AnalysisLinearSystemInitializer(degreesOfFreedom, mesh);
+        auto linearSystem = new AnalysisLinearSystemInitializer(degreesOfFreedom, mesh,
+                                                                mathematicalProblem, schemeSpecs);
         linearSystem->createLinearSystem();
         
         auto fileNameMatlab = "linearSystem.m";

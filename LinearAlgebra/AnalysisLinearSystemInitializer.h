@@ -11,6 +11,9 @@
 #include "LinearSystem.h"
 #include "../Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.h"
 #include "../Discretization/Mesh/Mesh.h"
+#include "../MathematicalProblem/MathematicalProblem.h"
+#include "../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
+using namespace MathematicalProblems;
 
 using namespace NumericalAnalysis;
 
@@ -19,7 +22,8 @@ namespace LinearAlgebra {
     class AnalysisLinearSystemInitializer{
         
         public:
-            explicit AnalysisLinearSystemInitializer(AnalysisDegreesOfFreedom* analysisDegreesOfFreedom, Mesh* mesh);
+            explicit AnalysisLinearSystemInitializer(AnalysisDegreesOfFreedom* analysisDegreesOfFreedom, Mesh* mesh,
+                                                     MathematicalProblem* mathematicalProblem, FDSchemeSpecs* specs);
             
             ~AnalysisLinearSystemInitializer();
             
@@ -34,7 +38,12 @@ namespace LinearAlgebra {
             void createLinearSystem();
             
             void updateRHS();
+            
     private:
+        
+        MathematicalProblem* _mathematicalProblem;
+        
+        FDSchemeSpecs* _specs;
         
         Array<double> *_matrix;
         

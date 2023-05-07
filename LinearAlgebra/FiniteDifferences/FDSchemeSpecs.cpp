@@ -16,6 +16,7 @@ namespace LinearAlgebra {
         insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>(2, map<Direction, tuple<FDSchemeType, int>>()));
         
         checkInput();
+        schemeTypeFixed = true;
     }
     
     FDSchemeSpecs::FDSchemeSpecs(const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirectionFirstDerivative,
@@ -28,6 +29,7 @@ namespace LinearAlgebra {
         insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>(2, schemeTypeAndOrderAtDirectionSecondDerivative));
         
         checkInput();
+        schemeTypeFixed = true;
     }
     
     FDSchemeSpecs::FDSchemeSpecs(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder,
@@ -40,6 +42,8 @@ namespace LinearAlgebra {
             schemeTypeAndOrderAtDirectionForDerivativeOrder->at(1).insert(pair<Direction, tuple<FDSchemeType, int>>(
                     direction,make_tuple(firstDerivativeSchemeType,firstDerivativeOrder)));
         }
+        schemeTypeFixed = true;
+
     }
     
     FDSchemeSpecs::FDSchemeSpecs(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder,
@@ -59,6 +63,25 @@ namespace LinearAlgebra {
             schemeTypeAndOrderAtDirectionForDerivativeOrder->at(2).insert(pair<Direction, tuple<FDSchemeType, int>>(
                     direction,make_tuple(secondDerivativeSchemeType,secondDerivativeOrder)));
         }
+        schemeTypeFixed = true;
+    }
+    
+    FDSchemeSpecs::FDSchemeSpecs(unsigned firstDerivativeOrder, unsigned secondDerivativeOrder,
+                                 const vector<Direction> &directions, bool diagonalTermsCalculated) {
+        schemeTypeAndOrderAtDirectionForDerivativeOrder = new map<unsigned, map<Direction, tuple<FDSchemeType, int>>>();
+        //Insert Specs for first derivative
+        schemeTypeAndOrderAtDirectionForDerivativeOrder->insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>
+                                                                        (1, map<Direction, tuple<FDSchemeType, int>>()));
+        //Insert Specs for second derivative
+        schemeTypeAndOrderAtDirectionForDerivativeOrder->insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>
+                                                                        (2, map<Direction, tuple<FDSchemeType, int>>()));
+        for (auto &direction : directions) {
+            schemeTypeAndOrderAtDirectionForDerivativeOrder->at(1).insert(pair<Direction, tuple<FDSchemeType, int>>(
+                    direction,make_tuple(Arbitrary, firstDerivativeOrder)));
+            schemeTypeAndOrderAtDirectionForDerivativeOrder->at(2).insert(pair<Direction, tuple<FDSchemeType, int>>(
+                    direction,make_tuple(Arbitrary, secondDerivativeOrder)));
+        }
+        schemeTypeFixed = false;
     }
     
     FDSchemeSpecs::~FDSchemeSpecs() {

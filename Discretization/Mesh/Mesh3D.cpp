@@ -13,9 +13,9 @@ namespace Discretization {
     }
     
     Mesh3D::~Mesh3D() {
-        for (int i = 0; i < numberOfNodesPerDirection[One] ; ++i)
-            for (int j = 0; j < numberOfNodesPerDirection[Two] ; ++j)
-                for (int k = 0; k < numberOfNodesPerDirection[Three] ; ++k){
+        for (int i = 0; i < nodesPerDirection[One] ; ++i)
+            for (int j = 0; j < nodesPerDirection[Two] ; ++j)
+                for (int k = 0; k < nodesPerDirection[Three] ; ++k){
                 delete (*_nodesMatrix)(i, j, k);
                 (*_nodesMatrix)(i, j, k) = nullptr;
             }
@@ -59,9 +59,9 @@ namespace Discretization {
     }
     
     void Mesh3D::printMesh() {
-        for (int k = 0 ; k < numberOfNodesPerDirection[Three] ; k++)
-            for (int j = 0 ; j < numberOfNodesPerDirection[Two] ; j++)
-                for (int i = 0 ; i < numberOfNodesPerDirection[One] ; i++) {
+        for (int k = 0 ; k < nodesPerDirection[Three] ; k++)
+            for (int j = 0 ; j < nodesPerDirection[Two] ; j++)
+                for (int i = 0 ; i < nodesPerDirection[One] ; i++) {
                     (*_nodesMatrix)(i, j, k)->printNode();
                 }   
     }
@@ -71,10 +71,10 @@ namespace Discretization {
         
         auto bottomNodes = new vector<Node*>();
         auto topNodes = new vector<Node*>();
-        for (int i = 0 ; i < numberOfNodesPerDirection[Two] ; i++) {
-            for (int j = 0 ; j < numberOfNodesPerDirection[One] ; j++) {
+        for (int i = 0 ; i < nodesPerDirection[Two] ; i++) {
+            for (int j = 0 ; j < nodesPerDirection[One] ; j++) {
                 bottomNodes->push_back((*_nodesMatrix)(i, j, 0));
-                topNodes->push_back((*_nodesMatrix)(i, j, numberOfNodesPerDirection[Three] - 1));
+                topNodes->push_back((*_nodesMatrix)(i, j, nodesPerDirection[Three] - 1));
             }
         }
         boundaryNodes->insert(pair<Position, vector<Node*>*>(Bottom, bottomNodes));
@@ -82,10 +82,10 @@ namespace Discretization {
         
         auto leftNodes = new vector<Node*>();
         auto rightNodes = new vector<Node*>();
-        for (int i = 0 ; i < numberOfNodesPerDirection[Three] ; i++) {
-            for (int j = 0 ; j < numberOfNodesPerDirection[Two] ; j++) {
+        for (int i = 0 ; i < nodesPerDirection[Three] ; i++) {
+            for (int j = 0 ; j < nodesPerDirection[Two] ; j++) {
                 leftNodes->push_back((*_nodesMatrix)(0, j, i));
-                rightNodes->push_back((*_nodesMatrix)(numberOfNodesPerDirection[One] - 1, j, i));
+                rightNodes->push_back((*_nodesMatrix)(nodesPerDirection[One] - 1, j, i));
             }
         }
         boundaryNodes->insert(pair<Position, vector<Node*>*>(Left, leftNodes));
@@ -93,10 +93,10 @@ namespace Discretization {
     
         auto frontNodes = new vector<Node*>();
         auto backNodes = new vector<Node*>();
-        for (int i = 0 ; i < numberOfNodesPerDirection[Three] ; i++) {
-            for (int j = 0 ; j < numberOfNodesPerDirection[One] ; j++) {
+        for (int i = 0 ; i < nodesPerDirection[Three] ; i++) {
+            for (int j = 0 ; j < nodesPerDirection[One] ; j++) {
                 frontNodes->push_back((*_nodesMatrix)(j, 0, i));
-                backNodes->push_back((*_nodesMatrix)(j, numberOfNodesPerDirection[Two] - 1, i));
+                backNodes->push_back((*_nodesMatrix)(j, nodesPerDirection[Two] - 1, i));
             }
         }
         boundaryNodes->insert(pair<Position, vector<Node*>*>(Front, frontNodes));
@@ -107,9 +107,9 @@ namespace Discretization {
     
     vector<Node*>* Mesh3D::addInternalNodesToVector() {
         auto internalNodes = new vector<Node*>();
-        for (int k = 1; k < numberOfNodesPerDirection[Three] - 1; k++){
-            for (int j = 1; j < numberOfNodesPerDirection[Two] - 1; j++){
-                for (int i = 1; i < numberOfNodesPerDirection[One] - 1; ++i) {
+        for (int k = 1; k < nodesPerDirection[Three] - 1; k++){
+            for (int j = 1; j < nodesPerDirection[Two] - 1; j++){
+                for (int i = 1; i < nodesPerDirection[One] - 1; ++i) {
                     internalNodes->push_back((*_nodesMatrix)(i, j, k));
                 }
             }
@@ -119,9 +119,9 @@ namespace Discretization {
 
     vector<Node*>* Mesh3D::addTotalNodesToVector() {
         auto totalNodes = new vector<Node*>(_nodesMatrix->size());
-        for (int k = 0; k < numberOfNodesPerDirection[Three]; k++){
-            for (int j = 0; j < numberOfNodesPerDirection[Two]; j++){
-                for (int i = 0; i < numberOfNodesPerDirection[One]; ++i) {
+        for (int k = 0; k < nodesPerDirection[Three]; k++){
+            for (int j = 0; j < nodesPerDirection[Two]; j++){
+                for (int i = 0; i < nodesPerDirection[One]; ++i) {
                     totalNodes->push_back((*_nodesMatrix)(i, j, k));
                 }
             }
@@ -141,11 +141,11 @@ namespace Discretization {
         // Parametric coordinate 3 of nodes in the new ghost mesh
         auto nodeArrayPositionK = 0;
         
-        auto nn1 = numberOfNodesPerDirection[One];
+        auto nn1 = nodesPerDirection[One];
         auto nn1Ghost = ghostNodesPerDirection->at(One);
-        auto nn2 = numberOfNodesPerDirection[Two];
+        auto nn2 = nodesPerDirection[Two];
         auto nn2Ghost = ghostNodesPerDirection->at(Two);
-        auto nn3 = numberOfNodesPerDirection[Three];
+        auto nn3 = nodesPerDirection[Three];
         auto nn3Ghost = ghostNodesPerDirection->at(Three);
 
         auto parametricCoordToNodeMap =  createParametricCoordToNodesMap();

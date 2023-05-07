@@ -14,8 +14,8 @@ namespace Discretization {
 
     Mesh2D::~Mesh2D() {
         //Deallocate all node pointers of the mesh
-        for (int i = 0; i < numberOfNodesPerDirection[One] ; ++i)
-            for (int j = 0; j < numberOfNodesPerDirection[Two] ; ++j){
+        for (int i = 0; i < nodesPerDirection[One] ; ++i)
+            for (int j = 0; j < nodesPerDirection[Two] ; ++j){
             delete (*_nodesMatrix)(i, j);
             (*_nodesMatrix)(i, j) = nullptr;
         }
@@ -61,8 +61,8 @@ namespace Discretization {
 
     void Mesh2D::printMesh() {
         cout << "Number of Nodes : " << totalNodes() << endl;
-        for (int i = 0; i < numberOfNodesPerDirection[Two] ; ++i) {
-            for (int j = 0; j < numberOfNodesPerDirection[One] ; ++j) {
+        for (int i = 0; i < nodesPerDirection[Two] ; ++i) {
+            for (int j = 0; j < nodesPerDirection[One] ; ++j) {
                 cout << "(i, j) : (" << j << ", " << i << ")" << endl;
                 cout << "ID (Global, Boundary, Internal) : (" << (*(*_nodesMatrix)(j, i)->id.global) << ", "
                                                              << (*(*_nodesMatrix)(j, i)->id.boundary) << ", "
@@ -77,20 +77,20 @@ namespace Discretization {
     map<Position, vector<Node*>*>* Mesh2D::addDBoundaryNodesToMap() {
         auto boundaryNodes = new map<Position, vector<Node*>*>();
                   
-        auto *leftBoundaryNodes = new vector<Node*>(numberOfNodesPerDirection[Two]);
-        auto *rightBoundaryNodes = new vector<Node*>(numberOfNodesPerDirection[Two]);
-        for (int i = 0 ; i < numberOfNodesPerDirection[Two] ; i++) {
+        auto *leftBoundaryNodes = new vector<Node*>(nodesPerDirection[Two]);
+        auto *rightBoundaryNodes = new vector<Node*>(nodesPerDirection[Two]);
+        for (int i = 0 ; i < nodesPerDirection[Two] ; i++) {
             (*leftBoundaryNodes)[i] = (*_nodesMatrix)(0, i);
-            (*rightBoundaryNodes)[i] = (*_nodesMatrix)(numberOfNodesPerDirection[One] - 1, i);
+            (*rightBoundaryNodes)[i] = (*_nodesMatrix)(nodesPerDirection[One] - 1, i);
         }
         boundaryNodes->insert( pair<Position, vector<Node*>*>(Position::Left, leftBoundaryNodes));
         boundaryNodes->insert( pair<Position, vector<Node*>*>(Position::Right, rightBoundaryNodes));
         
-        auto *bottomBoundaryNodes = new vector<Node*>(numberOfNodesPerDirection[One]);
-        auto *topBoundaryNodes = new vector<Node*>(numberOfNodesPerDirection[One]);
-        for (int i = 0 ; i < numberOfNodesPerDirection[One] ; i++) {
+        auto *bottomBoundaryNodes = new vector<Node*>(nodesPerDirection[One]);
+        auto *topBoundaryNodes = new vector<Node*>(nodesPerDirection[One]);
+        for (int i = 0 ; i < nodesPerDirection[One] ; i++) {
             (*bottomBoundaryNodes)[i] = (*_nodesMatrix)(i, 0);
-            (*topBoundaryNodes)[i] = (*_nodesMatrix)(i, numberOfNodesPerDirection[Two] - 1);
+            (*topBoundaryNodes)[i] = (*_nodesMatrix)(i, nodesPerDirection[Two] - 1);
         }
         boundaryNodes->insert( pair<Position, vector<Node*>*>(Position::Bottom, bottomBoundaryNodes));
         boundaryNodes->insert( pair<Position, vector<Node*>*>(Position::Top, topBoundaryNodes));
@@ -100,8 +100,8 @@ namespace Discretization {
     
     vector<Node*>* Mesh2D::addInternalNodesToVector() {
         auto internalNodes = new vector<Node*>();
-        for (int j = 1; j < numberOfNodesPerDirection[Two] - 1; j++){
-            for (int i = 1; i < numberOfNodesPerDirection[One] - 1; ++i) {
+        for (int j = 1; j < nodesPerDirection[Two] - 1; j++){
+            for (int i = 1; i < nodesPerDirection[One] - 1; ++i) {
                 internalNodes->push_back((*_nodesMatrix)(i, j));
             }
         }
@@ -110,9 +110,9 @@ namespace Discretization {
 
     vector<Node*>* Mesh2D::addTotalNodesToVector() {
         auto totalNodes = new vector<Node*>(_nodesMatrix->size());
-        for (int j = 0; j < numberOfNodesPerDirection[Two] ; j++){
-            for (int i = 0; i < numberOfNodesPerDirection[One] ; ++i) {
-                (*totalNodes)[i + j * numberOfNodesPerDirection[One]] = (*_nodesMatrix)(i, j);
+        for (int j = 0; j < nodesPerDirection[Two] ; j++){
+            for (int i = 0; i < nodesPerDirection[One] ; ++i) {
+                (*totalNodes)[i + j * nodesPerDirection[One]] = (*_nodesMatrix)(i, j);
             }
         }
         return totalNodes;
@@ -129,9 +129,9 @@ namespace Discretization {
         auto nodeArrayPositionI = 0;
         // Parametric coordinate 2 of nodes in the new ghost mesh
         auto nodeArrayPositionJ = 0;
-        auto nn1 = numberOfNodesPerDirection[One];
+        auto nn1 = nodesPerDirection[One];
         auto nn1Ghost = ghostNodesPerDirection->at(One);
-        auto nn2 = numberOfNodesPerDirection[Two];
+        auto nn2 = nodesPerDirection[Two];
         auto nn2Ghost = ghostNodesPerDirection->at(Two);
         
         //Create parametric coordinates to node map

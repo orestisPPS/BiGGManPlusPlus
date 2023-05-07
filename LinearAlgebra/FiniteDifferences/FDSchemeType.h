@@ -14,7 +14,8 @@ namespace LinearAlgebra {
         Forward,
         Backward,
         Central,
-        Mixed
+        Mixed,
+        Arbitrary
     };
 
 } // LinearAlgebra

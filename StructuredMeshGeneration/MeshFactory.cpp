@@ -61,7 +61,7 @@ namespace StructuredMeshGenerator{
     }
     
     void MeshFactory::_assign1DCoordinates() const {
-        for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
+        for (unsigned i = 0; i < mesh->nodesPerDirection.at(One); ++i) {
             mesh->node(i)->coordinates.addPositionVector(Natural);
             mesh->node(i)->coordinates.setPositionVector(
                     new vector<double>{static_cast<double>(i)}, Parametric);
@@ -71,8 +71,8 @@ namespace StructuredMeshGenerator{
     }
     
     void MeshFactory::_assign2DCoordinates() const {
-        for (unsigned j = 0; j < mesh->numberOfNodesPerDirection.at(Two); ++j) {
-            for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
+        for (unsigned j = 0; j < mesh->nodesPerDirection.at(Two); ++j) {
+            for (unsigned i = 0; i < mesh->nodesPerDirection.at(One); ++i) {
                 
                 // Natural coordinates
                 mesh->node(i, j)->coordinates.addPositionVector(Natural);
@@ -93,9 +93,9 @@ namespace StructuredMeshGenerator{
     }
     
     void MeshFactory::_assign3DCoordinates() const {
-        for (unsigned k = 0; k < mesh->numberOfNodesPerDirection.at(Three); ++k) {
-            for (unsigned j = 0; j < mesh->numberOfNodesPerDirection.at(Two); ++j) {
-                for (unsigned i = 0; i < mesh->numberOfNodesPerDirection.at(One); ++i) {
+        for (unsigned k = 0; k < mesh->nodesPerDirection.at(Three); ++k) {
+            for (unsigned j = 0; j < mesh->nodesPerDirection.at(Two); ++j) {
+                for (unsigned i = 0; i < mesh->nodesPerDirection.at(One); ++i) {
                     // Natural coordinates
                     mesh->node(i, j, k)->coordinates.addPositionVector(Natural);
                     // Parametric coordinates

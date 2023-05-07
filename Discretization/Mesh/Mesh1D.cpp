@@ -14,7 +14,7 @@ namespace Discretization {
     
     Mesh1D::~Mesh1D() {
         //Deallocate all node pointers of the mesh
-        for (int i = 0; i < numberOfNodesPerDirection[One] ; ++i) {
+        for (int i = 0; i < nodesPerDirection[One] ; ++i) {
             delete (*_nodesMatrix)(i);
             (*_nodesMatrix)(i) = nullptr;
         }
@@ -62,7 +62,7 @@ namespace Discretization {
     
     void Mesh1D::printMesh() {
         cout << "Mesh1D" << endl;
-        for (int i = 0 ; i < numberOfNodesPerDirection[Direction::One] ; i++) {
+        for (int i = 0 ; i < nodesPerDirection[Direction::One] ; i++) {
             (*_nodesMatrix)(i)->printNode();
         }
     }
@@ -74,14 +74,14 @@ namespace Discretization {
         auto leftBoundary = new vector<Node*>(1);
         auto rightBoundary = new vector<Node*>(1);
         leftBoundary->push_back(Mesh::node(0));
-        rightBoundary->push_back(Mesh::node(Mesh::numberOfNodesPerDirection[Direction::One] - 1));
+        rightBoundary->push_back(Mesh::node(Mesh::nodesPerDirection[Direction::One] - 1));
         boundaries->insert( pair<Position, vector<Node*>*>(Position::Left, leftBoundary));
         return boundaries;
     }
     
     vector<Node*>* Mesh1D::addInternalNodesToVector() {
         auto internalNodes = new vector<Node*>();
-        for (int i = 1; i < numberOfNodesPerDirection[Direction::One] - 1; i++) {
+        for (int i = 1; i < nodesPerDirection[Direction::One] - 1; i++) {
             internalNodes->push_back(Mesh::node(i));
         }
         return internalNodes;
@@ -89,7 +89,7 @@ namespace Discretization {
     
     vector<Node*>* Mesh1D::addTotalNodesToVector() {
         auto totalNodes = new vector<Node*>(_nodesMatrix->size());
-        for (int i = 0; i < numberOfNodesPerDirection[Direction::One]; i++) {
+        for (int i = 0; i < nodesPerDirection[Direction::One]; i++) {
             totalNodes->push_back(Mesh::node(i));
         }
         return totalNodes;
@@ -104,7 +104,7 @@ namespace Discretization {
         // Parametric coordinate 1 of nodes in the new ghost mesh
         auto nodeArrayPositionI = 0;
         
-        auto nn1 = numberOfNodesPerDirection[One];
+        auto nn1 = nodesPerDirection[One];
         auto nn1Ghost = ghostNodesPerDirection->at(One);
 
         //Create parametric coordinates to node map
