@@ -23,8 +23,8 @@ namespace LinearAlgebra {
                 auto order = get<1>(direction.second);
 
                 // Get the points needed for the scheme at the current direction and the corresponding order from 
-                // _schemeOrderToSchemeTypePointsDerivative1
-                auto pointsNeededAtDirection = _schemeOrderToSchemeTypePointsDerivative1()[order][schemeType];
+                // schemeOrderToSchemeTypePointsDerivative1
+                auto pointsNeededAtDirection = schemeOrderToSchemeTypePointsDerivative1()[order][schemeType];
                 if (pointsNeededAtDirection > max)
                     max = pointsNeededAtDirection;
             }
@@ -51,13 +51,13 @@ namespace LinearAlgebra {
                 auto orderAtDirection = get<1>(direction.second);
 
                 // Get the points needed for the scheme at the current direction and the corresponding order from 
-                // _schemeOrderToSchemeTypePointsDerivative1
+                // schemeOrderToSchemeTypePointsDerivative1
                 auto pointsNeededAtDirection =
-                        _schemeOrderToSchemeTypePointsDerivative1()[orderAtDirection][schemeTypeAtDirection];
+                        schemeOrderToSchemeTypePointsDerivative1()[orderAtDirection][schemeTypeAtDirection];
 
                 //Get the positions for the scheme at the current direction
                 auto positionsForSchemeAtDirection =
-                        _schemeToPositions()[directionI][schemeTypeAtDirection];
+                        schemeTypeToPositions()[directionI][schemeTypeAtDirection];
                 
                 for (auto &position : positionsForSchemeAtDirection) {
                     numberOfDiagonalNeighboursNeeded[position] = pointsNeededAtDirection;
@@ -74,10 +74,21 @@ namespace LinearAlgebra {
                 get<0>(schemeTypeAndOrder), get<1>(schemeTypeAndOrder));
     }
     
+    map<FDSchemeType, int> FiniteDifferenceSchemeBuilder::getSchemeTypeAndOrder(unsigned derivativeOrder,
+                                                                                     unsigned int errorOrder) {
+        switch (derivativeOrder) {
+            case 1:
+                return schemeOrderToSchemeTypePointsDerivative1()[errorOrder];
+            case 2:
+                return schemeOrderToSchemeTypePointsDerivative2()[errorOrder];
+            default:
+                throw invalid_argument("Maximum derivative order is 2.");
+        }
     
+    }
 
     map<unsigned int, map<FDSchemeType, int>>
-    FiniteDifferenceSchemeBuilder::_schemeOrderToSchemeTypePointsDerivative1() {
+    FiniteDifferenceSchemeBuilder::schemeOrderToSchemeTypePointsDerivative1() {
         
         auto orderToPointsNeededPerDirection = map<unsigned int, map<FDSchemeType, int>>();
         //Cut-off error order O(Δx)
@@ -114,7 +125,7 @@ namespace LinearAlgebra {
     }
 
     map<unsigned int, map<FDSchemeType, int>>
-    FiniteDifferenceSchemeBuilder::_schemeOrderToSchemeTypePointsDerivative2() {
+    FiniteDifferenceSchemeBuilder::schemeOrderToSchemeTypePointsDerivative2() {
 
         auto orderToPointsNeededPerDirection = map<unsigned int, map<FDSchemeType, int>>();
         
@@ -146,7 +157,7 @@ namespace LinearAlgebra {
     }
     
     map<Direction, map<FDSchemeType, vector<Position>>>
-    FiniteDifferenceSchemeBuilder::_schemeToPositions(){
+    FiniteDifferenceSchemeBuilder::schemeTypeToPositions(){
         auto positionsForSchemeAtDirection = map<Direction, map<FDSchemeType, vector<Position>>>();
         //Direction 1
         auto dimensionOnePositions = map<FDSchemeType, vector<Position>> {
@@ -173,7 +184,7 @@ namespace LinearAlgebra {
     };
 
     map<Direction, map<vector<Position>, FDSchemeType>>
-    FiniteDifferenceSchemeBuilder::_positionsToScheme(){
+    FiniteDifferenceSchemeBuilder::positionsToSchemeType(){
         auto positionsForSchemeAtDirection = map<Direction, map<vector<Position>, FDSchemeType>>();
         //Direction 1
         auto dimensionOnePositions = map<vector<Position>, FDSchemeType> {
@@ -215,10 +226,10 @@ namespace LinearAlgebra {
         }
         auto maxOrderScheme = map<FDSchemeType, int>();
         if (maxDerivativeOrder == 1){
-            maxOrderScheme = _schemeOrderToSchemeTypePointsDerivative1()[maxOrder];
+            maxOrderScheme = schemeOrderToSchemeTypePointsDerivative1()[maxOrder];
         }
         else if (maxDerivativeOrder == 2) {
-            maxOrderScheme = _schemeOrderToSchemeTypePointsDerivative2()[maxOrder];
+            maxOrderScheme = schemeOrderToSchemeTypePointsDerivative2()[maxOrder];
         }
         for (auto &schemeType : maxOrderScheme) {
             if (schemeType.second > maxPoints) {

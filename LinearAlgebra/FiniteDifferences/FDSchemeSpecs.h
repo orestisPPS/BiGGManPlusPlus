@@ -77,6 +77,8 @@ namespace LinearAlgebra {
         ~FDSchemeSpecs();
         
         map<unsigned, map<Direction, tuple<FDSchemeType, int>>>* schemeTypeAndOrderAtDirectionForDerivativeOrder;
+        
+        unsigned getErrorOrderOfVariableSchemeTypeForDerivativeOrder(unsigned derivativeOrder) const;
     
         bool schemeTypeFixed;
         

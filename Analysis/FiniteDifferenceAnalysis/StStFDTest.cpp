@@ -58,7 +58,7 @@ namespace NumericalAnalysis {
     
     FDSchemeSpecs* StStFDTest::createSchemeSpecs() {
 
-        return new FDSchemeSpecs(3, 3, {One, Two});
+        return new FDSchemeSpecs(2, 2, {One, Two});
     }
     
     

@@ -48,32 +48,74 @@ namespace LinearAlgebra {
     void AnalysisLinearSystemInitializer::_createFreeDOFSubMatrix() {
         //Define the directions of the simulation
         auto directions = _mesh->directions();
-        
+
         //Create Scheme Builder for utility functions
         auto schemeBuilder = FiniteDifferenceSchemeBuilder(_specs);
-        //Find the maximum number of neighbours needed for the desired order of accuracy
+
+        //Define the error order for each derivative order
+        auto errorOrderDerivative1 = _specs->getErrorOrderOfVariableSchemeTypeForDerivativeOrder(1);
+        auto errorOrderDerivative2 = _specs->getErrorOrderOfVariableSchemeTypeForDerivativeOrder(2);
+
+        //Find the number of points needed for the desired order of accuracy.
+        //The scheme type varies depending on the available neighbours of the dof.
+        auto schemeTypeToPointsDerivative1 = schemeBuilder.schemeOrderToSchemeTypePointsDerivative1()[errorOrderDerivative1];
+        auto schemeTypeToPointsDerivative2 = schemeBuilder.schemeOrderToSchemeTypePointsDerivative2()[errorOrderDerivative2];
+
+        //Convert scheme type to positions
+        auto schemeTypeToPosition = schemeBuilder.schemeTypeToPositions();
+        //Define the positions needed for the scheme at each direction as well as the number of points needed.
+        auto positionsAtDirectionsDerivative1 = map<Direction, map<vector<Position>, short int>>();
+        auto positionsAtDirectionsDerivative2 = map<Direction, map<vector<Position>, short int>>();
+
+
+        for (auto &direction : directions) {
+            positionsAtDirectionsDerivative1.insert(pair<Direction, map<vector<Position>, short int>>(
+                    direction, map<vector<Position>, short int>()));
+            positionsAtDirectionsDerivative2.insert(pair<Direction, map<vector<Position>, short int>>(
+                    direction, map<vector<Position>, short int>()));
+            
+            auto schemeTypeToPositions = schemeTypeToPosition[direction];
+            for (auto &scheme : schemeTypeToPositions) {
+                positionsAtDirectionsDerivative1[direction].insert(pair<vector<Position>, short int>
+                                                   (scheme.second, schemeTypeToPointsDerivative1[scheme.first]));
+                positionsAtDirectionsDerivative2[direction].insert(pair<vector<Position>, short int>
+                                                   (scheme.second, schemeTypeToPointsDerivative2[scheme.first]));
+            }
+        }
+        //TODO make function checkIfRequiredPositionsAreAvailable. possibly in the node graph class
+
+        //Find the maximum number of neighbours needed for the desired order of accuracy. Used as input node graph depth.
         auto maxNeighbours = schemeBuilder.getMaximumNumberOfPointsForArbitrarySchemeType();
-        
-        
+
         //Iterate over the free degrees of freedom
         for (auto &dof: *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
+            //for (auto &dof: *_analysisDegreesOfFreedom->fixedDegreesOfFreedom) {
             //Node with the DOF
             auto node = _mesh->nodeFromID(*dof->parentNode);
-            
+
             //Initiate node graph with depth equal to the maximum number of neighbours needed for the desired order of accuracy
             auto graph =IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap, _mesh->nodesPerDirection);
             //TODO: check why node id is not ascending in direction 1. for free dof 1 (node 6)
-            //      neighbours are free dof (1 (node 7), 2 (node 8), 10 (node 9). this affects the sparsity pattern maybe.
+            //      neighbours are free dof (1 (node 7), 2 (node 8), 10 (node 9). this maybe affects the sparsity pattern.
             auto neighbourDOF = graph.getSpecificDOFGraph(dof->type());
-            //auto positions = dofGraph.getColinearPositions();
-            
+            auto positions = graph.getColinearPositions(directions);
+
+            for (auto &direction : directions){
+                //Check if the template positions are available in the node graph
+                //Begin an if statement with central scheme starting first
+                //->get the required positions
+                //->get the scheme weights
+                //->add to matrix as below
+            }
+
+
             //Calculate Diagonal Element
             unsigned positionI = *dof->id->value;
             auto valueICoefficient = 0.0;
             for (auto &direction : directions) {
 
             }
-            
+
 /*            _freeDOFMatrix->at(positionI, positionI) = -2;
 
             //J Position in the matrix (neighbouring free DOF id)
@@ -99,15 +141,19 @@ namespace LinearAlgebra {
             auto zerothOrderCoefficients =
                     _mathematicalProblem->pde->properties->getLocalProperties(*node->id.global).zerothOrderCoefficient;
         }
-        
+
         _matrix = _freeDOFMatrix;
         _freeDOFMatrix = nullptr;
-        
+
         cout<<"Free DOF matrix"<<endl;
         //matrix->print();
         cout << "  " << endl;
 
     }
+    
+    
+    
+    
     
     void AnalysisLinearSystemInitializer::_createFixedDOFSubMatrix() {
         for (auto &dof: *_analysisDegreesOfFreedom->fixedDegreesOfFreedom) {

@@ -125,4 +125,16 @@ namespace LinearAlgebra {
             }
         }
     }
+
+    unsigned FDSchemeSpecs::getErrorOrderOfVariableSchemeTypeForDerivativeOrder(unsigned int derivativeOrder) const {
+        if (!schemeTypeFixed)
+            return get<1>(schemeTypeAndOrderAtDirectionForDerivativeOrder->at(derivativeOrder).at(One));
+        else
+            throw std::invalid_argument(" The scheme type is fixed. Use this method only if the error order is fixed"
+                                        " and the scheme type varies across the domain depending on the neighbours in order"
+                                        " to achieve the desired error order.");
+            
+
+    }
+    
 }// LinearAlgebra

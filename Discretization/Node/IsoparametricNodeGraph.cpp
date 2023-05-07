@@ -106,7 +106,8 @@ namespace Discretization {
         return coLinearNodes;
     }
 
-    unique_ptr<map<Direction, vector<Position>>> IsoParametricNodeGraph::getColinearPositions() const {
+    unique_ptr<map<Direction, vector<Position>>> IsoParametricNodeGraph::
+    getColinearPositions(vector<Direction>& availableDirections) const {
         auto positionsAtDirection = make_unique<map<Direction, vector<Position>>>();
         auto availablePositions = vector<Position>(nodeGraph->size());
         auto i = 0;
@@ -114,8 +115,8 @@ namespace Discretization {
             availablePositions[i] = position.first;
             i++;
         }
-        for (auto &direction : _nodesPerDirection)
-            positionsAtDirection->insert({direction.first, vector<Position>()});
+        for (auto &direction : availableDirections)
+            positionsAtDirection->insert({direction, vector<Position>()});
 
         for (auto &position : availablePositions){
             if (position == Left || position == Right)
@@ -125,6 +126,11 @@ namespace Discretization {
             else if (position == Back || position == Front )
                 positionsAtDirection->at(Three).push_back(position);
         }
+        for (auto &direction : *positionsAtDirection)
+            //sort positions in each direction with descending order
+            std::sort(direction.second.begin(), direction.second.end(), [](Position a, Position b) {
+                return a > b;
+            });
         return positionsAtDirection;
     }
 
