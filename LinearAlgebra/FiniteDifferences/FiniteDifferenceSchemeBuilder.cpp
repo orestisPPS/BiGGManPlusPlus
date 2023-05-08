@@ -237,6 +237,41 @@ namespace LinearAlgebra {
             }
         }
         return maxPoints;
+    }
+
+    map<Direction, map<vector<Position>, short int>>
+    FiniteDifferenceSchemeBuilder::templatePositionsAndPoints(unsigned short derivativeOrder,
+                                                              unsigned short errorOrder, vector<Direction>& directions) {
+        //Define the positions needed for the scheme at each direction as well as the number of points needed.
+        auto templatePositionsAndPoints =  map<Direction, map<vector<Position>, short>>();
+
+        //Find the number of points needed for the desired order of accuracy.
+        //The scheme type varies depending on the available neighbours of the dof.
+        auto schemeTypeToPoints = schemeOrderToSchemeTypePointsDerivative1()[errorOrder];
+
+        //Convert scheme type to positions
+        auto schemeTypeToPosition = schemeTypeToPositions();
+        for (auto direction : directions) {
+            auto dir = static_cast<Direction>(direction);
+            templatePositionsAndPoints.insert(pair<Direction, map<vector<Position>, short int>> (
+                    dir, map<vector<Position>, short int>()));
+
+            auto schemeTypeToPositions = schemeTypeToPosition[dir];
+            for (auto &schemeTypePositionTuple : schemeTypeToPositions) {
+                templatePositionsAndPoints[dir].insert(pair<vector<Position>, short int>(
+                        schemeTypePositionTuple.second, schemeTypeToPoints[schemeTypePositionTuple.first]));
+            }
+        }
+        //sort
+        for (auto &direction : templatePositionsAndPoints) {
+            auto &positionsAndPoints = direction.second;
+            for (auto &positionAndPoint : positionsAndPoints) {
+                auto positionVector = positionAndPoint.first;
+                sort(positionVector.begin(), positionVector.end(),
+                     [](Position a, Position b) { return a < b; });
+            }
+        }
+        return templatePositionsAndPoints;
     };
 } // LinearAlgebra
 

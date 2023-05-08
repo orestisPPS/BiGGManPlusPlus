@@ -46,6 +46,9 @@ namespace LinearAlgebra {
     //Creates a matrix with consistent order across the domain. The scheme type is defined by the node neighbourhood.
     //Error Order is user defined.
     void AnalysisLinearSystemInitializer::_createFreeDOFSubMatrix() {
+        
+        bool applyForwardScheme, applyBackwardScheme, applyCentralScheme;
+        
         //Define the directions of the simulation
         auto directions = _mesh->directions();
 
@@ -56,34 +59,13 @@ namespace LinearAlgebra {
         auto errorOrderDerivative1 = _specs->getErrorOrderOfVariableSchemeTypeForDerivativeOrder(1);
         auto errorOrderDerivative2 = _specs->getErrorOrderOfVariableSchemeTypeForDerivativeOrder(2);
 
-        //Find the number of points needed for the desired order of accuracy.
-        //The scheme type varies depending on the available neighbours of the dof.
-        auto schemeTypeToPointsDerivative1 = schemeBuilder.schemeOrderToSchemeTypePointsDerivative1()[errorOrderDerivative1];
-        auto schemeTypeToPointsDerivative2 = schemeBuilder.schemeOrderToSchemeTypePointsDerivative2()[errorOrderDerivative2];
 
-        //Convert scheme type to positions
-        auto schemeTypeToPosition = schemeBuilder.schemeTypeToPositions();
         //Define the positions needed for the scheme at each direction as well as the number of points needed.
-        auto positionsAtDirectionsDerivative1 = map<Direction, map<vector<Position>, short int>>();
-        auto positionsAtDirectionsDerivative2 = map<Direction, map<vector<Position>, short int>>();
-
-
-        for (auto &direction : directions) {
-            positionsAtDirectionsDerivative1.insert(pair<Direction, map<vector<Position>, short int>>(
-                    direction, map<vector<Position>, short int>()));
-            positionsAtDirectionsDerivative2.insert(pair<Direction, map<vector<Position>, short int>>(
-                    direction, map<vector<Position>, short int>()));
-            
-            auto schemeTypeToPositions = schemeTypeToPosition[direction];
-            for (auto &scheme : schemeTypeToPositions) {
-                positionsAtDirectionsDerivative1[direction].insert(pair<vector<Position>, short int>
-                                                   (scheme.second, schemeTypeToPointsDerivative1[scheme.first]));
-                positionsAtDirectionsDerivative2[direction].insert(pair<vector<Position>, short int>
-                                                   (scheme.second, schemeTypeToPointsDerivative2[scheme.first]));
-            }
-        }
-        //TODO make function checkIfRequiredPositionsAreAvailable. possibly in the node graph class
-
+        auto templatePositionsAndPointsDerivative1 = schemeBuilder.templatePositionsAndPoints(
+                1, errorOrderDerivative1, directions);
+        auto templatePositionsAndPointsDerivative2 = schemeBuilder.templatePositionsAndPoints(
+                2, errorOrderDerivative2, directions);
+        
         //Find the maximum number of neighbours needed for the desired order of accuracy. Used as input node graph depth.
         auto maxNeighbours = schemeBuilder.getMaximumNumberOfPointsForArbitrarySchemeType();
 
@@ -98,15 +80,63 @@ namespace LinearAlgebra {
             //TODO: check why node id is not ascending in direction 1. for free dof 1 (node 6)
             //      neighbours are free dof (1 (node 7), 2 (node 8), 10 (node 9). this maybe affects the sparsity pattern.
             auto neighbourDOF = graph.getSpecificDOFGraph(dof->type());
-            auto positions = graph.getColinearPositions(directions);
+            auto positionsAndDepth = graph.getColinearPositionsAndPoints(directions);
 
-            for (auto &direction : directions){
-                //Check if the template positions are available in the node graph
-                //Begin an if statement with central scheme starting first
-                //->get the required positions
-                //->get the scheme weights
-                //->add to matrix as below
+            for (auto &direction : directions) {
+
+                //Map with available positions and the number of neighbours available
+                auto availablePositionsAndPointsAtDirection = positionsAndDepth->at(direction);
+                
+                //Map with template positions and the number of neighbours needed for different scheme types to achieve
+                // the desired order of accuracy.Each position vector is a map to finite difference scheme
+                // ({Left}->Backward, {Right}->Forward, {Left, Right}->Central).
+                auto templatePositionsAndPointsAtDirectionDerivative1 = templatePositionsAndPointsDerivative1[direction];
+
+                //Iterate over the template position vectors
+                auto templatePositionsVector = vector<Position>();
+                auto templatePoints = 0;
+                for (auto &templatePositionAndPoints: templatePositionsAndPointsAtDirectionDerivative1) {
+                    templatePositionsVector = get<0>(templatePositionAndPoints);
+                    templatePoints = get<1>(templatePositionAndPoints);
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    //Iterate over the available positions
+                    for (auto &availablePositionAndPoints: availablePositionsAndPointsAtDirection) {
+                        //Position of the available DOF
+                        auto availablePosition = get<0>(availablePositionAndPoints);
+                        //Number of neighbours available
+                        auto availablePoints = get<1>(availablePositionAndPoints);
+                        
+                        //Iterate over the template positions and the number of neighbours needed for different scheme
+                        //types to achieve the desired order of accuracy
+                        for (auto &templatePosition: templatePositionsVector) {
+                            //If the available position is equal to the template position and the number of neighbours
+                            //available is equal to the number of neighbours needed for the desired order of accuracy
+/*                            if (availablePosition == templatePosition && availablePoints >= templatePoints) {
+                                cout<<"MITSOTAKI GAMIESAI"<<endl;
+     *//*                           //Apply the scheme type
+                                if (templatePosition == Position::Left) {
+                                    applyBackwardScheme = true;
+                                } else if (templatePosition == Position::Right) {
+                                    applyForwardScheme = true;
+                                } else if (templatePosition == Position::LeftRight) {
+                                    applyCentralScheme = true;
+                                }*//*
+                            }*/
+                        }
+                    }
+                    
+                    
+                    bool lolipop = false;
+                    
+                }
             }
+                
 
 
             //Calculate Diagonal Element

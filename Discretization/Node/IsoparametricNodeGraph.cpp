@@ -105,20 +105,70 @@ namespace Discretization {
         }
         return coLinearNodes;
     }
+    
+    unique_ptr<map<Direction, map<vector<Position>, short unsigned>>> IsoParametricNodeGraph::
+    getColinearPositionsAndPoints(vector<Direction>& availableDirections) const {
+        auto positionsAtDirection = make_unique<map<Direction, map<vector<Position>, short unsigned>>>();
+        auto availablePositions = vector<tuple<Position, unsigned>>();
+        auto i = 0;
+        for (auto &position: *nodeGraph) {
+            availablePositions.emplace_back(position.first, position.second.size());
+            i++;
+        }
+        for (auto &direction : availableDirections) {
+            positionsAtDirection->insert(pair<Direction, map<vector<Position>, short unsigned>>(
+                    direction, map<vector<Position>, short unsigned>()));
+        }
+        for (auto &tuple : availablePositions){
+            auto position = get<0>(tuple);
+            auto depth = get<1>(tuple);
+            if (position == Left || position == Right)
+                positionsAtDirection->at(One).insert(pair<vector<Position>, short unsigned>(vector<Position>{position}, depth));
+            else if (position == Bottom || position == Top)
+                positionsAtDirection->at(Two).insert(pair<vector<Position>, short unsigned>(vector<Position>{position}, depth));
+            else if (position == Back || position == Front )
+                positionsAtDirection->at(Three).insert(pair<vector<Position>, short unsigned>(vector<Position>{position}, depth));
+        }
+        
+        for (auto &temp : *positionsAtDirection) {
+            auto direction = temp.first;
+            auto &positions = temp.second;
+            auto sumPoints = vector<Position>(2);
+            auto sumDepth = vector<short unsigned>(2);
+            auto it = 0;
+            for (auto &position : positions) {
+                sumPoints[it] = position.first[0];
+                sumDepth[it] = position.second;
+                it++;
+            }
+            //sort sumpoints
+            sort(sumPoints.begin(), sumPoints.end(), [](const Position &a, const Position &b) {
+                return a > b;
+            });
+            
+            positions.insert(pair<vector<Position>, short unsigned>(
+                    sumPoints, *min_element(sumDepth.begin(), sumDepth.end())));
+        }
+
+        return positionsAtDirection;
+    }
 
     unique_ptr<map<Direction, vector<Position>>> IsoParametricNodeGraph::
     getColinearPositions(vector<Direction>& availableDirections) const {
         auto positionsAtDirection = make_unique<map<Direction, vector<Position>>>();
-        auto availablePositions = vector<Position>(nodeGraph->size());
+        auto availablePositions = vector<tuple<Position, unsigned>>();
         auto i = 0;
         for (auto &position: *nodeGraph) {
-            availablePositions[i] = position.first;
+            availablePositions.emplace_back(position.first, position.second.size());
             i++;
         }
         for (auto &direction : availableDirections)
-            positionsAtDirection->insert({direction, vector<Position>()});
-
-        for (auto &position : availablePositions){
+            positionsAtDirection->insert(pair<Direction, vector<Position>>(
+                                         direction, vector<Position>()));   
+        
+        for (auto &tuple : availablePositions){
+            auto position = get<0>(tuple);
+            auto depth = get<1>(tuple);
             if (position == Left || position == Right)
                 positionsAtDirection->at(One).push_back(position);
             else if (position == Bottom || position == Top)

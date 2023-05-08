@@ -59,6 +59,10 @@ namespace LinearAlgebra {
 
         map<Direction, map<vector<Position>, FDSchemeType>> positionsToSchemeType();
         
+        //Use this when the error order is fixed and the scheme varies across the domain.
+        map<Direction, map<vector<Position>, short int>> templatePositionsAndPoints(short unsigned derivativeOrder,
+                                                                                    short unsigned errorOrder, vector<Direction>& directions);
+        
     private:
         
 
