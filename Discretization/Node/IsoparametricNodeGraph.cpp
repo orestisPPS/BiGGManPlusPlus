@@ -107,7 +107,7 @@ namespace Discretization {
     }
     
     unique_ptr<map<Direction, map<vector<Position>, short unsigned>>> IsoParametricNodeGraph::
-    getColinearPositionsAndPoints(vector<Direction>& availableDirections) const {
+    getColinearPositionsAndPoints(vector<Direction>& availableDirections){
         auto positionsAtDirection = make_unique<map<Direction, map<vector<Position>, short unsigned>>>();
         auto availablePositions = vector<tuple<Position, unsigned>>();
         auto i = 0;

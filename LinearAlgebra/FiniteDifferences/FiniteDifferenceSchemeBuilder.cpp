@@ -67,9 +67,16 @@ namespace LinearAlgebra {
         return numberOfDiagonalNeighboursNeeded;
     }
     
-    vector<double> FiniteDifferenceSchemeBuilder::getSchemeWeightsAtDirection(Direction direction) {
+    vector<double> FiniteDifferenceSchemeBuilder::getSchemeWeightsAtDirectionDerivative1(Direction direction) {
         auto schemeTypeAndOrder = this->_schemeSpecs->
                 schemeTypeAndOrderAtDirectionForDerivativeOrder->at(1)[direction];
+        return FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative1(
+                get<0>(schemeTypeAndOrder), get<1>(schemeTypeAndOrder));
+    }
+
+    vector<double> FiniteDifferenceSchemeBuilder::getSchemeWeightsAtDirectionDerivative2(Direction direction) {
+        auto schemeTypeAndOrder = this->_schemeSpecs->
+                schemeTypeAndOrderAtDirectionForDerivativeOrder->at(2)[direction];
         return FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative1(
                 get<0>(schemeTypeAndOrder), get<1>(schemeTypeAndOrder));
     }
@@ -239,12 +246,9 @@ namespace LinearAlgebra {
         return maxPoints;
     }
 
-    map<Direction, map<vector<Position>, short int>>
-    FiniteDifferenceSchemeBuilder::templatePositionsAndPoints(unsigned short derivativeOrder,
-                                                              unsigned short errorOrder, vector<Direction>& directions) {
-        //Define the positions needed for the scheme at each direction as well as the number of points needed.
-        auto templatePositionsAndPoints =  map<Direction, map<vector<Position>, short>>();
-
+    void FiniteDifferenceSchemeBuilder::templatePositionsAndPoints
+    (short unsigned derivativeOrder, short unsigned errorOrder, vector<Direction>& directions,
+     map<Direction, map<vector<Position>, short int>>& templatePositionsAndPoints) {
         //Find the number of points needed for the desired order of accuracy.
         //The scheme type varies depending on the available neighbours of the dof.
         auto schemeTypeToPoints = schemeOrderToSchemeTypePointsDerivative1()[errorOrder];
@@ -271,8 +275,33 @@ namespace LinearAlgebra {
                      [](Position a, Position b) { return a < b; });
             }
         }
-        return templatePositionsAndPoints;
     };
+
+    vector<double> FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints,
+                                                                                         Direction& direction, unsigned short errorOrder) {
+        auto availableSchemes = map<FDSchemeType, vector<double>>();
+        auto positionsToScheme = positionsToSchemeType();
+        for (auto &qualifiedPositionAndPoint: qualifiedPositionsAndPoints) {
+            auto &positionVector = qualifiedPositionAndPoint.first;
+            auto &points = qualifiedPositionAndPoint.second;
+            auto schemeType = positionsToScheme[direction][positionVector];
+            availableSchemes.insert(pair<FDSchemeType, vector<double>>(schemeType,
+                    FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative1(schemeType, errorOrder)));
+        }
+        if (availableSchemes.find(Central) != availableSchemes.end()) {
+            return availableSchemes[Central];
+        }
+        else if (availableSchemes.find(Forward) != availableSchemes.end()) {
+            return availableSchemes[Forward];
+        }
+        else if (availableSchemes.find(Backward) != availableSchemes.end()) {
+            return availableSchemes[Backward];
+        }
+        else {
+            throw invalid_argument("No scheme found for the given positions");
+        }
+        cout<<"Mitsotaki gamiesai"<<endl;
+    }
 } // LinearAlgebra
 
 

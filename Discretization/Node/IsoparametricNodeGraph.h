@@ -55,7 +55,7 @@ namespace Discretization {
         
         vector<Node*> getColinearNodes(Direction direction) const;
 
-        unique_ptr<map<Direction, map<vector<Position>, short unsigned>>> getColinearPositionsAndPoints(vector<Direction>& availableDirections) const;
+        unique_ptr<map<Direction, map<vector<Position>, short unsigned>>> getColinearPositionsAndPoints(vector<Direction>& availableDirections);
         
         unique_ptr<map<Direction,vector<Position>>> getColinearPositions(vector<Direction>& availableDirections) const;
 

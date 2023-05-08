@@ -35,7 +35,9 @@ namespace LinearAlgebra {
         
         unsigned getMaximumNumberOfPointsForArbitrarySchemeType();
         
-        vector<double> getSchemeWeightsAtDirection(Direction direction);
+        vector<double> getSchemeWeightsAtDirectionDerivative1(Direction direction);
+        
+        vector<double> getSchemeWeightsAtDirectionDerivative2(Direction direction);
         
         map<FDSchemeType, int> getSchemeTypeAndOrder(unsigned derivativeOrder,
                                                             unsigned int errorOrder);
@@ -55,20 +57,18 @@ namespace LinearAlgebra {
         //For example Order 1, type central, -1 points
         map<unsigned, map<FDSchemeType, int>> schemeOrderToSchemeTypePointsDerivative2();
 
-        map<Direction, map<FDSchemeType, vector<Position>>> schemeTypeToPositions();
-
-        map<Direction, map<vector<Position>, FDSchemeType>> positionsToSchemeType();
+        static map<Direction, map<FDSchemeType, vector<Position>>> schemeTypeToPositions();
+        
+        static map<Direction, map<vector<Position>, FDSchemeType>> positionsToSchemeType();
         
         //Use this when the error order is fixed and the scheme varies across the domain.
-        map<Direction, map<vector<Position>, short int>> templatePositionsAndPoints(short unsigned derivativeOrder,
-                                                                                    short unsigned errorOrder, vector<Direction>& directions);
-        
-    private:
-        
+        void templatePositionsAndPoints(short unsigned derivativeOrder, short unsigned errorOrder,
+                                        vector<Direction>& directions,
+                                        map<Direction, map<vector<Position>, short int>>& positionsAndPoints);
 
-
+        vector<double> getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints,
+                                                                 Direction& direction, unsigned short errorOrder);
         
-
     };
 
 } // LinearAlgebra

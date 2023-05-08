@@ -51,7 +51,12 @@ namespace LinearAlgebra {
         
         //Define the directions of the simulation
         auto directions = _mesh->directions();
-
+        short unsigned maxDerivativeOrder = 2;
+        auto templatePositionsAndPointsMap = _initiatePositionsAndPointsMap(maxDerivativeOrder, directions);
+        auto qualifiedPositionsAndPoints = _initiatePositionsAndPointsMap(maxDerivativeOrder, directions);
+        auto availablePositionsAndPoints = _initiatePositionsAndPointsMap(maxDerivativeOrder, directions);
+        
+        
         //Create Scheme Builder for utility functions
         auto schemeBuilder = FiniteDifferenceSchemeBuilder(_specs);
 
@@ -61,10 +66,10 @@ namespace LinearAlgebra {
 
 
         //Define the positions needed for the scheme at each direction as well as the number of points needed.
-        auto templatePositionsAndPointsDerivative1 = schemeBuilder.templatePositionsAndPoints(
-                1, errorOrderDerivative1, directions);
-        auto templatePositionsAndPointsDerivative2 = schemeBuilder.templatePositionsAndPoints(
-                2, errorOrderDerivative2, directions);
+        schemeBuilder.templatePositionsAndPoints(1, errorOrderDerivative1, directions, templatePositionsAndPointsMap[1]);
+        schemeBuilder.templatePositionsAndPoints(2, errorOrderDerivative2, directions, templatePositionsAndPointsMap[2]);
+
+            
         
         //Find the maximum number of neighbours needed for the desired order of accuracy. Used as input node graph depth.
         auto maxNeighbours = schemeBuilder.getMaximumNumberOfPointsForArbitrarySchemeType();
@@ -74,44 +79,46 @@ namespace LinearAlgebra {
             //for (auto &dof: *_analysisDegreesOfFreedom->fixedDegreesOfFreedom) {
             //Node with the DOF
             auto node = _mesh->nodeFromID(*dof->parentNode);
-
+            
+            
             //Initiate node graph with depth equal to the maximum number of neighbours needed for the desired order of accuracy
-            auto graph =IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap, _mesh->nodesPerDirection);
+
+            
             //TODO: check why node id is not ascending in direction 1. for free dof 1 (node 6)
             //      neighbours are free dof (1 (node 7), 2 (node 8), 10 (node 9). this maybe affects the sparsity pattern.
-            auto neighbourDOF = graph.getSpecificDOFGraph(dof->type());
-            auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
 
-            for (auto &direction : directions) {
 
-                //Map with available positions and the number of neighbours available
-                auto availablePositionsAndPointsAtDirection = availablePositionsAndDepth->at(direction);
-                
-                //Map with template positions and the number of neighbours needed for different scheme types to achieve
-                // the desired order of accuracy.Each position vector is a map to finite difference scheme
-                // ({Left}->Backward, {Right}->Forward, {Left, Right}->Central).
-                auto templatePositionsAndPointsAtDirectionDerivative1 = templatePositionsAndPointsDerivative1[direction];
+
+            auto graph =IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap, _mesh->nodesPerDirection);
+            auto colinearDOF = graph.getColinearDOF(dof->type());
+            auto availablePositionsAndDepth = *graph.getColinearPositionsAndPoints(directions);
+
+            unsigned positionI = *dof->id->value;
             
-                auto qualifiedAvailablePositionsAndPoints = map<vector<Position>, short>();
-                //Check if the specifications of the template positions and points are met in the available positions and points
-                for (auto &templatePositionAndPoints : templatePositionsAndPointsAtDirectionDerivative1) {
-                    for (auto &availablePositionAndPoints: availablePositionsAndPointsAtDirection) {
-                        //Check if the template positions and points are met in the available positions and points
-                        if (availablePositionAndPoints.first == templatePositionAndPoints.first &&
-                            availablePositionAndPoints.second >= templatePositionAndPoints.second) {
-                            qualifiedAvailablePositionsAndPoints.insert(pair<vector<Position>, short>(
-                                    templatePositionAndPoints.first, templatePositionAndPoints.second));
-                        }
-                    }
-                }
+            for (auto &direction : directions) {
+                // 1) Map with template positions and the number of neighbours needed for different scheme types to achieve
+                //    the desired order of accuracy. Each position vector is a map to finite difference scheme
+                //    ({Left}->Backward, {Right}->Forward, {Left, Right}->Central).
+                // 2) Map the available positions with the number of neighbours available
+                // 3) Check if the available positions are qualified for the desired order of accuracy stencil.
+                _checkIfAvailableAreQualified(availablePositionsAndDepth[direction],
+                                              templatePositionsAndPointsMap[1][direction],
+                                              qualifiedPositionsAndPoints[1][direction]);
+                _checkIfAvailableAreQualified(availablePositionsAndDepth[direction],
+                                              templatePositionsAndPointsMap[2][direction],
+                                              qualifiedPositionsAndPoints[2][direction]);
+                auto firstDerivativeSchemeType = schemeBuilder.getSchemeWeightsFromQualifiedPositions(
+                        qualifiedPositionsAndPoints[1][direction], direction, errorOrderDerivative1);
+                auto secondDerivativeSchemeType = schemeBuilder.getSchemeWeightsFromQualifiedPositions(
+                        qualifiedPositionsAndPoints[2][direction], direction, errorOrderDerivative2);
                 
-                //TODO Convert back to scheme type
+                auto dofsAtDirection = colinearDOF[direction];
+                
             }
                 
 
 
             //Calculate Diagonal Element
-            unsigned positionI = *dof->id->value;
             auto valueICoefficient = 0.0;
             for (auto &direction : directions) {
 
@@ -215,4 +222,36 @@ namespace LinearAlgebra {
             cout << value << endl;
         }
     }
+
+    map<short unsigned, map<Direction, map<vector<Position>, short>>> AnalysisLinearSystemInitializer::
+    _initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions) {
+        map<short unsigned, map<Direction, map<vector<Position>, short>>> positionsAndPoints;
+        for (short unsigned derivativeOrder = 1; derivativeOrder <= maxDerivativeOrder; derivativeOrder++) {
+            positionsAndPoints.insert(pair<short unsigned, map<Direction, map<vector<Position>, short>>>(
+                    derivativeOrder, map<Direction, map<vector<Position>, short>>()));
+            for (auto &direction : directions) {
+                positionsAndPoints[derivativeOrder].insert(pair<Direction, map<vector<Position>, short>>(
+                        direction, map<vector<Position>, short>()));
+            }
+        }
+        return positionsAndPoints;
+    }
+    
+    void AnalysisLinearSystemInitializer::_checkIfAvailableAreQualified(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
+                                                                        map<vector<Position>,short>& templatePositionsAndPoints,
+                                                                        map<vector<Position>,short>& qualifiedPositionsAndPoints){
+        //Check if the specifications of the template positions and points are met in the available positions and points
+        for (auto &templatePositionAndPoints : templatePositionsAndPoints) {
+            for (auto &availablePositionAndPoints : availablePositionsAndPoints) {
+                //Check if the template positions and points are met in the available positions and points
+                if (availablePositionAndPoints.first == templatePositionAndPoints.first &&
+                    availablePositionAndPoints.second >= templatePositionAndPoints.second) {
+                    qualifiedPositionsAndPoints.insert(pair<vector<Position>, short>(
+                            templatePositionAndPoints.first, templatePositionAndPoints.second));
+                }
+            }
+        }
+    }
+
+
 }// LinearAlgebra

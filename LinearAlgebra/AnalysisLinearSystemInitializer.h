@@ -63,6 +63,16 @@ namespace LinearAlgebra {
         void _createFreeDOFSubMatrix();
 
         map<vector<double>, Node*>* _parametricCoordToNodeMap;
+
+        static map<short unsigned, map<Direction, map<vector<Position>, short>>>
+        _initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions);
+        
+        static void _checkIfAvailableAreQualified(map<vector<Position>, unsigned short>& availablePositionsAndPoints,
+                                                  map<vector<Position>, short>& templatePositionsAndPoints,
+                                                  map<vector<Position>, short>& qualifiedPositionsAndPoints);
+        
+        tuple<FDSchemeType, short>
+        _getSchemeTypeAndOrderFromQualified(map<vector<Position>, short>& qualifiedPositionsAndPoints);
         
         void _createRHS();
     };
