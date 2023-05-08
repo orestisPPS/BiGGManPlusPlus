@@ -80,61 +80,32 @@ namespace LinearAlgebra {
             //TODO: check why node id is not ascending in direction 1. for free dof 1 (node 6)
             //      neighbours are free dof (1 (node 7), 2 (node 8), 10 (node 9). this maybe affects the sparsity pattern.
             auto neighbourDOF = graph.getSpecificDOFGraph(dof->type());
-            auto positionsAndDepth = graph.getColinearPositionsAndPoints(directions);
+            auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
 
             for (auto &direction : directions) {
 
                 //Map with available positions and the number of neighbours available
-                auto availablePositionsAndPointsAtDirection = positionsAndDepth->at(direction);
+                auto availablePositionsAndPointsAtDirection = availablePositionsAndDepth->at(direction);
                 
                 //Map with template positions and the number of neighbours needed for different scheme types to achieve
                 // the desired order of accuracy.Each position vector is a map to finite difference scheme
                 // ({Left}->Backward, {Right}->Forward, {Left, Right}->Central).
                 auto templatePositionsAndPointsAtDirectionDerivative1 = templatePositionsAndPointsDerivative1[direction];
-
-                //Iterate over the template position vectors
-                auto templatePositionsVector = vector<Position>();
-                auto templatePoints = 0;
-                for (auto &templatePositionAndPoints: templatePositionsAndPointsAtDirectionDerivative1) {
-                    templatePositionsVector = get<0>(templatePositionAndPoints);
-                    templatePoints = get<1>(templatePositionAndPoints);
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    //Iterate over the available positions
+            
+                auto qualifiedAvailablePositionsAndPoints = map<vector<Position>, short>();
+                //Check if the specifications of the template positions and points are met in the available positions and points
+                for (auto &templatePositionAndPoints : templatePositionsAndPointsAtDirectionDerivative1) {
                     for (auto &availablePositionAndPoints: availablePositionsAndPointsAtDirection) {
-                        //Position of the available DOF
-                        auto availablePosition = get<0>(availablePositionAndPoints);
-                        //Number of neighbours available
-                        auto availablePoints = get<1>(availablePositionAndPoints);
-                        
-                        //Iterate over the template positions and the number of neighbours needed for different scheme
-                        //types to achieve the desired order of accuracy
-                        for (auto &templatePosition: templatePositionsVector) {
-                            //If the available position is equal to the template position and the number of neighbours
-                            //available is equal to the number of neighbours needed for the desired order of accuracy
-/*                            if (availablePosition == templatePosition && availablePoints >= templatePoints) {
-                                cout<<"MITSOTAKI GAMIESAI"<<endl;
-     *//*                           //Apply the scheme type
-                                if (templatePosition == Position::Left) {
-                                    applyBackwardScheme = true;
-                                } else if (templatePosition == Position::Right) {
-                                    applyForwardScheme = true;
-                                } else if (templatePosition == Position::LeftRight) {
-                                    applyCentralScheme = true;
-                                }*//*
-                            }*/
+                        //Check if the template positions and points are met in the available positions and points
+                        if (availablePositionAndPoints.first == templatePositionAndPoints.first &&
+                            availablePositionAndPoints.second >= templatePositionAndPoints.second) {
+                            qualifiedAvailablePositionsAndPoints.insert(pair<vector<Position>, short>(
+                                    templatePositionAndPoints.first, templatePositionAndPoints.second));
                         }
                     }
-                    
-                    
-                    bool lolipop = false;
-                    
                 }
+                
+                //TODO Convert back to scheme type
             }
                 
 

@@ -141,7 +141,6 @@ namespace Discretization {
                 sumDepth[it] = position.second;
                 it++;
             }
-            //sort sumpoints
             sort(sumPoints.begin(), sumPoints.end(), [](const Position &a, const Position &b) {
                 return a > b;
             });
