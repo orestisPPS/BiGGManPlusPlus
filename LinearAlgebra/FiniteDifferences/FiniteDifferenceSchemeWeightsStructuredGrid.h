@@ -21,12 +21,11 @@ namespace LinearAlgebra {
 
         FiniteDifferenceSchemeWeightsStructuredGrid();
         
-        static map<int, double>* getWeightsDerivative1(FDSchemeType schemeType, unsigned errorOrder);
-
-        static map<int, double>* getWeightsDerivative2(FDSchemeType schemeType, unsigned errorOrder);
-
+        static vector<double> getWeightsVector(unsigned short derivativeOrder, FDSchemeType schemeType, unsigned errorOrder);
 
         static vector<double> getWeightsVectorDerivative1(FDSchemeType schemeType, unsigned errorOrder);
+        
+        static vector<double> getWeightsVectorDerivative2(FDSchemeType schemeType, unsigned errorOrder);
         
     
     private:
@@ -165,6 +164,10 @@ namespace LinearAlgebra {
         
         
         static map<tuple<FDSchemeType, unsigned>, map<int, double>> _schemeTypeAndOrderToWeightsDerivative2();
+
+        static map<int, double>* _getWeightsDerivative1(FDSchemeType schemeType, unsigned errorOrder);
+
+        static map<int, double>* _getWeightsDerivative2(FDSchemeType schemeType, unsigned errorOrder);
         
     };
 

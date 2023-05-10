@@ -8,7 +8,7 @@ namespace LinearAlgebra {
     
     
     map<int, double>* FiniteDifferenceSchemeWeightsStructuredGrid::
-    getWeightsDerivative1(FDSchemeType schemeType, unsigned int errorOrder) {
+    _getWeightsDerivative1(FDSchemeType schemeType, unsigned int errorOrder) {
         
         auto schemeTypeAndOrder = make_tuple(schemeType, errorOrder);
         auto schemeTypeAndOrderToSchemeWeightsMap = _schemeTypeAndOrderToWeightsDerivative1();
@@ -21,7 +21,7 @@ namespace LinearAlgebra {
     }
 
     map<int, double>* FiniteDifferenceSchemeWeightsStructuredGrid::
-    getWeightsDerivative2(FDSchemeType schemeType, unsigned int errorOrder) {
+    _getWeightsDerivative2(FDSchemeType schemeType, unsigned int errorOrder) {
 
         auto schemeTypeAndOrder = make_tuple(schemeType, errorOrder);
         auto schemeTypeAndOrderToSchemeWeightsMap = _schemeTypeAndOrderToWeightsDerivative2();
@@ -32,15 +32,38 @@ namespace LinearAlgebra {
             throw invalid_argument("The scheme type and error order combination is not supported");
         }
     }
+    
+    vector<double> FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVector(unsigned short derivativeOrder, FDSchemeType schemeType, unsigned int errorOrder) {
+        if (derivativeOrder == 1) {
+            return getWeightsVectorDerivative1(schemeType, errorOrder);
+        }
+        else if (derivativeOrder == 2) {
+            return getWeightsVectorDerivative2(schemeType, errorOrder);
+        }
+        else {
+            throw invalid_argument("The derivative order is not supported");
+        }
+    }
 
     vector<double> FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative1(FDSchemeType schemeType, unsigned int errorOrder) {
-        auto weights = getWeightsDerivative1(schemeType, errorOrder);
+        auto weights = _getWeightsDerivative1(schemeType, errorOrder);
         auto weightsVector = vector<double>();
         for (auto& weight : *weights) {
             weightsVector.push_back(weight.second);
         }
         return weightsVector;
     }
+
+    vector<double> FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative2(FDSchemeType schemeType, unsigned int errorOrder) {
+        auto weights = _getWeightsDerivative2(schemeType, errorOrder);
+        auto weightsVector = vector<double>();
+        for (auto& weight : *weights) {
+            weightsVector.push_back(weight.second);
+        }
+        return weightsVector;
+    }
+    
+    
     
     map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _forward1_1() {
         auto weights = map<int, double>();

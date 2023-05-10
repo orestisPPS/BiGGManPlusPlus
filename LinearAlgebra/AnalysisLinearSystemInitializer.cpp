@@ -87,13 +87,13 @@ namespace LinearAlgebra {
             //TODO: check why node id is not ascending in direction 1. for free dof 1 (node 6)
             //      neighbours are free dof (1 (node 7), 2 (node 8), 10 (node 9). this maybe affects the sparsity pattern.
 
-
+            unsigned positionI = *dof->id->value;
 
             auto graph =IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap, _mesh->nodesPerDirection);
-            auto colinearDOF = graph.getColinearDOF(dof->type());
+            //
+            
             auto availablePositionsAndDepth = *graph.getColinearPositionsAndPoints(directions);
-
-            unsigned positionI = *dof->id->value;
+            auto graphFilter = map<Position, short>();
             
             for (auto &direction : directions) {
                 // 1) Map with template positions and the number of neighbours needed for different scheme types to achieve
@@ -107,16 +107,31 @@ namespace LinearAlgebra {
                 _checkIfAvailableAreQualified(availablePositionsAndDepth[direction],
                                               templatePositionsAndPointsMap[2][direction],
                                               qualifiedPositionsAndPoints[2][direction]);
-                auto firstDerivativeSchemeType = schemeBuilder.getSchemeWeightsFromQualifiedPositions(
-                        qualifiedPositionsAndPoints[1][direction], direction, errorOrderDerivative1);
-                auto secondDerivativeSchemeType = schemeBuilder.getSchemeWeightsFromQualifiedPositions(
-                        qualifiedPositionsAndPoints[2][direction], direction, errorOrderDerivative2);
                 
-                auto dofsAtDirection = colinearDOF[direction];
+                auto firstDerivativeSchemeWeights = schemeBuilder.getSchemeWeightsFromQualifiedPositions(
+                        qualifiedPositionsAndPoints[1][direction], direction, errorOrderDerivative1, 1);
+                auto secondDerivativeSchemeWeights = schemeBuilder.getSchemeWeightsFromQualifiedPositions(
+                        qualifiedPositionsAndPoints[2][direction], direction, errorOrderDerivative2, 2);
                 
+                auto filterDerivative1 = map<Position, unsigned short>();
+                for (auto &tuple : qualifiedPositionsAndPoints[1][direction]) {
+                    for (auto &point : tuple.first) {
+                        filterDerivative1[point] = 1;
+                    }
+                }
+                auto nodeGraphDerivative1 = graph.getNodeGraph(filterDerivative1);
+                auto colinearDOFDerivative1 = graph.getColinearDOF(dof->type(), direction, nodeGraphDerivative1);
+                
+                auto filterDerivative2 = map<Position, unsigned short>();
+                for (auto &tuple : qualifiedPositionsAndPoints[2][direction]) {
+                    for (auto &point : tuple.first) {
+                        filterDerivative2[point] = 1;
+                    }
+                }
+                auto nodeGraphDerivative2 = graph.getNodeGraph(filterDerivative2);
+                auto colinearDOFDerivative2 = graph.getColinearDOF(dof->type(), direction, nodeGraphDerivative2);
             }
                 
-
 
             //Calculate Diagonal Element
             auto valueICoefficient = 0.0;
@@ -183,7 +198,6 @@ namespace LinearAlgebra {
                     _fixedDOFMatrix->at(positionI, positionJ) = 1;
                 }
             }
-            delete dofGraph;
             dofGraph = nullptr;
         }
         cout<<"Fixed DOF matrix"<<endl;
@@ -211,8 +225,6 @@ namespace LinearAlgebra {
                     }
                 }
             }            
-            delete dofGraph;
-            dofGraph = nullptr;
         }
         delete _fixedDOFMatrix;
         _fixedDOFMatrix = nullptr;

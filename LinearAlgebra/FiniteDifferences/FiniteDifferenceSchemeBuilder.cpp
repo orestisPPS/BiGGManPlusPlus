@@ -277,16 +277,27 @@ namespace LinearAlgebra {
         }
     };
 
-    vector<double> FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints,
-                                                                                         Direction& direction, unsigned short errorOrder) {
+    vector<double> FiniteDifferenceSchemeBuilder::
+    getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints, Direction& direction,
+                                           unsigned short errorOrder, unsigned short derivativeOrder) {
         auto availableSchemes = map<FDSchemeType, vector<double>>();
         auto positionsToScheme = positionsToSchemeType();
         for (auto &qualifiedPositionAndPoint: qualifiedPositionsAndPoints) {
             auto &positionVector = qualifiedPositionAndPoint.first;
             auto &points = qualifiedPositionAndPoint.second;
             auto schemeType = positionsToScheme[direction][positionVector];
-            availableSchemes.insert(pair<FDSchemeType, vector<double>>(schemeType,
-                    FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative1(schemeType, errorOrder)));
+            switch (derivativeOrder) {
+                case 1:
+                    availableSchemes.insert(pair<FDSchemeType, vector<double>>(schemeType,
+                            FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative1(schemeType, errorOrder)));
+                    break;
+                case 2:
+                    availableSchemes.insert(pair<FDSchemeType, vector<double>>(schemeType,
+                            FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative2(schemeType, errorOrder)));
+                    break;
+                default:
+                    throw invalid_argument("Derivative order not supported");
+            }
         }
         if (availableSchemes.find(Central) != availableSchemes.end()) {
             return availableSchemes[Central];

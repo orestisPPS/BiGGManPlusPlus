@@ -242,7 +242,6 @@ namespace Discretization {
                 metrics->insert(pair<unsigned, Metrics *>(*node->id.global, nodeMetrics));
 
                 //Deallocate memory
-                delete nodeGraph;
                 nodeGraph = nullptr;
                 delete graph;
                 graph = nullptr;
@@ -352,7 +351,6 @@ namespace Discretization {
                 metrics->insert(pair<unsigned, Metrics *>(*node->id.global, nodeMetrics));
 
                 //Deallocate memory
-                delete nodeGraph;
                 nodeGraph = nullptr;
                 delete graph;
                 graph = nullptr;
