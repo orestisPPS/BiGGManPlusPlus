@@ -35,7 +35,8 @@ namespace LinearAlgebra {
     void AnalysisLinearSystemInitializer::createLinearSystem() {
         _createMatrix();
         _createRHS();
-        linearSystem = new LinearSystem(_matrix, _RHS);
+        linearSystem = new LinearSystem(_freeDOFMatrix, _RHS);
+        linearSystem->exportToMatlabFile("firstCLaplacecplace.m", "/home/hal9000/code/BiGGMan++/Testing", true);
     }
     
     void AnalysisLinearSystemInitializer::_createMatrix() {
@@ -46,8 +47,6 @@ namespace LinearAlgebra {
     //Creates a matrix with consistent order across the domain. The scheme type is defined by the node neighbourhood.
     //Error Order is user defined.
     void AnalysisLinearSystemInitializer::_createFreeDOFSubMatrix() {
-
-        bool applyForwardScheme, applyBackwardScheme, applyCentralScheme;
 
         //Define the directions of the simulation
         auto directions = _mesh->directions();
@@ -82,12 +81,16 @@ namespace LinearAlgebra {
             //Node with the DOF
             auto node = _mesh->nodeFromID(*dof->parentNode);
 
-            //TODO: check why node id is not ascending in direction 1. for free dof 1 (node 6)
-            //      neighbours are free dof (1 (node 7), 2 (node 8), 10 (node 9). this maybe affects the sparsity pattern.
+            //Find PDE Coefficients
+            auto secondOrderCoefficients =
+                    _mathematicalProblem->pde->properties->getLocalProperties(*node->id.global).secondOrderCoefficients;
+            auto firstOrderCoefficients =
+                    _mathematicalProblem->pde->properties->getLocalProperties(*node->id.global).firstOrderCoefficients;
+            auto zerothOrderCoefficients =
+                    _mathematicalProblem->pde->properties->getLocalProperties(*node->id.global).zerothOrderCoefficient;
 
             auto graph = IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap,
                                                 _mesh->nodesPerDirection);
-            //
 
             auto availablePositionsAndDepth = *graph.getColinearPositionsAndPoints(directions);
             auto graphFilter = map<Position, short>();
@@ -109,7 +112,12 @@ namespace LinearAlgebra {
                         qualifiedPositionsAndPoints[1][direction], direction, errorOrderDerivative1, 1);
                 auto secondDerivativeSchemeWeights = schemeBuilder.getSchemeWeightsFromQualifiedPositions(
                         qualifiedPositionsAndPoints[2][direction], direction, errorOrderDerivative2, 2);
-
+                
+                auto directionIndex = spatialDirectionToUnsigned[direction];
+                auto firstDerivativeCoefficient = firstOrderCoefficients->at(directionIndex);
+                auto secondDerivativeCoefficient = secondOrderCoefficients->at(directionIndex, directionIndex);
+                
+                
                 auto filterDerivative1 = map<Position, unsigned short>();
                 for (auto &tuple: qualifiedPositionsAndPoints[1][direction]) {
                     for (auto &point: tuple.first) {
@@ -130,33 +138,24 @@ namespace LinearAlgebra {
 
                 //Calculate the fucking scheme
                 positionI = *dof->id->value;
-/*                for (auto iDof = 0; iDof < colinearDOFDerivative1.size(); iDof++) {
+                for (auto iDof = 0; iDof < colinearDOFDerivative1.size(); iDof++) {
                     if (colinearDOFDerivative1[iDof]->id->constraintType() == Free) {
                         positionJ = *colinearDOFDerivative1[iDof]->id->value;
                         _freeDOFMatrix->at(positionI, positionJ) =
-                                _freeDOFMatrix->at(positionI, positionJ) + firstDerivativeSchemeWeights[iDof];
+                                _freeDOFMatrix->at(positionI, positionJ) +
+                                firstDerivativeSchemeWeights[iDof] * firstDerivativeCoefficient;
                     }
 
-                }*/
+                }
+                
                 for (auto iDof = 0; iDof < colinearDOFDerivative2.size(); iDof++) {
                     if (colinearDOFDerivative2[iDof]->id->constraintType() == Free) {
                         positionJ = *colinearDOFDerivative2[iDof]->id->value;
                         _freeDOFMatrix->at(positionI, positionJ) =
-                                _freeDOFMatrix->at(positionI, positionJ) + secondDerivativeSchemeWeights[iDof];
+                                _freeDOFMatrix->at(positionI, positionJ) +
+                                secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient;
                     }
                 }
-
-
-                //Find PDE Coefficients
-                auto secondOrderCoefficients =
-                        _mathematicalProblem->pde->properties->getLocalProperties(
-                                *node->id.global).secondOrderCoefficients;
-                auto firstOrderCoefficients =
-                        _mathematicalProblem->pde->properties->getLocalProperties(
-                                *node->id.global).firstOrderCoefficients;
-                auto zerothOrderCoefficients =
-                        _mathematicalProblem->pde->properties->getLocalProperties(
-                                *node->id.global).zerothOrderCoefficient;
             }
         }
         cout << "Free DOF matrix" << endl;
@@ -215,10 +214,10 @@ namespace LinearAlgebra {
         delete _fixedDOFMatrix;
         _fixedDOFMatrix = nullptr;
         
-/*        //print vector
+        //print vector
         for (auto &value: *_RHS) {
             cout << value << endl;
-        }*/
+        }
     }
 
     map<short unsigned, map<Direction, map<vector<Position>, short>>> AnalysisLinearSystemInitializer::

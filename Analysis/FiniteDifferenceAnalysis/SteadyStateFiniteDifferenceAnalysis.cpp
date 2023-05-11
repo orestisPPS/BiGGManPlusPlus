@@ -4,6 +4,7 @@
 
 #include "SteadyStateFiniteDifferenceAnalysis.h"
 #include "../../LinearAlgebra/AnalysisLinearSystemInitializer.h"
+#include "../../LinearAlgebra/Solvers/Direct/SolverLUP.h"
 
 namespace NumericalAnalysis {
     
@@ -14,6 +15,10 @@ namespace NumericalAnalysis {
         auto linearSystem = new AnalysisLinearSystemInitializer(degreesOfFreedom, mesh,
                                                                 mathematicalProblem, schemeSpecs);
         linearSystem->createLinearSystem();
+        auto solver = SolverLUP(1E-20, true);
+        solver.setLinearSystem(linearSystem->linearSystem);
+        solver.solve();
+
         
         auto fileNameMatlab = "linearSystem.m";
         auto filenameParaview = "mesh.vtk";

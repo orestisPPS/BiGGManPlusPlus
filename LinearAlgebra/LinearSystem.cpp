@@ -52,7 +52,7 @@ namespace LinearAlgebra {
 
 
         if (printSolution) {
-/*            // Write the command to create a grid for evaluating the solution
+            // Write the command to create a grid for evaluating the solution
             outputFile << "[X,Y] = meshgrid(0:0.1:1, 0:0.1:1);" << endl;
 
             // Write the command to evaluate the solution at each point on the grid
@@ -65,8 +65,7 @@ namespace LinearAlgebra {
             outputFile << "ylabel('y');" << endl;
             outputFile << "zlabel('z');" << endl;
             outputFile << "colorbar;" << endl;
-        }*/
-            outputFile.close();
         }
+            outputFile.close();
     }
-} // LinearAlgebra
+}// LinearAlgebra

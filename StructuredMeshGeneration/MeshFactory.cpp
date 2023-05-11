@@ -134,7 +134,7 @@ namespace StructuredMeshGenerator{
             auto nodeFieldProperties = FieldProperties();
             auto loliti = *mesh->metrics->at(*node->id.global)->contravariantTensor;
             nodeFieldProperties.secondOrderCoefficients = mesh->metrics->at(*node->id.global)->contravariantTensor;
-            nodeFieldProperties.firstOrderCoefficients = new vector<double>{0, 0};
+            nodeFieldProperties.firstOrderCoefficients = new vector<double>(2, 0);
             nodeFieldProperties.zerothOrderCoefficient = new double(0);
             nodeFieldProperties.sourceTerm = new double(0);
             pdePropertiesFromMetrics->insert(pair<unsigned, FieldProperties>(*node->id.global, nodeFieldProperties));
