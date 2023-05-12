@@ -36,7 +36,7 @@ namespace LinearAlgebra {
         _createMatrix();
         _createRHS();
         linearSystem = new LinearSystem(_freeDOFMatrix, _RHS);
-        linearSystem->exportToMatlabFile("firstCLaplacecplace.m", "/home/hal9000/code/BiGGMan++/Testing", true);
+        //linearSystem->exportToMatlabFile("firstCLaplacecplace.m", "/home/hal9000/code/BiGGMan++/Testing", true);
     }
     
     void AnalysisLinearSystemInitializer::_createMatrix() {
@@ -159,7 +159,7 @@ namespace LinearAlgebra {
             }
         }
         cout << "Free DOF matrix" << endl;
-        _freeDOFMatrix->print();
+        //_freeDOFMatrix->print();
         cout << "  " << endl;
     }
         
@@ -214,10 +214,10 @@ namespace LinearAlgebra {
         delete _fixedDOFMatrix;
         _fixedDOFMatrix = nullptr;
         
-        //print vector
+/*        //print vector
         for (auto &value: *_RHS) {
             cout << value << endl;
-        }
+        }*/
     }
 
     map<short unsigned, map<Direction, map<vector<Position>, short>>> AnalysisLinearSystemInitializer::

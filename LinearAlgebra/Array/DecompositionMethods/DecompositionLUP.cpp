@@ -198,6 +198,8 @@ namespace LinearAlgebra {
         auto x = new vector<double>(n);
         auto y = new vector<double>(n);
 
+        cout<<"FORWARD SUBSTITUTION"<<endl;
+        
         if (isStoredOnMatrix()){
             // Solve Ly = b using forward substitution
             for (unsigned i = 0; i < n; i++) {
@@ -206,7 +208,9 @@ namespace LinearAlgebra {
                     y->at(i) -= _matrix->at(i, j) * (*y)[j];
                 }
             }
-
+            
+            cout<<"BACKWARD SUBSTITUTION"<<endl;
+            
             // Solve Ux = y using backward substitution
             for (int i = static_cast<int>(n) - 1; i >= 0; i--) {
                 x->at(i) = y->at(i);

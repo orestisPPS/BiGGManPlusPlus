@@ -128,16 +128,22 @@ namespace Discretization {
 
     void Mesh::cleanMeshDataStructures() {
         //search all boundaryNodes map and deallocate all vector pointer values
-        for (auto &boundary: *boundaryNodes) {
-            delete boundary.second;
-            boundary.second = nullptr;
+        for (auto &node : *totalNodesVector) {
+            delete node;
+            node = nullptr;
+        }
+        delete totalNodesVector;
+        totalNodesVector = nullptr;
+        delete internalNodesVector;
+        internalNodesVector = nullptr;
+        for (auto &boundaryNodesVector : *boundaryNodes) {
+            delete boundaryNodesVector.second;
+            boundaryNodesVector.second = nullptr;
         }
         delete boundaryNodes;
         boundaryNodes = nullptr;
-
-        //Deallocate internalNodesVector vector
-        delete internalNodesVector;
-        internalNodesVector = nullptr;
+        delete _nodesMap;
+        _nodesMap = nullptr;
     }
 
     map<Direction, unsigned> *Mesh::createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth) {
@@ -156,7 +162,7 @@ namespace Discretization {
             _arbitrarilySpacedMeshMetrics(coordinateSystem);
         }
         
-        for (auto &node: *metrics) {
+/*        for (auto &node: *metrics) {
             //node.first->printNode();
             cout << "Node " << node.first << endl;
             cout << "covariant tensor" << endl;
@@ -164,7 +170,7 @@ namespace Discretization {
             cout << "contravariant tensor" << endl;
             node.second->contravariantTensor->print();
             cout << "---------------------------------" << endl;
-        }
+        }*/
     }
 
     GhostPseudoMesh* Mesh::createGhostPseudoMesh(unsigned ghostLayerDepth) {
@@ -185,7 +191,6 @@ namespace Discretization {
             
             //March through all the nodes of the mesh and calculate its metrics
             for (auto &node: *totalNodesVector) {
-                cout << "Node : " << *node->id.global << endl;
                 //Find Neighbors in a manner that applies the same numerical scheme to all nodes
                 auto neighbours = schemeBuilder->getNumberOfDiagonalNeighboursNeeded();
                 //Initiate Node Graph
@@ -271,7 +276,7 @@ namespace Discretization {
 
             //March through all the nodes of the mesh and calculate its metrics
             for (auto &node: *totalNodesVector) {
-                cout << "Node : " << *node->id.global << endl;
+                //cout << "Node : " << *node->id.global << endl;
                 //Find Neighbors in a manner that applies the same numerical scheme to all nodes
                 auto neighbours = schemeBuilder->getNumberOfDiagonalNeighboursNeeded();
                 //Initiate Node Graph

@@ -18,6 +18,7 @@ namespace NumericalAnalysis {
         auto solver = SolverLUP(1E-20, true);
         solver.setLinearSystem(linearSystem->linearSystem);
         solver.solve();
+        cout<<"Linear System solved..."<<endl;
 
         
         auto fileNameMatlab = "linearSystem.m";

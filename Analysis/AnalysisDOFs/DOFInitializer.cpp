@@ -161,10 +161,10 @@ namespace NumericalAnalysis {
         unsigned dofID = 0;
         for (auto &dof : *_freeDegreesOfFreedomList) {
             (*dof->id->value) = dofID;
-            cout << "FREE DOF ID: " << dofID << " Node: " << (*dof->parentNode)<< endl;
+            //cout << "FREE DOF ID: " << dofID << " Node: " << (*dof->parentNode)<< endl;
             dofID++;
         }
-        cout <<" "<< endl;
+        //cout <<" "<< endl;
         dofID = 0;
         for (auto &dof : *_boundedDegreesOfFreedomList) {
             (*dof->id->value) = dofID;
@@ -197,7 +197,7 @@ namespace NumericalAnalysis {
             for (auto &dof : *node->degreesOfFreedom) {
                 totalDegreesOfFreedomMap->insert(pair<unsigned, DegreeOfFreedom*>(dofId, dof));
                 totalDegreesOfFreedomMapInverse->insert(pair<DegreeOfFreedom*, unsigned>(dof, dofId));
-                cout<< "DOF ID: " << dofId << " Node: " << *totalDegreesOfFreedomMap->at(dofId)->parentNode << endl;
+                //cout<< "DOF ID: " << dofId << " Node: " << *totalDegreesOfFreedomMap->at(dofId)->parentNode << endl;
                 dofId++;
             }
         }

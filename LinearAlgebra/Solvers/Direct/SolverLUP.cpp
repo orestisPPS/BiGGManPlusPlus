@@ -26,6 +26,7 @@ namespace LinearAlgebra {
         _linearSystem = linearSystem;
         _decomposition = new DecompositionLUP(_linearSystem->matrix, _pivotTolerance, _throwExceptionOnSingularMatrix);
         if (_storeDecompositionOnMatrix) {
+            cout<<"Decomposition Initiated..."<<endl;
             _decomposition->decomposeOnMatrix();
         }
         else
