@@ -46,6 +46,30 @@ namespace DegreesOfFreedom {
             }
     };
     
+    struct nodalPositionVectorField1D_DOFType : public Field_DOFType {
+        nodalPositionVectorField1D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(1);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::Position1);
+        }
+    };
+    
+    struct nodalPositionVectorField2D_DOFType : public Field_DOFType {
+        nodalPositionVectorField2D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(2);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::Position1);
+            DegreesOfFreedom->at(1) =new DOFType(DOFType::Position2);
+        }
+    };
+    
+    struct nodalPositionVectorField3D_DOFType : public Field_DOFType {
+        nodalPositionVectorField3D_DOFType() : Field_DOFType{} {
+            DegreesOfFreedom = new std::vector<DOFType*>(3);
+            DegreesOfFreedom->at(0) =new DOFType(DOFType::Position1);
+            DegreesOfFreedom->at(1) =new DOFType(DOFType::Position2);
+            DegreesOfFreedom->at(2) =new DOFType(DOFType::Position3);
+        }
+    };
+    
     // Contains the u component of the [1x1] displacement vector field
     struct DisplacementVectorField1D_DOFType : public Field_DOFType {
         DisplacementVectorField1D_DOFType() : Field_DOFType{} {

@@ -13,6 +13,7 @@ using namespace LinearAlgebra;
 #include "LinearAlgebra/FiniteDifferences/FDWeightCalculator.h"
 #include <functional>
 #include <list>
+
 int main() {
 
     auto analysisTest = new NumericalAnalysis::StStFDTest();

@@ -76,14 +76,16 @@ namespace PartialDifferentialEquations {
                                                                 double zerothOrderCoefficient, double sourceTerm) {
         if (_type == Isotropic and not _isInitialized){
             auto totalDimensions = this->totalDimensions();
+            _firstDerivativeProperties = new vector<double>(totalDimensions);
+            _secondDerivativeProperties = new Array<double>(totalDimensions, totalDimensions);
             for (unsigned short i = 0; i < totalDimensions; i++){
                 _firstDerivativeProperties->at(i) = firstOrderCoefficient;
                 for (int j = 0; j < totalDimensions; ++j) {
                     _secondDerivativeProperties->at(i,j) = secondOrderCoefficient;
                 }
             }
-            *_zeroDerivativeProperties = zerothOrderCoefficient;
-            *_sourceTerm = sourceTerm;
+            _zeroDerivativeProperties = new double(zerothOrderCoefficient);
+            _sourceTerm = new double(sourceTerm);
             _isInitialized = true;
         } else {
             //throw argument
@@ -114,10 +116,15 @@ namespace PartialDifferentialEquations {
         if (_type == LocallyAnisotropic){
             return _locallyAnisotropic1Properties->at(nodeId);
         } else {
-            throw std::invalid_argument("Cannot get local properties from a non-locally anisotropic PDE");
+            auto localProperties = FieldProperties();
+            localProperties.secondOrderCoefficients = _secondDerivativeProperties;
+            localProperties.firstOrderCoefficients = _firstDerivativeProperties;
+            localProperties.zerothOrderCoefficient = _zeroDerivativeProperties;
+            localProperties.sourceTerm = _sourceTerm;
+            return localProperties;
         }
     }
-
+    
     FieldProperties SecondOrderLinearPDEProperties::getLocalProperties() {
         if (_type == LocallyAnisotropic){
             throw std::invalid_argument("The PDE is locally anisotropic. Node ID must be specified");

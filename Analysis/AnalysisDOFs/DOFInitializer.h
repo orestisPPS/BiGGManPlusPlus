@@ -31,8 +31,12 @@ namespace NumericalAnalysis {
         
         void _initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType* degreesOfFreedom) const;
         
-        void _initiateBoundaryNodeDOF(Mesh *mesh, Field_DOFType *problemDOFTypes,
-                                      DomainBoundaryConditions *domainBoundaryConditions) const;
+        void _initiateBoundaryNodeDOFWithHomogenousBC(Mesh *mesh, Field_DOFType *problemDOFTypes,
+                                                      DomainBoundaryConditions *domainBoundaryConditions) const;
+        
+        void _initiateBoundaryNodeDOFWithNonHomogenousBC(Mesh *mesh, Field_DOFType *problemDOFTypes,
+                                                         DomainBoundaryConditions *domainBoundaryConditions) const;
+        
         void _removeDuplicatesAndDelete(Mesh *mesh) const;
         
         void _assignDOFIDs() const;

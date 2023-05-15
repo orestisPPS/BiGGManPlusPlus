@@ -6,14 +6,16 @@
 
 namespace LinearAlgebra {
     
-    void Solver::setLinearSystem(LinearSystem* linearSystem){
-        _linearSystem = linearSystem;
-    }
+    
     
     SolverType Solver::type(){
         return _solverType;
     }
     
     void Solver::solve(){}
+
+    void Solver::setLinearSystem(LinearSystem *linearSystem) {
+
+    }
 
 } // LinearAlgebra

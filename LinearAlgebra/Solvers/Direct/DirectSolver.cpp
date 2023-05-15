@@ -22,8 +22,5 @@ namespace LinearAlgebra {
         return nullptr;
     }
     
-    void DirectSolver::solve() { }
-    
-    void DirectSolver::setLinearSystem(LinearSystem* linearSystem) { }
     
 } // LinearAlgebra

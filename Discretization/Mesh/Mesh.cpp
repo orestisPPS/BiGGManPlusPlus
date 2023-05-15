@@ -106,10 +106,9 @@ namespace Discretization {
 
     void Mesh::createNumberOfNodesPerDirectionMap() {
         if (isInitialized) {
-            nodesPerDirection = map<Direction, unsigned>();
-            nodesPerDirection[One] = _nodesMatrix->numberOfColumns();
-            nodesPerDirection[Two] = _nodesMatrix->numberOfRows();
-            nodesPerDirection[Three] = _nodesMatrix->numberOfAisles();
+            nodesPerDirection.insert(pair<Direction, unsigned>(One, _nodesMatrix->numberOfRows()));
+            nodesPerDirection.insert(pair<Direction, unsigned>(Two, _nodesMatrix->numberOfColumns()));
+            nodesPerDirection.insert(pair<Direction, unsigned>(Three, _nodesMatrix->numberOfAisles()));
         } else
             throw std::runtime_error("Mesh has not been initialized");
     }

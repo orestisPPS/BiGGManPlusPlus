@@ -4,6 +4,8 @@
 
 #include "IsoparametricNodeGraph.h"
 
+#include <memory>
+
 
 namespace Discretization {
 
@@ -13,27 +15,29 @@ namespace Discretization {
                                                    bool includeDiagonalNeighbours) :
             _node(node), _graphDepth(graphDepth), _nodesPerDirection(nodesPerDirection) {
         _nodeMap = nodeMap;
-        nodeGraph = new map<Position, vector<Node *>>();
+        nodeGraph = std::make_shared<map<Position, vector<Node*>>>();
         _findINeighborhoodRecursively(includeDiagonalNeighbours);
     }
+    
 
-    unique_ptr<map<Position, vector<Node*>>> IsoParametricNodeGraph::getNodeGraph() const {
-        return unique_ptr<map<Position, vector<Node*>>>(nodeGraph);
+    shared_ptr<map<Position, vector<Node*>>> IsoParametricNodeGraph::getNodeGraph() const {
+        return shared_ptr<map<Position, vector<Node*>>>(nodeGraph);
     }
 
-    unique_ptr<map<Position, vector<Node*>>>
+    shared_ptr<map<Position, vector<Node*>>>
     IsoParametricNodeGraph::getNodeGraph(const map<Position, short unsigned> &customDepth) const {
+        shared_ptr<map<Position, vector<Node*>>> graph = shared_ptr<map<Position, vector<Node*>>>(this->nodeGraph);
         for (auto &position: customDepth) {
             auto currentPosition = position.first;
-            if (nodeGraph->find(currentPosition) != nodeGraph->end()) {
+            if (graph->find(currentPosition) != graph->end()) {
                 auto currentDepth = position.second;
-                if (currentDepth < nodeGraph->at(currentPosition).size()) {
-                    nodeGraph->at(currentPosition).erase(nodeGraph->at(currentPosition).begin() + currentDepth,
-                                                         nodeGraph->at(currentPosition).end());
+                if (currentDepth < graph->at(currentPosition).size()) {
+                    graph->at(currentPosition).erase(graph->at(currentPosition).begin() + currentDepth,
+                                                     graph->at(currentPosition).end());
                 }
             }
         }
-        return make_unique<map<Position, vector<Node *>>>(*nodeGraph);
+        return graph;
     }
 
     unique_ptr<map<Position, vector<vector<DegreeOfFreedom*>*>>> IsoParametricNodeGraph::getAllDOFGraph() const {
@@ -101,7 +105,7 @@ namespace Discretization {
     //BUGGY
     unique_ptr<map<Position, vector<DegreeOfFreedom *>>>
     IsoParametricNodeGraph::
-    getSpecificDOFGraph(DOFType dofType, ConstraintType constraint, unique_ptr<map<Position, vector<Node*>>>& customNodeGraph) {
+    getSpecificDOFGraph(DOFType dofType, ConstraintType constraint, shared_ptr<map<Position, vector<Node*>>>& customNodeGraph) {
         unique_ptr<map<Position, vector<DegreeOfFreedom *>>> dofGraph = make_unique<map<Position, vector<DegreeOfFreedom *>>>();
         for (auto &position: *customNodeGraph) {
             dofGraph->insert({position.first, vector<DegreeOfFreedom *>()});
@@ -114,7 +118,7 @@ namespace Discretization {
     }
 
     unique_ptr<map<Direction, vector<Node*>>> IsoParametricNodeGraph::getColinearNodes() const {
-        unique_ptr<map<Direction, vector<Node*>>> coLinearNodes = make_unique<map<Direction, vector<Node*>>>();
+        unique_ptr<map<Direction, vector<Node*>>> coLinearNodes = std::make_unique<map<Direction, vector<Node*>>>();
         
         auto direction = 10;
         auto colinearNodesVector = vector<Node *>();
@@ -122,18 +126,23 @@ namespace Discretization {
             auto n1 = normalUnitVectorsOfPositions.at(position1.first);
             for (auto &position2: *nodeGraph) {
                 auto n2 = normalUnitVectorsOfPositions.at(position2.first);
+                auto n1n2 = VectorOperations::dotProduct(n1, n2);
+                if (n1n2 == -1 || n1n2 == 1) {
 
-                if (VectorOperations::dotProduct(n1, n2) == -1) {
-
-                    if ((n1[0] + n2[0] == 0) && (n1[1] == n2[1]) && (n1[2] == n2[2])) {
+                    if ((n1[0] + n2[0] == 0) && (n1[1] == n2[1]) && (n1[2] == n2[2]) ||
+                        (n1[0] + n2[0] == 2) && (n1[1] == n2[1]) && (n1[2] == n2[2])) {
                         colinearNodesVector = _mergeAndSortColinearNodes(position1.second, position2.second, _node);
-                        coLinearNodes->insert(pair<Direction, vector<Node*>>(One, colinearNodesVector));
-                    } else if ((n1[0] == n2[0]) && (n1[1] + n2[1] == 0) && (n1[2] == n2[2])) {
+                        coLinearNodes->insert(pair<Direction, vector<Node *>>(One, colinearNodesVector));
+                    }
+                    else if ((n1[0] == n2[0]) && (n1[1] + n2[1] == 0) && (n1[2] == n2[2]) ||
+                               (n1[0] == n2[0]) && (n1[1] + n2[1] == 2) && (n1[2] == n2[2])) {
                         colinearNodesVector = _mergeAndSortColinearNodes(position1.second, position2.second, _node);
-                        coLinearNodes->insert(pair<Direction, vector<Node*>>(Two, colinearNodesVector));
-                    } else if ((n1[0] == n2[0]) && (n1[1] == n2[1]) && (n1[2] + n2[2] == 0)) {
+                        coLinearNodes->insert(pair<Direction, vector<Node *>>(Two, colinearNodesVector));
+                    }
+                    else if ((n1[0] == n2[0]) && (n1[1] == n2[1]) && (n1[2] + n2[2] == 0) ||
+                               (n1[0] == n2[0]) && (n1[1] == n2[1]) && (n1[2] + n2[2] == 2)){
                         colinearNodesVector = _mergeAndSortColinearNodes(position1.second, position2.second, _node);\
-                        coLinearNodes->insert(pair<Direction, vector<Node*>>(Three, colinearNodesVector));
+                        coLinearNodes->insert(pair<Direction, vector<Node *>>(Three, colinearNodesVector));
                     }
                 }
             }
@@ -142,7 +151,7 @@ namespace Discretization {
     }
     
     unique_ptr<map<Direction, vector<Node*>>> IsoParametricNodeGraph::
-    getColinearNodes(vector<Direction>& directions, unique_ptr<map<Position, vector<Node*>>>& customNodeGraph) const {
+    getColinearNodes(vector<Direction>& directions, shared_ptr<map<Position, vector<Node*>>>& customNodeGraph) const {
         unique_ptr<map<Direction, vector<Node*>>> coLinearNodes = make_unique<map<Direction, vector<Node*>>>();
 
         auto direction = 10;
@@ -216,7 +225,7 @@ namespace Discretization {
     }
 
     unique_ptr<map<Direction, map<vector<Position>, short unsigned>>> IsoParametricNodeGraph::
-    getColinearPositionsAndPoints(vector<Direction>& availableDirections, unique_ptr<map<Position, vector<Node*>>>& customNodeGraph) {
+    getColinearPositionsAndPoints(vector<Direction>& availableDirections, shared_ptr<map<Position, vector<Node*>>>& customNodeGraph) {
         
         auto positionsAtDirection = make_unique<map<Direction, map<vector<Position>, short unsigned>>>();
         auto availablePositions = vector<tuple<Position, unsigned>>();
@@ -285,7 +294,7 @@ namespace Discretization {
         return nodes;
     }
 
-    vector<Node*> IsoParametricNodeGraph::getColinearNodes(Direction direction, unique_ptr<map<Position, vector<Node*>>>& customNodeGraph) const {
+    vector<Node*> IsoParametricNodeGraph::getColinearNodes(Direction direction, shared_ptr<map<Position, vector<Node*>>>& customNodeGraph) const {
         auto coLinearNodes = getColinearNodes();
         auto nodes = coLinearNodes->at(direction);
         return nodes;
@@ -315,7 +324,7 @@ namespace Discretization {
     }
     
     map<Direction, vector<vector<double>>> IsoParametricNodeGraph::
-    getSameColinearNodalCoordinates(CoordinateType coordinateType, unique_ptr<map<Position, vector<Node*>>>& customNodeGraph) const {
+    getSameColinearNodalCoordinates(CoordinateType coordinateType, shared_ptr<map<Position, vector<Node*>>>& customNodeGraph) const {
 
         map<Direction, vector<vector<double>>> coLinearNodalCoordinates;
         auto coLinearNodes = getColinearNodes();
@@ -354,7 +363,7 @@ namespace Discretization {
     }
     
     map<Direction, vector<DegreeOfFreedom*>> IsoParametricNodeGraph::
-    getColinearDOF(DOFType dofType, unique_ptr<map<Position, vector<Node*>>>& customNodeGraph) const {
+    getColinearDOF(DOFType dofType, shared_ptr<map<Position, vector<Node*>>>& customNodeGraph) const {
         map<Direction, vector<DegreeOfFreedom*>> coLinearDOF;
         auto coLinearNodes = getColinearNodes();
         for(auto& direction : *coLinearNodes){
@@ -379,11 +388,12 @@ namespace Discretization {
         return dofValues;
     }
     
-    vector<DegreeOfFreedom*> IsoParametricNodeGraph::getColinearDOF(DOFType dofType, Direction direction, unique_ptr<map<Position, vector<Node*>>>& customNodeGraph) const {
-        auto coLinearDOF = getColinearDOF(dofType, customNodeGraph).at(direction);;
-        auto dofValues = vector<DegreeOfFreedom*>(coLinearDOF.size());
+    vector<DegreeOfFreedom*> IsoParametricNodeGraph::getColinearDOF(DOFType dofType, Direction direction, shared_ptr<map<Position, vector<Node *>>> &customNodeGraph) const {
+        auto colinearDOF = getColinearDOF(dofType, customNodeGraph);
+        auto coLinearDOFAtDirection = colinearDOF.at(direction);;
+        auto dofValues = vector<DegreeOfFreedom*>(coLinearDOFAtDirection.size());
         auto iDof = 0;
-        for (auto &dof : coLinearDOF) {
+        for (auto &dof : coLinearDOFAtDirection) {
             dofValues[iDof] = dof;
             iDof++;
         }

@@ -7,7 +7,10 @@
 
 #include "../LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h"
 #include "../MathematicalProblem/MathematicalProblem.h"
+#include "../LinearAlgebra/AnalysisLinearSystemInitializer.h"
 #include "AnalysisDOFs/AnalysisDegreesOfFreedom.h"
+#include "../LinearAlgebra/Solvers/Solver.h"
+
 
 using namespace LinearAlgebra;
 using namespace MathematicalProblems;
@@ -18,7 +21,7 @@ namespace NumericalAnalysis {
 
     class NumericalAnalysis {
         public:
-        NumericalAnalysis(MathematicalProblem* mathematicalProblem, Mesh *mesh);
+        NumericalAnalysis(MathematicalProblem* mathematicalProblem, Mesh *mesh, Solver* solver);
         
         ~NumericalAnalysis();
         
@@ -28,9 +31,11 @@ namespace NumericalAnalysis {
                 
         AnalysisDegreesOfFreedom* degreesOfFreedom;
         
-        //virtual void createLinearSystem();
+        LinearSystem* linearSystem;
         
-        //virtual void solve();
+        Solver *solver;
+
+        void solve() const;
         
     protected:
 
