@@ -5,8 +5,9 @@
 #include "NumericalAnalysis.h"
 
 namespace NumericalAnalysis {
-    NumericalAnalysis::NumericalAnalysis(MathematicalProblem *mathematicalProblem, Mesh *mesh) :
-            mathematicalProblem(mathematicalProblem), mesh(mesh) {
+    NumericalAnalysis::NumericalAnalysis(MathematicalProblem *mathematicalProblem, Mesh *mesh, Solver* solver) :
+            mathematicalProblem(mathematicalProblem), mesh(mesh), linearSystem(nullptr),
+            degreesOfFreedom(initiateDegreesOfFreedom()), solver(solver) {
     }
     
     NumericalAnalysis::~NumericalAnalysis() {
@@ -23,5 +24,11 @@ namespace NumericalAnalysis {
                                                  mathematicalProblem->degreesOfFreedom);
 
         return dofs;
+    }
+    
+    void NumericalAnalysis::solve() const {
+        solver->solve();
+        
+        cout<<"Linear System solved..."<<endl;
     }
 } // NumericalAnalysis

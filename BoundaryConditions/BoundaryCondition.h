@@ -34,6 +34,8 @@ namespace BoundaryConditions {
         //at the given boundary node coordinates vector pointer.
         double scalarValueOfDOFAt(DOFType type, vector<double>* coordinates);
         
+        double scalarValueOfDOFAt(DOFType type);
+        
         //Returns the vector value of all boundary conditions for all degrees of freedom 
         //at the given boundary node coordinates vector pointer.
         vector<double> vectorValueOfAllDOFAt(vector<double> *coordinates);
@@ -45,7 +47,9 @@ namespace BoundaryConditions {
     private:
         BoundaryConditionType _bcType;
 
-        map<DOFType, function<double (vector<double>*)>>* bcForDof;
+        map<DOFType, function<double (vector<double>*)>>* _bcFunctionForDof;
+        
+        map<DOFType, double>* _bcValueForDof;
     };
 } // BoundaryConditions
 

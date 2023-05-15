@@ -7,25 +7,25 @@
 
 namespace BoundaryConditions {
     
-    BoundaryCondition::BoundaryCondition(BoundaryConditionType bcType, map<DOFType, function<double (vector<double>*)>>* bcForDof) :
-            _bcType(bcType), bcForDof(bcForDof) {
+    BoundaryCondition::BoundaryCondition(BoundaryConditionType bcType, map<DOFType, function<double (vector<double>*)>>* bcFunctionForDof) :
+            _bcType(bcType), _bcFunctionForDof(bcFunctionForDof), _bcValueForDof(nullptr) {
     }
     
-    BoundaryCondition::BoundaryCondition(BoundaryConditionType bcType, map<DOFType, double>* bcForDof){
-        _bcType = bcType;
-        this->bcForDof = new map<DOFType, function<double (vector<double>*)>>();
-        for (auto &bc : *bcForDof) {
-            this->bcForDof->insert({bc.first, [bc](vector<double> *coordinates) { return bc.second; }});
-        }
+    BoundaryCondition::BoundaryCondition(BoundaryConditionType bcType, map<DOFType, double>* bcValueForDof) :
+            _bcType(bcType), _bcValueForDof(bcValueForDof), _bcFunctionForDof(nullptr) {
     }
     
     double BoundaryCondition::scalarValueOfDOFAt(DOFType type, vector<double>* coordinates) {
-        return bcForDof->at(type)(coordinates);
+        return _bcFunctionForDof->at(type)(coordinates);
+    }
+    
+    double BoundaryCondition::scalarValueOfDOFAt(DOFType type) {
+        return _bcValueForDof->at(type);
     }
 
     vector<double> BoundaryCondition::vectorValueOfAllDOFAt(vector<double> *coordinates) {
-        vector<double> result = vector<double>(bcForDof->size());
-        for (auto &bc : *bcForDof) {
+        vector<double> result = vector<double>(_bcFunctionForDof->size());
+        for (auto &bc : *_bcFunctionForDof) {
             result.push_back(bc.second(coordinates));
         }
         return result;

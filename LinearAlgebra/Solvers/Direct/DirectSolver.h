@@ -17,12 +17,8 @@ namespace LinearAlgebra {
         explicit DirectSolver(bool storeDecompositionOnMatrix);
 
         unique_ptr<LinearSystem> getLinearSystem();
-
-        virtual void setLinearSystem(LinearSystem* linearSystem);
-
-        virtual unique_ptr<MatrixDecomposition> getDecomposition();
         
-        virtual void solve();
+        virtual unique_ptr<MatrixDecomposition> getDecomposition();
         
     protected:
         

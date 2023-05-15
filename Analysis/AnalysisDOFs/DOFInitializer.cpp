@@ -21,7 +21,10 @@ namespace NumericalAnalysis {
         totalDegreesOfFreedomMapInverse = new map<DegreeOfFreedom*, unsigned>();
         
         _initiateInternalNodeDOFs(mesh, degreesOfFreedom);
-        _initiateBoundaryNodeDOF(mesh, degreesOfFreedom, domainBoundaryConditions);
+        if (domainBoundaryConditions->varyWithNode())
+            _initiateBoundaryNodeDOFWithNonHomogenousBC(mesh, degreesOfFreedom, domainBoundaryConditions);
+        else
+            _initiateBoundaryNodeDOFWithHomogenousBC(mesh, degreesOfFreedom, domainBoundaryConditions);
         _removeDuplicatesAndDelete(mesh);
         _assignDOFIDs();
         _reconstructTotalDOFList();
@@ -52,8 +55,10 @@ namespace NumericalAnalysis {
         }
     }
     
-    void DOFInitializer::_initiateBoundaryNodeDOF(Mesh *mesh, Field_DOFType *problemDOFTypes,
-                                                     DomainBoundaryConditions *domainBoundaryConditions) const {
+    void DOFInitializer::_initiateBoundaryNodeDOFWithHomogenousBC(Mesh *mesh, Field_DOFType *problemDOFTypes,
+                                                                  DomainBoundaryConditions *domainBoundaryConditions) const {
+        
+        
         for (auto & domainBoundary : *mesh->boundaryNodes){
             auto position = domainBoundary.first;
             auto nodesAtPosition = domainBoundary.second;
@@ -62,7 +67,42 @@ namespace NumericalAnalysis {
             for (auto & node : *nodesAtPosition){
                 auto dofValue = -1.0;
                 for (auto& dofType : *problemDOFTypes->DegreesOfFreedom){
-                    dofValue = bcAtPosition->scalarValueOfDOFAt((*dofType), node->coordinates.positionVectorPtr());
+                    dofValue = bcAtPosition->scalarValueOfDOFAt((*dofType));
+                    switch (bcAtPosition->type()){
+                        case Dirichlet:{
+                            auto dirichletDOF = new DegreeOfFreedom(dofType, dofValue, node->id.global, true);
+                            _boundedDegreesOfFreedomList->push_back(dirichletDOF);
+                            _totalDegreesOfFreedomList->push_back(dirichletDOF);
+                            break;
+                        }
+                        case Neumann:{
+                            auto neumannDOF = new DegreeOfFreedom(dofType, node->id.global, false);
+                            _fluxDegreesOfFreedomList->push_back(tuple<DegreeOfFreedom*, double>(neumannDOF, dofValue));
+                            _freeDegreesOfFreedomList->push_back(neumannDOF);
+                            _totalDegreesOfFreedomList->push_back(neumannDOF);
+                            break;
+                        }
+                        default:
+                            throw std::invalid_argument("Boundary condition type not recognized");
+                    }
+                }
+            }
+        }
+    }
+
+    void DOFInitializer::_initiateBoundaryNodeDOFWithNonHomogenousBC(Mesh *mesh, Field_DOFType *problemDOFTypes,
+                                                                  DomainBoundaryConditions *domainBoundaryConditions) const {
+
+
+        for (auto & domainBoundary : *mesh->boundaryNodes){
+            auto position = domainBoundary.first;
+            auto nodesAtPosition = domainBoundary.second;
+            //March through the nodes at the Position  that is the key of the domainBoundary map
+            for (auto & node : *nodesAtPosition){
+                auto bcAtPosition = domainBoundaryConditions-> getBoundaryConditionAtPositionAndNode(position,  *node->id.global);
+                auto dofValue = -1.0;
+                for (auto& dofType : *problemDOFTypes->DegreesOfFreedom){
+                    dofValue = bcAtPosition->scalarValueOfDOFAt((*dofType));
                     switch (bcAtPosition->type()){
                         case Dirichlet:{
                             auto dirichletDOF = new DegreeOfFreedom(dofType, dofValue, node->id.global, true);
@@ -174,13 +214,19 @@ namespace NumericalAnalysis {
     }
     
     void DOFInitializer::_reconstructTotalDOFList() const {
+        _freeDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
+            return (*a->id->value) < (*b->id->value);
+        });
+        _boundedDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
+            return (*a->id->value) < (*b->id->value);
+        });
         _totalDegreesOfFreedomList->clear();
         _totalDegreesOfFreedomList->insert(_totalDegreesOfFreedomList->end(),
                                            _freeDegreesOfFreedomList->begin(), _freeDegreesOfFreedomList->end());
         _totalDegreesOfFreedomList->insert(_totalDegreesOfFreedomList->end(),
                                            _boundedDegreesOfFreedomList->begin(), _boundedDegreesOfFreedomList->end());
         _totalDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
-            return (*a->parentNode) > (*b->parentNode);
+            return (*a->parentNode) < (*b->parentNode);
         });
     }
     

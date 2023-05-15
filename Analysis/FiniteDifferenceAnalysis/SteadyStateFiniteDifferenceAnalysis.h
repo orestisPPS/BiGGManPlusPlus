@@ -11,11 +11,10 @@ namespace NumericalAnalysis {
 
     class SteadyStateFiniteDifferenceAnalysis : public FiniteDifferenceAnalysis{
     public:
-        SteadyStateFiniteDifferenceAnalysis(SteadyStateMathematicalProblem *mathematicalProblem,
-                                            Mesh *mesh,
+        
+        SteadyStateFiniteDifferenceAnalysis(SteadyStateMathematicalProblem *mathematicalProblem, Mesh *mesh,
+                                            Solver *solver,
                                             FDSchemeSpecs *schemeSpecs);
-        
-        
     };
 
 } // NumericalAnalysis

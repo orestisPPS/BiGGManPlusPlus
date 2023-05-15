@@ -20,8 +20,8 @@ namespace LinearAlgebra {
     class Solver {
         
     public:
-        
-        void setLinearSystem(LinearSystem* linearSystem);
+
+        virtual void setLinearSystem(LinearSystem* linearSystem);
 
         SolverType type();
 
