@@ -66,7 +66,7 @@ namespace LinearAlgebra {
                                         vector<Direction>& directions,
                                         map<Direction, map<vector<Position>, short int>>& positionsAndPoints);
 
-        vector<double> getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints,
+        static vector<double> getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints,
                                                               Direction& direction, unsigned short errorOrder, unsigned short derivativeOrder);
         
         static map<Direction, map<Position, unsigned short>>

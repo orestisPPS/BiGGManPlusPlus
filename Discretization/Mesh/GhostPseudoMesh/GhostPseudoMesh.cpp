@@ -17,8 +17,10 @@ namespace Discretization {
             parametricCoordToNodeMap(parametricCoordToNodeMap) {}
     
     GhostPseudoMesh::~GhostPseudoMesh() {
-        for (auto& node : *ghostNodesList)
+        for (auto& node : *ghostNodesList){
             delete node;
+            node = nullptr;
+        }         
         delete ghostNodesList;
         delete ghostNodesPerDirection;
         delete parametricCoordToNodeMap;

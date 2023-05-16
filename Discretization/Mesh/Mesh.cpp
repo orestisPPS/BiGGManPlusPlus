@@ -353,9 +353,7 @@ namespace Discretization {
             }
             delete ghostMesh;
             delete schemeBuilder;
-            schemeBuilder = nullptr;
             delete schemeSpecs;
-            schemeSpecs = nullptr;
             
         }
         else

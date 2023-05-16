@@ -21,7 +21,6 @@ namespace LinearAlgebra {
         _fixedDOFMatrix = new Array<double>(*numberOfFixedDOFs, *numberOfDOFs);
         _parametricCoordToNodeMap = _mesh->createParametricCoordToNodesMap();
         _specs = specs;
-        //matrix->print();
     }
         
     AnalysisLinearSystemInitializer::~AnalysisLinearSystemInitializer() {
@@ -122,8 +121,9 @@ namespace LinearAlgebra {
                 //Mais l'important c'est pas la chute, c'est l'atterisage!!!
                 auto firstDerivativeCoefficient = firstOrderCoefficients->at(directionIndex);
                 auto secondDerivativeCoefficient = secondOrderCoefficients->at(directionIndex, directionIndex);
-                
-                
+
+                //Jusqu'ici, tout va bien
+                //Mais l'important c'est pas la chute, c'est l'atterisage!!!
                 auto filterDerivative1 = map<Position, unsigned short>();
                 for (auto &tuple: qualifiedPositionsAndPoints[1][direction]) {
                     for (auto &point: tuple.first) {
@@ -133,7 +133,9 @@ namespace LinearAlgebra {
                 auto nodeGraphDerivative1 = graph.getNodeGraph(filterDerivative1);
                 //Fucked up
                 auto colinearDOFDerivative1 = graph.getColinearDOF(dof->type(), direction, nodeGraphDerivative1);
-
+                
+                //Jusqu'ici, tout va bien
+                //Mais l'important c'est pas la chute, c'est l'atterisage!!!
                 auto filterDerivative2 = map<Position, unsigned short>();
                 for (auto &tuple: qualifiedPositionsAndPoints[2][direction]) {
                     for (auto &point: tuple.first) {

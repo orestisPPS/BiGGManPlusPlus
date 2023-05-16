@@ -257,10 +257,11 @@ namespace LinearAlgebra {
                 schemeTypeToPoints = schemeOrderToSchemeTypePointsDerivative1()[errorOrder];
                 break;
             case 2:
-                schemeTypeToPoints = schemeOrderToSchemeTypePointsDerivative2()[errorOrder];    
+                schemeTypeToPoints = schemeOrderToSchemeTypePointsDerivative2()[errorOrder];
                 break;
             default:
                 throw invalid_argument("Derivative order must be 1 or 2");
+        }
         //Convert scheme type to positions
         auto schemeTypeToPosition = schemeTypeToPositions();
         for (auto direction : directions) {
@@ -283,7 +284,7 @@ namespace LinearAlgebra {
                      [](Position a, Position b) { return a < b; });
             }
         }
-    };
+    }
 
     vector<double> FiniteDifferenceSchemeBuilder::
     getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints, Direction& direction,
@@ -307,19 +308,33 @@ namespace LinearAlgebra {
                     throw invalid_argument("Derivative order not supported");
             }
         }
+        
+        auto positionsFromScheme = vector<Position>();
+        auto weights = vector<double>();
+        
         if (availableSchemes.find(Central) != availableSchemes.end()) {
-            return availableSchemes[Central];
+            positionsFromScheme = schemeTypeToPositions()[direction][Central];
+            weights =  availableSchemes[Central];
         }
         else if (availableSchemes.find(Forward) != availableSchemes.end()) {
+            positionsFromScheme = schemeTypeToPositions()[direction][Forward];
             return availableSchemes[Forward];
         }
         else if (availableSchemes.find(Backward) != availableSchemes.end()) {
+            positionsFromScheme = schemeTypeToPositions()[direction][Backward];
             return availableSchemes[Backward];
         }
         else {
             throw invalid_argument("No scheme found for the given positions");
         }
-        cout<<"Mitsotaki gamiesai"<<endl;
+        for (auto &position : qualifiedPositionsAndPoints) {
+            if (position.first != positionsFromScheme) {
+                qualifiedPositionsAndPoints.erase(position.first);
+                break;
+            }
+        }
+        //cout<<"Mitsotaki gamiesai"<<endl;
+        return weights;
     }
 } // LinearAlgebra
 

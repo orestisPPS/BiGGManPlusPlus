@@ -88,7 +88,7 @@ namespace StructuredMeshGenerator{
                 Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
 
                 mesh->node(i, j)->coordinates.setPositionVector(new vector<double>(templateCoord), Template);
-            }   
+            }
         }
     }
     

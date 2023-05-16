@@ -56,11 +56,8 @@ namespace Discretization {
         //         The input node is included in the vector.
         map<Direction, vector<Node*>> getColinearNodes() const;
         
-        map<Direction, vector<Node*>>
-        getColinearNodes(vector<Direction>& directions, map<Position, vector<Node*>>& customNodeGraph) const;
+        map<Direction, vector<Node*>> getColinearNodes(map<Position, vector<Node*>>& customNodeGraph) const;
         
-        vector<Node*> getColinearNodes(Direction direction) const;
-
         //THIS MIGHT BE SERIOUSLY FUCKED UP
         vector<Node*>  getColinearNodes(Direction direction, map<Position, vector<Node*>>& customNodeGraph) const;
 
@@ -78,7 +75,6 @@ namespace Discretization {
         
         map<Direction, vector<DegreeOfFreedom*>> getColinearDOF(DOFType dofType, map<Position, vector<Node*>>& customNodeGraph) const;
 
-        vector<DegreeOfFreedom*> getColinearDOF(DOFType dofType, Direction direction) const;
         
         vector<DegreeOfFreedom*> getColinearDOF(DOFType dofType, Direction direction, map<Position, vector<Node *>> &customNodeGraph) const;
 
