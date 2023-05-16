@@ -251,8 +251,16 @@ namespace LinearAlgebra {
      map<Direction, map<vector<Position>, short int>>& templatePositionsAndPoints) {
         //Find the number of points needed for the desired order of accuracy.
         //The scheme type varies depending on the available neighbours of the dof.
-        auto schemeTypeToPoints = schemeOrderToSchemeTypePointsDerivative1()[errorOrder];
-
+        auto schemeTypeToPoints = map<FDSchemeType, int>();
+        switch (derivativeOrder) {
+            case 1:
+                schemeTypeToPoints = schemeOrderToSchemeTypePointsDerivative1()[errorOrder];
+                break;
+            case 2:
+                schemeTypeToPoints = schemeOrderToSchemeTypePointsDerivative2()[errorOrder];    
+                break;
+            default:
+                throw invalid_argument("Derivative order must be 1 or 2");
         //Convert scheme type to positions
         auto schemeTypeToPosition = schemeTypeToPositions();
         for (auto direction : directions) {

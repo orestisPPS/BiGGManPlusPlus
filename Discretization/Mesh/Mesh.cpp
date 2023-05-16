@@ -246,9 +246,6 @@ namespace Discretization {
                 metrics->insert(pair<unsigned, Metrics *>(*node->id.global, nodeMetrics));
 
                 //Deallocate memory
-                nodeGraph = nullptr;
-                delete graph;
-                graph = nullptr;
             }
             delete ghostMesh;
             delete schemeBuilder;
@@ -353,11 +350,6 @@ namespace Discretization {
                 nodeMetrics->calculateCovariantTensor();
                 nodeMetrics->calculateContravariantTensor();
                 metrics->insert(pair<unsigned, Metrics *>(*node->id.global, nodeMetrics));
-
-                //Deallocate memory
-                nodeGraph = nullptr;
-                delete graph;
-                graph = nullptr;
             }
             delete ghostMesh;
             delete schemeBuilder;

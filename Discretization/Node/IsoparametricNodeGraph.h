@@ -21,78 +21,70 @@ namespace Discretization {
         IsoParametricNodeGraph(Node* node, unsigned graphDepth, map<vector<double>, Node*> *nodeMap,
                                map<Direction, unsigned>& nodesPerDirection, bool includeDiagonalNeighbours = true);
         
-        ~IsoParametricNodeGraph();
-
         // Returns a map ptr of the input node neighbours graph
         // Key : Position Enum representing the position of the neighbour node relative to the input node.
         // Value : Vector Node ptr of the neighbour nodes at all the input depth levels. (length = depth)
         // Warning : Always deallocate the returned pointer.
-        shared_ptr<map<Position, vector<Node*>>> getNodeGraph() const ;
+        const map<Position, vector<Node*>>& getNodeGraph() const ;
 
-        shared_ptr<map<Position, vector<Node*>>> getNodeGraph(const map<Position,short unsigned>& customDepth) const ;
-
-        // Returns a map ptr graph with all the Degrees Of Freedom of the input node neighbours.
-        // Key : Position Enum representing the position of the neighbour node relative to the input node.
-        // Value : Vector of DegreeOfFreedom Pointers vector pointer at all the input depth levels.
-        // Warning : Always deallocate the returned pointer.
-        unique_ptr<map<Position, vector<vector<DegreeOfFreedom*>*>>> getAllDOFGraph() const ;
+        map<Position, vector<Node*>> getNodeGraph(const map<Position,short unsigned>& customDepth) const ;
         
-        static unique_ptr<map<Position, vector<vector<DegreeOfFreedom*>*>>> getAllDOFGraph(unique_ptr<map<Position, vector<Node*>>>& customNodeGraph) ;
 
         // Map ptr graph with a specific Degree Of Freedom of the input node neighbours (free and constrained).
         // Key : Position Enum representing the position of the neighbour node relative to the input node.
         // Value : Vector of DegreeOfFreedom Pointers vector pointer at all the input depth levels.
         // Warning : Always deallocate the returned pointer.
-        unique_ptr<map<Position, vector<DegreeOfFreedom*>>> getSpecificDOFGraph(DOFType dofType) const ;
+        map<Position, vector<DegreeOfFreedom*>> getSpecificDOFGraph(DOFType dofType) const ;
         
-        static unique_ptr<map<Position, vector<DegreeOfFreedom*>>>
-        getSpecificDOFGraph(DOFType dofType, unique_ptr<map<Position, vector<Node*>>>& customNodeGraph) ;
+        
+        static map<Position, vector<DegreeOfFreedom*>>
+        getSpecificDOFGraph(DOFType dofType, map<Position, vector<Node*>>& customNodeGraph) ;
 
         // Map ptr graph with a specific Degree Of Freedom of the input node neighbours (free or constrained).
         // Key : Position Enum representing the position of the neighbour node relative to the input node.
         // Value : Vector of DegreeOfFreedom Pointers vector pointer at all the input depth levels.
         // Warning : Always deallocate the returned pointer.
-        unique_ptr<map<Position, vector<DegreeOfFreedom*>>>
+        map<Position, vector<DegreeOfFreedom*>>
         getSpecificDOFGraph(DOFType dofType, ConstraintType constraint) const ;
         
-        static unique_ptr<map<Position, vector<DegreeOfFreedom*>>>
-        getSpecificDOFGraph(DOFType dofType, ConstraintType constraint, shared_ptr<map<Position, vector<Node*>>>& customNodeGraph) ;
+        static map<Position, vector<DegreeOfFreedom*>>
+        getSpecificDOFGraph(DOFType dofType, ConstraintType constraint, map<Position, vector<Node*>>& customNodeGraph) ;
         
         // Returns a map ptr graph with all the Nodes that belong at the same parametric coordinate line as the input node.
         // Key : Direction Enum representing the direction of the parametric coordinate line.
         // Value : Vector of Node ptr at all depth nodes. They are ordered with increasing parametric coordinate value.
         //         The input node is included in the vector.
-        unique_ptr<map<Direction, vector<Node*>>> getColinearNodes() const;
+        map<Direction, vector<Node*>> getColinearNodes() const;
         
-        unique_ptr<map<Direction, vector<Node*>>> 
-        getColinearNodes(vector<Direction>& directions, shared_ptr<map<Position, vector<Node*>>>& customNodeGraph) const;
+        map<Direction, vector<Node*>>
+        getColinearNodes(vector<Direction>& directions, map<Position, vector<Node*>>& customNodeGraph) const;
         
         vector<Node*> getColinearNodes(Direction direction) const;
 
         //THIS MIGHT BE SERIOUSLY FUCKED UP
-        vector<Node*>  getColinearNodes(Direction direction, shared_ptr<map<Position, vector<Node*>>>& customNodeGraph) const;
+        vector<Node*>  getColinearNodes(Direction direction, map<Position, vector<Node*>>& customNodeGraph) const;
 
-        unique_ptr<map<Direction, map<vector<Position>, short unsigned>>> getColinearPositionsAndPoints(vector<Direction>& availableDirections) const;
+        map<Direction, map<vector<Position>, short unsigned>> getColinearPositionsAndPoints(vector<Direction>& availableDirections) ;
         
-        static unique_ptr<map<Direction, map<vector<Position>, short unsigned>>>
-        getColinearPositionsAndPoints(vector<Direction>& availableDirections, shared_ptr<map<Position, vector<Node*>>>& customNodeGraph) ;
+        map<Direction, map<vector<Position>, short unsigned>>
+        getColinearPositionsAndPoints(vector<Direction>& availableDirections, map<Position, vector<Node*>>& customNodeGraph) ;
 
         map<Direction, vector<vector<double>>> getSameColinearNodalCoordinates(CoordinateType coordinateType) const;
         
         map<Direction, vector<vector<double>>>
-        getSameColinearNodalCoordinates(CoordinateType coordinateType, shared_ptr<map<Position, vector<Node*>>>& customNodeGraph) const;
+        getSameColinearNodalCoordinates(CoordinateType coordinateType, map<Position, vector<Node*>>& customNodeGraph) const;
         
         map<Direction, vector<DegreeOfFreedom*>> getColinearDOF(DOFType dofType) const;
         
-        map<Direction, vector<DegreeOfFreedom*>> getColinearDOF(DOFType dofType, shared_ptr<map<Position, vector<Node*>>>& customNodeGraph) const;
+        map<Direction, vector<DegreeOfFreedom*>> getColinearDOF(DOFType dofType, map<Position, vector<Node*>>& customNodeGraph) const;
 
         vector<DegreeOfFreedom*> getColinearDOF(DOFType dofType, Direction direction) const;
         
-        vector<DegreeOfFreedom*> getColinearDOF(DOFType dofType, Direction direction, shared_ptr<map<Position, vector<Node *>>> &customNodeGraph) const;
+        vector<DegreeOfFreedom*> getColinearDOF(DOFType dofType, Direction direction, map<Position, vector<Node *>> &customNodeGraph) const;
 
 
 
-        shared_ptr<map<Position, vector<Node*>>> nodeGraph;
+        map<Position, vector<Node*>> nodeGraph;
                 
     private:
 

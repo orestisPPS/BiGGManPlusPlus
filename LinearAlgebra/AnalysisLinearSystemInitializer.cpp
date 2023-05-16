@@ -89,30 +89,37 @@ namespace LinearAlgebra {
             auto zerothOrderCoefficients =
                     _mathematicalProblem->pde->properties->getLocalProperties(*node->id.global).zerothOrderCoefficient;
 
+            //Jusqu'ici, tout va bien
             auto graph = IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap,
                                                 _mesh->nodesPerDirection);
 
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
-
+            //Jusqu'ici, tout va bien
+            
             for (auto &direction: directions) {
                 // 1) Map with template positions and the number of neighbours needed for different scheme types to achieve
                 //    the desired order of accuracy. Each position vector is a map to finite difference scheme
                 //    ({Left}->Backward, {Right}->Forward, {Left, Right}->Central).
                 // 2) Map the available positions with the number of neighbours available
                 // 3) Check if the available positions are qualified for the desired order of accuracy stencil.
-                _checkIfAvailableAreQualified(availablePositionsAndDepth->at(direction),
+                _checkIfAvailableAreQualified(availablePositionsAndDepth.at(direction),
                                               templatePositionsAndPointsMap[1][direction],
                                               qualifiedPositionsAndPoints[1][direction]);
-                _checkIfAvailableAreQualified(availablePositionsAndDepth->at(direction),
+                _checkIfAvailableAreQualified(availablePositionsAndDepth.at(direction),
                                               templatePositionsAndPointsMap[2][direction],
                                               qualifiedPositionsAndPoints[2][direction]);
-
+                
+                //Jusqu'ici, tout va bien
+                //Mais l'important c'est pas la chute, c'est l'atterisage!!!
                 auto firstDerivativeSchemeWeights = schemeBuilder.getSchemeWeightsFromQualifiedPositions(
                         qualifiedPositionsAndPoints[1][direction], direction, errorOrderDerivative1, 1);
                 auto secondDerivativeSchemeWeights = schemeBuilder.getSchemeWeightsFromQualifiedPositions(
                         qualifiedPositionsAndPoints[2][direction], direction, errorOrderDerivative2, 2);
                 
                 auto directionIndex = spatialDirectionToUnsigned[direction];
+
+                //Jusqu'ici, tout va bien
+                //Mais l'important c'est pas la chute, c'est l'atterisage!!!
                 auto firstDerivativeCoefficient = firstOrderCoefficients->at(directionIndex);
                 auto secondDerivativeCoefficient = secondOrderCoefficients->at(directionIndex, directionIndex);
                 
@@ -120,19 +127,21 @@ namespace LinearAlgebra {
                 auto filterDerivative1 = map<Position, unsigned short>();
                 for (auto &tuple: qualifiedPositionsAndPoints[1][direction]) {
                     for (auto &point: tuple.first) {
-                        filterDerivative1[point] = 1;
+                        filterDerivative1.insert(pair<Position, unsigned short>(point, tuple.second));
                     }
                 }
                 auto nodeGraphDerivative1 = graph.getNodeGraph(filterDerivative1);
+                //Fucked up
                 auto colinearDOFDerivative1 = graph.getColinearDOF(dof->type(), direction, nodeGraphDerivative1);
 
                 auto filterDerivative2 = map<Position, unsigned short>();
                 for (auto &tuple: qualifiedPositionsAndPoints[2][direction]) {
                     for (auto &point: tuple.first) {
-                        filterDerivative2[point] = 1;
+                        filterDerivative2.insert(pair<Position, unsigned short>(point, tuple.second));
                     }
                 }
                 auto nodeGraphDerivative2 = graph.getNodeGraph(filterDerivative2);
+                //Fucked up
                 auto colinearDOFDerivative2 = graph.getColinearDOF(dof->type(), direction, nodeGraphDerivative2);
 
                 //Calculate the fucking scheme
@@ -144,9 +153,7 @@ namespace LinearAlgebra {
                                 _freeDOFMatrix->at(positionI, positionJ) +
                                 firstDerivativeSchemeWeights[iDof] * firstDerivativeCoefficient;
                     }
-
                 }
-                
                 for (auto iDof = 0; iDof < colinearDOFDerivative2.size(); iDof++) {
                     if (colinearDOFDerivative2[iDof]->id->constraintType() == Free) {
                         positionJ = *colinearDOFDerivative2[iDof]->id->value;
@@ -215,10 +222,10 @@ namespace LinearAlgebra {
                 //    ({Left}->Backward, {Right}->Forward, {Left, Right}->Central).
                 // 2) Map the available positions with the number of neighbours available
                 // 3) Check if the available positions are qualified for the desired order of accuracy stencil.
-                _checkIfAvailableAreQualified(availablePositionsAndDepth->at(direction),
+                _checkIfAvailableAreQualified(availablePositionsAndDepth.at(direction),
                                               templatePositionsAndPointsMap[1][direction],
                                               qualifiedPositionsAndPoints[1][direction]);
-                _checkIfAvailableAreQualified(availablePositionsAndDepth->at(direction),
+                _checkIfAvailableAreQualified(availablePositionsAndDepth.at(direction),
                                               templatePositionsAndPointsMap[2][direction],
                                               qualifiedPositionsAndPoints[2][direction]);
                 
@@ -310,7 +317,7 @@ namespace LinearAlgebra {
                     IsoParametricNodeGraph(node, 1, _parametricCoordToNodeMap, _mesh->nodesPerDirection).
                             getSpecificDOFGraph(dof->type());
             //Marching through all the neighbouring DOFs
-            for (auto &neighbour: *dofGraph) {
+            for (auto &neighbour: dofGraph) {
                 for (auto &neighbourDof: neighbour.second) {
                     //Check if the neighbouring DOF is fixed 
                     if (neighbourDof->id->constraintType() == Fixed) {
