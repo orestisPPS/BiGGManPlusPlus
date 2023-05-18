@@ -17,8 +17,8 @@ namespace LinearAlgebra {
         numberOfFreeDOFs = new unsigned(_analysisDegreesOfFreedom->freeDegreesOfFreedom->size());
         numberOfFixedDOFs = new unsigned(_analysisDegreesOfFreedom->fixedDegreesOfFreedom->size());
         numberOfDOFs = new unsigned(_analysisDegreesOfFreedom->totalDegreesOfFreedomMap->size());
-        _freeDOFMatrix = new Array<double>(*numberOfFreeDOFs, *numberOfFreeDOFs);
-        _fixedDOFMatrix = new Array<double>(*numberOfFixedDOFs, *numberOfDOFs);
+        _freeDOFMatrix = new Array<double>(*numberOfFreeDOFs, *numberOfFreeDOFs, 1, 0);
+        _fixedDOFMatrix = new Array<double>(*numberOfFixedDOFs, *numberOfDOFs, 1, 0);
         _parametricCoordToNodeMap = _mesh->createParametricCoordToNodesMap();
         _specs = specs;
     }
@@ -39,7 +39,7 @@ namespace LinearAlgebra {
     }
     
     void AnalysisLinearSystemInitializer::_createMatrix() {
-        //_createFixedDOFSubMatrix();
+        _createFixedDOFSubMatrix();
         _createFreeDOFSubMatrix();
     }
     
@@ -214,10 +214,13 @@ namespace LinearAlgebra {
             auto zerothOrderCoefficients =
                     _mathematicalProblem->pde->properties->getLocalProperties(*node->id.global).zerothOrderCoefficient;
 
+            //Jusqu'ici, tout va bien
             auto graph = IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap,
                                                 _mesh->nodesPerDirection);
 
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
+            //Jusqu'ici, tout va bien
+
             for (auto &direction: directions) {
                 // 1) Map with template positions and the number of neighbours needed for different scheme types to achieve
                 //    the desired order of accuracy. Each position vector is a map to finite difference scheme
@@ -230,18 +233,23 @@ namespace LinearAlgebra {
                 _checkIfAvailableAreQualified(availablePositionsAndDepth.at(direction),
                                               templatePositionsAndPointsMap[2][direction],
                                               qualifiedPositionsAndPoints[2][direction]);
-                
-                
+
+                //Jusqu'ici, tout va bien
+                //Mais l'important c'est pas la chute, c'est l'atterisage!!!
                 auto firstDerivativeSchemeWeights = schemeBuilder.getSchemeWeightsFromQualifiedPositions(
                         qualifiedPositionsAndPoints[1][direction], direction, errorOrderDerivative1, 1);
                 auto secondDerivativeSchemeWeights = schemeBuilder.getSchemeWeightsFromQualifiedPositions(
                         qualifiedPositionsAndPoints[2][direction], direction, errorOrderDerivative2, 2);
-                
+
                 auto directionIndex = spatialDirectionToUnsigned[direction];
+
+                //Jusqu'ici, tout va bien
+                //Mais l'important c'est pas la chute, c'est l'atterisage!!!
                 auto firstDerivativeCoefficient = firstOrderCoefficients->at(directionIndex);
                 auto secondDerivativeCoefficient = secondOrderCoefficients->at(directionIndex, directionIndex);
 
-
+                //Jusqu'ici, tout va bien
+                //Mais l'important c'est pas la chute, c'est l'atterisage!!!
                 auto filterDerivative1 = map<Position, unsigned short>();
                 for (auto &tuple: qualifiedPositionsAndPoints[1][direction]) {
                     for (auto &point: tuple.first) {
@@ -249,23 +257,26 @@ namespace LinearAlgebra {
                     }
                 }
                 auto nodeGraphDerivative1 = graph.getNodeGraph(filterDerivative1);
-                auto colinearDOFDerivative1 = graph.getColinearDOF(dof->type(), direction, nodeGraphDerivative1);
+                //Fucked up
+                auto colinearDOFDerivative1 = graph.getColinearDOFOnBoundary(dof->type(), direction, nodeGraphDerivative1);
 
+                //Jusqu'ici, tout va bien
+                //Mais l'important c'est pas la chute, c'est l'atterisage!!!
                 auto filterDerivative2 = map<Position, unsigned short>();
                 for (auto &tuple: qualifiedPositionsAndPoints[2][direction]) {
                     for (auto &point: tuple.first) {
-                        filterDerivative1.insert(pair<Position, unsigned short>(point, tuple.second));
+                        filterDerivative2.insert(pair<Position, unsigned short>(point, tuple.second));
                     }
                 }
                 auto nodeGraphDerivative2 = graph.getNodeGraph(filterDerivative2);
-                auto colinearDOFDerivative2 = graph.getColinearDOF(dof->type(), direction, nodeGraphDerivative2);
-
+                //Fucked up
+                auto colinearDOFDerivative2 = graph.getColinearDOFOnBoundary(dof->type(), direction, nodeGraphDerivative2);
                 //Calculate the fucking scheme
                 positionI = *dof->id->value;
                 positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
 
                 for (auto iDof = 0; iDof < colinearDOFDerivative1.size(); iDof++) {
-                    positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOFDerivative2[iDof]);
+                    positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOFDerivative1[iDof]);
                     _fixedDOFMatrix->at(positionI, positionJ) =
                             _fixedDOFMatrix->at(positionI, positionJ) +
                             firstDerivativeSchemeWeights[iDof] * firstDerivativeCoefficient;
@@ -280,32 +291,9 @@ namespace LinearAlgebra {
             }
             
         }
-        cout << "Free DOF matrix" << endl;
-        _freeDOFMatrix->print();
+        cout << "Fixed DOF matrix" << endl;
+        _fixedDOFMatrix->print();
         cout << "  " << endl;
-/*        for (auto &dof: *_analysisDegreesOfFreedom->fixedDegreesOfFreedom) {
-            //Node with the DOF
-            auto node = _mesh->nodeFromID(*dof->parentNode);
-            auto dofGraph =
-                    IsoParametricNodeGraph(node, 1, _parametricCoordToNodeMap, _mesh->nodesPerDirection).
-                            getSpecificDOFGraph(dof->type());
-            unsigned positionI;
-            unsigned positionJ;
-            
-            positionI = *dof->id->value;
-            positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
-            _fixedDOFMatrix->at(positionI, positionJ) = 2;
-            
-            for (auto &neighbour: *dofGraph) {
-                for (auto &neighbourDof: neighbour.second) {
-                    positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(neighbourDof);
-                    _fixedDOFMatrix->at(positionI, positionJ) = 1;
-                }
-            }
-            dofGraph = nullptr;
-        }
-        cout<<"Fixed DOF matrix"<<endl;
-        //_fixedDOFMatrix->print();*/
     }
         
     void AnalysisLinearSystemInitializer::_createRHS() {
@@ -326,7 +314,6 @@ namespace LinearAlgebra {
                         unsigned i = *neighbourDof->id->value;
                         unsigned j = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
                         _RHS->at(*dof->id->value) -= _fixedDOFMatrix->at(i, j) * neighbourDof->value();
-                        //_RHS->at(*dof->id->value) = _fixedDOFMatrix->at(i, j) * neighbourDof->value();
                     }
                 }
             }            

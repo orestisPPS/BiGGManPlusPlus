@@ -58,6 +58,8 @@ namespace Discretization {
         
         map<Direction, vector<Node*>> getColinearNodes(map<Position, vector<Node*>>& customNodeGraph) const;
         
+        map<Direction, vector<Node*>> getColinearNodesOnBoundary(map<Position, vector<Node*>>& customNodeGraph) const;
+        
         //THIS MIGHT BE SERIOUSLY FUCKED UP
         vector<Node*>  getColinearNodes(Direction direction, map<Position, vector<Node*>>& customNodeGraph) const;
 
@@ -74,9 +76,12 @@ namespace Discretization {
         map<Direction, vector<DegreeOfFreedom*>> getColinearDOF(DOFType dofType) const;
         
         map<Direction, vector<DegreeOfFreedom*>> getColinearDOF(DOFType dofType, map<Position, vector<Node*>>& customNodeGraph) const;
-
         
         vector<DegreeOfFreedom*> getColinearDOF(DOFType dofType, Direction direction, map<Position, vector<Node *>> &customNodeGraph) const;
+        
+        vector<DegreeOfFreedom*> getColinearDOFOnBoundary(DOFType dofType, Direction direction, map<Position, vector<Node *>> &customNodeGraph) const;
+
+        map<Direction, vector<DegreeOfFreedom*>> getColinearDOFOnBoundary(DOFType dofType, map<Position, vector<Node*>>& customNodeGraph) const;
 
 
 
@@ -101,6 +106,8 @@ namespace Discretization {
         void _addNeighbourNodeIfParametricCoordsExist(Position position, vector<double> &parametricCoords);
         
         static vector<Node*> _mergeAndSortColinearNodes(vector<Node*>& nodesDirection1, vector<Node*>& nodesDirection2, Node* node);
+        
+        static vector<Node*> _mergeAndSortColinearNodes(vector<Node*>& nodesDirection1, Node* node);
     };
 
 } // Node

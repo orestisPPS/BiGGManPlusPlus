@@ -38,6 +38,8 @@ namespace Discretization {
         }
         return graph;
     }
+    
+    
 
     map<Position, vector<DegreeOfFreedom *>> IsoParametricNodeGraph::getSpecificDOFGraph(DOFType dofType) const {
         auto dofGraph = map<Position, vector<DegreeOfFreedom *>>();
@@ -91,39 +93,7 @@ namespace Discretization {
         return dofGraph;
     }
 
-/*    map<Direction, vector<Node*>> IsoParametricNodeGraph::getColinearNodes() const {
-        
-        auto coLinearNodes = map<Direction, vector<Node*>>();
-        auto direction = 10;
-        auto colinearNodesVector = vector<Node *>();
-        for (auto &position1: nodeGraph) {
-            auto n1 = normalUnitVectorsOfPositions.at(position1.first);
-            for (auto &position2: nodeGraph) {
-                auto n2 = normalUnitVectorsOfPositions.at(position2.first);
-                auto n1n2 = VectorOperations::dotProduct(n1, n2);
-                if (n1n2 == -1 || n1n2 == 1) {
-                        auto nodes1 = position1.second;
-                        auto nodes2 = position2.second;
-                    if ((n1[0] + n2[0] == 0) && (n1[1] == n2[1]) && (n1[2] == n2[2]) ||
-                        (n1[0] + n2[0] == 2) && (n1[1] == n2[1]) && (n1[2] == n2[2])) {
-                        colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
-                        coLinearNodes.insert(pair<Direction, vector<Node *>>(One, colinearNodesVector));
-                    }
-                    else if ((n1[0] == n2[0]) && (n1[1] + n2[1] == 0) && (n1[2] == n2[2]) ||
-                               (n1[0] == n2[0]) && (n1[1] + n2[1] == 2) && (n1[2] == n2[2])) {
-                        colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
-                        coLinearNodes.insert(pair<Direction, vector<Node *>>(Two, colinearNodesVector));
-                    }
-                    else if ((n1[0] == n2[0]) && (n1[1] == n2[1]) && (n1[2] + n2[2] == 0) ||
-                               (n1[0] == n2[0]) && (n1[1] == n2[1]) && (n1[2] + n2[2] == 2)){
-                        colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
-                        coLinearNodes.insert(pair<Direction, vector<Node *>>(Three, colinearNodesVector));
-                    }
-                }
-            }
-        }
-        return coLinearNodes;
-    }*/
+
 
     map<Direction, vector<Node *>> IsoParametricNodeGraph::getColinearNodes() const {
         map<Direction, vector<Node *>> coLinearNodes;
@@ -151,60 +121,101 @@ namespace Discretization {
                     coLinearNodes[Three] = colinearNodesVector;
                 }
             }
-
-/*                if (n1n2 == -1 || n1n2 == 1) {
-                    auto nodes1 = position1.second;
-                    auto nodes2 = position2.second;
-
-                    if ((n1[0] + n2[0] == 0) && (n1[1] == n2[1]) && (n1[2] == n2[2]) ||
-                        (n1[0] + n2[0] == 2) && (n1[1] == n2[1]) && (n1[2] == n2[2])) {
-                        const auto colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
-                        coLinearNodes[One] = colinearNodesVector;
-                    }
-                    else if ((n1[0] == n2[0]) && (n1[1] + n2[1] == 0) && (n1[2] == n2[2]) ||
-                             (n1[0] == n2[0]) && (n1[1] + n2[1] == 2) && (n1[2] == n2[2])) {
-                        const auto colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
-                        coLinearNodes[Two] = colinearNodesVector;
-                    }
-                    else if ((n1[0] == n2[0]) && (n1[1] == n2[1]) && (n1[2] + n2[2] == 0) ||
-                             (n1[0] == n2[0]) && (n1[1] == n2[1]) && (n1[2] + n2[2] == 2)) {
-                        const auto colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
-                        coLinearNodes[Three] = colinearNodesVector;
-                    }
-                }*/
         }
         
         return coLinearNodes;
     }
 
-    map<Direction, vector<Node *>> IsoParametricNodeGraph::
-    getColinearNodes(map<Position, vector<Node *>> &customNodeGraph) const {
+    map<Direction, vector<Node*>> IsoParametricNodeGraph::
+    getColinearNodes(map<Position, vector<Node*>>& customNodeGraph) const {
+        map<Direction, vector<Node*>> coLinearNodes;
 
-        auto coLinearNodes = map<Direction, vector<Node *>>();
-        auto direction = 10;
-        auto colinearNodesVector = vector<Node *>();
-        for (auto &position1: customNodeGraph) {
-            auto n1 = normalUnitVectorsOfPositions.at(position1.first);
-            for (auto &position2: customNodeGraph) {
-                auto n2 = normalUnitVectorsOfPositions.at(position2.first);
+        for (auto& position1 : customNodeGraph) {
+            auto& n1 = normalUnitVectorsOfPositions.at(position1.first);
 
-                if (VectorOperations::dotProduct(n1, n2) == -1) {
-                    auto nodes1 = position1.second;
-                    auto nodes2 = position2.second;
+            for (auto& position2 : customNodeGraph) {
+                auto& n2 = normalUnitVectorsOfPositions.at(position2.first);
+                auto n1n2 = VectorOperations::dotProduct(n1, n2);
+
+                if (n1n2 == -1) {
+                    auto& nodes1 = position1.second;
+                    auto& nodes2 = position2.second;
+
                     if ((n1[0] + n2[0] == 0) && (n1[1] == n2[1]) && (n1[2] == n2[2])) {
-                        colinearNodesVector = _mergeAndSortColinearNodes(position1.second, position2.second, _node);
-                        coLinearNodes.insert(pair<Direction, vector<Node *>>(One, colinearNodesVector));
+                        auto colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
+                        coLinearNodes[One] = colinearNodesVector;
                     } else if ((n1[0] == n2[0]) && (n1[1] + n2[1] == 0) && (n1[2] == n2[2])) {
-                        colinearNodesVector = _mergeAndSortColinearNodes(position1.second, position2.second, _node);
-                        coLinearNodes.insert(pair<Direction, vector<Node *>>(Two, colinearNodesVector));
+                        auto colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
+                        coLinearNodes[Two] = colinearNodesVector;
                     } else if ((n1[0] == n2[0]) && (n1[1] == n2[1]) && (n1[2] + n2[2] == 0)) {
-                        colinearNodesVector = _mergeAndSortColinearNodes(position1.second, position2.second, _node);\
-                        coLinearNodes.insert(pair<Direction, vector<Node *>>(Three, colinearNodesVector));
+                        auto colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
+                        coLinearNodes[Three] = colinearNodesVector;
                     }
                 }
-                
             }
         }
+
+        return coLinearNodes;
+    }
+    
+    map<Direction, vector<Node *>> IsoParametricNodeGraph::getColinearNodesOnBoundary(
+            map<PositioningInSpace::Position, vector<Discretization::Node *>> &customNodeGraph) const {
+        map<Direction, vector<Node*>> coLinearNodes;
+
+        for (auto& position1 : customNodeGraph) {
+            auto& n1 = normalUnitVectorsOfPositions.at(position1.first);
+
+            for (auto& position2 : customNodeGraph) {
+                auto& n2 = normalUnitVectorsOfPositions.at(position2.first);
+                auto n1n2 = VectorOperations::dotProduct(n1, n2);
+
+                if (n1n2 == -1) {
+                    auto& nodes1 = position1.second;
+                    auto& nodes2 = position2.second;
+
+                    if ((n1[0] + n2[0] == 0) && (n1[1] == n2[1]) && (n1[2] == n2[2])) {
+                        auto colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
+                        coLinearNodes[One] = colinearNodesVector;
+                    } else if ((n1[0] == n2[0]) && (n1[1] + n2[1] == 0) && (n1[2] == n2[2])) {
+                        auto colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
+                        coLinearNodes[Two] = colinearNodesVector;
+                    } else if ((n1[0] == n2[0]) && (n1[1] == n2[1]) && (n1[2] + n2[2] == 0)) {
+                        auto colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
+                        coLinearNodes[Three] = colinearNodesVector;
+                    }
+                } else if (n1n2 == 1) {
+                    if ((abs(n1[0] + n2[0]) == 2) && (n1[1] == n2[1]) && (n1[2] == n2[2])) {
+                        if (coLinearNodes.find(One) == coLinearNodes.end()) {
+                            coLinearNodes[One] = _mergeAndSortColinearNodes(position1.second, position2.second, _node);
+                        } else {
+                            coLinearNodes[One].push_back(_node);
+                        }
+                    } else if ((n1[0] == n2[0]) && (abs(n1[1] + n2[1]) == 2) && (n1[2] == n2[2])) {
+                        if (coLinearNodes.find(Two) == coLinearNodes.end()) {
+                            coLinearNodes[Two] = {position1.second[0], _node};
+                        } else {
+                            coLinearNodes[Two].push_back(_node);
+                        }
+                    } else if ((n1[0] == n2[0]) && (n1[1] == n2[1]) && (abs(n1[2] + n2[2]) == 2)) {
+                        if (coLinearNodes.find(Three) == coLinearNodes.end()) {
+                            coLinearNodes[Three] = {position1.second[0], _node};
+                        } else {
+                            coLinearNodes[Three].push_back(_node);
+                        }
+                    }
+                    for (auto& colinearNodes : coLinearNodes) {
+                        sort(colinearNodes.second.begin(), colinearNodes.second.end(), [](Node* a, Node* b){
+                            auto coords1 = a->coordinates.positionVector(Parametric);
+                            auto coords2 = b->coordinates.positionVector(Parametric);
+                            return coords1 < coords2;
+                        });
+                        colinearNodes.second.erase(unique(colinearNodes.second.begin(), colinearNodes.second.end()), colinearNodes.second.end());
+                    }
+
+                }
+            }
+        }
+
         return coLinearNodes;
     }
 
@@ -322,10 +333,24 @@ namespace Discretization {
         });
         return mergedNodes;
     }
+
+    vector<Node *> IsoParametricNodeGraph::_mergeAndSortColinearNodes(vector<Node *> &nodesDirection1,
+                                                                      Discretization::Node *node) {
+        auto mergedNodes = vector<Node *>(nodesDirection1.size() + 1);
+        for (auto i = 0; i < nodesDirection1.size(); i++) {
+            mergedNodes[i] = nodesDirection1[i];
+        }
+        mergedNodes[nodesDirection1.size() + nodesDirection1.size()] = node;
+        std::sort(mergedNodes.begin(), mergedNodes.end(), [](Node *a, Node *b) {
+            auto coords1 = a->coordinates.positionVector(Parametric);
+            auto coords2 = b->coordinates.positionVector(Parametric);
+            return coords1 < coords2;
+        });
+        return mergedNodes;
+    }
     
 
-    vector<Node *> IsoParametricNodeGraph::getColinearNodes(Direction direction,
-                                                            map<Position, vector<Node *>> &customNodeGraph) const {
+    vector<Node *> IsoParametricNodeGraph::getColinearNodes(Direction direction, map<Position, vector<Node *>> &customNodeGraph) const {
         auto coLinearNodes = getColinearNodes();
         auto nodes = coLinearNodes.at(direction);
         return nodes;
@@ -349,18 +374,16 @@ namespace Discretization {
                             coordinateType)[i];
                     iNode++;
                 }
-
             }
         }
         return coLinearNodalCoordinates;
     }
 
     map<Direction, vector<vector<double>>> IsoParametricNodeGraph::
-    getSameColinearNodalCoordinates(CoordinateType coordinateType,
-                                    map<Position, vector<Node *>> &customNodeGraph) const {
+    getSameColinearNodalCoordinates(CoordinateType coordinateType, map<Position, vector<Node *>> &customNodeGraph) const {
 
         map<Direction, vector<vector<double>>> coLinearNodalCoordinates;
-        auto coLinearNodes = getColinearNodes();
+        auto coLinearNodes = getColinearNodes(customNodeGraph);
         auto numberOfDirections = coLinearNodes.size();
         for (auto &direction: coLinearNodes) {
             auto directionI = direction.first;
@@ -381,8 +404,8 @@ namespace Discretization {
     }
 
 
-    map<Direction, vector<DegreeOfFreedom *>> IsoParametricNodeGraph::
-    getColinearDOF(DOFType dofType) const {
+    map<Direction, vector<DegreeOfFreedom *>> IsoParametricNodeGraph:: getColinearDOF(DOFType dofType) const {
+        
         map<Direction, vector<DegreeOfFreedom *>> coLinearDOF = map<Direction, vector<DegreeOfFreedom *>>();
         auto coLinearNodes = getColinearNodes();
         for (auto &direction: coLinearNodes) {
@@ -414,6 +437,34 @@ namespace Discretization {
     vector<DegreeOfFreedom *> IsoParametricNodeGraph::getColinearDOF(DOFType dofType, Direction direction,
                                                                      map<Position, vector<Node *>> &customNodeGraph) const {
         auto colinearDOF = getColinearDOF(dofType, customNodeGraph);
+        auto coLinearDOFAtDirection = colinearDOF.at(direction);;
+        auto dofValues = vector<DegreeOfFreedom *>(coLinearDOFAtDirection.size());
+        auto iDof = 0;
+        for (auto &dof: coLinearDOFAtDirection) {
+            dofValues[iDof] = dof;
+            iDof++;
+        }
+        return dofValues;
+    }
+
+    map<Direction, vector<DegreeOfFreedom *>> IsoParametricNodeGraph::
+    getColinearDOFOnBoundary(DOFType dofType, map<Position, vector<Node *>> &customNodeGraph) const {
+        map<Direction, vector<DegreeOfFreedom *>> coLinearDOF = map<Direction, vector<DegreeOfFreedom *>>();
+        auto coLinearNodes = getColinearNodesOnBoundary(customNodeGraph);
+        for (auto &direction: coLinearNodes) {
+            coLinearDOF.insert({direction.first, vector<DegreeOfFreedom *>(direction.second.size())});
+            auto iPoint = 0;
+            for (auto &node: direction.second) {
+                coLinearDOF.at(direction.first)[iPoint] = node->getDegreeOfFreedomPtr(dofType);
+                iPoint++;
+            }
+        }
+        return coLinearDOF;
+    }
+
+    vector<DegreeOfFreedom *> IsoParametricNodeGraph::getColinearDOFOnBoundary(DOFType dofType, Direction direction,
+                                                                     map<Position, vector<Node *>> &customNodeGraph) const {
+        auto colinearDOF = getColinearDOFOnBoundary(dofType, customNodeGraph);
         auto coLinearDOFAtDirection = colinearDOF.at(direction);;
         auto dofValues = vector<DegreeOfFreedom *>(coLinearDOFAtDirection.size());
         auto iDof = 0;
