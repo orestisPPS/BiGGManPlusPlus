@@ -14,8 +14,8 @@ namespace NumericalAnalysis {
         map<Direction, short unsigned> numberOfNodes;
 /*        numberOfNodes[Direction::One] = 5;
         numberOfNodes[Direction::Two] = 7;*/
-        numberOfNodes[Direction::One] = 5;
-        numberOfNodes[Direction::Two] = 5;
+        numberOfNodes[Direction::One] = 4;
+        numberOfNodes[Direction::Two] = 4;
         //auto specs = new StructuredMeshGenerator::MeshSpecs(numberOfNodes, 0.25, 0.25, 0, 0, 0);
         auto specs = new StructuredMeshGenerator::MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto space = (PositioningInSpace::Plane);
@@ -54,7 +54,7 @@ namespace NumericalAnalysis {
         auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                                                                         {{Temperature, 0}}));
         auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                                                                        {{Temperature, 100}}));
+                                                                        {{Temperature, 75}}));
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                                                                         {{Temperature, 0}}));
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
