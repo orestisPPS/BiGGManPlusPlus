@@ -304,7 +304,7 @@ namespace LinearAlgebra {
             
             //Get all the neighbouring DOFs with the same type
             auto dofGraph =
-                    IsoParametricNodeGraph(node, 1, _parametricCoordToNodeMap, _mesh->nodesPerDirection).
+                    IsoParametricNodeGraph(node, 3, _parametricCoordToNodeMap, _mesh->nodesPerDirection).
                             getSpecificDOFGraph(dof->type());
             //Marching through all the neighbouring DOFs
             for (auto &neighbour: dofGraph) {

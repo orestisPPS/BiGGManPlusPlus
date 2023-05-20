@@ -34,6 +34,8 @@ namespace Discretization {
 
         map<Position, vector<Node*>*>* boundaryNodes;
         
+        vector<Node*>* boundaryNodesVector;
+        
         vector<Node*>* internalNodesVector;
         
         vector<Node*>* totalNodesVector;
@@ -104,6 +106,8 @@ namespace Discretization {
         virtual vector<Node*>* addInternalNodesToVector();
         
         virtual vector<Node*>* addTotalNodesToVector();
+        
+        vector<Node*>* addBoundaryNodesToVector();
         
         virtual GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth);
         

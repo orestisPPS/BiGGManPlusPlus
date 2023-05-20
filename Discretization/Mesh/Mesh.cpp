@@ -90,6 +90,20 @@ namespace Discretization {
     vector<Node *> *Mesh::addTotalNodesToVector() {
         return nullptr;
     }
+    
+    vector<Node*> *Mesh::addBoundaryNodesToVector() {
+        auto boundaryNodesList = list<Node*>();
+        for (auto &boundaryNodesMap : *boundaryNodes)
+            for (auto &node : *boundaryNodesMap.second)
+                boundaryNodesList.push_back(node);
+        boundaryNodesList.sort([](Node* a, Node* b){
+            return (*a->id.boundary) < (*b->id.boundary);
+        });
+        boundaryNodesList.unique([](Node* a, Node* b){
+            return (*a->id.boundary) == (*b->id.boundary);
+        });
+        return new vector<Node*>(boundaryNodesList.begin(), boundaryNodesList.end());
+    }
 
 
     void createNumberOfNodesPerDirectionMap() {}
@@ -98,6 +112,7 @@ namespace Discretization {
     void Mesh::categorizeNodes() {
         if (isInitialized) {
             boundaryNodes = addDBoundaryNodesToMap();
+            boundaryNodesVector = addBoundaryNodesToVector();
             internalNodesVector = addInternalNodesToVector();
             totalNodesVector = addTotalNodesToVector();
         } else

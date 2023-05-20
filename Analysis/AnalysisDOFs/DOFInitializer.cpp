@@ -126,55 +126,70 @@ namespace NumericalAnalysis {
     }
     
     void DOFInitializer::_removeDuplicatesAndDelete(Mesh *mesh) const {
-        
+
         //Sort the list of total DOFs
-        _totalDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
+        _totalDegreesOfFreedomList->sort([](DegreeOfFreedom *a, DegreeOfFreedom *b) {
             return (*a->parentNode) < (*b->parentNode);
         });
-        _boundedDegreesOfFreedomList->sort([&mesh](DegreeOfFreedom* a, DegreeOfFreedom* b){
+        _boundedDegreesOfFreedomList->sort([&mesh](DegreeOfFreedom *a, DegreeOfFreedom *b) {
             auto aNodeBoundaryID = (*mesh->nodeFromID((*a->parentNode))->id.boundary);
             auto bNodeBoundaryID = (*mesh->nodeFromID((*b->parentNode))->id.boundary);
             return aNodeBoundaryID > bNodeBoundaryID;
         });
-        _fluxDegreesOfFreedomList->sort([](tuple<DegreeOfFreedom*, double> a, tuple<DegreeOfFreedom*, double> b){
+        _fluxDegreesOfFreedomList->sort([](tuple<DegreeOfFreedom *, double> a, tuple<DegreeOfFreedom *, double> b) {
             return (*get<0>(a)->parentNode) < (*get<0>(b)->parentNode);
         });
-        _freeDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
+        _freeDegreesOfFreedomList->sort([](DegreeOfFreedom *a, DegreeOfFreedom *b) {
             return (*a->parentNode) < (*b->parentNode);
         });
-        
-        auto duplicates = vector<DegreeOfFreedom*>();
+
+
+
+        auto duplicates = vector<DegreeOfFreedom *>();
         //Remove the duplicates from the list of total DOFs. The duplicates are added to the duplicates vector.
-        _totalDegreesOfFreedomList->unique([&duplicates](DegreeOfFreedom* a, DegreeOfFreedom* b){
+        _totalDegreesOfFreedomList->unique([&duplicates](DegreeOfFreedom *a, DegreeOfFreedom *b) {
             auto parentNodeCondition = (*a->parentNode) == (*b->parentNode);
             auto dofTypeCondition = a->type() == b->type();
             auto constraintTypeCondition = false;
             //auto aDirichletBNeumann = a->id->constraintType() == ConstraintType::Fixed && b->id->constraintType() == ConstraintType::Free;
 
             constraintTypeCondition = a->id->constraintType() == Fixed && b->id->constraintType() == Free;
-            if (parentNodeCondition && dofTypeCondition && constraintTypeCondition){
+            if (parentNodeCondition && dofTypeCondition && constraintTypeCondition) {
                 duplicates.push_back(b);
                 return true;
             }
             constraintTypeCondition = a->id->constraintType() == Free && b->id->constraintType() == Fixed;
-            if (parentNodeCondition && dofTypeCondition && constraintTypeCondition){
+            if (parentNodeCondition && dofTypeCondition && constraintTypeCondition) {
                 duplicates.push_back(a);
                 return true;
             }
             constraintTypeCondition = a->id->constraintType() == Fixed && b->id->constraintType() == Fixed;
-            if (parentNodeCondition && dofTypeCondition && constraintTypeCondition){
-                 duplicates.push_back(b);
+            if (parentNodeCondition && dofTypeCondition && constraintTypeCondition) {
+                duplicates.push_back(b);
                 return true;
             }
             constraintTypeCondition = a->id->constraintType() == Free && b->id->constraintType() == Free;
-            if (parentNodeCondition && dofTypeCondition && constraintTypeCondition){
+            if (parentNodeCondition && dofTypeCondition && constraintTypeCondition) {
                 duplicates.push_back(b);
                 return true;
             }
             return false;
         });
-        
+        _boundedDegreesOfFreedomList->erase(
+                std::unique(_boundedDegreesOfFreedomList->begin(), _boundedDegreesOfFreedomList->end(),
+                            [](DegreeOfFreedom* a, DegreeOfFreedom* b) {
+                                if (*a->parentNode == *b->parentNode && a->type() != b->type()) {
+                                    return true;
+                                }
+                                return false;
+                            }),
+                _boundedDegreesOfFreedomList->end()
+        );
 
+        for (auto &boundedDof: *_boundedDegreesOfFreedomList) {
+            boundedDof->Print();
+        }
+    
         //Remove the duplicates of the duplicates vector from the bounded or free and flux DOF lists according to
         // the constraint type their value (fixed or free).
         for (auto &dof : duplicates) {
@@ -208,7 +223,7 @@ namespace NumericalAnalysis {
         dofID = 0;
         for (auto &dof : *_boundedDegreesOfFreedomList) {
             (*dof->id->value) = dofID;
-            //cout << "FIXED DOF ID: " << dofID << " Node: " << (*dof->parentNode)<< endl;
+            cout << "FIXED DOF ID: " << dofID << " Node: " << (*dof->parentNode)<< endl;
             dofID++;
         }
     }

@@ -71,7 +71,7 @@ namespace StructuredMeshGenerator{
             boundaryId++;
         }
         //Right boundary nodes.
-        for (auto i = 1; i < index2 ; ++i) {
+        for (int i = 1; i < index2 ; ++i) {
             nodesMatrix->at(index1 - 1, i) = allocateBoundaryNode(boundaryId);
             //(*nodesMatrix)(index1 - 1, i) = allocateBoundaryNode(boundaryId);
             boundaryId++;
