@@ -48,7 +48,7 @@ namespace DegreesOfFreedom{
     
             void setValue(double value);
     
-            void Print();
+            void print(bool printValue);
     
         private:
             DOFType* _dofType;

@@ -47,7 +47,7 @@ namespace NumericalAnalysis {
     DomainBoundaryConditions* StStFDTest::createBC(Mesh *mesh) {
         
         auto boundaryFactory = new DomainBoundaryFactory(mesh);
-        return boundaryFactory->parallelogram(4, 4, 4, 4);
+        return boundaryFactory->parallelogram(5, 5, 4, 4);
 
 /*        auto bcFunctionBottom = function<double (vector<double>*)> ([](vector<double>* x) {return  x->at(0) * x->at(0);} );
         auto bcFunctionTop= function<double (vector<double>*)> ([](vector<double>* x) {return  x->at(0) * x->at(0) - 1;} );

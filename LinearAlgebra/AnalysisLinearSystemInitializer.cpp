@@ -273,7 +273,6 @@ namespace LinearAlgebra {
                 auto colinearDOFDerivative2 = graph.getColinearDOFOnBoundary(dof->type(), direction, nodeGraphDerivative2);
                 //Calculate the fucking scheme
                 positionI = *dof->id->value;
-                positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
 
                 for (auto iDof = 0; iDof < colinearDOFDerivative1.size(); iDof++) {
                     positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOFDerivative1[iDof]);

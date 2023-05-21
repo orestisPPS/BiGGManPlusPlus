@@ -58,6 +58,8 @@ namespace LinearAlgebra {
         // Fixed DOF x Total DOF
         Array<double>* _fixedDOFMatrix;
 
+        Array<double>* _totalDOFMatrix;
+
         void _createMatrix();
         void _createFixedDOFSubMatrix();
         void _createFreeDOFSubMatrix();

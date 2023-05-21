@@ -51,7 +51,7 @@ namespace LinearAlgebra {
                 throw runtime_error("WARNING: Matrix is singular. It is degenerate like yourself.");
             }
             else if (_isSingular && !_throwExceptionOnSingularMatrix) {
-                // Print a warning message if the matrix is singular and the flag is not set
+                // print a warning message if the matrix is singular and the flag is not set
                 cout << "WARNING: Matrix is singular. It is degenerate like yourself." << endl;
                 break;
             }

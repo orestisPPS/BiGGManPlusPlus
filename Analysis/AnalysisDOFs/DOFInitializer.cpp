@@ -132,9 +132,7 @@ namespace NumericalAnalysis {
             return (*a->parentNode) < (*b->parentNode);
         });
         _boundedDegreesOfFreedomList->sort([&mesh](DegreeOfFreedom *a, DegreeOfFreedom *b) {
-            auto aNodeBoundaryID = (*mesh->nodeFromID((*a->parentNode))->id.boundary);
-            auto bNodeBoundaryID = (*mesh->nodeFromID((*b->parentNode))->id.boundary);
-            return aNodeBoundaryID > bNodeBoundaryID;
+            return (a->type()) < (b->type());
         });
         _fluxDegreesOfFreedomList->sort([](tuple<DegreeOfFreedom *, double> a, tuple<DegreeOfFreedom *, double> b) {
             return (*get<0>(a)->parentNode) < (*get<0>(b)->parentNode);
@@ -175,21 +173,6 @@ namespace NumericalAnalysis {
             }
             return false;
         });
-        _boundedDegreesOfFreedomList->erase(
-                std::unique(_boundedDegreesOfFreedomList->begin(), _boundedDegreesOfFreedomList->end(),
-                            [](DegreeOfFreedom* a, DegreeOfFreedom* b) {
-                                if (*a->parentNode == *b->parentNode && a->type() != b->type()) {
-                                    return true;
-                                }
-                                return false;
-                            }),
-                _boundedDegreesOfFreedomList->end()
-        );
-
-        for (auto &boundedDof: *_boundedDegreesOfFreedomList) {
-            boundedDof->Print();
-        }
-    
         //Remove the duplicates of the duplicates vector from the bounded or free and flux DOF lists according to
         // the constraint type their value (fixed or free).
         for (auto &dof : duplicates) {
@@ -209,6 +192,17 @@ namespace NumericalAnalysis {
             delete dof;
             dof = nullptr;
         }
+        _boundedDegreesOfFreedomList->unique([&duplicates](DegreeOfFreedom *a, DegreeOfFreedom *b) {
+            if (*a->parentNode == *b->parentNode && a->type() == b->type()) {
+                return true;
+            }
+            return false;
+        });
+        _boundedDegreesOfFreedomList->sort([&mesh](DegreeOfFreedom *a, DegreeOfFreedom *b) {
+            auto aNodeBoundaryID = (*mesh->nodeFromID((*a->parentNode))->id.boundary);
+            auto bNodeBoundaryID = (*mesh->nodeFromID((*b->parentNode))->id.boundary);
+            return aNodeBoundaryID < bNodeBoundaryID;
+        });
         
     }
 
@@ -226,13 +220,13 @@ namespace NumericalAnalysis {
             cout << "FIXED DOF ID: " << dofID << " Node: " << (*dof->parentNode)<< endl;
             dofID++;
         }
+        for (auto &boundedDof: *_boundedDegreesOfFreedomList) {
+            boundedDof->print(true);
+        }
     }
     
     void DOFInitializer::_reconstructTotalDOFList() const {
         _freeDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
-            return (*a->id->value) < (*b->id->value);
-        });
-        _boundedDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
             return (*a->id->value) < (*b->id->value);
         });
         _totalDegreesOfFreedomList->clear();
