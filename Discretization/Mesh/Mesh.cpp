@@ -91,17 +91,12 @@ namespace Discretization {
         return nullptr;
     }
     
-    vector<Node*> *Mesh::addBoundaryNodesToVector() {
+    vector<Node*> *Mesh::addBoundaryNodesToVector() const {
         auto boundaryNodesList = list<Node*>();
         for (auto &boundaryNodesMap : *boundaryNodes)
             for (auto &node : *boundaryNodesMap.second)
-                boundaryNodesList.push_back(node);
-        boundaryNodesList.sort([](Node* a, Node* b){
-            return (*a->id.boundary) < (*b->id.boundary);
-        });
-        boundaryNodesList.unique([](Node* a, Node* b){
-            return (*a->id.boundary) == (*b->id.boundary);
-        });
+                if (find(boundaryNodesList.begin(), boundaryNodesList.end(), node) == boundaryNodesList.end())
+                    boundaryNodesList.push_back(node);
         return new vector<Node*>(boundaryNodesList.begin(), boundaryNodesList.end());
     }
 

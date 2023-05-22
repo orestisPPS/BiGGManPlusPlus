@@ -107,7 +107,7 @@ namespace Discretization {
         
         virtual vector<Node*>* addTotalNodesToVector();
         
-        vector<Node*>* addBoundaryNodesToVector();
+        vector<Node*>* addBoundaryNodesToVector() const;
         
         virtual GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth);
         
