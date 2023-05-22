@@ -65,6 +65,8 @@ namespace LinearAlgebra {
         void _createFixedDOFSubMatrix();
         
         void _createFreeDOFSubMatrix();
+        
+        void _createTotalDOFSubMatrix();
 
         map<vector<double>, Node*>* _parametricCoordToNodeMap;
 

@@ -43,7 +43,7 @@ namespace NumericalAnalysis {
         
         void _reconstructTotalDOFList(Mesh* mesh) const;
 
-        void _assignDOFIDsToNodes(Mesh *mesh) const;
+        void _assignDOFToNodes(Mesh *mesh) const;
         
         void _createTotalDOFMap(Mesh *mesh) const;
         

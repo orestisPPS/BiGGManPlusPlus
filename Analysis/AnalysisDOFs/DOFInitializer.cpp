@@ -28,7 +28,7 @@ namespace NumericalAnalysis {
         _removeDuplicatesAndDelete(mesh);
         _assignDOFIDs();
         _reconstructTotalDOFList(mesh);
-        _assignDOFIDsToNodes(mesh);
+        _assignDOFToNodes(mesh);
         _createTotalDOFMap(mesh);
         _listPtrToVectorPtr(freeDegreesOfFreedom, _freeDegreesOfFreedomList);
         _listPtrToVectorPtr(boundedDegreesOfFreedom, _boundedDegreesOfFreedomList);
@@ -156,9 +156,9 @@ namespace NumericalAnalysis {
             return aNodeGlobalID < bNodeGlobalID;
         });
         
-        for (auto &dof : *_boundedDegreesOfFreedomList) {
+/*        for (auto &dof : *_boundedDegreesOfFreedomList) {
             dof->print(true);
-        }
+        }*/
 
     }
 
@@ -175,9 +175,7 @@ namespace NumericalAnalysis {
             (*dof->id->value) = dofID;
             dofID++;
         }
-        for (auto &boundedDof: *_boundedDegreesOfFreedomList) {
-            boundedDof->print(true);
-        }
+
     }
 
     void DOFInitializer::_reconstructTotalDOFList(Mesh* mesh) const {
@@ -196,22 +194,20 @@ namespace NumericalAnalysis {
         });
     }
 
-    void DOFInitializer::_assignDOFIDsToNodes(Mesh *mesh) const {
+    void DOFInitializer::_assignDOFToNodes(Mesh *mesh) const {
         for (auto &dof : *_totalDegreesOfFreedomList) {
             auto node = mesh->nodeFromID(((*dof->parentNode)));
             node->degreesOfFreedom->push_back(dof);
+            dof->print(false);
         }
     }
 
     void DOFInitializer::_createTotalDOFMap(Mesh *mesh) const {
         auto dofId = 0;
-        for (auto &node : *mesh->totalNodesVector) {
-            for (auto &dof : *node->degreesOfFreedom) {
-                totalDegreesOfFreedomMap->insert(pair<unsigned, DegreeOfFreedom*>(dofId, dof));
-                totalDegreesOfFreedomMapInverse->insert(pair<DegreeOfFreedom*, unsigned>(dof, dofId));
-                //cout<< "DOF ID: " << dofId << " Node: " << *totalDegreesOfFreedomMap->at(dofId)->parentNode << endl;
-                dofId++;
-            }
+        for (auto &dof : *_totalDegreesOfFreedomList) {
+            totalDegreesOfFreedomMap->insert(pair<int, DegreeOfFreedom *>(dofId, dof));
+            totalDegreesOfFreedomMapInverse->insert(pair<DegreeOfFreedom *, int>(dof, dofId));
+            dofId++;
         }
     }
 
