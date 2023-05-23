@@ -41,8 +41,8 @@ namespace LinearAlgebra {
     }
     
     void AnalysisLinearSystemInitializer::_createMatrix() {
-        _createFixedDOFSubMatrix();
-        _createFreeDOFSubMatrix();
+/*        _createFixedDOFSubMatrix();
+        _createFreeDOFSubMatrix();*/
         _createTotalDOFSubMatrix();
     }
     

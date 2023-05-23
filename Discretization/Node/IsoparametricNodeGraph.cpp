@@ -185,23 +185,25 @@ namespace Discretization {
                     }
                 } else if (n1n2 == 1) {
                     if ((abs(n1[0] + n2[0]) == 2) && (n1[1] == n2[1]) && (n1[2] == n2[2])) {
-                        if (coLinearNodes.find(One) == coLinearNodes.end()) {
-                            coLinearNodes[One] = _mergeAndSortColinearNodes(position1.second, position2.second, _node);
-                        } else {
-                            coLinearNodes[One].push_back(_node);
+                        coLinearNodes.insert(pair<Direction, vector<Node*>>(One, vector<Node*>()));
+                        for (auto& node : position1.second) {
+                            coLinearNodes[One].push_back(node);
                         }
+                        coLinearNodes[One].push_back(_node);
+
                     } else if ((n1[0] == n2[0]) && (abs(n1[1] + n2[1]) == 2) && (n1[2] == n2[2])) {
-                        if (coLinearNodes.find(Two) == coLinearNodes.end()) {
-                            coLinearNodes[Two] = {position1.second[0], _node};
-                        } else {
-                            coLinearNodes[Two].push_back(_node);
+                        coLinearNodes.insert(pair<Direction, vector<Node*>>(Two, vector<Node*>()));
+                        for (auto& node : position1.second) {
+                            coLinearNodes[Two].push_back(node);
                         }
+                        coLinearNodes[Two].push_back(_node);
+
                     } else if ((n1[0] == n2[0]) && (n1[1] == n2[1]) && (abs(n1[2] + n2[2]) == 2)) {
-                        if (coLinearNodes.find(Three) == coLinearNodes.end()) {
-                            coLinearNodes[Three] = {position1.second[0], _node};
-                        } else {
-                            coLinearNodes[Three].push_back(_node);
+                        coLinearNodes.insert(pair<Direction, vector<Node*>>(Three, vector<Node*>()));
+                        for (auto& node : position1.second) {
+                            coLinearNodes[Three].push_back(node);
                         }
+                        coLinearNodes[Three].push_back(_node);
                     }
                     for (auto& colinearNodes : coLinearNodes) {
                         sort(colinearNodes.second.begin(), colinearNodes.second.end(), [](Node* a, Node* b){
