@@ -217,7 +217,6 @@ namespace Discretization {
                 }
             }
         }
-
         return coLinearNodes;
     }
 

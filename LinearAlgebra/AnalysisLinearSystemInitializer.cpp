@@ -41,8 +41,8 @@ namespace LinearAlgebra {
     }
     
     void AnalysisLinearSystemInitializer::_createMatrix() {
-/*        _createFixedDOFSubMatrix();
-        _createFreeDOFSubMatrix();*/
+        _createFixedDOFSubMatrix();
+        _createFreeDOFSubMatrix();
         _createTotalDOFSubMatrix();
     }
     
@@ -221,6 +221,8 @@ namespace LinearAlgebra {
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
             //Jusqu'ici, tout va bien
 
+            positionI = *dof->id->value;
+
             for (auto &direction: directions) {
                 // 1) Map with template positions and the number of neighbours needed for different scheme types to achieve
                 //    the desired order of accuracy. Each position vector is a map to finite difference scheme
@@ -256,6 +258,7 @@ namespace LinearAlgebra {
                         filterDerivative1.insert(pair<Position, unsigned short>(point, tuple.second));
                     }
                 }
+                //Jusqu'ici, tout va bien
                 auto filterDerivative2 = map<Position, unsigned short>();
                 for (auto &tuple: qualifiedPositionsAndPoints[2][direction]) {
                     for (auto &point: tuple.first) {
@@ -270,23 +273,22 @@ namespace LinearAlgebra {
                 colinearDOFDerivative2 = graph.getColinearDOFOnBoundary(dof->type(), direction, nodeGraphDerivative2);
 
                 //Calculate the fucking scheme
-                positionI = *dof->id->value;
                 for (auto iDof = 0; iDof < colinearDOFDerivative1.size(); iDof++) {
                     positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOFDerivative1[iDof]);
-                    _fixedDOFMatrix->at(positionI, positionJ) =
-                            _fixedDOFMatrix->at(positionI, positionJ) +
+                    _fixedDOFMatrix->at(positionI, positionJ) = _fixedDOFMatrix->at(positionI, positionJ) +
                             firstDerivativeSchemeWeights[iDof] * firstDerivativeCoefficient;
                     bool lol = 0;
                 }
                 for (auto iDof = 0; iDof < colinearDOFDerivative2.size(); iDof++) {
                     positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOFDerivative2[iDof]);
-                    _fixedDOFMatrix->at(positionI, positionJ) =
-                            _fixedDOFMatrix->at(positionI, positionJ) +
+                    _fixedDOFMatrix->at(positionI, positionJ) = _fixedDOFMatrix->at(positionI, positionJ) +
                             secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient;
                     bool lol = false;
 
                 }
             }
+            qualifiedPositionsAndPoints.clear();
+            availablePositionsAndDepth.clear();
         }
         cout << "Fixed DOF matrix" << endl;
         _fixedDOFMatrix->print();
@@ -440,10 +442,12 @@ namespace LinearAlgebra {
                 for (auto &neighbourDof: neighbour.second) {
                     //Check if the neighbouring DOF is fixed 
                     if (neighbourDof->id->constraintType() == Fixed) {
-                        unsigned i = *dof->id->value;
-                        unsigned j = *neighbourDof->id->value;
-                        //unsigned j = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(neighbourDof);
-                        _RHS->at(*dof->id->value) += _fixedDOFMatrix->at(i, j) * neighbourDof->value();
+                        //unsigned i = *dof->id->value;
+                        unsigned i = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
+                        //unsigned j = *neighbourDof->id->value;
+                        unsigned j = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(neighbourDof);
+                        //_RHS->at(*dof->id->value) += _fixedDOFMatrix->at(i, j) * neighbourDof->value();
+                        _RHS->at(*dof->id->value) -= _totalDOFMatrix->at(i, j) * neighbourDof->value();
                     }
                 }
             }            
