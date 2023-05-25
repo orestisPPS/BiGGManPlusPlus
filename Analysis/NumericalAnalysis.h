@@ -37,6 +37,8 @@ namespace NumericalAnalysis {
 
         void solve() const;
         
+        void applySolutionToDegreesOfFreedom() const;
+        
     protected:
 
         AnalysisDegreesOfFreedom* initiateDegreesOfFreedom() const;

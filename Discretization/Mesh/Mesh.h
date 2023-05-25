@@ -45,10 +45,8 @@ namespace Discretization {
         MeshSpecs* specs;
         
         map<unsigned, Metrics*> *metrics;
-
-
-        //---------------Implemented parent class methods--------------
         
+        //---------------Implemented parent class methods--------------
         unsigned totalNodes();
         
         //Returns the node pointer of the node with the given global ID
@@ -60,13 +58,12 @@ namespace Discretization {
          // the final coordinate system is calculated.
          // If coordinateSystem is Natural then the metrics are calculated based on the final calculated coordinate system.
          void calculateMeshMetrics(CoordinateType coordinateSystem, bool isUniformMesh);
-        
-        
-        
-        //-----------------Virtual parent class methods-----------------  
-
+         
          void initialize();
+         
+         void storeMeshInVTKFile(const string& filePath, const string& fileName);
         
+        //-----------------Virtual parent class methods-----------------
         virtual unsigned dimensions();
         
         virtual SpaceEntityType space();
@@ -85,6 +82,7 @@ namespace Discretization {
 
         
      protected:
+         
         Array<Node *> *_nodesMatrix;
         
         map<unsigned, Node*>* _nodesMap;

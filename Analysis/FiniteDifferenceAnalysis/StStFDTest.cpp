@@ -14,21 +14,22 @@ namespace NumericalAnalysis {
         map<Direction, short unsigned> numberOfNodes;
 /*        numberOfNodes[Direction::One] = 5;
         numberOfNodes[Direction::Two] = 7;*/
-        numberOfNodes[Direction::One] = 5;
-        numberOfNodes[Direction::Two] = 5;
+        numberOfNodes[Direction::One] = 101;
+        numberOfNodes[Direction::Two] = 101;
         //auto specs = new StructuredMeshGenerator::MeshSpecs(numberOfNodes, 0.25, 0.25, 0, 0, 0);
         auto specs = new StructuredMeshGenerator::MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
-        auto space = (PositioningInSpace::Plane);
         auto meshFactory = new MeshFactory(specs);
+        meshFactory->domainBoundaryFactory->parallelogram(11, 11, 10, 10);
+        meshFactory->buildMesh(2);
         auto mesh = meshFactory->mesh;
 
-        auto meshProperties = new SecondOrderLinearPDEProperties(
+        /*auto meshProperties = new SecondOrderLinearPDEProperties(
                 2, false, LocallyAnisotropic);
         meshProperties->setLocallyAnisotropicProperties(meshFactory->pdePropertiesFromMetrics);
         
-/*        auto laplaceProperties = new SecondOrderLinearPDEProperties(
+*//*        auto laplaceProperties = new SecondOrderLinearPDEProperties(
                 2, false, Isotropic);
-        laplaceProperties->setIsotropicProperties(1, 0, 0, 0);*/
+        laplaceProperties->setIsotropicProperties(1, 0, 0, 0);*//*
         
         auto pde = new PartialDifferentialEquation(meshProperties, Laplace);
 
@@ -41,13 +42,13 @@ namespace NumericalAnalysis {
         auto result = analysis->linearSystem->solution;
         for (double i : *result) {
             cout << i << endl;
-        }
+        }*/
     }
 
     DomainBoundaryConditions* StStFDTest::createBC(Mesh *mesh) {
         
         auto boundaryFactory = new DomainBoundaryFactory(mesh);
-        return boundaryFactory->parallelogram(5, 5, 4, 4);
+        return boundaryFactory->parallelogram(101, 101, 100, 100);
 
 /*        auto bcFunctionBottom = function<double (vector<double>*)> ([](vector<double>* x) {return  x->at(0) * x->at(0);} );
         auto bcFunctionTop= function<double (vector<double>*)> ([](vector<double>* x) {return  x->at(0) * x->at(0) - 1;} );

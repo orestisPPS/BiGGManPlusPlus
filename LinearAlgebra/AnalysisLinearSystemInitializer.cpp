@@ -37,11 +37,11 @@ namespace LinearAlgebra {
         _createRHS();
         //linearSystem = new LinearSystem(_freeDOFMatrix, _RHS);
         linearSystem = new LinearSystem(_freeDOFMatrix, _RHS);
-        linearSystem->exportToMatlabFile("firstCLaplacecplace.m", "/home/hal9000/code/BiGGMan++/Testing/", true);
+        //linearSystem->exportToMatlabFile("firstCLaplacecplace.m", "/home/hal9000/code/BiGGMan++/Testing/", true);
     }
     
     void AnalysisLinearSystemInitializer::_createMatrix() {
-        _createFixedDOFSubMatrix();
+        //_createFixedDOFSubMatrix();
         _createFreeDOFSubMatrix();
         _createTotalDOFSubMatrix();
     }
@@ -167,7 +167,7 @@ namespace LinearAlgebra {
             }
         }
         cout << "Free DOF matrix" << endl;
-            _freeDOFMatrix->print();
+            //_freeDOFMatrix->print();
         cout << "  " << endl;
     }
 
@@ -291,7 +291,7 @@ namespace LinearAlgebra {
             availablePositionsAndDepth.clear();
         }
         cout << "Fixed DOF matrix" << endl;
-        _fixedDOFMatrix->print();
+        //_fixedDOFMatrix->print();
         cout << "  " << endl;
     }
 
@@ -421,7 +421,7 @@ namespace LinearAlgebra {
             }
         }
         cout << "Total DOF matrix" << endl;
-        _totalDOFMatrix->print();
+        //_totalDOFMatrix->print();
         cout << "  " << endl;
     }
 
@@ -444,9 +444,9 @@ namespace LinearAlgebra {
                     if (neighbourDof->id->constraintType() == Fixed) {
                         //unsigned i = *dof->id->value;
                         unsigned i = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
-                        //unsigned j = *neighbourDof->id->value;
+                        //unsigned i = *neighbourDof->id->value;
                         unsigned j = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(neighbourDof);
-                        //_RHS->at(*dof->id->value) += _fixedDOFMatrix->at(i, j) * neighbourDof->value();
+                        //_RHS->at(*dof->id->value) -= _fixedDOFMatrix->at(i, j) * neighbourDof->value();
                         _RHS->at(*dof->id->value) -= _totalDOFMatrix->at(i, j) * neighbourDof->value();
                     }
                 }
@@ -454,11 +454,13 @@ namespace LinearAlgebra {
         }
         delete _fixedDOFMatrix;
         _fixedDOFMatrix = nullptr;
+        delete _totalDOFMatrix;
+        _totalDOFMatrix = nullptr;
         
         //print vector
-        for (auto &value: *_RHS) {
+/*        for (auto &value: *_RHS) {
             cout << value << endl;
-        }
+        }*/
     }
 
     map<short unsigned, map<Direction, map<vector<Position>, short>>> AnalysisLinearSystemInitializer::

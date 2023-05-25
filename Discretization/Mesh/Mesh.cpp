@@ -5,6 +5,7 @@
 #include "Mesh.h"
 #include "../../LinearAlgebra/FiniteDifferences/FDSchemeType.h"
 #include "../../LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h"
+#include "../../Utility/Exporters/Exporters.h"
 
 using namespace  Discretization;
 
@@ -369,6 +370,10 @@ namespace Discretization {
         else
             throw std::runtime_error("Mesh is not initialized");
     }
-    
-    
+
+    void Mesh::storeMeshInVTKFile(const std::string& filePath, const std::string& fileName) {
+        //Utility::Exporters::exportLinearSystemToMatlabFile(fileName, this);
+    }
+
+
 } // Discretization

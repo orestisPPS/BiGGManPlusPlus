@@ -31,4 +31,10 @@ namespace NumericalAnalysis {
         
         cout<<"Linear System solved..."<<endl;
     }
+
+    void NumericalAnalysis::applySolutionToDegreesOfFreedom() const {
+        for (auto i = 0; i < degreesOfFreedom->freeDegreesOfFreedom->size(); i++) {
+            degreesOfFreedom->freeDegreesOfFreedom->at(i)->setValue(linearSystem->solution->at(i));
+        }
+    }
 } // NumericalAnalysis

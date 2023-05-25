@@ -11,7 +11,13 @@
 #include "../LinearAlgebra/Operations/Transformations.h"
 #include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 #include "NodeFactory.h"
+#include "MeshSpecs.h"
+#include "DomainBoundaryFactory.h"
 #include "../PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
+#include "../Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.h"
+#include "../LinearAlgebra/Solvers/Direct/SolverLUP.h"
+
+
 using namespace PartialDifferentialEquations;
 namespace StructuredMeshGenerator {
     
@@ -23,8 +29,16 @@ namespace StructuredMeshGenerator {
 
         map<unsigned, FieldProperties>* pdePropertiesFromMetrics;
         
+        DomainBoundaryFactory* domainBoundaryFactory;
+        
+        void buildMesh(unsigned short schemeOrder);
+        
     private:
         MeshSpecs *_meshSpecs;
+        
+        bool _boundaryFactoryInitialized;
+        
+        DomainBoundaryConditions* _boundaryConditions;
 
         Mesh* _initiateRegularMesh();
         
@@ -39,7 +53,8 @@ namespace StructuredMeshGenerator {
         SpaceEntityType _calculateSpaceEntityType();
 
         void _calculatePDEPropertiesFromMetrics();
-
+        
+        
     };
 
 };

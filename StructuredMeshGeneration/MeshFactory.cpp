@@ -10,9 +10,54 @@ namespace StructuredMeshGenerator{
         mesh = _initiateRegularMesh();
         _assignCoordinates();
         mesh->specs = _meshSpecs;
-        cout<<mesh->dimensions()<<endl;
         mesh->calculateMeshMetrics(Template, true);
         _calculatePDEPropertiesFromMetrics();
+        domainBoundaryFactory = new DomainBoundaryFactory(mesh);
+        
+    }
+    
+    void MeshFactory::buildMesh(unsigned short schemeOrder) {
+        
+        auto pdeProperties = new SecondOrderLinearPDEProperties(
+                2, false, LocallyAnisotropic);
+        pdeProperties->setLocallyAnisotropicProperties(pdePropertiesFromMetrics);
+
+        auto pde = new PartialDifferentialEquation(pdeProperties, Laplace);
+        
+        auto specs = new FDSchemeSpecs(schemeOrder, schemeOrder, mesh->directions());
+        
+        DomainBoundaryConditions* boundaryConditions = nullptr;
+        if (_boundaryFactoryInitialized) {
+            boundaryConditions = _boundaryConditions;
+        }
+        else
+            throw invalid_argument("Boundary conditions not initialized");
+        
+        Field_DOFType* dofTypes = nullptr;
+        switch (mesh->dimensions()) {
+            case 1:
+                dofTypes = new nodalPositionVectorField1D_DOFType();
+                break;
+            case 2:
+                dofTypes = new nodalPositionVectorField2D_DOFType();
+                break;
+            case 3:
+                dofTypes = new nodalPositionVectorField3D_DOFType();
+                break;
+        }
+        
+        auto problem = new SteadyStateMathematicalProblem(pde, boundaryConditions, dofTypes);
+
+        auto solver = new SolverLUP(1E-20, true);
+        auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specs);
+
+        analysis->solve();
+        auto result = analysis->linearSystem->solution;
+        for (double i : *result) {
+            cout << i << endl;
+        }
+        
+        analysis->applySolutionToDegreesOfFreedom();
     }
 
 
