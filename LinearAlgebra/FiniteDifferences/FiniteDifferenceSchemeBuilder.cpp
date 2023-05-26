@@ -286,54 +286,60 @@ namespace LinearAlgebra {
         }
     }
 
-    vector<double> FiniteDifferenceSchemeBuilder::
-    getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints, Direction& direction,
-                                           unsigned short errorOrder, unsigned short derivativeOrder) {
-        auto availableSchemes = map<FDSchemeType, vector<double>>();
+    vector<double> FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
+            map<vector<Position>, short>& qualifiedPositionsAndPoints,
+            Direction& direction,
+            unsigned short errorOrder,
+            unsigned short derivativeOrder
+    ) {
+        map<FDSchemeType, vector<double>> availableSchemes;
         auto positionsToScheme = positionsToSchemeType();
-        for (auto &qualifiedPositionAndPoint: qualifiedPositionsAndPoints) {
-            auto &positionVector = qualifiedPositionAndPoint.first;
-            auto &points = qualifiedPositionAndPoint.second;
-            auto schemeType = positionsToScheme[direction][positionVector];
+
+        for (auto& qualifiedPositionAndPoint : qualifiedPositionsAndPoints) {
+            const vector<Position>& positionVector = qualifiedPositionAndPoint.first;
+            short points = qualifiedPositionAndPoint.second;
+
+            FDSchemeType schemeType = positionsToScheme[direction][positionVector];
             switch (derivativeOrder) {
                 case 1:
-                    availableSchemes.insert(pair<FDSchemeType, vector<double>>(schemeType,
-                            FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative1(schemeType, errorOrder)));
+                    availableSchemes[schemeType] = FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative1(schemeType, errorOrder);
                     break;
                 case 2:
-                    availableSchemes.insert(pair<FDSchemeType, vector<double>>(schemeType,
-                            FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative2(schemeType, errorOrder)));
+                    availableSchemes[schemeType] = FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative2(schemeType, errorOrder);
                     break;
                 default:
                     throw invalid_argument("Derivative order not supported");
             }
         }
-        
-        auto positionsFromScheme = vector<Position>();
-        auto weights = vector<double>();
-        
-        if (availableSchemes.find(Central) != availableSchemes.end()) {
+
+        vector<Position> positionsFromScheme;
+        vector<double> weights;
+
+        if (availableSchemes.count(Central) != 0) {
             positionsFromScheme = schemeTypeToPositions()[direction][Central];
-            weights =  availableSchemes[Central];
+            weights = availableSchemes[Central];
         }
-        else if (availableSchemes.find(Forward) != availableSchemes.end()) {
+        else if (availableSchemes.count(Forward) != 0) {
             positionsFromScheme = schemeTypeToPositions()[direction][Forward];
             return availableSchemes[Forward];
         }
-        else if (availableSchemes.find(Backward) != availableSchemes.end()) {
+        else if (availableSchemes.count(Backward) != 0) {
             positionsFromScheme = schemeTypeToPositions()[direction][Backward];
             return availableSchemes[Backward];
         }
         else {
             throw invalid_argument("No scheme found for the given positions");
         }
-        for (auto &position : qualifiedPositionsAndPoints) {
-            if (position.first != positionsFromScheme) {
-                qualifiedPositionsAndPoints.erase(position.first);
-                break;
+
+        for (auto it = qualifiedPositionsAndPoints.begin(); it != qualifiedPositionsAndPoints.end();) {
+            if (it->first != positionsFromScheme) {
+                it = qualifiedPositionsAndPoints.erase(it);
+            }
+            else {
+                ++it;
             }
         }
-        //cout<<"Mitsotaki gamiesai"<<endl;
+
         return weights;
     }
 } // LinearAlgebra

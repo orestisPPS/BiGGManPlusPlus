@@ -28,7 +28,7 @@ namespace StructuredMeshGenerator{
         
         DomainBoundaryConditions* boundaryConditions = nullptr;
         if (_boundaryFactoryInitialized) {
-            boundaryConditions = _boundaryConditions;
+            boundaryConditions = domainBoundaryFactory->getDomainBoundaryConditions();
         }
         else
             throw invalid_argument("Boundary conditions not initialized");

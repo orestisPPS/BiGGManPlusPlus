@@ -8,7 +8,7 @@
 namespace StructuredMeshGenerator {
     
         MeshTest2D::MeshTest2D() {
-            map<Direction, short unsigned> numberOfNodes;
+            map<Direction, unsigned> numberOfNodes;
             numberOfNodes[Direction::One] = 5;
             numberOfNodes[Direction::Two] = 5;
             auto specs = new MeshSpecs(numberOfNodes, 1, 1, 

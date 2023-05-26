@@ -15,18 +15,24 @@ namespace StructuredMeshGenerator {
     class DomainBoundaryFactory {
         
     public:
-        DomainBoundaryFactory(Mesh* mesh);
-
-        DomainBoundaryConditions* parallelogram(unsigned nnX, unsigned nnY, double lengthX, double lengthY,
-                                                double rotAngle = 0, double shearX = 0, double shearY = 0);
+        explicit DomainBoundaryFactory(Mesh* mesh);
         
-        DomainBoundaryConditions* parallelepiped(unsigned nnX, unsigned nnY, unsigned nnZ,
+        ~DomainBoundaryFactory();
+
+        void parallelogram(map<Direction, unsigned>& nodesPerDirection, double lengthX, double lengthY,
+                           double rotAngle = 0, double shearX = 0, double shearY = 0);
+        
+        void parallelepiped(map<Direction, unsigned>& nodesPerDirection,
                                                  double stepX, double stepY, double stepZ,
                                                  double rotAngleX = 0, double rotAngleY = 0, double rotAngleZ = 0,
                                                  double shearX = 0, double shearY = 0, double shearZ = 0);
         
+        DomainBoundaryConditions* getDomainBoundaryConditions() const;
+        
     private:
         Mesh* _mesh;
+        
+        DomainBoundaryConditions* _domainBoundaryConditions;
     };
 
 } // StructuredMeshGenerator

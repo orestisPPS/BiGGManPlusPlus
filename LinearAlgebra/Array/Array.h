@@ -515,6 +515,29 @@ namespace LinearAlgebra {
                 cout << endl;
             }
         }
+        
+        void printRow(unsigned row) const {
+            for (int i = 0; i < _numberOfColumns; ++i) {
+                cout << _array[row * _numberOfColumns + i] << " ";
+            }
+            cout << endl;
+        }
+        
+        void printColumn(unsigned column) const {
+            for (int i = 0; i < _numberOfRows; ++i) {
+                cout << _array[i * _numberOfColumns + column] << " ";
+            }
+            cout << endl;
+        }
+        
+        bool hasZeroInDiagonal(double tolerance = 1E-20){
+            auto size = _numberOfRows * _numberOfColumns;
+            for (int i = 0; i < size; i = i + _numberOfColumns + 1) {
+                if (abs(_array[i]) > tolerance)
+                    return false;
+            }
+            return true;
+        }
 
     private:
         // The 1D array that stores the matrix. The elements are stored in row-major order.

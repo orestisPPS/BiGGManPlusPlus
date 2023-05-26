@@ -6,7 +6,7 @@
 
 namespace StructuredMeshGenerator{
     
-    NodeFactory :: NodeFactory(map<Direction,  short unsigned> &numberOfNodes){
+    NodeFactory :: NodeFactory(map<Direction,  unsigned> &numberOfNodes){
         _nn1 = numberOfNodes.at(Direction::One);
         _nn2 = numberOfNodes.at(Direction::Two);
         _nn3 = numberOfNodes.at(Direction::Three);
@@ -19,9 +19,11 @@ namespace StructuredMeshGenerator{
         auto space = NullSpace;
         if (_nn2 == 1 && _nn3 == 1){
             space = Axis;
-        } else if (_nn3 == 1){
+        }
+        else if (_nn3 == 1){
             space = Plane;
-        } else {
+        } 
+        else {
             space = Volume;
         }
         return space;

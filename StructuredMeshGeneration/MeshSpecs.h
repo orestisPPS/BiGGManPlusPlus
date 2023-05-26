@@ -14,21 +14,21 @@ namespace StructuredMeshGenerator {
     
     class MeshSpecs {
     public :
-        MeshSpecs(map<Direction, short unsigned> &nodesPerDirection,
-                  double templateStepOne, short unsigned metricsOrder = 2);
+        MeshSpecs(map<Direction, unsigned> &nodesPerDirection,
+                  double templateStepOne, unsigned short metricsOrder = 2);
         
-        MeshSpecs(map<Direction, short unsigned> &nodesPerDirection,
+        MeshSpecs(map<Direction, unsigned> &nodesPerDirection,
                   double templateStepOne, double templateStepTwo,
                   double templateRotAngle,
-                  double templateShearOne, double templateShearTwo, short unsigned metricsOrder = 2);
+                  double templateShearOne, double templateShearTwo, unsigned short metricsOrder = 2);
         
-        MeshSpecs(map<Direction, short unsigned> &nodesPerDirection,
+        MeshSpecs(map<Direction, unsigned> &nodesPerDirection,
                   double templateStepOne, double templateStepTwo, double templateStepThree,
                   double templateRotAngleOne, double templateRotAngleTwo, double templateRotAngleThree,
-                  double templateShearOne, double templateShearTwo, double templateShearThree, short unsigned metricsOrder = 2);
+                  double templateShearOne, double templateShearTwo, double templateShearThree, unsigned short metricsOrder = 2);
         
-        short unsigned dimensions, metricsOrder;
-        map<Direction, short unsigned>& nodesPerDirection;
+        unsigned dimensions, metricsOrder;
+        map<Direction, unsigned>& nodesPerDirection;
         double templateStepOne, templateStepTwo, templateStepThree,
                templateRotAngleOne, templateRotAngleTwo, templateRotAngleThree,
                templateShearOne, templateShearTwo, templateShearThree;

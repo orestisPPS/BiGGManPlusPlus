@@ -12,8 +12,8 @@ namespace NumericalAnalysis {
         SteadyStateMathematicalProblem *mathematicalProblem, Mesh *mesh, Solver* solver,  FDSchemeSpecs *schemeSpecs) :
         FiniteDifferenceAnalysis(mathematicalProblem, mesh, solver, schemeSpecs){
         
-        auto linearSystemInitializer = new AnalysisLinearSystemInitializer(degreesOfFreedom, mesh,
-                                                                mathematicalProblem, schemeSpecs);
+        auto linearSystemInitializer =
+                new AnalysisLinearSystemInitializer(degreesOfFreedom, mesh, mathematicalProblem, schemeSpecs);
         linearSystemInitializer->createLinearSystem();
         linearSystem = linearSystemInitializer->linearSystem;
         solver->setLinearSystem(linearSystem);

@@ -6,10 +6,17 @@
 
 namespace StructuredMeshGenerator {
     
-    DomainBoundaryFactory::DomainBoundaryFactory(Mesh* mesh) : _mesh(mesh) { }
+    DomainBoundaryFactory::DomainBoundaryFactory(Mesh* mesh) : _mesh(mesh), _domainBoundaryConditions(nullptr) {
+    }
     
-    DomainBoundaryConditions* DomainBoundaryFactory::parallelogram(unsigned nnX, unsigned nnY, double lengthX, double lengthY,
-                                                                   double rotAngle, double shearX, double shearY) {
+    DomainBoundaryFactory::~DomainBoundaryFactory() {
+        delete _domainBoundaryConditions;
+    }
+    
+    void DomainBoundaryFactory::parallelogram(map<Direction, unsigned>& nodesPerDirection, double lengthX, double lengthY,
+                                              double rotAngle, double shearX, double shearY) {
+        auto nnX = nodesPerDirection[One];
+        auto nnY = nodesPerDirection[Two];
         
         auto stepX = lengthX / (nnX - 1.0);
         auto stepY = lengthY / (nnY - 1.0);
@@ -86,13 +93,17 @@ namespace StructuredMeshGenerator {
                     throw runtime_error("A parallelogram can only have bottom, right, top, and left boundaries.");
             }
         }
-        return new DomainBoundaryConditions(boundaryConditionsSet);
+        _domainBoundaryConditions = new  DomainBoundaryConditions(boundaryConditionsSet);
     }
     
-    DomainBoundaryConditions* DomainBoundaryFactory::parallelepiped(unsigned nnX, unsigned nnY, unsigned nnZ,
-                                                                     double stepX, double stepY, double stepZ,
-                                                                     double rotAngleX, double rotAngleY, double rotAngleZ,
-                                                                     double shearX, double shearY, double shearZ) {
+    void DomainBoundaryFactory::parallelepiped(map<Direction, unsigned>& nodesPerDirection,
+                                                 double stepX, double stepY, double stepZ,
+                                                 double rotAngleX, double rotAngleY, double rotAngleZ,
+                                                 double shearX, double shearY, double shearZ) {
 
+    }
+
+    DomainBoundaryConditions *DomainBoundaryFactory::getDomainBoundaryConditions() const {
+        return _domainBoundaryConditions;
     }
 } // StructuredMeshGenerator
