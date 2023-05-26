@@ -61,7 +61,7 @@ namespace Discretization {
          
          void initialize();
          
-         void storeMeshInVTKFile(const string& filePath, const string& fileName);
+         void storeMeshInVTKFile(const string& filePath, const string& fileName, CoordinateType coordinateType = Natural) const;
         
         //-----------------Virtual parent class methods-----------------
         virtual unsigned dimensions();

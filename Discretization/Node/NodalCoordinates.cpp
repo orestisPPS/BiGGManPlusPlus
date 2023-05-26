@@ -57,10 +57,7 @@ namespace Discretization {
     }
     
     void NodalCoordinates::setPositionVector(vector<double>* positionVector) {
-        if (positionVector->empty() && positionVector->size()<= 3)
-            _positionVectors->insert(pair<CoordinateType, vector<double>*>(Natural, positionVector));
-        else
-            _positionVectors->insert(pair<CoordinateType, vector<double>*>(Natural, positionVector));
+        _positionVectors->insert(pair<CoordinateType, vector<double>*>(Natural, positionVector));
     }
     
     void NodalCoordinates::removePositionVector(CoordinateType type) {

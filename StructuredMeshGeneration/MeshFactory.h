@@ -31,7 +31,7 @@ namespace StructuredMeshGenerator {
         
         DomainBoundaryFactory* domainBoundaryFactory;
         
-        void buildMesh(unsigned short schemeOrder);
+        void buildMesh(unsigned short schemeOrder) const;
         
     private:
         MeshSpecs *_meshSpecs;

@@ -13,14 +13,17 @@ namespace NumericalAnalysis {
     StStFDTest::StStFDTest() {
         map<Direction, unsigned> numberOfNodes;
 
-        numberOfNodes[Direction::One] = 7 ;
-        numberOfNodes[Direction::Two] = 7;
+        numberOfNodes[Direction::One] = 20;
+        numberOfNodes[Direction::Two] = 20;
         //auto specs = new StructuredMeshGenerator::MeshSpecs(numberOfNodes, 0.25, 0.25, 0, 0, 0);
         auto specs = new MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 6, 6);
+        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 19, 19);
         meshFactory->buildMesh(2);
+        auto filenameParaview = "firstMesh.vtk";
+        auto path = "/home/hal9000/code/BiGGMan++/Testing/";
         auto mesh = meshFactory->mesh;
+        mesh->storeMeshInVTKFile(path, filenameParaview);
     }
 
     DomainBoundaryConditions* StStFDTest::createBC(Mesh *mesh) {

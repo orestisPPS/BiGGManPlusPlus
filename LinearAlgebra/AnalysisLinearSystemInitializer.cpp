@@ -163,23 +163,18 @@ namespace LinearAlgebra {
                 for (auto iDof = 0; iDof < colinearDOFDerivative2.size(); iDof++) {
                     if (colinearDOFDerivative2[iDof]->id->constraintType() == Free){
                         positionJ = *colinearDOFDerivative2[iDof]->id->value;
-                        cout<<"Kij = " << _freeDOFMatrix->at(positionI, positionJ) << endl;
-                        cout<<"weight = " << secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient << endl;
                         _freeDOFMatrix->at(positionI, positionJ) =
                                 _freeDOFMatrix->at(positionI, positionJ) +
                                 secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient;
-                        cout<< "Kij + weight = " << _freeDOFMatrix->at(positionI, positionJ) << endl;
-                        cout<<"  "<<endl;
-                        
                     }
                 }
-                cout<<"row : "<<positionI<<"  "<<endl;
-                _freeDOFMatrix->printRow(positionI);
-                cout<<"  "<<endl;
+/*                cout<<"row : "<<positionI<<"  "<<endl;
+                //_freeDOFMatrix->printRow(positionI);
+                cout<<"  "<<endl;*/
             }
         }
         cout << "Free DOF matrix" << endl;
-            _freeDOFMatrix->print();
+            //_freeDOFMatrix->print();
         cout << "  " << endl;
     }
 

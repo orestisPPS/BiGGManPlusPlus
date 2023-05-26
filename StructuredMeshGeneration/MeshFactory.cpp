@@ -16,10 +16,9 @@ namespace StructuredMeshGenerator{
         
     }
     
-    void MeshFactory::buildMesh(unsigned short schemeOrder) {
+    void MeshFactory::buildMesh(unsigned short schemeOrder) const {
         
-        auto pdeProperties = new SecondOrderLinearPDEProperties(
-                2, false, LocallyAnisotropic);
+        auto pdeProperties = new SecondOrderLinearPDEProperties(2, false, LocallyAnisotropic);
         pdeProperties->setLocallyAnisotropicProperties(pdePropertiesFromMetrics);
 
         auto pde = new PartialDifferentialEquation(pdeProperties, Laplace);
@@ -49,6 +48,7 @@ namespace StructuredMeshGenerator{
         auto problem = new SteadyStateMathematicalProblem(pde, boundaryConditions, dofTypes);
 
         auto solver = new SolverLUP(1E-20, true);
+        
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specs);
 
         analysis->solve();
@@ -58,6 +58,15 @@ namespace StructuredMeshGenerator{
         }
         
         analysis->applySolutionToDegreesOfFreedom();
+        
+        for (auto &node : *mesh->totalNodesVector){
+            auto coords = new vector<double>();
+            for (auto &dof : *node->degreesOfFreedom){
+                coords->push_back(dof->value());
+            }
+            node->coordinates.addPositionVector(coords);
+            cout << " " << endl;
+        }
     }
 
 

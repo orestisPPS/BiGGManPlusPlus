@@ -371,8 +371,18 @@ namespace Discretization {
             throw std::runtime_error("Mesh is not initialized");
     }
 
-    void Mesh::storeMeshInVTKFile(const std::string& filePath, const std::string& fileName) {
-        //Utility::Exporters::exportLinearSystemToMatlabFile(fileName, this);
+    void Mesh::storeMeshInVTKFile(const std::string& filePath, const std::string& fileName, CoordinateType coordinateType) const {
+        ofstream outputFile(filePath + fileName);
+        outputFile << "# vtk DataFile Version 3.0 \n";
+        outputFile << "vtk output \n";
+        outputFile << "ASCII \n";
+        outputFile << "DATASET UNSTRUCTURED_GRID \n";
+        outputFile << "POINTS " << totalNodesVector->size() << " double\n";
+        for (auto &node: *totalNodesVector) {
+            auto coordinates = node->coordinates.positionVector(coordinateType);
+            outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << "\n";
+        }
+        outputFile.close();
     }
 
 
