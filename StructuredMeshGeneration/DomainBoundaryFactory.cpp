@@ -54,7 +54,6 @@ namespace StructuredMeshGenerator {
                         auto dofBC = new map<DOFType, double>();
                         dofBC->insert(pair<DOFType, double>(DOFType::Position1, coordinateVector[0]));
                         dofBC->insert(pair<DOFType, double>(DOFType::Position2, coordinateVector[1]));
-                        auto bc = 
                         boundaryConditionsSet->at(boundary.first).insert(pair<unsigned, BoundaryCondition *>(
                                 *node->id.global, new BoundaryCondition(Dirichlet,  dofBC)));
                     }
@@ -69,8 +68,7 @@ namespace StructuredMeshGenerator {
                         auto dofBC = new map<DOFType, double>();
                         dofBC->insert(pair<DOFType, double>(DOFType::Position1, coordinateVector[0]));
                         dofBC->insert(pair<DOFType, double>(DOFType::Position2, coordinateVector[1]));
-                        auto bc =
-                                boundaryConditionsSet->at(boundary.first).insert(pair<unsigned, BoundaryCondition *>(
+                        boundaryConditionsSet->at(boundary.first).insert(pair<unsigned, BoundaryCondition *>(
                                         *node->id.global, new BoundaryCondition(Dirichlet,  dofBC)));
                     }
                     break;
@@ -84,8 +82,7 @@ namespace StructuredMeshGenerator {
                         auto dofBC = new map<DOFType, double>();
                         dofBC->insert(pair<DOFType, double>(DOFType::Position1, coordinateVector[0]));
                         dofBC->insert(pair<DOFType, double>(DOFType::Position2, coordinateVector[1]));
-                        auto bc =
-                                boundaryConditionsSet->at(boundary.first).insert(pair<unsigned, BoundaryCondition *>(
+                        boundaryConditionsSet->at(boundary.first).insert(pair<unsigned, BoundaryCondition *>(
                                         *node->id.global, new BoundaryCondition(Dirichlet,  dofBC)));
                     }
                     break;
@@ -102,8 +99,59 @@ namespace StructuredMeshGenerator {
                                                  double shearX, double shearY, double shearZ) {
 
     }
+    
+    
 
     DomainBoundaryConditions *DomainBoundaryFactory::getDomainBoundaryConditions() const {
         return _domainBoundaryConditions;
     }
+
+    void DomainBoundaryFactory::ellipse(map<Direction, unsigned int> &nodesPerDirection, double radius1, double radius2) {
+
+        auto pi = acos(-1.0);
+        auto theta = 0.0;
+        unsigned numberOfNodes = 0;
+        double stepTheta;
+        vector<double> coordinateVector(2, 0);
+
+        auto boundaryConditionsSet = new map<Position, map<unsigned, BoundaryCondition *>>();
+
+        for (auto& boundary : *_mesh->boundaryNodes) {
+            boundaryConditionsSet->insert(pair<Position, map<unsigned, BoundaryCondition *>>(
+                    boundary.first, map<unsigned, BoundaryCondition *>()));
+            switch (boundary.first) {
+                case Bottom:
+                    theta = 5.0 * pi / 4.0;
+                    numberOfNodes = nodesPerDirection[One];
+                    break;
+                case Right:
+                    theta = 7.0 * pi / 4.0;
+                    numberOfNodes = nodesPerDirection[Two];
+                    break;
+                case Top:
+                    theta = pi / 4.0;
+                    numberOfNodes = nodesPerDirection[One];
+                    break;
+                case Left:
+                    theta = 3.0 * pi / 4.0;
+                    numberOfNodes = nodesPerDirection[Two];
+                    break;
+                default:
+                    throw runtime_error("An ellipse can only have bottom, right, top, and left boundaries.");
+            }
+            stepTheta = (pi / 2.0) / (numberOfNodes - 1);
+            for (int i = 0; i < numberOfNodes; i++) {
+                auto dofBC = new map<DOFType, double>();
+                dofBC->insert(pair<DOFType, double>(DOFType::Position1, radius1 * cos(theta + i * stepTheta)));
+                dofBC->insert(pair<DOFType, double>(DOFType::Position2, radius2 * sin(theta + i * stepTheta)));
+                boundaryConditionsSet->at(boundary.first).insert(
+                        pair<unsigned, BoundaryCondition *>(*boundary.second->at(i)->id.global,
+                                                            new BoundaryCondition(Dirichlet, dofBC)));
+            }
+        }
+        _domainBoundaryConditions = new DomainBoundaryConditions(boundaryConditionsSet);
+    }
+
+
+
 } // StructuredMeshGenerator

@@ -379,7 +379,7 @@ namespace Discretization {
         outputFile << "DATASET UNSTRUCTURED_GRID \n";
         outputFile << "POINTS " << totalNodesVector->size() << " double\n";
         for (auto &node: *totalNodesVector) {
-            auto coordinates = node->coordinates.positionVector(coordinateType);
+            auto coordinates = node->coordinates.positionVector3D(coordinateType);
             outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << "\n";
         }
         outputFile.close();

@@ -297,9 +297,9 @@ namespace LinearAlgebra {
             qualifiedPositionsAndPoints.clear();
             availablePositionsAndDepth.clear();
         }
-        cout << "Fixed DOF matrix" << endl;
+/*        cout << "Fixed DOF matrix" << endl;
         _fixedDOFMatrix->print();
-        cout << "  " << endl;
+        cout << "  " << endl;*/
     }
 
     void AnalysisLinearSystemInitializer::_createTotalDOFSubMatrix() {
@@ -435,15 +435,13 @@ namespace LinearAlgebra {
         
     void AnalysisLinearSystemInitializer::_createRHS() {
         //Marching through all the free DOFs
-        _RHS = new vector<double>(*numberOfDOFs, 0);
-          _RHS = new vector<double>(*numberOfFreeDOFs, 0);
-      for (auto &dof: *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
+        _RHS = new vector<double>(*numberOfFreeDOFs, 0);
+        for (auto &dof: *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
             auto node = _mesh->nodeFromID(*dof->parentNode);
             
             //Get all the neighbouring DOFs with the same type
-            auto dofGraph =
-                    IsoParametricNodeGraph(node, 5, _parametricCoordToNodeMap, _mesh->nodesPerDirection).
-                            getSpecificDOFGraph(dof->type());
+            auto dofGraph = IsoParametricNodeGraph(node, 5, _parametricCoordToNodeMap, _mesh->nodesPerDirection).
+                                       getSpecificDOFGraph(dof->type());
             //Marching through all the neighbouring DOFs
             for (auto &neighbour: dofGraph) {
                 for (auto &neighbourDof: neighbour.second) {
@@ -465,9 +463,9 @@ namespace LinearAlgebra {
         _totalDOFMatrix = nullptr;
         
         //print vector
-/*        for (auto &value: *_RHS) {
-            cout << value << endl;
-        }*/
+        for (auto &value: *_RHS) {
+            //cout << value << endl;
+        }
     }
 
     map<short unsigned, map<Direction, map<vector<Position>, short>>> AnalysisLinearSystemInitializer::

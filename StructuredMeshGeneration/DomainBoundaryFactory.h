@@ -21,6 +21,8 @@ namespace StructuredMeshGenerator {
 
         void parallelogram(map<Direction, unsigned>& nodesPerDirection, double lengthX, double lengthY,
                            double rotAngle = 0, double shearX = 0, double shearY = 0);
+
+        void ellipse(map<Direction, unsigned> &nodesPerDirection, double radius1, double radius2);
         
         void parallelepiped(map<Direction, unsigned>& nodesPerDirection,
                                                  double stepX, double stepY, double stepZ,

@@ -173,6 +173,7 @@ namespace NumericalAnalysis {
         dofID = 0;
         for (auto &dof : *_boundedDegreesOfFreedomList) {
             (*dof->id->value) = dofID;
+            //dof->print(true);
             dofID++;
         }
 
