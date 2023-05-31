@@ -264,6 +264,15 @@ namespace Discretization {
             positions.insert(pair<vector<Position>, short unsigned>(
                     sumPoints, *min_element(sumDepth.begin(), sumDepth.end())));
         }
+        
+        for (auto &direction: positionsAtDirection) {
+            for (auto &position: direction.second) {
+                if (position.second == 0) {
+                    direction.second.erase(position.first);
+                    break;
+                }
+            }
+        }
 
         return positionsAtDirection;
     }

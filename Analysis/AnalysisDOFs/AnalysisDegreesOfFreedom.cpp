@@ -15,7 +15,9 @@ namespace NumericalAnalysis {
         fluxDegreesOfFreedom = dofInitializer.fluxDegreesOfFreedom;
         totalDegreesOfFreedomMap = dofInitializer.totalDegreesOfFreedomMap;
         totalDegreesOfFreedomMapInverse = dofInitializer.totalDegreesOfFreedomMapInverse;
-
+        numberOfFreeDOFs = new unsigned(freeDegreesOfFreedom->size());
+        numberOfFixedDOFs = new unsigned(fixedDegreesOfFreedom->size());
+        numberOfDOFs = new unsigned(totalDegreesOfFreedomMap->size());
         //printDOFCount();
     }
     
@@ -25,10 +27,17 @@ namespace NumericalAnalysis {
         delete freeDegreesOfFreedom;
         delete fixedDegreesOfFreedom;
         delete fluxDegreesOfFreedom;
+        delete numberOfFreeDOFs;
+        delete numberOfFixedDOFs;
+        delete numberOfDOFs;
         totalDegreesOfFreedom = nullptr;
         freeDegreesOfFreedom = nullptr;
         fixedDegreesOfFreedom = nullptr;
         fluxDegreesOfFreedom = nullptr;
+        numberOfFreeDOFs = nullptr;
+        numberOfFixedDOFs = nullptr;
+        numberOfDOFs = nullptr;
+        
     }
     
 

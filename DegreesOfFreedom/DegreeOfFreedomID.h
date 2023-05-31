@@ -25,6 +25,8 @@ namespace DegreesOfFreedom {
         
         //Pointer to the value of the degree of freedom
         unsigned int* value;
+        
+        unsigned int* globalValue;
 
         //Constant reference to an enum that indicates whether the degree of freedom is
         // fixed (Dirichlet BC), flux (Neumann BC), or free.

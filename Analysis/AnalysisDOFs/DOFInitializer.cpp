@@ -29,7 +29,7 @@ namespace NumericalAnalysis {
         _assignDOFIDs();
         _reconstructTotalDOFList(mesh);
         _assignDOFToNodes(mesh);
-        _createTotalDOFMap(mesh);
+        _createTotalDOFDataStructures(mesh);
         _listPtrToVectorPtr(freeDegreesOfFreedom, _freeDegreesOfFreedomList);
         _listPtrToVectorPtr(boundedDegreesOfFreedom, _boundedDegreesOfFreedomList);
         for (auto & fluxDOF : *_fluxDegreesOfFreedomList){
@@ -127,7 +127,7 @@ namespace NumericalAnalysis {
                 return a->type() < b->type();
             return *a->parentNode < *b->parentNode;
         });
-
+        //THIS IS WORKING
         _boundedDegreesOfFreedomList->unique([](DegreeOfFreedom *a, DegreeOfFreedom *b) {
             return *a->parentNode == *b->parentNode && a->type() == b->type();
         });
@@ -150,11 +150,11 @@ namespace NumericalAnalysis {
             }
             return false;
         });*/
-        _boundedDegreesOfFreedomList->sort([&mesh](DegreeOfFreedom *a, DegreeOfFreedom *b) {
+/*        _boundedDegreesOfFreedomList->sort([&mesh](DegreeOfFreedom *a, DegreeOfFreedom *b) {
             auto aNodeGlobalID = (*mesh->nodeFromID((*a->parentNode))->id.global);
             auto bNodeGlobalID = (*mesh->nodeFromID((*b->parentNode))->id.global);
             return aNodeGlobalID < bNodeGlobalID;
-        });
+        });*/
         
 /*        for (auto &dof : *_boundedDegreesOfFreedomList) {
             dof->print(true);
@@ -178,13 +178,15 @@ namespace NumericalAnalysis {
         }
 
     }
-
     void DOFInitializer::_reconstructTotalDOFList(Mesh* mesh) const {
         _freeDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
             return (*a->id->value) < (*b->id->value);
         });
         _boundedDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
             return (*a->id->value) < (*b->id->value);
+        });
+        _boundedDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
+            return (*a->parentNode) < (*b->parentNode);
         });
         _totalDegreesOfFreedomList->insert(_totalDegreesOfFreedomList->end(),
                                            _freeDegreesOfFreedomList->begin(), _freeDegreesOfFreedomList->end());
@@ -203,13 +205,23 @@ namespace NumericalAnalysis {
         }
     }
 
-    void DOFInitializer::_createTotalDOFMap(Mesh *mesh) const {
+    void DOFInitializer::_createTotalDOFDataStructures(Mesh *mesh) const {
         auto dofId = 0;
         for (auto &dof : *_totalDegreesOfFreedomList) {
+            dof->id->globalValue = new unsigned int (dofId);
             totalDegreesOfFreedomMap->insert(pair<int, DegreeOfFreedom *>(dofId, dof));
             totalDegreesOfFreedomMapInverse->insert(pair<DegreeOfFreedom *, int>(dof, dofId));
             dofId++;
         }
+/*        unsigned dofID = 0;
+        for (auto& node : *mesh->totalNodesVector){
+            for (auto& dof : *node->degreesOfFreedom){
+                dof->id->globalValue = new unsigned int (dofID);
+                totalDegreesOfFreedomMap->insert(pair<int, DegreeOfFreedom *>(dofID, dof));
+                totalDegreesOfFreedomMapInverse->insert(pair<DegreeOfFreedom *, int>(dof, dofID));
+                dofID++;
+            }
+        }*/
     }
 
     void DOFInitializer::_listPtrToVectorPtr(vector<DegreeOfFreedom *> *vector, list<DegreeOfFreedom *> *list) {

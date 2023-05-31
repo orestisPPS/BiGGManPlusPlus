@@ -69,7 +69,7 @@ namespace LinearAlgebra {
         static vector<double> getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints,
                                                               Direction& direction, unsigned short errorOrder, unsigned short derivativeOrder);
         
-        static map<Direction, map<Position, unsigned short>>
+        map<Direction, map<Position, unsigned short>>
         getNumberOfPointsForPositionsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints);
         
     };

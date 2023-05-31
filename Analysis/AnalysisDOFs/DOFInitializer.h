@@ -45,7 +45,7 @@ namespace NumericalAnalysis {
 
         void _assignDOFToNodes(Mesh *mesh) const;
         
-        void _createTotalDOFMap(Mesh *mesh) const;
+        void _createTotalDOFDataStructures(Mesh *mesh) const;
         
         static void _listPtrToVectorPtr(vector<DegreeOfFreedom*> *vector, list<DegreeOfFreedom*> *list) ;
         
