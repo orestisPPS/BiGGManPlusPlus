@@ -42,8 +42,9 @@ namespace LinearAlgebra {
 
     void AnalysisLinearSystemInitializer::_createMatrix() {
         //_createFixedDOFSubMatrix();
-        _createFreeDOFSubMatrix();
         _createTotalDOFSubMatrix();
+        _createFreeDOFSubMatrix();
+
     }
 
     //Creates a matrix with consistent order across the domain. The scheme type is defined by the node neighbourhood.
@@ -174,7 +175,7 @@ namespace LinearAlgebra {
             }
         }
         cout << "Free DOF matrix" << endl;
-        //_freeDOFMatrix->print();
+        _freeDOFMatrix->print();
         cout << "  " << endl;
     }
 
@@ -303,94 +304,49 @@ namespace LinearAlgebra {
     }
 
     void AnalysisLinearSystemInitializer::_createTotalDOFSubMatrix() {
-
-        //Define the directions of the simulation
         auto directions = _mesh->directions();
         short unsigned maxDerivativeOrder = 2;
         auto templatePositionsAndPointsMap = _initiatePositionsAndPointsMap(maxDerivativeOrder, directions);
         auto qualifiedPositionsAndPoints = _initiatePositionsAndPointsMap(maxDerivativeOrder, directions);
-        auto availablePositionsAndPoints = _initiatePositionsAndPointsMap(maxDerivativeOrder, directions);
-
-
-        //Create Scheme Builder for utility functions
         auto schemeBuilder = FiniteDifferenceSchemeBuilder(_specs);
 
-        //Define the error order for each derivative order
         auto errorOrderDerivative1 = _specs->getErrorOrderOfVariableSchemeTypeForDerivativeOrder(1);
         auto errorOrderDerivative2 = _specs->getErrorOrderOfVariableSchemeTypeForDerivativeOrder(2);
 
+        schemeBuilder.templatePositionsAndPoints(1, errorOrderDerivative1, directions, templatePositionsAndPointsMap[1]);
+        schemeBuilder.templatePositionsAndPoints(2, errorOrderDerivative2, directions, templatePositionsAndPointsMap[2]);
 
-        //Define the positions needed for the scheme at each direction as well as the number of points needed.
-        schemeBuilder.templatePositionsAndPoints(1, errorOrderDerivative1, directions,
-                                                 templatePositionsAndPointsMap[1]);
-        schemeBuilder.templatePositionsAndPoints(2, errorOrderDerivative2, directions,
-                                                 templatePositionsAndPointsMap[2]);
-        //Find the maximum number of neighbours needed for the desired order of accuracy. Used as input node graph depth.
         auto maxNeighbours = schemeBuilder.getMaximumNumberOfPointsForArbitrarySchemeType();
 
-        unsigned positionI = 0;
-        unsigned positionJ = 0;
-
-        //Iterate over the free degrees of freedom
-        for (auto &dof: *_analysisDegreesOfFreedom->totalDegreesOfFreedom) {
-            //for (auto &dof: *_analysisDegreesOfFreedom->fixedDegreesOfFreedom) {
-            //Node with the DOF
+        for (auto &dof : *_analysisDegreesOfFreedom->totalDegreesOfFreedom) {
             auto node = _mesh->nodeFromID(*dof->parentNode);
+            auto secondOrderCoefficients = _mathematicalProblem->pde->properties->getLocalProperties(*node->id.global).secondOrderCoefficients;
+            auto firstOrderCoefficients = _mathematicalProblem->pde->properties->getLocalProperties(*node->id.global).firstOrderCoefficients;
+            auto zerothOrderCoefficient = _mathematicalProblem->pde->properties->getLocalProperties(*node->id.global).zerothOrderCoefficient;
 
-            //Find PDE Coefficients
-            auto secondOrderCoefficients =
-                    _mathematicalProblem->pde->properties->getLocalProperties(*node->id.global).secondOrderCoefficients;
-            auto firstOrderCoefficients =
-                    _mathematicalProblem->pde->properties->getLocalProperties(*node->id.global).firstOrderCoefficients;
-            auto zerothOrderCoefficients =
-                    _mathematicalProblem->pde->properties->getLocalProperties(*node->id.global).zerothOrderCoefficient;
-
-            //Jusqu'ici, tout va bien
-            auto graph = IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap,
-                                                _mesh->nodesPerDirection);
-
+            auto graph = IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap, _mesh->nodesPerDirection);
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
-            //Jusqu'ici, tout va bien
 
-            vector<DegreeOfFreedom*> colinearDOFDerivative1, colinearDOFDerivative2;
-            for (auto &direction: directions) {
-                // 1) Map with template positions and the number of neighbours needed for different scheme types to achieve
-                //    the desired order of accuracy. Each position vector is a map to finite difference scheme
-                //    ({Left}->Backward, {Right}->Forward, {Left, Right}->Central).
-                // 2) Map the available positions with the number of neighbours available
-                // 3) Check if the available positions are qualified for the desired order of accuracy stencil.
-                _checkIfAvailableAreQualified(availablePositionsAndDepth.at(direction),
-                                              templatePositionsAndPointsMap[1][direction],
-                                              qualifiedPositionsAndPoints[1][direction]);
-                _checkIfAvailableAreQualified(availablePositionsAndDepth.at(direction),
-                                              templatePositionsAndPointsMap[2][direction],
-                                              qualifiedPositionsAndPoints[2][direction]);
+            for (auto &direction : directions) {
+                _checkIfAvailableAreQualified(availablePositionsAndDepth.at(direction), templatePositionsAndPointsMap[1][direction], qualifiedPositionsAndPoints[1][direction]);
+                _checkIfAvailableAreQualified(availablePositionsAndDepth.at(direction), templatePositionsAndPointsMap[2][direction], qualifiedPositionsAndPoints[2][direction]);
 
-                //Jusqu'ici, tout va bien
-                //Mais l'important c'est pas la chute, c'est l'atterisage!!!
-                auto firstDerivativeSchemeWeights = schemeBuilder.getSchemeWeightsFromQualifiedPositions(
-                        qualifiedPositionsAndPoints[1][direction], direction, errorOrderDerivative1, 1);
-                auto secondDerivativeSchemeWeights = schemeBuilder.getSchemeWeightsFromQualifiedPositions(
-                        qualifiedPositionsAndPoints[2][direction], direction, errorOrderDerivative2, 2);
+                auto firstDerivativeSchemeWeights = schemeBuilder.getSchemeWeightsFromQualifiedPositions(qualifiedPositionsAndPoints[1][direction], direction, errorOrderDerivative1, 1);
+                auto secondDerivativeSchemeWeights = schemeBuilder.getSchemeWeightsFromQualifiedPositions(qualifiedPositionsAndPoints[2][direction], direction, errorOrderDerivative2, 2);
 
                 auto directionIndex = spatialDirectionToUnsigned[direction];
-
-                //Jusqu'ici, tout va bien
-                //Mais l'important c'est pas la chute, c'est l'atterisage!!!
                 auto firstDerivativeCoefficient = firstOrderCoefficients->at(directionIndex);
                 auto secondDerivativeCoefficient = secondOrderCoefficients->at(directionIndex, directionIndex);
 
-                //Jusqu'ici, tout va bien
-                //Mais l'important c'est pas la chute, c'est l'atterisage!!!
                 auto filterDerivative1 = map<Position, unsigned short>();
-                for (auto &tuple: qualifiedPositionsAndPoints[1][direction]) {
-                    for (auto &point: tuple.first) {
+                for (auto &tuple : qualifiedPositionsAndPoints[1][direction]) {
+                    for (auto &point : tuple.first) {
                         filterDerivative1.insert(pair<Position, unsigned short>(point, tuple.second));
                     }
                 }
                 auto filterDerivative2 = map<Position, unsigned short>();
-                for (auto &tuple: qualifiedPositionsAndPoints[2][direction]) {
-                    for (auto &point: tuple.first) {
+                for (auto &tuple : qualifiedPositionsAndPoints[2][direction]) {
+                    for (auto &point : tuple.first) {
                         filterDerivative2.insert(pair<Position, unsigned short>(point, tuple.second));
                     }
                 }
@@ -398,6 +354,7 @@ namespace LinearAlgebra {
                 auto nodeGraphDerivative1 = graph.getNodeGraph(filterDerivative1);
                 auto nodeGraphDerivative2 = graph.getNodeGraph(filterDerivative2);
 
+                vector<DegreeOfFreedom*> colinearDOFDerivative1, colinearDOFDerivative2;
 
                 if (dof->id->constraintType() == Free) {
                     colinearDOFDerivative1 = graph.getColinearDOF(dof->type(), direction, nodeGraphDerivative1);
@@ -405,31 +362,30 @@ namespace LinearAlgebra {
                 } else {
                     colinearDOFDerivative1 = graph.getColinearDOFOnBoundary(dof->type(), direction, nodeGraphDerivative1);
                     colinearDOFDerivative2 = graph.getColinearDOFOnBoundary(dof->type(), direction, nodeGraphDerivative2);
-                    auto lol = 0;
                 }
 
-                //Calculate the fucking scheme
-                positionI = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
+                unsigned positionI = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
                 for (auto iDof = 0; iDof < colinearDOFDerivative1.size(); iDof++) {
-                    positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOFDerivative1[iDof]);
-                    _totalDOFMatrix->at(positionI, positionJ) =
-                            _totalDOFMatrix->at(positionI, positionJ) +
-                            firstDerivativeSchemeWeights[iDof] * firstDerivativeCoefficient;
-                    bool lol = 0;
+                    unsigned positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOFDerivative1[iDof]);
+                    _totalDOFMatrix->at(positionI, positionJ) += firstDerivativeSchemeWeights[iDof] * firstDerivativeCoefficient;
                 }
                 for (auto iDof = 0; iDof < colinearDOFDerivative2.size(); iDof++) {
-                    positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOFDerivative2[iDof]);
-                    _totalDOFMatrix->at(positionI, positionJ) =
-                            _totalDOFMatrix->at(positionI, positionJ) +
-                            secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient;
-                    bool lol = false;
-
+                    unsigned positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOFDerivative2[iDof]);
+                    _totalDOFMatrix->at(positionI, positionJ) += secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient;
+/*                    if (positionI == positionJ)
+                        cout<< "Diagonal element: " << _totalDOFMatrix->at(positionI, positionJ) <<
+                         " "<< secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient<<  endl;*/
                 }
+
+                colinearDOFDerivative1.clear();
+                colinearDOFDerivative2.clear();
             }
+
+            qualifiedPositionsAndPoints.clear();
+            availablePositionsAndDepth.clear();
         }
-/*        cout << "Total DOF matrix" << endl;
+        cout << "Total DOF matrix" << endl;
         _totalDOFMatrix->print();
-        cout << "  " << endl;*/
     }
 
 
@@ -442,7 +398,7 @@ namespace LinearAlgebra {
 
             //Get all the neighbouring DOFs with the same type
             auto dofGraph =
-                    IsoParametricNodeGraph(node, 5, _parametricCoordToNodeMap, _mesh->nodesPerDirection).
+                    IsoParametricNodeGraph(node, 1, _parametricCoordToNodeMap, _mesh->nodesPerDirection).
                             getSpecificDOFGraph(dof->type());
             //Marching through all the neighbouring DOFs
             for (auto &neighbour: dofGraph) {
@@ -453,8 +409,10 @@ namespace LinearAlgebra {
                         unsigned i = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
                         //unsigned i = *neighbourDof->id->value;
                         unsigned j = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(neighbourDof);
+                        cout<<_totalDOFMatrix->at(i, j)<<endl;
                         //_RHS->at(*dof->id->value) -= _fixedDOFMatrix->at(i, j) * neighbourDof->value();
                         _RHS->at(*dof->id->value) -= _totalDOFMatrix->at(i, j) * neighbourDof->value();
+                        //_RHS->at(*dof->id->value) -= 1.0 * neighbourDof->value();
                     }
                 }
             }

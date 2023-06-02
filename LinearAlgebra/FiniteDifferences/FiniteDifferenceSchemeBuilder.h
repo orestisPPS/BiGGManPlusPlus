@@ -57,16 +57,16 @@ namespace LinearAlgebra {
         //For example Order 1, type central, -1 points
         map<unsigned, map<FDSchemeType, int>> schemeOrderToSchemeTypePointsDerivative2();
 
-        static map<Direction, map<FDSchemeType, vector<Position>>> schemeTypeToPositions();
+        map<Direction, map<FDSchemeType, vector<Position>>> schemeTypeToPositions();
         
-        static map<Direction, map<vector<Position>, FDSchemeType>> positionsToSchemeType();
+        map<Direction, map<vector<Position>, FDSchemeType>> positionsToSchemeType();
         
         //Use this when the error order is fixed and the scheme varies across the domain.
         void templatePositionsAndPoints(short unsigned derivativeOrder, short unsigned errorOrder,
                                         vector<Direction>& directions,
                                         map<Direction, map<vector<Position>, short int>>& positionsAndPoints);
 
-        static vector<double> getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints,
+        vector<double> getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints,
                                                               Direction& direction, unsigned short errorOrder, unsigned short derivativeOrder);
         
         map<Direction, map<Position, unsigned short>>

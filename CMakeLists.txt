@@ -97,6 +97,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Direct/Cholesky.cpp
         LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.h
         LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.cpp
-        LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp LinearAlgebra/Operations/NumberOperations.h LinearAlgebra/Operations/NumberOperations.cpp LinearAlgebra/FiniteDifferences/FDWeightCalculator.h PartialDifferentialEquations/FieldProperties.h StructuredMeshGeneration/DomainBoundaryFactory.h StructuredMeshGeneration/DomainBoundaryFactory.cpp)
+        LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp LinearAlgebra/Operations/NumberOperations.h LinearAlgebra/Operations/NumberOperations.cpp LinearAlgebra/FiniteDifferences/FDWeightCalculator.h PartialDifferentialEquations/FieldProperties.h StructuredMeshGeneration/DomainBoundaryFactory.h StructuredMeshGeneration/DomainBoundaryFactory.cpp LinearAlgebra/AnalysisLinearSystemInitializer2.h LinearAlgebra/AnalysisLinearSystemInitializer2.cpp)
         
         

@@ -182,9 +182,9 @@ namespace NumericalAnalysis {
         _freeDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
             return (*a->id->value) < (*b->id->value);
         });
-        _boundedDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
+/*        _boundedDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
             return (*a->id->value) < (*b->id->value);
-        });
+        });*/
         _boundedDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
             return (*a->parentNode) < (*b->parentNode);
         });
@@ -192,9 +192,10 @@ namespace NumericalAnalysis {
                                            _freeDegreesOfFreedomList->begin(), _freeDegreesOfFreedomList->end());
         _totalDegreesOfFreedomList->insert(_totalDegreesOfFreedomList->end(),
                                            _boundedDegreesOfFreedomList->begin(), _boundedDegreesOfFreedomList->end());
-        _totalDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
+/*        _totalDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
             return (*a->parentNode) < (*b->parentNode);
-        });
+        });*/
+        //V total ->
     }
 
     void DOFInitializer::_assignDOFToNodes(Mesh *mesh) const {
