@@ -10,11 +10,12 @@
 #include <iostream>
 #include <tuple>
 #include <vector>
-#include "cmath"
+#include <cmath>
 #include <limits>
 #include <omp.h>
 #include <memory>
 #include <stdexcept>
+#include <chrono>
 
 using namespace std;
 
@@ -382,32 +383,45 @@ namespace LinearAlgebra {
         vector<T> multiplyWithVector(const vector<T>& vector) const {
             if (_numberOfColumns != vector.size())
                 throw invalid_argument("The dimensions of the array and the vector are not the same.");
-            auto result = std::vector<T>(_numberOfRows);
+
+            auto result  = std::vector<T>(_numberOfRows);
+
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = 0; j < _numberOfColumns; ++j) {
                     result[i] += _array[i * _numberOfColumns + j] * vector[j];
                 }
             }
+            return result;
         }
+
 
         Array<T> transpose() const{
             if (_numberOfRows != _numberOfColumns)
                 throw invalid_argument("The matrix is not square.");
+            
+            Array<T> transpose(_numberOfColumns, _numberOfRows);
+            
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = i + 1; j < _numberOfColumns; ++j) {
-                    swap(_array[i * _numberOfColumns + j], _array[j * _numberOfColumns + i]);
+                    transpose._array[i * _numberOfColumns + j] = _array[j * _numberOfColumns + i];
                 }
             }
         }
 
-        void transposeIntoThis(){
-            if (_numberOfRows != _numberOfColumns)
-                throw invalid_argument("The matrix is not square.");
+        void transposeIntoThis() {
+            auto temp_vector = vector<T>(_array.size());
+            auto temp_rows = _numberOfRows;
+            auto temp_columns = _numberOfColumns;
+
             for (int i = 0; i < _numberOfRows; ++i) {
-                for (int j = i + 1; j < _numberOfColumns; ++j) {
-                    swap(_array[i * _numberOfColumns + j], _array[j * _numberOfColumns + i]);
+                for (int j = 0; j < _numberOfColumns; ++j) {
+                    temp_vector[j * temp_rows + i] = _array[i * _numberOfColumns + j];
                 }
             }
+
+            _array = temp_vector;
+            _numberOfRows = temp_columns;
+            _numberOfColumns = temp_rows;
         }
 
         bool isSquare() const {

@@ -18,6 +18,8 @@ namespace StructuredMeshGenerator{
     
     void MeshFactory::buildMesh(unsigned short schemeOrder) const {
         
+        auto start = chrono::steady_clock::now();
+        
         auto pdeProperties = new SecondOrderLinearPDEProperties(2, false, LocallyAnisotropic);
         pdeProperties->setLocallyAnisotropicProperties(pdePropertiesFromMetrics);
 
@@ -66,6 +68,9 @@ namespace StructuredMeshGenerator{
             }
             node->coordinates.addPositionVector(coords);
         }
+        
+        auto end = chrono::steady_clock::now();
+        cout<< "Mesh Built in " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
 
 /*        for (auto &node : *mesh->totalNodesVector){
             auto coords = new vector<double>();

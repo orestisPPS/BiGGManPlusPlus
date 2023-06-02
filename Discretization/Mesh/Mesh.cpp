@@ -299,8 +299,7 @@ namespace Discretization {
                 //Get the co-linear nodal coordinates (Left-Right -> 1, Up-Down -> 2, Front-Back -> 3)
                 auto parametricCoords = graph->getSameColinearNodalCoordinates(Parametric);
                 auto templateCoords = graph->getSameColinearNodalCoordinates(coordinateSystem);
-
-
+                
                 auto directionsVector = directions();
                 //March through all the directions I (g_i = d(x_j)/d(x_i))
                 for (auto&  directionI : directionsVector){//Initialize the weights vector. Their values depend on whether the mesh is uniform or not.

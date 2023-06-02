@@ -12,17 +12,13 @@ namespace NumericalAnalysis {
     
     StStFDTest::StStFDTest() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 5;
-        numberOfNodes[Direction::Two] = 5;
+        numberOfNodes[Direction::One] = 11;
+        numberOfNodes[Direction::Two] = 11;
         auto specs = new MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        //meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 8, 4);
-        meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
+        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);
+        //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
         meshFactory->buildMesh(2);
-        
-        
-        
-        
         
         
         auto filenameParaview = "firstMesh.vtk";

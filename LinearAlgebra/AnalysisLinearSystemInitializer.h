@@ -4,7 +4,6 @@
 
 #ifndef UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
 #define UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
-
 #include "Array/Array.h"
 #include "../Discretization/Node/IsoparametricNodeGraph.h"
 #include "../Utility/Exporters/Exporters.h"
@@ -28,13 +27,7 @@ namespace LinearAlgebra {
         ~AnalysisLinearSystemInitializer();
 
         LinearSystem* linearSystem;
-
-        unsigned* numberOfFreeDOFs;
-
-        unsigned* numberOfFixedDOFs;
-
-        unsigned* numberOfDOFs;
-
+        
         void createLinearSystem();
 
         void updateRHS();
@@ -53,17 +46,18 @@ namespace LinearAlgebra {
 
         AnalysisDegreesOfFreedom* _analysisDegreesOfFreedom;
 
-        Array<double>* _freeDOFMatrix;
+        Array<double>* _freeFreeMatrix;
 
         // Fixed DOF x Total DOF
-        Array<double>* _fixedDOFMatrix;
+        Array<double>* _fixedFreeMatrix;
 
         Array<double>* _totalDOFMatrix;
 
-        void _createMatrix();
+        void assembleMatrices();
 
-        void _createFixedDOFSubMatrix();
+        void _createFixedFreeDOFSubMatrix();
 
+        //Take the Free-Free sub-matrix from the total matrix that is arranged as follows [Free-Free, Free-Fixed, Fixed-Free, Fixed-Fixed]
         void _createFreeDOFSubMatrix();
 
         void _createTotalDOFSubMatrix();
@@ -140,11 +134,11 @@ namespace LinearAlgebra {
         
         AnalysisDegreesOfFreedom* _analysisDegreesOfFreedom;
         
-        Array<double>* _freeDOFMatrix;
+        Array<double>* _freeFreeMatrix;
         
         map<DegreeOfFreedom*, double>* _fixedDOFCoefficients;
         
-        void _createMatrix();
+        void assembleMatrices();
         
         void _calculateFixedDOFCoefficients();
         
