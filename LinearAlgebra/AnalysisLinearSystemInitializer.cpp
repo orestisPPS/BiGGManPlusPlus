@@ -17,7 +17,7 @@ namespace LinearAlgebra {
                                     _mathematicalProblem(problem),
                                     _specs(specs),
                                     _coordinateType(coordinateType) {
-        _rhsVector = new vector<double>(*_analysisDegreesOfFreedom->numberOfDOFs, 0);
+        _rhsVector = new vector<double>(*_analysisDegreesOfFreedom->numberOfFreeDOFs, 0);
         _totalDOFMatrix = new Array<double>(*_analysisDegreesOfFreedom->numberOfDOFs, *_analysisDegreesOfFreedom->numberOfDOFs, 1, 0);
         _freeFreeMatrix = new Array<double>(*_analysisDegreesOfFreedom->numberOfFreeDOFs, *_analysisDegreesOfFreedom->numberOfFreeDOFs, 1, 0);
         _fixedFreeMatrix = new Array<double>(*_analysisDegreesOfFreedom->numberOfFreeDOFs, *_analysisDegreesOfFreedom->numberOfFixedDOFs, 1, 0);
@@ -60,7 +60,7 @@ namespace LinearAlgebra {
         
         cout << "Free - Free DOF Sub-Matrix Assembled in : " <<
         std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
-        //_freeFreeMatrix->print();
+        _freeFreeMatrix->print();
     }
 
     void AnalysisLinearSystemInitializer::_createFreeFixedDOFSubMatrix() {
@@ -77,7 +77,7 @@ namespace LinearAlgebra {
         auto end = std::chrono::steady_clock::now(); // Stop the timer
         cout << "Fixed - Free Sub - Matrix Assembled in : " <<
         std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
-        //_fixedFreeMatrix->print();
+        _fixedFreeMatrix->print();
         cout << "  " << endl;
     }
 
@@ -168,7 +168,7 @@ namespace LinearAlgebra {
                 //Step that is calculated based on the average absolute difference of the colinear coordinates
                 auto step = VectorOperations::averageAbsoluteDifference(colinearCoordinates[direction][directionIndex]);
 
-                auto stepDerivative2 = pow(step, errorOrderDerivative2);
+                double stepDerivative2 = pow(step, errorOrderDerivative2);
 
                 auto positionI = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
                 for (auto iDof = 0; iDof < colinearDOFDerivative1.size(); iDof++) {
@@ -181,7 +181,8 @@ namespace LinearAlgebra {
                     auto positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(
                             colinearDOFDerivative2[iDof]);
                     _totalDOFMatrix->at(positionI, positionJ) +=
-                            secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient * (2 * stepDerivative2);
+                            //secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient * (2 * stepDerivative2);
+                            secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient / stepDerivative2;
                 }
                 colinearDOFDerivative1.clear();
                 colinearDOFDerivative2.clear();
@@ -190,7 +191,7 @@ namespace LinearAlgebra {
         auto end = std::chrono::steady_clock::now(); // Stop the timer
         cout << "Total DOF Matrix Assembled in "
              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
-        //_totalDOFMatrix->print();
+        _totalDOFMatrix->print();
     }
 
 
@@ -199,12 +200,14 @@ namespace LinearAlgebra {
         //Apply the boundary values into the RHS
         auto fixedValues = vector<double >(*_analysisDegreesOfFreedom->numberOfFixedDOFs, 0);
         for (auto & fixedDOF : *_analysisDegreesOfFreedom->fixedDegreesOfFreedom) {
+            //TODO check if ids are in the same order as the matrix
             fixedValues[*fixedDOF->id->value] = fixedDOF->value();
         }
         
-        auto dirichletContribution = _fixedFreeMatrix->multiplyWithVector(fixedValues);
-        for ( auto i = 0; i < dirichletContribution.size(); i++) {
-            _rhsVector->at(i) -= dirichletContribution[i];
+        auto dirichletContribution = vector<double>(_fixedFreeMatrix->multiplyWithVector(fixedValues));
+        
+        for ( auto i = 0; i < _rhsVector->size(); i++) {
+            _rhsVector->at(i) -= dirichletContribution[i] / 2;
             
         }
         delete _fixedFreeMatrix;

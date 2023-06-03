@@ -107,7 +107,6 @@ namespace StructuredMeshGenerator {
     }
 
     void DomainBoundaryFactory::ellipse(map<Direction, unsigned int> &nodesPerDirection, double radius1, double radius2) {
-
         auto pi = acos(-1.0);
         auto theta = 0.0;
         unsigned numberOfNodes = 0;
@@ -129,11 +128,11 @@ namespace StructuredMeshGenerator {
                     numberOfNodes = nodesPerDirection[Two];
                     break;
                 case Top:
-                    theta = pi / 4.0;
+                    theta = 3.0 * pi / 4.0;  // Corrected theta value for the top boundary
                     numberOfNodes = nodesPerDirection[One];
                     break;
                 case Left:
-                    theta = 3.0 * pi / 4.0;
+                    theta = pi / 4.0;  // Corrected theta value for the left boundary
                     numberOfNodes = nodesPerDirection[Two];
                     break;
                 default:
@@ -151,6 +150,7 @@ namespace StructuredMeshGenerator {
         }
         _domainBoundaryConditions = new DomainBoundaryConditions(boundaryConditionsSet);
     }
+
 
 
 

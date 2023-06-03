@@ -12,13 +12,15 @@ namespace NumericalAnalysis {
     
     StStFDTest::StStFDTest() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 11;
-        numberOfNodes[Direction::Two] = 11;
+        numberOfNodes[Direction::One] = 5;
+        numberOfNodes[Direction::Two] = 5;
         auto specs = new MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);
+        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 4, 4);
         //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
         meshFactory->buildMesh(2);
+        
+        meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk");
         
         auto pdeProperties =
                 new SecondOrderLinearPDEProperties(2, false, Isotropic);
@@ -29,6 +31,7 @@ namespace NumericalAnalysis {
         auto specsFD = new FDSchemeSpecs(2, 2, meshFactory->mesh->directions());
 
 
+/*        //--------------------------------CHAPRA PG 857---------------------------------------------------------------------
         auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                                                                         {{Temperature, 0}}));
         auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
@@ -36,7 +39,26 @@ namespace NumericalAnalysis {
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                                                                         {{Temperature, 50}}));
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                                                                        {{Temperature, 75}}));
+                                                                        {{Temperature, 75}}));*/
+        
+        //--------------------------------COMSOL TEST---------------------------------------------------------------------
+        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 0}}));
+        auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 0}}));
+        auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 200}}));
+        auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 100}}));
+
+/*        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 00}}));
+        auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 00}}));
+        auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 100}}));
+        auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 00}}));*/
         auto dummyBCMap = new map<Position, BoundaryCondition*>();
         dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Left, leftBC));
         dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Right, rightBC));
@@ -56,9 +78,11 @@ namespace NumericalAnalysis {
         
         analysis->solve();
         
+        
         analysis->applySolutionToDegreesOfFreedom();
         
-        auto targetCoords = vector<double>{0.5, 0.5};
+        //auto targetCoords = vector<double>{0.5, 0.5};
+        auto targetCoords = vector<double>{2, 2};
         auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-2);
         
         cout<<"Target Solution: "<< targetSolution[0] << endl;
@@ -66,6 +90,10 @@ namespace NumericalAnalysis {
         
         for (double i : *result) {
             cout << i << endl;
+        }*/
+
+/*        for (auto & fixedDOF : *analysis->degreesOfFreedom->fixedDegreesOfFreedom){
+            fixedDOF->print(true);
         }*/
         
         auto filenameParaview = "firstMesh.vtk";

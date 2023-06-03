@@ -73,6 +73,7 @@ namespace StructuredMeshGenerator{
             node->degreesOfFreedom->clear();
             node->coordinates.addPositionVector(coords);
         }
+        delete analysis->linearSystem;
         
         auto end = chrono::steady_clock::now();
         cout<< "Mesh Built in " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
