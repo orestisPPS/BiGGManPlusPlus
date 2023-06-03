@@ -55,10 +55,11 @@ namespace StructuredMeshGenerator{
                 new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specs, Parametric);
 
         analysis->solve();
-        auto result = analysis->linearSystem->solution;
+        
+/*        auto result = analysis->linearSystem->solution;
         for (double i : *result) {
             cout << i << endl;
-        }
+        }*/
         
         analysis->applySolutionToDegreesOfFreedom();
         

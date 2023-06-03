@@ -168,7 +168,7 @@ namespace LinearAlgebra {
                 //Step that is calculated based on the average absolute difference of the colinear coordinates
                 auto step = VectorOperations::averageAbsoluteDifference(colinearCoordinates[direction][directionIndex]);
 
-                auto stepDerivative2 = 1 / (pow(step, errorOrderDerivative2));
+                auto stepDerivative2 = pow(step, errorOrderDerivative2);
 
                 auto positionI = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
                 for (auto iDof = 0; iDof < colinearDOFDerivative1.size(); iDof++) {
@@ -181,7 +181,7 @@ namespace LinearAlgebra {
                     auto positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(
                             colinearDOFDerivative2[iDof]);
                     _totalDOFMatrix->at(positionI, positionJ) +=
-                            secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient * stepDerivative2;
+                            secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient * (2 * stepDerivative2);
                 }
                 colinearDOFDerivative1.clear();
                 colinearDOFDerivative2.clear();

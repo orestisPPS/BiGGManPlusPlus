@@ -30,13 +30,13 @@ namespace NumericalAnalysis {
 
 
         auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                                                                        {{Temperature, 200}}));
+                                                                        {{Temperature, 0}}));
         auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                                                                         {{Temperature, 100}}));
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                                                                        {{Temperature, 0}}));
+                                                                        {{Temperature, 50}}));
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                                                                        {{Temperature, 0}}));
+                                                                        {{Temperature, 75}}));
         auto dummyBCMap = new map<Position, BoundaryCondition*>();
         dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Left, leftBC));
         dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Right, rightBC));
@@ -52,15 +52,16 @@ namespace NumericalAnalysis {
         auto solver = new SolverLUP(1E-20, true);
         
         auto analysis =
-                new SteadyStateFiniteDifferenceAnalysis(problem, meshFactory->mesh, solver, specsFD, Parametric);
+                new SteadyStateFiniteDifferenceAnalysis(problem, meshFactory->mesh, solver, specsFD);
         
         analysis->solve();
         
         analysis->applySolutionToDegreesOfFreedom();
         
         auto targetCoords = vector<double>{0.5, 0.5};
-        auto targetSolution = analysis->getSolutionAtNode(targetCoords);
+        auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-2);
         
+        cout<<"Target Solution: "<< targetSolution[0] << endl;
 /*        auto result = analysis->linearSystem->solution;
         
         for (double i : *result) {
