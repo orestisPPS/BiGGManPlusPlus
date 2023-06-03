@@ -13,8 +13,7 @@ namespace NumericalAnalysis {
     public:
         
         SteadyStateFiniteDifferenceAnalysis(SteadyStateMathematicalProblem *mathematicalProblem, Mesh *mesh,
-                                            Solver *solver,
-                                            FDSchemeSpecs *schemeSpecs);
+                                            Solver *solver, FDSchemeSpecs *schemeSpecs, CoordinateType coordinateSystem = Natural);
     };
 
 } // NumericalAnalysis

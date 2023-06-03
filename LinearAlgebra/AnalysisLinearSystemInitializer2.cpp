@@ -37,15 +37,15 @@ namespace LinearAlgebra {
     void AnalysisLinearSystemInitializer2::createLinearSystem() {
         _createMatrix();
         _createRHS();
-        //linearSystem = new LinearSystem(_freeFreeMatrix, _RHS);
-        linearSystem = new LinearSystem(_freeFreeMatrix, _RHS);
+        //linearSystem = new LinearSystem(_freeFreeMatrix, _rhsVector);
+        linearSystem = new LinearSystem(_freeFreeMatrix, _rhsVector);
         //linearSystem->exportToMatlabFile("firstCLaplacecplace.m", "/home/hal9000/code/BiGGMan++/Testing/", true);
     }
 
     void AnalysisLinearSystemInitializer2::assembleMatrices() {
-        //_createFixedFreeDOFSubMatrix();
-        _createFreeDOFSubMatrix();
-        _createTotalDOFSubMatrix();
+        //_createFreeFixedDOFSubMatrix();
+        _createFreeFreeDOFSubMatrix();
+        _createTotalDOFMatrix();
     }
     
 */
@@ -74,7 +74,7 @@ namespace LinearAlgebra {
 
     //Creates a matrix with consistent order across the domain. The scheme type is defined by the node neighbourhood.
     //Error Order is user defined.
-    void AnalysisLinearSystemInitializer2::_createFreeDOFSubMatrix() {
+    void AnalysisLinearSystemInitializer2::_createFreeFreeDOFSubMatrix() {
 
         //Define the directions of the simulation
         auto directions = _mesh->directions();
@@ -206,7 +206,7 @@ namespace LinearAlgebra {
         cout << "  " << endl;
     }
 
-    void AnalysisLinearSystemInitializer2::_createFixedFreeDOFSubMatrix() {
+    void AnalysisLinearSystemInitializer2::_createFreeFixedDOFSubMatrix() {
 
         //Define the directions of the simulation
         auto directions = _mesh->directions();
@@ -330,7 +330,7 @@ namespace LinearAlgebra {
         cout << "  " << endl;
     }
 
-    void AnalysisLinearSystemInitializer2::_createTotalDOFSubMatrix() {
+    void AnalysisLinearSystemInitializer2::_createTotalDOFMatrix() {
         auto directions = _mesh->directions();
         short unsigned maxDerivativeOrder = 2;
         auto templatePositionsAndPointsMap = _initiatePositionsAndPointsMap(maxDerivativeOrder, directions);
@@ -418,8 +418,8 @@ namespace LinearAlgebra {
 
     void AnalysisLinearSystemInitializer2::_createRHS() {
         //Marching through all the free DOFs
-        _RHS = new vector<double>(*numberOfDOFs, 0);
-        _RHS = new vector<double>(*numberOfFreeDOFs, 0);
+        _rhsVector = new vector<double>(*numberOfDOFs, 0);
+        _rhsVector = new vector<double>(*numberOfFreeDOFs, 0);
         for (auto &dof: *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
             auto node = _mesh->nodeFromID(*dof->parentNode);
 
@@ -437,9 +437,9 @@ namespace LinearAlgebra {
                         //unsigned i = *neighbourDof->id->value;
                         unsigned j = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(neighbourDof);
                         cout<<_totalDOFMatrix->at(i, j)<<endl;
-                        //_RHS->at(*dof->id->value) -= _fixedFreeMatrix->at(i, j) * neighbourDof->value();
-                        _RHS->at(*dof->id->value) -= _totalDOFMatrix->at(i, j) * neighbourDof->value();
-                        //_RHS->at(*dof->id->value) -= 1.0 * neighbourDof->value();
+                        //_rhsVector->at(*dof->id->value) -= _fixedFreeMatrix->at(i, j) * neighbourDof->value();
+                        _rhsVector->at(*dof->id->value) -= _totalDOFMatrix->at(i, j) * neighbourDof->value();
+                        //_rhsVector->at(*dof->id->value) -= 1.0 * neighbourDof->value();
                     }
                 }
             }
@@ -451,7 +451,7 @@ namespace LinearAlgebra {
 
         //print vector
 */
-/*        for (auto &value: *_RHS) {
+/*        for (auto &value: *_rhsVector) {
             cout << value << endl;
         }*//*
 

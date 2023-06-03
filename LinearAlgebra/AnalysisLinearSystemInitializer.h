@@ -22,7 +22,7 @@ namespace LinearAlgebra {
 
     public:
         explicit AnalysisLinearSystemInitializer(AnalysisDegreesOfFreedom* analysisDegreesOfFreedom, Mesh* mesh,
-                                                 MathematicalProblem* mathematicalProblem, FDSchemeSpecs* specs);
+                                                 MathematicalProblem* mathematicalProblem, FDSchemeSpecs* specs, CoordinateType = Natural);
 
         ~AnalysisLinearSystemInitializer();
 
@@ -37,30 +37,30 @@ namespace LinearAlgebra {
         MathematicalProblem* _mathematicalProblem;
 
         FDSchemeSpecs* _specs;
-
-        Array<double> *_matrix;
-
-        vector<double> *_RHS;
+        
+        CoordinateType _coordinateType;
+        
+        vector<double> *_rhsVector;
 
         Mesh* _mesh;
 
         AnalysisDegreesOfFreedom* _analysisDegreesOfFreedom;
 
         Array<double>* _freeFreeMatrix;
-
-        // Fixed DOF x Total DOF
+        
         Array<double>* _fixedFreeMatrix;
 
         Array<double>* _totalDOFMatrix;
-
+        
         void assembleMatrices();
-
-        void _createFixedFreeDOFSubMatrix();
+        
+        //Take the Free-Fixed sub-matrix from the total matrix that is arranged as follows [Free-Free, Free-Fixed, Fixed-Free, Fixed-Fixed]
+        void _createFreeFixedDOFSubMatrix();
 
         //Take the Free-Free sub-matrix from the total matrix that is arranged as follows [Free-Free, Free-Fixed, Fixed-Free, Fixed-Fixed]
-        void _createFreeDOFSubMatrix();
+        void _createFreeFreeDOFSubMatrix();
 
-        void _createTotalDOFSubMatrix();
+        void _createTotalDOFMatrix();
 
         map<vector<double>, Node*>* _parametricCoordToNodeMap;
 
@@ -70,10 +70,7 @@ namespace LinearAlgebra {
         static void _checkIfAvailableAreQualified(map<vector<Position>, unsigned short>& availablePositionsAndPoints,
                                                   map<vector<Position>, short>& templatePositionsAndPoints,
                                                   map<vector<Position>, short>& qualifiedPositionsAndPoints);
-
-        tuple<FDSchemeType, short>
-        _getSchemeTypeAndOrderFromQualified(map<vector<Position>, short>& qualifiedPositionsAndPoints);
-
+        
         void _createRHS();
     };
 
@@ -128,7 +125,7 @@ namespace LinearAlgebra {
         
         Array<double> *_matrix;
         
-        vector<double> *_RHS;
+        vector<double> *_rhsVector;
         
         Mesh* _mesh;
         

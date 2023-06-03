@@ -20,27 +20,19 @@ namespace NumericalAnalysis {
         //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
         meshFactory->buildMesh(2);
         
+        auto pdeProperties =
+                new SecondOrderLinearPDEProperties(2, false, Isotropic);
+        pdeProperties->setIsotropicProperties(1,0,0,0);
         
-        auto filenameParaview = "firstMesh.vtk";
-        auto path = "/home/hal9000/code/BiGGMan++/Testing/";
-        auto mesh = meshFactory->mesh;
-        mesh->storeMeshInVTKFile(path, filenameParaview);
-    }
-
-    DomainBoundaryConditions* StStFDTest::createBC(Mesh *mesh) {
+        auto heatTransferPDE = new PartialDifferentialEquation(pdeProperties, Laplace);
         
-        /*auto boundaryFactory = new DomainBoundaryFactory(mesh);
-        return boundaryFactory->parallelogram(101, 101, 100, 100);*/
+        auto specsFD = new FDSchemeSpecs(2, 2, meshFactory->mesh->directions());
 
-/*        auto bcFunctionBottom = function<double (vector<double>*)> ([](vector<double>* x) {return  x->at(0) * x->at(0);} );
-        auto bcFunctionTop= function<double (vector<double>*)> ([](vector<double>* x) {return  x->at(0) * x->at(0) - 1;} );
-        auto bcFunctionRight = function<double (vector<double>*)> ([](vector<double>* x) {return 1 - x->at(1) * x->at(1);} );
-        auto bcFunctionLeft = function<double (vector<double>*)> ([](vector<double>* x) {return  - x->at(1) * x->at(1);} );*/
-        /*
+
         auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                                                                        {{Temperature, 0}}));
+                                                                        {{Temperature, 200}}));
         auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                                                                        {{Temperature, 75}}));
+                                                                        {{Temperature, 100}}));
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                                                                         {{Temperature, 0}}));
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
@@ -51,8 +43,37 @@ namespace NumericalAnalysis {
         dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Top, topBC));
         dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Bottom, bottomBC));
         
-        return new DomainBoundaryConditions(dummyBCMap);*/
+        auto boundaryConditions = new DomainBoundaryConditions(dummyBCMap);
+        
+        auto temperatureDOF = new TemperatureScalar_DOFType();
+        
+        auto problem = new SteadyStateMathematicalProblem(heatTransferPDE, boundaryConditions, temperatureDOF);
+        
+        auto solver = new SolverLUP(1E-20, true);
+        
+        auto analysis =
+                new SteadyStateFiniteDifferenceAnalysis(problem, meshFactory->mesh, solver, specsFD, Parametric);
+        
+        analysis->solve();
+        
+        analysis->applySolutionToDegreesOfFreedom();
+        
+        auto targetCoords = vector<double>{0.5, 0.5};
+        auto targetSolution = analysis->getSolutionAtNode(targetCoords);
+        
+/*        auto result = analysis->linearSystem->solution;
+        
+        for (double i : *result) {
+            cout << i << endl;
+        }*/
+        
+        auto filenameParaview = "firstMesh.vtk";
+        auto path = "/home/hal9000/code/BiGGMan++/Testing/";
+        auto mesh = meshFactory->mesh;
+        mesh->storeMeshInVTKFile(path, filenameParaview);
     }
+
+
     
     Field_DOFType* StStFDTest::createDOF() {
         //return new TemperatureScalar_DOFType();

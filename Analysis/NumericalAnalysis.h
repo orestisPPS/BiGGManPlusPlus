@@ -21,7 +21,7 @@ namespace NumericalAnalysis {
 
     class NumericalAnalysis {
         public:
-        NumericalAnalysis(MathematicalProblem* mathematicalProblem, Mesh *mesh, Solver* solver);
+        NumericalAnalysis(MathematicalProblem* mathematicalProblem, Mesh *mesh, Solver* solver, CoordinateType coordinateSystem = Natural);
         
         ~NumericalAnalysis();
         
@@ -38,6 +38,8 @@ namespace NumericalAnalysis {
         void solve() const;
         
         void applySolutionToDegreesOfFreedom() const;
+        
+        vector<double> getSolutionAtNode(vector<double>& nodeCoordinates, double tolerance = 1E-4) const;
         
     protected:
 

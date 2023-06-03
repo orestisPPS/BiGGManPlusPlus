@@ -9,11 +9,11 @@
 namespace NumericalAnalysis {
     
     SteadyStateFiniteDifferenceAnalysis::SteadyStateFiniteDifferenceAnalysis(
-        SteadyStateMathematicalProblem *mathematicalProblem, Mesh *mesh, Solver* solver,  FDSchemeSpecs *schemeSpecs) :
+        SteadyStateMathematicalProblem *mathematicalProblem, Mesh *mesh, Solver* solver,  FDSchemeSpecs *schemeSpecs, CoordinateType coordinateSystem) :
         FiniteDifferenceAnalysis(mathematicalProblem, mesh, solver, schemeSpecs){
         
         auto linearSystemInitializer =
-                new AnalysisLinearSystemInitializer(degreesOfFreedom, mesh, mathematicalProblem, schemeSpecs);
+                new AnalysisLinearSystemInitializer(degreesOfFreedom, mesh, mathematicalProblem, schemeSpecs, coordinateSystem);
         linearSystemInitializer->createLinearSystem();
         linearSystem = linearSystemInitializer->linearSystem;
         solver->setLinearSystem(linearSystem);

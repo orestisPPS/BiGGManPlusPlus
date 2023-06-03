@@ -384,5 +384,13 @@ namespace Discretization {
         outputFile.close();
     }
 
+    map<vector<double>, Node *> Mesh::getCoordinateToNodeMap(CoordinateType coordinateType) const {
+        map<vector<double>, Node *> coordinateToNodeMap;
+        for (auto &node: *totalNodesVector) {
+            coordinateToNodeMap.insert(pair<vector<double>, Node *>(node->coordinates.positionVector3D(coordinateType), node));
+        }
+        return coordinateToNodeMap;
+    }
+
 
 } // Discretization

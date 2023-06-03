@@ -26,8 +26,9 @@ namespace NumericalAnalysis {
         else
             _initiateBoundaryNodeDOFWithHomogenousBC(mesh, degreesOfFreedom, domainBoundaryConditions);
         _removeDuplicatesAndDelete(mesh);
+
+        _createTotalDOFList(mesh);
         _assignDOFIDs();
-        _reconstructTotalDOFList(mesh);
         _assignDOFToNodes(mesh);
         _createTotalDOFDataStructures(mesh);
         _listPtrToVectorPtr(freeDegreesOfFreedom, _freeDegreesOfFreedomList);
@@ -161,7 +162,20 @@ namespace NumericalAnalysis {
         }*/
 
     }
-
+    
+    void DOFInitializer::_createTotalDOFList(Mesh* mesh) const {
+        _freeDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
+            return (*a->parentNode) < (*b->parentNode);
+        });
+        _boundedDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
+            return (*a->parentNode) < (*b->parentNode);
+        });
+        _totalDegreesOfFreedomList->insert(_totalDegreesOfFreedomList->end(),
+                                           _freeDegreesOfFreedomList->begin(), _freeDegreesOfFreedomList->end());
+        _totalDegreesOfFreedomList->insert(_totalDegreesOfFreedomList->end(),
+                                           _boundedDegreesOfFreedomList->begin(), _boundedDegreesOfFreedomList->end());
+    }
+    
     void DOFInitializer::_assignDOFIDs() const {
         unsigned dofID = 0;
         for (auto &dof : *_freeDegreesOfFreedomList) {
@@ -178,26 +192,6 @@ namespace NumericalAnalysis {
         }
 
     }
-    void DOFInitializer::_reconstructTotalDOFList(Mesh* mesh) const {
-        _freeDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
-            return (*a->id->value) < (*b->id->value);
-        });
-/*        _boundedDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
-            return (*a->id->value) < (*b->id->value);
-        });*/
-        _boundedDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
-            return (*a->parentNode) < (*b->parentNode);
-        });
-        _totalDegreesOfFreedomList->insert(_totalDegreesOfFreedomList->end(),
-                                           _freeDegreesOfFreedomList->begin(), _freeDegreesOfFreedomList->end());
-        _totalDegreesOfFreedomList->insert(_totalDegreesOfFreedomList->end(),
-                                           _boundedDegreesOfFreedomList->begin(), _boundedDegreesOfFreedomList->end());
-/*        _totalDegreesOfFreedomList->sort([](DegreeOfFreedom* a, DegreeOfFreedom* b){
-            return (*a->parentNode) < (*b->parentNode);
-        });*/
-        //V total ->
-    }
-
     void DOFInitializer::_assignDOFToNodes(Mesh *mesh) const {
         for (auto &dof : *_totalDegreesOfFreedomList) {
             auto node = mesh->nodeFromID(((*dof->parentNode)));

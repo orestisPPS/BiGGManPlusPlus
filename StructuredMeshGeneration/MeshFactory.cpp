@@ -51,7 +51,8 @@ namespace StructuredMeshGenerator{
 
         auto solver = new SolverLUP(1E-20, true);
         
-        auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specs);
+        auto analysis =
+                new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specs, Parametric);
 
         analysis->solve();
         auto result = analysis->linearSystem->solution;
@@ -65,7 +66,10 @@ namespace StructuredMeshGenerator{
             auto coords = new vector<double>();
             for (auto &dof : *node->degreesOfFreedom){
                 coords->push_back(dof->value());
+                delete dof;
+                dof = nullptr;
             }
+            node->degreesOfFreedom->clear();
             node->coordinates.addPositionVector(coords);
         }
         
@@ -83,10 +87,7 @@ namespace StructuredMeshGenerator{
             node->coordinates.addPositionVector(coords);
         }*/
     }
-
-
-
-
+    
     Mesh* MeshFactory::_initiateRegularMesh() {
         auto nodesPerDirection = _meshSpecs->nodesPerDirection;
         auto nodeFactory = NodeFactory(_meshSpecs->nodesPerDirection);
@@ -102,7 +103,6 @@ namespace StructuredMeshGenerator{
                 throw runtime_error("Invalid space type");
         }
     }
-
     
     void MeshFactory::_assignCoordinates() {
         switch (_calculateSpaceEntityType()) {

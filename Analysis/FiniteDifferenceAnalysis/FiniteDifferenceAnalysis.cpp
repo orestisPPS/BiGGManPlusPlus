@@ -6,7 +6,7 @@
 
 namespace NumericalAnalysis {
     
-    FiniteDifferenceAnalysis::FiniteDifferenceAnalysis(MathematicalProblem *problem, Mesh *mesh, Solver* solver, FDSchemeSpecs *specs) :
+    FiniteDifferenceAnalysis::FiniteDifferenceAnalysis(MathematicalProblem *problem, Mesh *mesh, Solver* solver, FDSchemeSpecs *specs, CoordinateType coordinateSystem) :
             schemeSpecs(specs), NumericalAnalysis(problem, mesh, solver ) {
     }
     

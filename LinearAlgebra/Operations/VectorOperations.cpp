@@ -286,6 +286,8 @@ namespace LinearAlgebra {
         }
         
         double VectorOperations::averageAbsoluteDifference(vector<double>& vector1) {
+            if (vector1.size() < 2 || vector1.empty())
+                throw std::invalid_argument("Vector must have at least 2 elements");
             auto numOfSpaces = static_cast<double>(vector1.size() - 1);
             auto result = 0.0;
             for(auto i = 0; i < numOfSpaces; i++)
