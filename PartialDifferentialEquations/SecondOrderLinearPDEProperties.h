@@ -34,9 +34,6 @@ namespace PartialDifferentialEquations {
         
         short unsigned totalDimensions() const;
         
-        
-
-        
         void setIsotropicProperties(double secondOrderCoefficient, double firstOrderCoefficient,
                                     double zerothOrderCoefficient, double sourceTerm);
         

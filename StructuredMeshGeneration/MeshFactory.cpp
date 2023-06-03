@@ -73,21 +73,16 @@ namespace StructuredMeshGenerator{
             node->degreesOfFreedom->clear();
             node->coordinates.addPositionVector(coords);
         }
-        delete analysis->linearSystem;
         
+        delete specs;
+        //delete problem;
+        delete solver;
+        delete analysis->degreesOfFreedom;
+        delete dofTypes;
+        delete analysis->linearSystem;
+
         auto end = chrono::steady_clock::now();
         cout<< "Mesh Built in " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
-
-/*        for (auto &node : *mesh->totalNodesVector){
-            auto coords = new vector<double>();
-            for (auto &dof : *node->degreesOfFreedom){
-                if (dof->id->constraintType() == Fixed)
-                coords->push_back(dof->value());
-                else
-                    coords->push_back(0);
-            }
-            node->coordinates.addPositionVector(coords);
-        }*/
     }
     
     Mesh* MeshFactory::_initiateRegularMesh() {

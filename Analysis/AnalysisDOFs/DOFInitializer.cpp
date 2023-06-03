@@ -130,13 +130,14 @@ namespace NumericalAnalysis {
         });
         //THIS IS WORKING
         _boundedDegreesOfFreedomList->unique([](DegreeOfFreedom *a, DegreeOfFreedom *b) {
-            if (*a->parentNode == *b->parentNode && a->type() == b->type()){
+            return *a->parentNode == *b->parentNode && a->type() == b->type();
+   /*         if (*a->parentNode == *b->parentNode && a->type() == b->type()){
                 auto meanValue = (a->value() + b->value())/2.0;
                 a->setValue(meanValue);
                 delete b;
                 b = nullptr;
                 return true;
-            }
+            }*/
             return false;
         });
         _fluxDegreesOfFreedomList->sort([](tuple<DegreeOfFreedom *, double> a, tuple<DegreeOfFreedom *, double> b) {

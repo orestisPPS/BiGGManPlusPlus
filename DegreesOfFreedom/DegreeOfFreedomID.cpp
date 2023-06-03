@@ -11,8 +11,11 @@ namespace DegreesOfFreedom {
     }
     
     DegreeOfFreedomID::~DegreeOfFreedomID() {
-        delete value;
+        if (value != nullptr)
+            delete value;
+        delete globalValue;
         value = nullptr;
+        globalValue = nullptr;
     }
     
     bool DegreeOfFreedomID::operator == (const DegreeOfFreedomID& dof) const {
