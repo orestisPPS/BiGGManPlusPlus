@@ -21,7 +21,7 @@ namespace LinearAlgebra {
         numberOfDOFs = new unsigned(_analysisDegreesOfFreedom->totalDegreesOfFreedomMap->size());
         _freeFreeMatrix = new Array<double>(*numberOfFreeDOFs, *numberOfFreeDOFs, 1, 0);
         _fixedFreeMatrix = new Array<double>(*numberOfFixedDOFs, *numberOfDOFs, 1, 0);
-        _totalDOFMatrix = new Array<double>(*numberOfDOFs, *numberOfDOFs, 1, 0);
+        _freeFreeFreeFixedSubMatrix = new Array<double>(*numberOfDOFs, *numberOfDOFs, 1, 0);
         _parametricCoordToNodeMap = _mesh->createParametricCoordToNodesMap();
         _specs = specs;
     }
@@ -45,7 +45,7 @@ namespace LinearAlgebra {
     void AnalysisLinearSystemInitializer2::assembleMatrices() {
         //_createFreeFixedDOFSubMatrix();
         _createFreeFreeDOFSubMatrix();
-        _createTotalDOFMatrix();
+        _createFreeFreeFreeFixedSubMatrix();
     }
     
 */
@@ -330,7 +330,7 @@ namespace LinearAlgebra {
         cout << "  " << endl;
     }
 
-    void AnalysisLinearSystemInitializer2::_createTotalDOFMatrix() {
+    void AnalysisLinearSystemInitializer2::_createFreeFreeFreeFixedSubMatrix() {
         auto directions = _mesh->directions();
         short unsigned maxDerivativeOrder = 2;
         auto templatePositionsAndPointsMap = _initiatePositionsAndPointsMap(maxDerivativeOrder, directions);
@@ -394,13 +394,13 @@ namespace LinearAlgebra {
                 unsigned positionI = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
                 for (auto iDof = 0; iDof < colinearDOFDerivative1.size(); iDof++) {
                     unsigned positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOFDerivative1[iDof]);
-                    _totalDOFMatrix->at(positionI, positionJ) += firstDerivativeSchemeWeights[iDof] * firstDerivativeCoefficient;
+                    _freeFreeFreeFixedSubMatrix->at(positionI, positionJ) += firstDerivativeSchemeWeights[iDof] * firstDerivativeCoefficient;
                 }
                 for (auto iDof = 0; iDof < colinearDOFDerivative2.size(); iDof++) {
                     unsigned positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOFDerivative2[iDof]);
-                    _totalDOFMatrix->at(positionI, positionJ) += secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient;
+                    _freeFreeFreeFixedSubMatrix->at(positionI, positionJ) += secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient;
                     if (positionI == positionJ)
-                        cout<< "Diagonal element: " << _totalDOFMatrix->at(positionI, positionJ) <<
+                        cout<< "Diagonal element: " << _freeFreeFreeFixedSubMatrix->at(positionI, positionJ) <<
                             " "<< secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient<<  endl;
                 }
 
@@ -412,7 +412,7 @@ namespace LinearAlgebra {
             availablePositionsAndDepth.clear();
         }
         cout << "Total DOF matrix" << endl;
-        _totalDOFMatrix->print();
+        _freeFreeFreeFixedSubMatrix->print();
     }
 
 
@@ -436,9 +436,9 @@ namespace LinearAlgebra {
                         unsigned i = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
                         //unsigned i = *neighbourDof->id->value;
                         unsigned j = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(neighbourDof);
-                        cout<<_totalDOFMatrix->at(i, j)<<endl;
+                        cout<<_freeFreeFreeFixedSubMatrix->at(i, j)<<endl;
                         //_rhsVector->at(*dof->id->value) -= _fixedFreeMatrix->at(i, j) * neighbourDof->value();
-                        _rhsVector->at(*dof->id->value) -= _totalDOFMatrix->at(i, j) * neighbourDof->value();
+                        _rhsVector->at(*dof->id->value) -= _freeFreeFreeFixedSubMatrix->at(i, j) * neighbourDof->value();
                         //_rhsVector->at(*dof->id->value) -= 1.0 * neighbourDof->value();
                     }
                 }
@@ -446,8 +446,8 @@ namespace LinearAlgebra {
         }
         delete _fixedFreeMatrix;
         _fixedFreeMatrix = nullptr;
-        delete _totalDOFMatrix;
-        _totalDOFMatrix = nullptr;
+        delete _freeFreeFreeFixedSubMatrix;
+        _freeFreeFreeFixedSubMatrix = nullptr;
 
         //print vector
 */

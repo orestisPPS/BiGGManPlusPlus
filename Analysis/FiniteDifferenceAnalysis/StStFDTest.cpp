@@ -16,8 +16,8 @@ namespace NumericalAnalysis {
         numberOfNodes[Direction::Two] = 5;
         auto specs = new MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 4, 4);
-        //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
+        //meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 4, 4);
+        meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
         meshFactory->buildMesh(2);
         
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk");

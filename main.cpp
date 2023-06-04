@@ -18,7 +18,7 @@ int main() {
 
     auto analysisTest = new NumericalAnalysis::StStFDTest();
     
-    cout << "MTSTK GMS" << endl;
+    cout << "yo" << endl;
     
 }
 

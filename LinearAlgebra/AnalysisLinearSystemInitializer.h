@@ -50,7 +50,7 @@ namespace LinearAlgebra {
         
         Array<double>* _fixedFreeMatrix;
 
-        Array<double>* _totalDOFMatrix;
+        Array<double>* _freeFreeFreeFixedSubMatrix;
         
         void assembleMatrices();
         
@@ -60,7 +60,7 @@ namespace LinearAlgebra {
         //Take the Free-Free sub-matrix from the total matrix that is arranged as follows [Free-Free, Free-Fixed, Fixed-Free, Fixed-Fixed]
         void _createFreeFreeDOFSubMatrix();
 
-        void _createTotalDOFMatrix();
+        void _createFreeFreeFreeFixedSubMatrix();
 
         map<vector<double>, Node*>* _parametricCoordToNodeMap;
 

@@ -129,9 +129,9 @@ namespace NumericalAnalysis {
 
         _boundedDegreesOfFreedomList->unique([](DegreeOfFreedom* a, DegreeOfFreedom* b) {
             if ( a->parentNode() == b->parentNode() && a->type() == b->type()){
-                auto median = (a->value() + b->value())/2.0;
+/*                auto median = (a->value() + b->value())/2.0;
                 a->setValue(median);
-                b->setValue(median);
+                b->setValue(median);*/
                 return true;
             }
             return false;

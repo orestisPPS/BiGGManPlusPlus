@@ -18,9 +18,8 @@ namespace LinearAlgebra {
                                     _specs(specs),
                                     _coordinateType(coordinateType) {
         _rhsVector = new vector<double>(*_analysisDegreesOfFreedom->numberOfFreeDOFs, 0);
-        _totalDOFMatrix = new Array<double>(*_analysisDegreesOfFreedom->numberOfDOFs, *_analysisDegreesOfFreedom->numberOfDOFs, 1, 0);
+        _freeFreeFreeFixedSubMatrix = new Array<double>(*_analysisDegreesOfFreedom->numberOfFreeDOFs, *_analysisDegreesOfFreedom->numberOfDOFs, 1, 0);
         _freeFreeMatrix = new Array<double>(*_analysisDegreesOfFreedom->numberOfFreeDOFs, *_analysisDegreesOfFreedom->numberOfFreeDOFs, 1, 0);
-        _fixedFreeMatrix = new Array<double>(*_analysisDegreesOfFreedom->numberOfFreeDOFs, *_analysisDegreesOfFreedom->numberOfFixedDOFs, 1, 0);
         _parametricCoordToNodeMap = _mesh->createParametricCoordToNodesMap();
     }
 
@@ -37,9 +36,8 @@ namespace LinearAlgebra {
     }
 
     void AnalysisLinearSystemInitializer::assembleMatrices() {
-        _createTotalDOFMatrix();
+        _createFreeFreeFreeFixedSubMatrix();
         _createFreeFreeDOFSubMatrix();
-        _createFreeFixedDOFSubMatrix();
     }
 
     //Creates a matrix with consistent order across the domain. The scheme type is defined by the node neighbourhood.
@@ -52,7 +50,7 @@ namespace LinearAlgebra {
         auto &totalDOF = *_analysisDegreesOfFreedom->numberOfFreeDOFs;
         for (unsigned i = 0; i < totalDOF; i++) {
             for (unsigned j = 0; j < totalDOF; j++) {
-                _freeFreeMatrix->at(i, j) = _totalDOFMatrix->at(i, j);
+                _freeFreeMatrix->at(i, j) = _freeFreeFreeFixedSubMatrix->at(i, j);
             }
         }
 
@@ -62,26 +60,8 @@ namespace LinearAlgebra {
         std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
         _freeFreeMatrix->print();
     }
-
-    void AnalysisLinearSystemInitializer::_createFreeFixedDOFSubMatrix() {
-        auto start = std::chrono::steady_clock::now(); // Start the timer
-        unsigned & minIndex = *_analysisDegreesOfFreedom->numberOfFreeDOFs;
-        for (unsigned i = 0; i < *_analysisDegreesOfFreedom->numberOfFreeDOFs; i++) {
-            for (unsigned j = 0; j < *_analysisDegreesOfFreedom->numberOfFixedDOFs; j++) {
-                _fixedFreeMatrix->at(i, j) = _totalDOFMatrix->at(i, j + minIndex);
-            }
-        }
-        delete _totalDOFMatrix;
-        _totalDOFMatrix = nullptr;
-        
-        auto end = std::chrono::steady_clock::now(); // Stop the timer
-        cout << "Fixed - Free Sub - Matrix Assembled in : " <<
-        std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
-        _fixedFreeMatrix->print();
-        cout << "  " << endl;
-    }
-
-    void AnalysisLinearSystemInitializer::_createTotalDOFMatrix() {
+    
+    void AnalysisLinearSystemInitializer::_createFreeFreeFreeFixedSubMatrix() {
         auto start = std::chrono::steady_clock::now(); // Start the timer
 
         auto directions = _mesh->directions();
@@ -99,7 +79,7 @@ namespace LinearAlgebra {
 
         auto maxNeighbours = schemeBuilder.getMaximumNumberOfPointsForArbitrarySchemeType();
 
-        for (auto &dof: *_analysisDegreesOfFreedom->totalDegreesOfFreedom) {
+        for (auto &dof: *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
 
             auto node = _mesh->nodeFromID(dof->parentNode());
             auto secondOrderCoefficients = _mathematicalProblem->pde->properties->getLocalProperties(
@@ -172,13 +152,13 @@ namespace LinearAlgebra {
                 for (auto iDof = 0; iDof < colinearDOFDerivative1.size(); iDof++) {
                     auto positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(
                             colinearDOFDerivative1[iDof]);
-                    _totalDOFMatrix->at(positionI, positionJ) +=
+                    _freeFreeFreeFixedSubMatrix->at(positionI, positionJ) +=
                             firstDerivativeSchemeWeights[iDof] * firstDerivativeCoefficient / step;
                 }
                 for (auto iDof = 0; iDof < colinearDOFDerivative2.size(); iDof++) {
                     auto positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(
                             colinearDOFDerivative2[iDof]);
-                    _totalDOFMatrix->at(positionI, positionJ) +=
+                    _freeFreeFreeFixedSubMatrix->at(positionI, positionJ) +=
                             //secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient * (2 * stepDerivative2);
                             secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient * stepDerivative2;
                 }
@@ -191,31 +171,26 @@ namespace LinearAlgebra {
         auto end = std::chrono::steady_clock::now(); // Stop the timer
         cout << "Total DOF Matrix Assembled in "
              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
-        _totalDOFMatrix->print();
+        _freeFreeFreeFixedSubMatrix->print();
     }
 
 
 
     void AnalysisLinearSystemInitializer::_createRHS() {
-        //Apply the boundary values into the RHS
-        auto fixedValues = vector<double >(*_analysisDegreesOfFreedom->numberOfFixedDOFs, 0);
-        for (auto & fixedDOF : *_analysisDegreesOfFreedom->fixedDegreesOfFreedom) {
-            fixedDOF->print(true);
-            //TODO check if ids are in the same order as the matrix
-            fixedValues[fixedDOF->ID()] = fixedDOF->value();
+        for(unsigned iFreeDOF = 0; iFreeDOF < *_analysisDegreesOfFreedom->numberOfFreeDOFs; iFreeDOF++){
+            for (unsigned jNeighbour = 0; jNeighbour < *_analysisDegreesOfFreedom->numberOfDOFs; jNeighbour++) {
+                auto neighbourDOF = _analysisDegreesOfFreedom->totalDegreesOfFreedomMap->at(jNeighbour);
+                if (neighbourDOF->constraintType() == Fixed){
+                    _rhsVector->at(iFreeDOF) -= _freeFreeFreeFixedSubMatrix->at(iFreeDOF, jNeighbour) * neighbourDOF->value() / 2;
+                }
+            }
         }
-        
-        auto dirichletContribution = vector<double>(_fixedFreeMatrix->multiplyWithVector(fixedValues));
-        
-        for ( auto i = 0; i < _rhsVector->size(); i++) {
-            _rhsVector->at(i) -= dirichletContribution[i];
-            
-        }
-        delete _fixedFreeMatrix;
+        cout << "RHS Vector Assembled" << endl;
+        delete _freeFreeFreeFixedSubMatrix;
         
 
-        //print vector
-/*        for (auto &value: *_rhsVector) {
+/*        //print vector
+        for (auto &value: *_rhsVector) {
             cout << value << endl;
         }*/
     }
@@ -434,7 +409,7 @@ namespace LinearAlgebra {
     }
 
 */
-/*    void AnalysisLinearSystemInitializer::_createTotalDOFMatrix() {
+/*    void AnalysisLinearSystemInitializer::_createFreeFreeFreeFixedSubMatrix() {
 
         //Define the directions of the simulation
         auto directions = _mesh->directions();
@@ -542,15 +517,15 @@ namespace LinearAlgebra {
                 positionI = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
                 for (auto iDof = 0; iDof < colinearDOFDerivative1.size(); iDof++) {
                     positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOFDerivative1[iDof]);
-                    _totalDOFMatrix->at(positionI, positionJ) =
-                            _totalDOFMatrix->at(positionI, positionJ) +
+                    _freeFreeFreeFixedSubMatrix->at(positionI, positionJ) =
+                            _freeFreeFreeFixedSubMatrix->at(positionI, positionJ) +
                             firstDerivativeSchemeWeights[iDof] * firstDerivativeCoefficient;
                     bool lol = 0;
                 }
                 for (auto iDof = 0; iDof < colinearDOFDerivative2.size(); iDof++) {
                     positionJ = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOFDerivative2[iDof]);
-                    _totalDOFMatrix->at(positionI, positionJ) =
-                            _totalDOFMatrix->at(positionI, positionJ) +
+                    _freeFreeFreeFixedSubMatrix->at(positionI, positionJ) =
+                            _freeFreeFreeFixedSubMatrix->at(positionI, positionJ) +
                             secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient;
                     bool lol = false;
 
@@ -561,7 +536,7 @@ namespace LinearAlgebra {
             availablePositionsAndDepth.clear();
         }
         cout << "Total DOF matrix" << endl;
-        _totalDOFMatrix->print();
+        _freeFreeFreeFixedSubMatrix->print();
         cout << "  " << endl;
     }*//*
 
