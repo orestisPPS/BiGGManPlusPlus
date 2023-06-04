@@ -42,23 +42,23 @@ namespace NumericalAnalysis {
                                                                         {{Temperature, 75}}));*/
         
         //--------------------------------COMSOL TEST---------------------------------------------------------------------
-        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+/*        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 0}}));
         auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 0}}));
+                {{Temperature, 100}}));
+        auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 0 }}));
+        auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 00}}));*/
+
+        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 00}}));
+        auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 00}}));
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 200}}));
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 100}}));
-
-/*        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 00}}));
-        auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 00}}));
-        auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 100}}));
-        auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 00}}));*/
         auto dummyBCMap = new map<Position, BoundaryCondition*>();
         dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Left, leftBC));
         dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Right, rightBC));
@@ -86,11 +86,13 @@ namespace NumericalAnalysis {
         auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-2);
         
         cout<<"Target Solution: "<< targetSolution[0] << endl;
-/*        auto result = analysis->linearSystem->solution;
+        
+        
+        auto result = analysis->linearSystem->solution;
         
         for (double i : *result) {
             cout << i << endl;
-        }*/
+        }
 
 /*        for (auto & fixedDOF : *analysis->degreesOfFreedom->fixedDegreesOfFreedom){
             fixedDOF->print(true);

@@ -87,7 +87,6 @@ namespace LinearAlgebra {
         auto directions = _mesh->directions();
         short unsigned maxDerivativeOrder = 2;
         auto templatePositionsAndPointsMap = _initiatePositionsAndPointsMap(maxDerivativeOrder, directions);
-        auto qualifiedPositionsAndPoints = _initiatePositionsAndPointsMap(maxDerivativeOrder, directions);
         auto schemeBuilder = FiniteDifferenceSchemeBuilder(_specs);
 
         auto errorOrderDerivative1 = _specs->getErrorOrderOfVariableSchemeTypeForDerivativeOrder(1);
@@ -99,10 +98,10 @@ namespace LinearAlgebra {
                                                  templatePositionsAndPointsMap[2]);
 
         auto maxNeighbours = schemeBuilder.getMaximumNumberOfPointsForArbitrarySchemeType();
-        vector<DegreeOfFreedom*>  colinearDOFDerivative1, colinearDOFDerivative2;
+
         for (auto &dof: *_analysisDegreesOfFreedom->totalDegreesOfFreedom) {
 
-            auto node = _mesh->nodeFromID(*dof->parentNode);
+            auto node = _mesh->nodeFromID(dof->parentNode());
             auto secondOrderCoefficients = _mathematicalProblem->pde->properties->getLocalProperties(
                     *node->id.global).secondOrderCoefficients;
             auto firstOrderCoefficients = _mathematicalProblem->pde->properties->getLocalProperties(
@@ -113,6 +112,7 @@ namespace LinearAlgebra {
             auto graph = IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap,
                                                 _mesh->nodesPerDirection);
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
+            auto qualifiedPositionsAndPoints = _initiatePositionsAndPointsMap(maxDerivativeOrder, directions);
 
             for (auto &direction: directions) {
                 auto directionIndex = spatialDirectionToUnsigned[direction];
@@ -150,25 +150,23 @@ namespace LinearAlgebra {
                 auto nodeGraphDerivative2 = graph.getNodeGraph(filterDerivative2);
 
                 auto colinearCoordinates = map<Direction, vector<vector<double>>>();
-                if (dof->id->constraintType() == Free) {
+                vector<DegreeOfFreedom*>  colinearDOFDerivative1 = vector<DegreeOfFreedom*>();
+                vector<DegreeOfFreedom*>  colinearDOFDerivative2 = vector<DegreeOfFreedom*>();
+                if (dof->constraintType() == Free) {
                     colinearDOFDerivative1 = graph.getColinearDOF(dof->type(), direction, nodeGraphDerivative1);
                     colinearDOFDerivative2 = graph.getColinearDOF(dof->type(), direction, nodeGraphDerivative2);
-                    colinearCoordinates = graph.getSameColinearNodalCoordinatesOnBoundary(_coordinateType,
-                                                                                          nodeGraphDerivative2);
+                    colinearCoordinates = graph.getSameColinearNodalCoordinates(_coordinateType,nodeGraphDerivative2);
                 } else {
-                    colinearCoordinates = graph.getSameColinearNodalCoordinatesOnBoundary(_coordinateType,
-                                                                                          nodeGraphDerivative2);
-                    colinearDOFDerivative1 = graph.getColinearDOFOnBoundary(dof->type(), direction,
-                                                                            nodeGraphDerivative1);
-                    colinearDOFDerivative2 = graph.getColinearDOFOnBoundary(dof->type(), direction,
-                                                                            nodeGraphDerivative2);
+                    colinearCoordinates = graph.getSameColinearNodalCoordinatesOnBoundary(_coordinateType,nodeGraphDerivative2);
+                    colinearDOFDerivative1 = graph.getColinearDOFOnBoundary(dof->type(), direction,nodeGraphDerivative1);
+                    colinearDOFDerivative2 = graph.getColinearDOFOnBoundary(dof->type(), direction,nodeGraphDerivative2);
                 }
                 
                 //TODO : calculate step for derivative 1
                 //Step that is calculated based on the average absolute difference of the colinear coordinates
                 auto step = VectorOperations::averageAbsoluteDifference(colinearCoordinates[direction][directionIndex]);
 
-                double stepDerivative2 = pow(step, errorOrderDerivative2);
+                double stepDerivative2 = 1.0 / pow(step, errorOrderDerivative2);
 
                 auto positionI = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
                 for (auto iDof = 0; iDof < colinearDOFDerivative1.size(); iDof++) {
@@ -182,11 +180,13 @@ namespace LinearAlgebra {
                             colinearDOFDerivative2[iDof]);
                     _totalDOFMatrix->at(positionI, positionJ) +=
                             //secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient * (2 * stepDerivative2);
-                            secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient / stepDerivative2;
+                            secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient * stepDerivative2;
                 }
                 colinearDOFDerivative1.clear();
                 colinearDOFDerivative2.clear();
             }
+/*            availablePositionsAndDepth.clear();
+            qualifiedPositionsAndPoints.clear();*/
         }
         auto end = std::chrono::steady_clock::now(); // Stop the timer
         cout << "Total DOF Matrix Assembled in "
@@ -200,19 +200,19 @@ namespace LinearAlgebra {
         //Apply the boundary values into the RHS
         auto fixedValues = vector<double >(*_analysisDegreesOfFreedom->numberOfFixedDOFs, 0);
         for (auto & fixedDOF : *_analysisDegreesOfFreedom->fixedDegreesOfFreedom) {
+            fixedDOF->print(true);
             //TODO check if ids are in the same order as the matrix
-            fixedValues[*fixedDOF->id->value] = fixedDOF->value();
+            fixedValues[fixedDOF->ID()] = fixedDOF->value();
         }
         
         auto dirichletContribution = vector<double>(_fixedFreeMatrix->multiplyWithVector(fixedValues));
         
         for ( auto i = 0; i < _rhsVector->size(); i++) {
-            _rhsVector->at(i) -= dirichletContribution[i] / 2;
+            _rhsVector->at(i) -= dirichletContribution[i];
             
         }
         delete _fixedFreeMatrix;
-        _fixedFreeMatrix = nullptr;
-
+        
 
         //print vector
 /*        for (auto &value: *_rhsVector) {

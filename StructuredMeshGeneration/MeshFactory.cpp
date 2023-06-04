@@ -67,8 +67,6 @@ namespace StructuredMeshGenerator{
             auto coords = new vector<double>();
             for (auto &dof : *node->degreesOfFreedom){
                 coords->push_back(dof->value());
-                delete dof;
-                dof = nullptr;
             }
             node->degreesOfFreedom->clear();
             node->coordinates.addPositionVector(coords);
@@ -77,9 +75,10 @@ namespace StructuredMeshGenerator{
         delete specs;
         //delete problem;
         delete solver;
-        delete analysis->degreesOfFreedom;
-        delete dofTypes;
         delete analysis->linearSystem;
+        //delete analysis->degreesOfFreedom;
+        delete dofTypes;
+
 
         auto end = chrono::steady_clock::now();
         cout<< "Mesh Built in " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;

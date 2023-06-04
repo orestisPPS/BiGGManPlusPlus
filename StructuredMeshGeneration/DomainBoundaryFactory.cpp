@@ -107,11 +107,11 @@ namespace StructuredMeshGenerator {
     }
 
     void DomainBoundaryFactory::ellipse(map<Direction, unsigned int> &nodesPerDirection, double radius1, double radius2) {
-        auto pi = acos(-1.0);
-        auto theta = 0.0;
-        unsigned numberOfNodes = 0;
-        double stepTheta;
-        vector<double> coordinateVector(2, 0);
+        const double pi = acos(-1.0);
+        double theta = 0.0;
+        unsigned int numberOfNodes = 0;
+        double stepTheta = 0.0;
+        vector<double> coordinateVector(2, 0.0);
 
         auto boundaryConditionsSet = new map<Position, map<unsigned, BoundaryCondition *>>();
 
@@ -120,26 +120,30 @@ namespace StructuredMeshGenerator {
                     boundary.first, map<unsigned, BoundaryCondition *>()));
             switch (boundary.first) {
                 case Bottom:
-                    theta = 5.0 * pi / 4.0;
                     numberOfNodes = nodesPerDirection[One];
+                    theta = 5.0 * pi / 4.0;
+                    stepTheta = (pi / 2.0) / (numberOfNodes - 1);
                     break;
                 case Right:
-                    theta = 7.0 * pi / 4.0;
                     numberOfNodes = nodesPerDirection[Two];
+                    theta = 7.0 * pi / 4.0;
+                    stepTheta = (pi / 2.0) / (numberOfNodes - 1);
                     break;
                 case Top:
-                    theta = 3.0 * pi / 4.0;  // Corrected theta value for the top boundary
                     numberOfNodes = nodesPerDirection[One];
+                    theta = pi / 4.0;
+                    stepTheta = (pi / 2.0) / (numberOfNodes - 1);
                     break;
                 case Left:
-                    theta = pi / 4.0;  // Corrected theta value for the left boundary
                     numberOfNodes = nodesPerDirection[Two];
+                    theta = 3.0 * pi / 4.0;
+                    stepTheta = (pi / 2.0) / (numberOfNodes - 1);
                     break;
                 default:
                     throw runtime_error("An ellipse can only have bottom, right, top, and left boundaries.");
             }
-            stepTheta = (pi / 2.0) / (numberOfNodes - 1);
-            for (int i = 0; i < numberOfNodes; i++) {
+
+            for (unsigned int i = 0; i < numberOfNodes; i++) {
                 auto dofBC = new map<DOFType, double>();
                 dofBC->insert(pair<DOFType, double>(DOFType::Position1, radius1 * cos(theta + i * stepTheta)));
                 dofBC->insert(pair<DOFType, double>(DOFType::Position2, radius2 * sin(theta + i * stepTheta)));
@@ -148,8 +152,10 @@ namespace StructuredMeshGenerator {
                                                             new BoundaryCondition(Dirichlet, dofBC)));
             }
         }
+
         _domainBoundaryConditions = new DomainBoundaryConditions(boundaryConditionsSet);
     }
+
 
 
 

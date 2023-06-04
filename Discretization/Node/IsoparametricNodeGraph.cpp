@@ -71,7 +71,7 @@ namespace Discretization {
         for (auto &position: nodeGraph) {
             dofGraph.insert({position.first, vector<DegreeOfFreedom *>()});
             for (auto &node: position.second) {
-                if (node->getDegreeOfFreedomPtr(dofType)->id->constraintType() == constraint)
+                if (node->getDegreeOfFreedomPtr(dofType)->constraintType() == constraint)
                     dofGraph.at(position.first).push_back(node->getDegreeOfFreedomPtr(dofType));
             }
         }
@@ -86,7 +86,7 @@ namespace Discretization {
         for (auto &position: customNodeGraph) {
             dofGraph.insert({position.first, vector<DegreeOfFreedom *>()});
             for (auto &node: position.second) {
-                if (node->getDegreeOfFreedomPtr(dofType)->id->constraintType() == constraint)
+                if (node->getDegreeOfFreedomPtr(dofType)->constraintType() == constraint)
                     dofGraph.at(position.first).push_back(node->getDegreeOfFreedomPtr(dofType));
             }
         }

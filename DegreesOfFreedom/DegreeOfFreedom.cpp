@@ -7,59 +7,58 @@
 
 namespace DegreesOfFreedom{
 
-    DegreeOfFreedom::DegreeOfFreedom(DOFType* dofType, unsigned* parentNode, bool isConstrained) :
-            _dofType(dofType), parentNode(parentNode) ,_value(numeric_limits<double>::quiet_NaN()) {
+    DegreeOfFreedom::DegreeOfFreedom(DOFType* dofType, unsigned parentNode, bool isConstrained, double value) :
+       _dofType(dofType), _parentNode(parentNode), _value(value), _id(numeric_limits<unsigned int>::quiet_NaN()) {
         if (isConstrained)
-            id = new DegreeOfFreedomID(ConstraintType::Fixed);
+            _constraintType = Fixed;
         else
-            id = new DegreeOfFreedomID(ConstraintType::Free);
+            _constraintType = Free;
             
     }
-
-    DegreeOfFreedom::DegreeOfFreedom(DOFType* dofType, double value, unsigned* parentNode, bool isConstrained) :
-            _dofType(dofType), _value(value) , parentNode(parentNode) {
-        if (isConstrained)
-            id = new DegreeOfFreedomID(ConstraintType::Fixed);
-        else
-            throw invalid_argument("A DOF with a prescribed value must be constrained");
-    }
     
-    DegreeOfFreedom::~DegreeOfFreedom() {
-        delete id;
-        //delete parentNode;
-        //delete _dofType;
-        id = nullptr;
-        parentNode = nullptr;
-        _dofType = nullptr;
-    }
-
     bool DegreeOfFreedom::operator==(const DegreeOfFreedom &dof) {
         return _dofType == dof._dofType &&
-               *parentNode == *dof.parentNode;
+               _parentNode == dof._parentNode;
     }
 
     bool DegreeOfFreedom::operator!=(const DegreeOfFreedom &dof) {
         return !(*this == dof);
     }
+    
+    unsigned int const &DegreeOfFreedom::ID() const{
+        return _id;
+    }
 
-    DOFType const &DegreeOfFreedom::type() {
+    DOFType const &DegreeOfFreedom::type() const{
         return *(_dofType);
     }
 
+    ConstraintType const &DegreeOfFreedom::constraintType() const{
+        return _constraintType;
+    }
 
-    double DegreeOfFreedom::value() const {
+    unsigned int const &DegreeOfFreedom::parentNode() const {
+        return _parentNode;
+    }
+    
+    double const &DegreeOfFreedom::value() const{
         return _value;
     }
 
     void DegreeOfFreedom::setValue(double value) {
         _value = value;
     }
-    //Prints in the CLI the DOF ID value, DOF type  and constraint type
+    
+    void DegreeOfFreedom::setID(unsigned int ID) {
+        _id = ID;
+    }
+
     void DegreeOfFreedom::print(bool printValue) {
         if (printValue)
-            std::cout << "DOF ID: " << *id->value << " parent Node : " <<*parentNode<< " Value: " << value() << " DOF Type: " <<
-                      *_dofType << " Constraint Type: " << id->constraintType() << std::endl;        else
-            std::cout << "DOF ID: " << *id->value << " parent Node : " <<*parentNode<< " DOF Type: " <<
-                          *_dofType << " Constraint Type: " << id->constraintType() << std::endl;
+            cout << "DOF ID: " << _id << "Parent Node: " << _parentNode<< " DOF type: " << *_dofType << " Constraint type: " << _constraintType << " Value: " << _value << endl;
+        else
+            cout << "DOF ID: " << _id << "Parent Node: " << _parentNode<< " DOF type: " << *_dofType << " Constraint type: " << _constraintType << endl;
     }
+
+
 }

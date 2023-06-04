@@ -45,7 +45,6 @@ add_executable(untitled main.cpp
         Analysis/FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.h
         Discretization/Node/NodalCoordinates.h
         Discretization/Node/NodalCoordinates.cpp
-        DegreesOfFreedom/DegreeOfFreedomID.cpp
         Analysis/FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.cpp
         BoundaryConditions/DomainBoundaryConditions.h
         BoundaryConditions/DomainBoundaryConditions.cpp

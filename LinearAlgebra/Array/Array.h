@@ -62,7 +62,9 @@ namespace LinearAlgebra {
                 _array(array._array), _isPositiveDefinite(array._isPositiveDefinite), _isSquare(array._isSquare),
                 parallelizationThreshold(array.parallelizationThreshold) {}
                 
-        ~Array() = default;
+        ~Array() {
+            _array.clear();
+        }
 
         /**
          * The threshold number of elements after which operations on the matrix will be parallelized.

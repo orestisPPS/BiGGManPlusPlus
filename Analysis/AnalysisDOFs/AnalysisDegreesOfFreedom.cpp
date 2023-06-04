@@ -52,6 +52,7 @@ namespace NumericalAnalysis {
     void AnalysisDegreesOfFreedom::_deallocateDegreesOfFreedom() const {
         for (auto dof : *totalDegreesOfFreedom) {
             delete dof;
+            
         }
     }
 } // NumericalAnalysis
