@@ -23,21 +23,16 @@ namespace LinearAlgebra {
         map<Position, double>* schemeWeightAtPosition;
         
         // The maximum number of points needed for any scheme in any direction.
-        short unsigned getNumberOfGhostNodesNeeded();
+        short unsigned getNumberOfGhostNodesNeeded() const;
         
         // Can be implemented for more efficient node graph creation.
         // Returns a map with all positions needed for the scheme and the number of points needed for each position.
         // Use this when creating a scheme that is consistent across the whole domain.
-        map<Position, short unsigned> getNumberOfDiagonalNeighboursNeeded();
+        map<Position, short unsigned> getNumberOfDiagonalNeighboursNeeded() const;
         
-        unsigned getMaximumNumberOfPointsForArbitrarySchemeType();
+        unsigned getMaximumNumberOfPointsForArbitrarySchemeType() const;
         
-        vector<double> getSchemeWeightsAtDirectionDerivative1(Direction direction);
-        
-        vector<double> getSchemeWeightsAtDirectionDerivative2(Direction direction);
-        
-        map<FDSchemeType, int> getSchemeTypeAndOrder(unsigned derivativeOrder,
-                                                            unsigned int errorOrder);
+        Scheme getSchemeAtDirection(Direction direction, unsigned derivativeOrder, unsigned errorOrder) const;
         
         FDSchemeSpecs* _schemeSpecs;
         //Maps the order of the scheme to the type of the scheme and the neighbouring points needed to build it
@@ -45,25 +40,25 @@ namespace LinearAlgebra {
         //For example Order 2, type central, 3 points
         //If the second item of the tuple is -1, then the scheme is not defined for that order
         //For example Order 1, type central, -1 points
-        map<unsigned, map<FDSchemeType, int>> schemeOrderToSchemeTypePointsDerivative1();
+        static map<unsigned, map<FDSchemeType, int>> schemeOrderToSchemeTypePointsDerivative1();
 
         //Maps the order of the scheme to the type of the scheme and the neighbouring points needed to build it
         // for a first derivative finite difference scheme.
         //For example Order 2, type central, 3 points
         //If the second item of the tuple is -1, then the scheme is not defined for that order
         //For example Order 1, type central, -1 points
-        map<unsigned, map<FDSchemeType, int>> schemeOrderToSchemeTypePointsDerivative2();
+        static map<unsigned, map<FDSchemeType, int>> schemeOrderToSchemeTypePointsDerivative2();
 
-        map<Direction, map<FDSchemeType, vector<Position>>> schemeTypeToPositions();
+        static map<Direction, map<FDSchemeType, vector<Position>>> schemeTypeToPositions();
         
-        map<Direction, map<vector<Position>, FDSchemeType>> positionsToSchemeType();
+        static map<Direction, map<vector<Position>, FDSchemeType>> positionsToSchemeType();
         
         //Use this when the error order is fixed and the scheme varies across the domain.
-        void templatePositionsAndPoints(short unsigned derivativeOrder, short unsigned errorOrder,
+        static void templatePositionsAndPoints(short unsigned derivativeOrder, short unsigned errorOrder,
                                         vector<Direction>& directions,
                                         map<Direction, map<vector<Position>, short int>>& positionsAndPoints);
 
-        vector<double> getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints,
+        static Scheme getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints,
                                                               Direction& direction, unsigned short errorOrder, unsigned short derivativeOrder);
         
         

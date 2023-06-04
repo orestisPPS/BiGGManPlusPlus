@@ -19,12 +19,15 @@ namespace PositioningInSpace {
         Two,
         Three,
         Time,
+        None
     };
     
     static map<Direction, unsigned> spatialDirectionToUnsigned =
         {{Direction::One,   0},
          {Direction::Two,   1},
-         {Direction::Three, 2}};
+         {Direction::Three, 2},
+         {Direction::Time,  3},
+         {Direction::None,  4}};
     
     static map<unsigned, Direction> unsignedToSpatialDirection =
         {{0, Direction::One},

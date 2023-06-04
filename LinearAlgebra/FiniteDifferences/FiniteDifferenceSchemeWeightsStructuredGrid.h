@@ -36,20 +36,12 @@ namespace LinearAlgebra {
 
         FiniteDifferenceSchemeWeightsStructuredGrid();
         
-        static SchemeMap _getSchemeFromDerivativeOrder(FDSchemeType schemeType, unsigned derivativeOrder, unsigned int errorOrder);
-        
         static Scheme getScheme( FDSchemeType schemeType, unsigned short derivativeOrder, unsigned errorOrder);
-
-        static struct Scheme getWeightsVectorDerivative1(FDSchemeType schemeType, unsigned errorOrder);
         
-        static struct Scheme getWeightsVectorDerivative2(FDSchemeType schemeType, unsigned errorOrder);
-
-
-
-
-
     private:
         
+        static SchemeMap _getSchemeFromDerivativeOrder(FDSchemeType schemeType, unsigned derivativeOrder, unsigned int errorOrder);
+
 
         //====================================================================================================
         //===================================First Order Derivative Schemes===================================
@@ -186,11 +178,6 @@ namespace LinearAlgebra {
         
         
         static map<tuple<FDSchemeType, unsigned>, SchemeMap> _schemeTypeAndOrderToWeightsDerivative2();
-
-        static Scheme _getSchemeDerivative1(FDSchemeType schemeType, unsigned errorOrder);
-
-        static Scheme _getSchemeDerivative2(FDSchemeType schemeType, unsigned errorOrder);
-        
     };
 
 } // LinearAlgebra

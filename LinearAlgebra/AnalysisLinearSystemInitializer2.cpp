@@ -19,7 +19,7 @@ namespace LinearAlgebra {
         numberOfFreeDOFs = new unsigned(_analysisDegreesOfFreedom->freeDegreesOfFreedom->size());
         numberOfFixedDOFs = new unsigned(_analysisDegreesOfFreedom->fixedDegreesOfFreedom->size());
         numberOfDOFs = new unsigned(_analysisDegreesOfFreedom->totalDegreesOfFreedomMap->size());
-        _freeFreeMatrix = new Array<double>(*numberOfFreeDOFs, *numberOfFreeDOFs, 1, 0);
+        _matrix = new Array<double>(*numberOfFreeDOFs, *numberOfFreeDOFs, 1, 0);
         _fixedFreeMatrix = new Array<double>(*numberOfFixedDOFs, *numberOfDOFs, 1, 0);
         _freeFreeFreeFixedSubMatrix = new Array<double>(*numberOfDOFs, *numberOfDOFs, 1, 0);
         _parametricCoordToNodeMap = _mesh->createParametricCoordToNodesMap();
@@ -37,12 +37,12 @@ namespace LinearAlgebra {
     void AnalysisLinearSystemInitializer2::createLinearSystem() {
         _createMatrix();
         _createRHS();
-        //linearSystem = new LinearSystem(_freeFreeMatrix, _rhsVector);
-        linearSystem = new LinearSystem(_freeFreeMatrix, _rhsVector);
+        //linearSystem = new LinearSystem(_matrix, _rhsVector);
+        linearSystem = new LinearSystem(_matrix, _rhsVector);
         //linearSystem->exportToMatlabFile("firstCLaplacecplace.m", "/home/hal9000/code/BiGGMan++/Testing/", true);
     }
 
-    void AnalysisLinearSystemInitializer2::assembleMatrices() {
+    void AnalysisLinearSystemInitializer2::_assembleMatrices() {
         //_createFreeFixedDOFSubMatrix();
         _createFreeFreeDOFSubMatrix();
         _createFreeFreeFreeFixedSubMatrix();
@@ -61,7 +61,7 @@ namespace LinearAlgebra {
         for (auto i = 0; i < totalDOF; i++) {
             for (auto j = 0; j < totalDOF; j++) {
                 if (i == j) {
-                    _freeFreeMatrix->setElement(i, j, 1);
+                    _matrix->setElement(i, j, 1);
                 }
             }
         }
@@ -179,8 +179,8 @@ namespace LinearAlgebra {
                     for (auto iDof = 0; iDof < colinearDOFDerivative1.size(); iDof++) {
                         if (colinearDOFDerivative1[iDof]->id->constraintType() == Free){
                             positionJ = *colinearDOFDerivative1[iDof]->id->value;
-                            _freeFreeMatrix->at(positionI, positionJ) =
-                                    _freeFreeMatrix->at(positionI, positionJ) +
+                            _matrix->at(positionI, positionJ) =
+                                    _matrix->at(positionI, positionJ) +
                                     firstDerivativeSchemeWeights[iDof] * firstDerivativeCoefficient;
                         }
                     }
@@ -189,20 +189,20 @@ namespace LinearAlgebra {
                 for (auto iDof = 0; iDof < colinearDOFDerivative2.size(); iDof++) {
                     if (colinearDOFDerivative2[iDof]->id->constraintType() == Free){
                         positionJ = *colinearDOFDerivative2[iDof]->id->value;
-                        _freeFreeMatrix->at(positionI, positionJ) =
-                                _freeFreeMatrix->at(positionI, positionJ) +
+                        _matrix->at(positionI, positionJ) =
+                                _matrix->at(positionI, positionJ) +
                                 secondDerivativeSchemeWeights[iDof] * secondDerivativeCoefficient;
                     }
                 }
 */
 /*                cout<<"row : "<<positionI<<"  "<<endl;
-                //_freeFreeMatrix->printRow(positionI);
+                //_matrix->printRow(positionI);
                 cout<<"  "<<endl;*//*
 
             }
         }
         cout << "Free DOF matrix" << endl;
-        _freeFreeMatrix->print();
+        _matrix->print();
         cout << "  " << endl;
     }
 

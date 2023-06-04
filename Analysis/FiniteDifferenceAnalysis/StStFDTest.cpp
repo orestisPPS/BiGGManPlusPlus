@@ -16,11 +16,13 @@ namespace NumericalAnalysis {
         numberOfNodes[Direction::Two] = 5;
         auto specs = new MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 4, 4);
+        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
         meshFactory->buildMesh(2);
         
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk");
+        
+        Mesh* mesh = meshFactory->mesh;
         
         auto pdeProperties =
                 new SecondOrderLinearPDEProperties(2, false, Isotropic);
@@ -28,10 +30,11 @@ namespace NumericalAnalysis {
         
         auto heatTransferPDE = new PartialDifferentialEquation(pdeProperties, Laplace);
         
-        auto specsFD = new FDSchemeSpecs(2, 2, meshFactory->mesh->directions());
+        auto specsFD = new FDSchemeSpecs(2, 2, mesh->directions());
 
-
-/*        //--------------------------------CHAPRA PG 857---------------------------------------------------------------------
+        //--------------------------------CHAPRA PG 857---------------------------------------------------------------------
+        //--------------------------Passes-----------------------------
+/*
         auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                                                                         {{Temperature, 0}}));
         auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
@@ -42,23 +45,42 @@ namespace NumericalAnalysis {
                                                                         {{Temperature, 75}}));*/
         
         //--------------------------------COMSOL TEST---------------------------------------------------------------------
-/*        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 0}}));
         auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 100}}));
+                {{Temperature, 0}}));
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 0 }}));
+                {{Temperature, 100 }}));
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 00}}));*/
-
-        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 00}}));
+        
+        
+        //--------------------------------https://kyleniemeyer.github.io/ME373-book/content/pdes/elliptic.html---------------------------------------------------------------------
+        //-------------------------------------------------------------------------Passes-----------------------------
+/*        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 100}}));
         auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 00}}));
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 200}}));
+                {{Temperature, 100}}));
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 00}}));
+                {{Temperature, 100}}));*/
+        
+        //--------------------------Valougeorgis examples10 pg. 6 (0 Dirichlet, -1 Source)-----------------------------
+        //--------------------------Passes-----------------------------
+/*        auto pdeProperties =
+                new SecondOrderLinearPDEProperties(2, false, Isotropic);
+        pdeProperties->setIsotropicProperties(1,0,0,-1);
+        
+        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 0}}));
+        auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 0}}));
+        auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 0}}));
+        auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 0}}));*/
+
         auto dummyBCMap = new map<Position, BoundaryCondition*>();
         dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Left, leftBC));
         dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Right, rightBC));
@@ -74,15 +96,20 @@ namespace NumericalAnalysis {
         auto solver = new SolverLUP(1E-20, true);
         
         auto analysis =
-                new SteadyStateFiniteDifferenceAnalysis(problem, meshFactory->mesh, solver, specsFD);
+                new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
+        auto fileNameMatlab = "linearSystemTemperature.m";
+        auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
+        Utility::Exporters::exportLinearSystemToMatlabFile(analysis->linearSystem->matrix, analysis->linearSystem->RHS, filePath, fileNameMatlab);
         
         analysis->solve();
         
         
         analysis->applySolutionToDegreesOfFreedom();
+
+
         
-        //auto targetCoords = vector<double>{0.5, 0.5};
-        auto targetCoords = vector<double>{2, 2};
+        auto targetCoords = vector<double>{0.5, 0.5};
+        //auto targetCoords = vector<double>{2, 2};
         auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-2);
         
         cout<<"Target Solution: "<< targetSolution[0] << endl;
@@ -99,9 +126,6 @@ namespace NumericalAnalysis {
         }*/
         
         auto filenameParaview = "firstMesh.vtk";
-        auto path = "/home/hal9000/code/BiGGMan++/Testing/";
-        auto mesh = meshFactory->mesh;
-        mesh->storeMeshInVTKFile(path, filenameParaview);
     }
 
 

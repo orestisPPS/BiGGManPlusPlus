@@ -7,11 +7,10 @@
 namespace LinearAlgebra {
     
     //Creates a Finite Difference Scheme For an input 
-    FiniteDifferenceSchemeBuilder::FiniteDifferenceSchemeBuilder(FDSchemeSpecs* schemeSpecs) {
-        this->_schemeSpecs = schemeSpecs;
+    FiniteDifferenceSchemeBuilder::FiniteDifferenceSchemeBuilder(FDSchemeSpecs* schemeSpecs) : _schemeSpecs(schemeSpecs) {
     }
     
-    short unsigned FiniteDifferenceSchemeBuilder::getNumberOfGhostNodesNeeded() {
+    short unsigned FiniteDifferenceSchemeBuilder::getNumberOfGhostNodesNeeded() const {
         short unsigned max = 0;
         // March through all derivative orders
         for (auto &derivativeOrder: *this->_schemeSpecs->schemeTypeAndOrderAtDirectionForDerivativeOrder) {
@@ -32,7 +31,7 @@ namespace LinearAlgebra {
         return max;
     }
 
-    map<Position, short unsigned> FiniteDifferenceSchemeBuilder:: getNumberOfDiagonalNeighboursNeeded() {
+    map<Position, short unsigned> FiniteDifferenceSchemeBuilder:: getNumberOfDiagonalNeighboursNeeded() const {
         auto numberOfDiagonalNeighboursNeeded = map<Position, short unsigned>();
         //March through all derivative orders
         for (auto& derivativeOrder : *this->_schemeSpecs->schemeTypeAndOrderAtDirectionForDerivativeOrder) {
@@ -67,31 +66,11 @@ namespace LinearAlgebra {
         return numberOfDiagonalNeighboursNeeded;
     }
     
-    vector<double> FiniteDifferenceSchemeBuilder::getSchemeWeightsAtDirectionDerivative1(Direction direction) {
+    Scheme FiniteDifferenceSchemeBuilder::getSchemeAtDirection(Direction direction, unsigned derivativeOrder, unsigned errorOrder) const {
         auto schemeTypeAndOrder = this->_schemeSpecs->
-                schemeTypeAndOrderAtDirectionForDerivativeOrder->at(1)[direction];
-        return FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative1(
-                get<0>(schemeTypeAndOrder), get<1>(schemeTypeAndOrder));
-    }
-
-    vector<double> FiniteDifferenceSchemeBuilder::getSchemeWeightsAtDirectionDerivative2(Direction direction) {
-        auto schemeTypeAndOrder = this->_schemeSpecs->
-                schemeTypeAndOrderAtDirectionForDerivativeOrder->at(2)[direction];
-        return FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative1(
-                get<0>(schemeTypeAndOrder), get<1>(schemeTypeAndOrder));
-    }
-    
-    map<FDSchemeType, int> FiniteDifferenceSchemeBuilder::getSchemeTypeAndOrder(unsigned derivativeOrder,
-                                                                                     unsigned int errorOrder) {
-        switch (derivativeOrder) {
-            case 1:
-                return schemeOrderToSchemeTypePointsDerivative1()[errorOrder];
-            case 2:
-                return schemeOrderToSchemeTypePointsDerivative2()[errorOrder];
-            default:
-                throw invalid_argument("Maximum derivative order is 2.");
-        }
-    
+                schemeTypeAndOrderAtDirectionForDerivativeOrder->at(derivativeOrder)[direction];
+        return FiniteDifferenceSchemeWeightsStructuredGrid::getScheme(
+                get<0>(schemeTypeAndOrder), derivativeOrder, errorOrder);
     }
 
     map<unsigned int, map<FDSchemeType, int>>
@@ -217,7 +196,7 @@ namespace LinearAlgebra {
         return positionsForSchemeAtDirection;
     }
 
-    unsigned FiniteDifferenceSchemeBuilder::getMaximumNumberOfPointsForArbitrarySchemeType() {
+    unsigned FiniteDifferenceSchemeBuilder::getMaximumNumberOfPointsForArbitrarySchemeType() const {
         auto maxDerivativeOrder =
                 static_cast<unsigned int>(_schemeSpecs->schemeTypeAndOrderAtDirectionForDerivativeOrder->size());
         auto maxOrder = -1;
@@ -286,33 +265,22 @@ namespace LinearAlgebra {
         }
     }
 
-    vector<double> FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
+    Scheme FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
             map<vector<Position>, short>& qualifiedPositionsAndPoints,
             Direction& direction,
             unsigned short errorOrder,
             unsigned short derivativeOrder) {
-        map<FDSchemeType, vector<double>> availableSchemes;
+        map<FDSchemeType, Scheme> availableSchemes;
         auto positionsToScheme = positionsToSchemeType();
 
         for (auto& qualifiedPositionAndPoint : qualifiedPositionsAndPoints) {
             const vector<Position>& positionVector = qualifiedPositionAndPoint.first;
-            short points = qualifiedPositionAndPoint.second;
-
             FDSchemeType schemeType = positionsToScheme[direction][positionVector];
-            switch (derivativeOrder) {
-                case 1:
-                    availableSchemes[schemeType] = FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative1(schemeType, errorOrder);
-                    break;
-                case 2:
-                    availableSchemes[schemeType] = FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative2(schemeType, errorOrder);
-                    break;
-                default:
-                    throw invalid_argument("Derivative order not supported");
-            }
+            availableSchemes[schemeType] = FiniteDifferenceSchemeWeightsStructuredGrid::getScheme(schemeType, derivativeOrder, errorOrder);
         }
-
+        
         vector<Position> positionsFromScheme;
-        vector<double> weights;
+        Scheme weights;
 
         if (availableSchemes.count(Central) != 0) {
             positionsFromScheme = schemeTypeToPositions()[direction][Central];
@@ -329,7 +297,6 @@ namespace LinearAlgebra {
         else {
             throw invalid_argument("No scheme found for the given positions");
         }
-
         for (auto it = qualifiedPositionsAndPoints.begin(); it != qualifiedPositionsAndPoints.end();) {
             if (it->first != positionsFromScheme) {
                 it = qualifiedPositionsAndPoints.erase(it);
@@ -338,7 +305,6 @@ namespace LinearAlgebra {
                 ++it;
             }
         }
-
         return weights;
     }
 } // LinearAlgebra

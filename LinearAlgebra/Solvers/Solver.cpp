@@ -14,8 +14,6 @@ namespace LinearAlgebra {
     
     void Solver::solve(){}
 
-    void Solver::setLinearSystem(LinearSystem *linearSystem) {
-
-    }
+    void Solver::setLinearSystem(LinearSystem *linearSystem) { }
 
 } // LinearAlgebra

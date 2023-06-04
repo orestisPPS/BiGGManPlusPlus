@@ -11,17 +11,16 @@ namespace Discretization {
     
     void Node::printNode() {
         cout << "Node: " << (*id.global) << endl;
-        //cout << "Boundary value: " << (*id.boundary) << " Internal Id: "<< (*id.internal)<< endl;
+/*        //cout << "Boundary value: " << (*id.boundary) << " Internal Id: "<< (*id.internal)<< endl;
         cout << "Template coordinates [x_1, x_2, x_3] = { " <<(coordinates.positionVector(Template)[0]) << ", " <<
                                                            coordinates.positionVector(Template)[1] << ", " <<
                                                            coordinates.positionVector(Template)[2] << "}" << endl;
         cout << "Parametric coordinates [x_1, x_2, x_3] = { " <<(coordinates.positionVector(Parametric)[0]) << ", " <<
              coordinates.positionVector(Parametric)[1] << ", " <<
-             coordinates.positionVector(Parametric)[2] << "}" << endl;
-
-/*        cout << "Natural coordinates [x_1, x_2, x_3] = { " <<(coordinates.positionVector(Natural)[0]) << ", " <<
-             coordinates.positionVector(Natural)[1] << ", " <<
-             coordinates.positionVector(Natural)[2] << "}" << endl;*/
+             coordinates.positionVector(Parametric)[2] << "}" << endl;*/
+        auto naturalCoords = coordinates.positionVector3D(Natural);
+        cout << "Natural coordinates [x_1, x_2, x_3] = { " <<(\
+             naturalCoords[0]) << ", " << naturalCoords[1] << ", " << naturalCoords[2] << "}" << endl;
         cout << "---------------------------------------------------------" << endl;
     }
     

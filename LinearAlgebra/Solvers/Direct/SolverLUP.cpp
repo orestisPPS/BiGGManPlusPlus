@@ -25,6 +25,14 @@ namespace LinearAlgebra {
     void SolverLUP::setLinearSystem(LinearSystem* linearSystem) {
         _linearSystem = linearSystem;
         _decomposition = new DecompositionLUP(_linearSystem->matrix, _pivotTolerance, _throwExceptionOnSingularMatrix);
+
+    }
+
+    unique_ptr<MatrixDecomposition> SolverLUP::getDecomposition() {
+        return unique_ptr<MatrixDecomposition>(_decomposition);
+    }
+    
+    void SolverLUP::solve() {
         if (_storeDecompositionOnMatrix) {
             cout<<"Decomposition Initiated..."<<endl;
             _decomposition->decomposeOnMatrix();
@@ -33,14 +41,6 @@ namespace LinearAlgebra {
         {
             _decomposition->decompose(true);
         }
-        
-    }
-
-    unique_ptr<MatrixDecomposition> SolverLUP::getDecomposition() {
-        return unique_ptr<MatrixDecomposition>(_decomposition);
-    }
-    
-    void SolverLUP::solve() {
         _linearSystem->solution = _decomposition->solve(_linearSystem->RHS);
     }
 } // LinearAlgebra

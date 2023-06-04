@@ -46,13 +46,13 @@ namespace LinearAlgebra {
 
         AnalysisDegreesOfFreedom* _analysisDegreesOfFreedom;
 
-        Array<double>* _freeFreeMatrix;
+        Array<double>* _matrix;
         
-        Array<double>* _fixedFreeMatrix;
+/*        Array<double>* _fixedFreeMatrix;
 
-        Array<double>* _freeFreeFreeFixedSubMatrix;
+        Array<double>* _freeFreeFreeFixedSubMatrix;*/
         
-        void assembleMatrices();
+        void _assembleMatrices();
         
 
 
@@ -70,6 +70,8 @@ namespace LinearAlgebra {
                                                                       map<vector<Position>,short>& templatePositionsAndPoints);
         
         void _createRHS();
+        
+        double _getPDECoefficient(unsigned short derivativeOrder, Node* parentNode, Direction direction = None);
     };
 
 } // LinearAlgebra
@@ -129,11 +131,11 @@ namespace LinearAlgebra {
         
         AnalysisDegreesOfFreedom* _analysisDegreesOfFreedom;
         
-        Array<double>* _freeFreeMatrix;
+        Array<double>* _matrix;
         
         map<DegreeOfFreedom*, double>* _fixedDOFCoefficients;
         
-        void assembleMatrices();
+        void _assembleMatrices();
         
         void _calculateFixedDOFCoefficients();
         

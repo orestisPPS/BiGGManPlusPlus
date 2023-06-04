@@ -56,11 +56,6 @@ namespace StructuredMeshGenerator{
 
         analysis->solve();
         
-/*        auto result = analysis->linearSystem->solution;
-        for (double i : *result) {
-            cout << i << endl;
-        }*/
-        
         analysis->applySolutionToDegreesOfFreedom();
         
         for (auto &node : *mesh->totalNodesVector){
@@ -68,16 +63,33 @@ namespace StructuredMeshGenerator{
             for (auto &dof : *node->degreesOfFreedom){
                 coords->push_back(dof->value());
             }
+            for (auto &dof : *node->degreesOfFreedom){
+                delete dof;
+                dof = nullptr;
+            }
+            node->degreesOfFreedom->clear();
+            node->coordinates.addPositionVector(coords);
+        }
+
+        for (auto &node : *mesh->totalNodesVector){
+            auto coords = new vector<double>();
+            for (auto &dof : *node->degreesOfFreedom){
+                coords->push_back(dof->value());
+            }
+            for (auto &dof : *node->degreesOfFreedom){
+                delete dof;
+                dof = nullptr;
+            }
             node->degreesOfFreedom->clear();
             node->coordinates.addPositionVector(coords);
         }
         
-        delete specs;
+/*        delete specs;
         //delete problem;
         delete solver;
         delete analysis->linearSystem;
-        //delete analysis->degreesOfFreedom;
-        delete dofTypes;
+        delete analysis->degreesOfFreedom;
+        delete dofTypes;*/
 
 
         auto end = chrono::steady_clock::now();

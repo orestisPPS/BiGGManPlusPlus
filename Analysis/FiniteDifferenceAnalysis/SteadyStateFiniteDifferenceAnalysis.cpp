@@ -15,14 +15,18 @@ namespace NumericalAnalysis {
         auto linearSystemInitializer =
                 new AnalysisLinearSystemInitializer(degreesOfFreedom, mesh, mathematicalProblem, schemeSpecs, coordinateSystem);
         linearSystemInitializer->createLinearSystem();
-        linearSystem = linearSystemInitializer->linearSystem;
+        this->linearSystem = linearSystemInitializer->linearSystem;
         solver->setLinearSystem(linearSystem);
+        cout<<"Matrix: "<<endl;
+        this->linearSystem->matrix->print();
+        cout<<"RHS: "<<endl;
+        for (double i : *this->linearSystem->RHS) {
+            cout<<i<<endl;
+        }
+        cout<<"SYSTEM BEFORE SOLVER..."<<endl;
         
-/*        auto fileNameMatlab = "linearSystem.m";
-        auto filenameParaview = "mesh.vtk";
-        auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
-        //Utility::Exporters::exportLinearSystemToMatlabFile(linearSystem->matrix, linearSystem->RHS, filePath, fileNameMatlab);
-        //Utility::Exporters::saveNodesToParaviewFile(mesh, filePath, filenameParaview);*/
+
+        //Utility::Exporters::saveNodesToParaviewFile(mesh, filePath, filenameParaview);
     }
     
     //void SteadyStateFiniteDifferenceAnalysis::createLinearSystem() {

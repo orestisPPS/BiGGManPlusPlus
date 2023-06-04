@@ -310,7 +310,8 @@ namespace Discretization {
                     auto contravariantBaseVectorI = vector<double>(directionsVector.size(), 0);
 
                     //Get the FD scheme weights for the current direction
-                    auto covariantWeights = schemeBuilder->getSchemeWeightsAtDirectionDerivative1(directionI);
+                    auto scheme = schemeBuilder->getSchemeAtDirection(directionI, 1, 2);
+                    auto covariantWeights = scheme.weights;
                     auto contravariantWeights = covariantWeights;
 
                     //Check if the number of weights and the number of nodes match
@@ -332,6 +333,7 @@ namespace Discretization {
 
                     auto covariantStep = 1.0;
                     auto contravariantStep = VectorOperations::averageAbsoluteDifference(templateCoords[directionI][i]);
+                    contravariantStep = pow(contravariantStep, scheme.power) * scheme.denominatorCoefficient;
 
                     for (int weight = 0; weight < covariantWeights.size(); weight++) {
                         covariantWeights[weight] /= covariantStep;

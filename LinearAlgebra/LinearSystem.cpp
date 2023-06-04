@@ -13,9 +13,18 @@ namespace LinearAlgebra {
             solution(nullptr) {}
     
     LinearSystem::~LinearSystem() {
-        delete matrix;
-        delete RHS;
-        delete solution;
+        if (matrix != nullptr){
+            delete matrix;
+            matrix = nullptr;
+        }
+        if (RHS != nullptr){
+            delete RHS;
+            RHS = nullptr;
+        }
+        if (solution != nullptr){
+            delete solution;
+            solution = nullptr;
+        }
     }
 
 
