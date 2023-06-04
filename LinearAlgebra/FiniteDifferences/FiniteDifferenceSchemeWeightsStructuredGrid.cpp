@@ -6,191 +6,232 @@
 
 namespace LinearAlgebra {
     
-    
-    map<int, double>* FiniteDifferenceSchemeWeightsStructuredGrid::
-    _getWeightsDerivative1(FDSchemeType schemeType, unsigned int errorOrder) {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid::
+    _getSchemeFromDerivativeOrder(FDSchemeType schemeType, unsigned derivativeOrder, unsigned int errorOrder) {
+
+        auto schemeTypeAndOrder = make_tuple(schemeType, errorOrder);
+        auto schemeTypeAndOrderToSchemeWeightsMap = map<tuple<FDSchemeType, unsigned int>, SchemeMap>();
+        switch (derivativeOrder) {
+            case 1:
+                schemeTypeAndOrderToSchemeWeightsMap = _schemeTypeAndOrderToWeightsDerivative1();
+                break;
+            case 2:
+                schemeTypeAndOrderToSchemeWeightsMap = _schemeTypeAndOrderToWeightsDerivative2();
+                break;
+            default:
+                throw invalid_argument("Derivative order should be 1 or 2");
+        }
+        if (schemeTypeAndOrderToSchemeWeightsMap.find(make_tuple(schemeType, errorOrder)) !=
+            schemeTypeAndOrderToSchemeWeightsMap.end()) {
+            return schemeTypeAndOrderToSchemeWeightsMap[schemeTypeAndOrder];
+        } else {
+            throw invalid_argument("The scheme type and error order combination is not supported");
+        }
+    }
+
+    Scheme FiniteDifferenceSchemeWeightsStructuredGrid::
+    getScheme(FDSchemeType schemeType, unsigned short derivativeOrder, unsigned errorOrder) {
         
-        auto schemeTypeAndOrder = make_tuple(schemeType, errorOrder);
-        auto schemeTypeAndOrderToSchemeWeightsMap = _schemeTypeAndOrderToWeightsDerivative1();
-        if (schemeTypeAndOrderToSchemeWeightsMap.find(schemeTypeAndOrder) != schemeTypeAndOrderToSchemeWeightsMap.end()) {
-            return new map<int, double>(schemeTypeAndOrderToSchemeWeightsMap[schemeTypeAndOrder]);
+        auto schemeMap = _getSchemeFromDerivativeOrder(schemeType, derivativeOrder, errorOrder);
+        auto scheme = Scheme();
+        scheme.power = schemeMap.power;
+        scheme.denominatorCoefficient = schemeMap.denominatorCoefficient;
+        scheme.weights = vector<double>();
+        for (auto& weight : schemeMap.weights) {
+            scheme.weights.push_back(weight.second);
         }
-        else {
-            throw invalid_argument("The scheme type and error order combination is not supported");
-        }
-    }
-
-    map<int, double>* FiniteDifferenceSchemeWeightsStructuredGrid::
-    _getWeightsDerivative2(FDSchemeType schemeType, unsigned int errorOrder) {
-
-        auto schemeTypeAndOrder = make_tuple(schemeType, errorOrder);
-        auto schemeTypeAndOrderToSchemeWeightsMap = _schemeTypeAndOrderToWeightsDerivative2();
-        if (schemeTypeAndOrderToSchemeWeightsMap.find(schemeTypeAndOrder) != schemeTypeAndOrderToSchemeWeightsMap.end()) {
-            return new map<int, double>(schemeTypeAndOrderToSchemeWeightsMap[schemeTypeAndOrder]);
-        }
-        else {
-            throw invalid_argument("The scheme type and error order combination is not supported");
-        }
+        return scheme;
     }
     
-    vector<double> FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVector(unsigned short derivativeOrder, FDSchemeType schemeType, unsigned int errorOrder) {
-        if (derivativeOrder == 1) {
-            return getWeightsVectorDerivative1(schemeType, errorOrder);
-        }
-        else if (derivativeOrder == 2) {
-            return getWeightsVectorDerivative2(schemeType, errorOrder);
-        }
-        else {
-            throw invalid_argument("The derivative order is not supported");
-        }
-    }
-
-    vector<double> FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative1(FDSchemeType schemeType, unsigned int errorOrder) {
-        auto weights = _getWeightsDerivative1(schemeType, errorOrder);
-        auto weightsVector = vector<double>();
-        for (auto& weight : *weights) {
-            weightsVector.push_back(weight.second);
-        }
-        return weightsVector;
-    }
-
-    vector<double> FiniteDifferenceSchemeWeightsStructuredGrid::getWeightsVectorDerivative2(FDSchemeType schemeType, unsigned int errorOrder) {
-        auto weights = _getWeightsDerivative2(schemeType, errorOrder);
-        auto weightsVector = vector<double>();
-        for (auto& weight : *weights) {
-            weightsVector.push_back(weight.second);
-        }
-        return weightsVector;
-    }
-    
-    
-    
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _forward1_1() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _forward1_1() {
         auto weights = map<int, double>();
         weights[0] = 1;
         weights[1] = -1;
-        return weights;
+        auto scheme = SchemeMap();
+        scheme.power = 1;
+        scheme.denominatorCoefficient = 1.0;
+        scheme.weights = weights;
+        return scheme;
+    }
+
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _forward1_2() {
+        auto weights = map<int, double>();
+        weights[0] = 3.0;
+        weights[1] = -4.0;
+        weights[2] = 1.0;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 1;
+        scheme.denominatorCoefficient = 2.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _forward1_2() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _forward1_3() {
         auto weights = map<int, double>();
-        weights[0] = 3.0 / 2.0;
-        weights[1] = -4 / 2.0;
-        weights[2] = 1 / 2.0;
-        return weights;
+        weights[0] = 11.0;
+        weights[1] = -18.0;
+        weights[2] = 9.0;
+        weights[3] = -2.0;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 1;
+        scheme.denominatorCoefficient = 6.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _forward1_3() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _forward1_4() {
         auto weights = map<int, double>();
-        weights[0] = 11 / 6.0;
-        weights[1] = -18 / 6.0;
-        weights[2] = 9 / 6.0;
-        weights[3] = -2 / 6.0;
-        return weights;
+        weights[0] = 25.0;
+        weights[1] = -48.0;
+        weights[2] = 36.0;
+        weights[3] = -16.0;
+        weights[4] = 3.0;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 1;
+        scheme.denominatorCoefficient = 12.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _forward1_4() {
+    
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _forward1_5() {
         auto weights = map<int, double>();
-        weights[0] = 25 / 12.0;
-        weights[1] = -48 / 6.0;
-        weights[2] = 36 / 6.0;
-        weights[3] = -16 / 6.0;
-        weights[4] = 3 / 6.0;
-        return weights;
+        weights[0] = 137.0;
+        weights[1] = -300.0;
+        weights[2] = 300.0;
+        weights[3] = -200.0;
+        weights[4] = 75.0;
+        weights[5] = -12.0;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 1;
+        scheme.denominatorCoefficient = 60.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _forward1_5() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _backward1_1() {
         auto weights = map<int, double>();
-        weights[0] = 137 / 60.0;
-        weights[1] = -300 / 60.0;
-        weights[2] = 300 / 60.0;
-        weights[3] = -200 / 60.0;
-        weights[4] = 75 / 60.0;
-        weights[5] = -12 / 60.0;
-        return weights;
-    }
-    
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _backward1_1() {
-        auto weights = map<int, double>();
-        weights[-1] = 1;
+        weights[-1] = -1;
         weights[0] = 1;
-        return weights;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 1;
+        scheme.denominatorCoefficient = 1.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _backward1_2() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _backward1_2() {
         auto weights = map<int, double>();
-        weights[-2] = 1 / 2.0;
-        weights[-1] = -4 / 2.0;
-        weights[0] = 3 / 2.0;
-
-
-        return weights;
+        weights[-2] = 1;
+        weights[-1] = -4;
+        weights[0] = 3;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 1;
+        scheme.denominatorCoefficient = 2.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _backward1_3() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _backward1_3() {
         auto weights = map<int, double>();
-        weights[-3] = -2 / 6.0;
-        weights[-2] = 9 / 6.0;
-        weights[-1] = -18 / 6.0;
-        weights[0] = 11 / 6.0;
-        return weights;
+        weights[-3] = -2;
+        weights[-2] = 9;
+        weights[-1] = -18;
+        weights[0] = 11;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 1;
+        scheme.denominatorCoefficient = 6.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _backward1_4() {
+    
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _backward1_4() {
         auto weights = map<int, double>();
-        weights[-4] = 3 / 12.0;
-        weights[-3] = -16 / 12.0;
-        weights[-2] = 36 / 12.0;
-        weights[-1] = -48 / 12.0;
-        weights[0] = 25 / 12.0;
-        return weights;
+        weights[-4] = 3;
+        weights[-3] = -16;
+        weights[-2] = 36;
+        weights[-1] = -48;
+        weights[0] = 25;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 1;
+        scheme.denominatorCoefficient = 12.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _backward1_5() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _backward1_5() {
         auto weights = map<int, double>();
-        weights[-5] = -12 / 60.0;
-        weights[-4] = 75 / 60.0;
-        weights[-3] = -200 / 60.0;
-        weights[-2] = 300 / 60.0;
-        weights[-1] = -300 / 60.0;
-        weights[0] = 137 / 60.0;
-
-        return weights;
+        weights[-5] = -12;
+        weights[-4] = 75;
+        weights[-3] = -200;
+        weights[-2] = 300;
+        weights[-1] = -300;
+        weights[0] = 137;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 1;
+        scheme.denominatorCoefficient = 60.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _central1_2() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _central1_2() {
         auto weights = map<int, double>();
-        weights[-1] = -1 / 2.0;
+        weights[-1] = -1.0;
         weights[0] = 0.0;
-        weights[1] = 1 / 2.0;
-        return weights;
+        weights[1] = 1.0;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 1;
+        scheme.denominatorCoefficient = 2.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _central1_4() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _central1_4() {
         auto weights = map<int, double>();
-        weights[-2] = 1 / 12.0;
-        weights[-1] = -8 / 12.0;
-        weights[0] = 0.0;
-        weights[1] = 8 / 12.0;
-        weights[2] = -1 / 12.0;
-        return weights;
+        weights[-2] = 1;
+        weights[-1] = -8;
+        weights[0] = 0;
+        weights[1] = 8;
+        weights[2] = -1;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 1;
+        scheme.denominatorCoefficient = 12.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _central1_6() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _central1_6() {
         auto weights = map<int, double>();
-        weights[-3] = 1 / 60.0;
-        weights[-2] = -9 / 60.0;
-        weights[-1] = 45 / 60.0;
-        weights[0] = 0.0;
-        weights[1] = -45 / 60.0;
-        weights[2] = 9 / 60.0;
-        weights[3] = -1 / 60.0;
-        return weights;
+        weights[-3] = 1;
+        weights[-2] = -9;
+        weights[-1] = 45;
+        weights[0] = 0;
+        weights[1] = -45;
+        weights[2] = 9;
+        weights[3] = -1;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 1;
+        scheme.denominatorCoefficient = 60.0;
+        return scheme;
     }
 
-    map<tuple<FDSchemeType, unsigned>, map<int, double>>
+    map<tuple<FDSchemeType, unsigned>, SchemeMap>
     FiniteDifferenceSchemeWeightsStructuredGrid::_schemeTypeAndOrderToWeightsDerivative1() {
-        auto firstOrderWeights = map<tuple<FDSchemeType, unsigned>, map<int, double>>();
+        auto firstOrderWeights = map<tuple<FDSchemeType, unsigned>, SchemeMap>();
         firstOrderWeights[make_tuple(FDSchemeType::Forward, 1)] = _forward1_1();
         firstOrderWeights[make_tuple(FDSchemeType::Forward, 2)] = _forward1_2();
         firstOrderWeights[make_tuple(FDSchemeType::Forward, 3)] = _forward1_3();
@@ -207,122 +248,180 @@ namespace LinearAlgebra {
         return firstOrderWeights;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _forward2_2() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _forward2_2() {
         auto weights = map<int, double>();
         weights[0] = 2;
         weights[1] = -5;
         weights[2] = 4;
         weights[3] = -1;
-        return weights;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 2;
+        scheme.denominatorCoefficient = 1.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _forward2_3() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _forward2_3() {
         auto weights = map<int, double>();
-        weights[0] = 35 / 12.0;
-        weights[1] = -104 / 12.0;
-        weights[2] = 114 / 12.0;
-        weights[3] = -56 / 12.0;
-        weights[4] = 11 / 12.0;
-        return weights;
+        weights[0] = 35.0;
+        weights[1] = -104.0;
+        weights[2] = 114.0;
+        weights[3] = -56.0;
+        weights[4] = 11.0;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 2;
+        scheme.denominatorCoefficient = 12.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _forward2_4() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _forward2_4() {
         auto weights = map<int, double>();
-        weights[0] =  45  / 12.0;
-        weights[1] = -154 / 12.0;
-        weights[2] =  214 / 12.0;
-        weights[3] = -156 / 12.0;
-        weights[4] =  61  / 12.0;
-        weights[5] = -10  / 12.0;
-        return weights;
+        weights[0] = 45.0;
+        weights[1] = -154.0;
+        weights[2] = 214.0;
+        weights[3] = -156.0;
+        weights[4] = 61.0;
+        weights[5] = -10.0;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 2;
+        scheme.denominatorCoefficient = 12.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _forward2_5() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _forward2_5() {
         auto weights = map<int, double>();
-        weights[0] = 812 / 180.0;
-        weights[1] = -3132 / 180.0;
-        weights[2] = 5265 / 180.0;
-        weights[3] = -5080 / 180.0;
-        weights[4] = -2970 / 180.0;
-        weights[5] = -972 / 180.0;
-        weights[6] = 137 / 180.0;
-        return weights;
+        weights[0] = 812.0;
+        weights[1] = -3132.0;
+        weights[2] = 5265.0;
+        weights[3] = -5080.0;
+        weights[4] = 2970.0;
+        weights[5] = -972.0;
+        weights[6] = 137.0;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 2;
+        scheme.denominatorCoefficient = 180.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _backward2_2() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _backward2_2() {
         auto weights = map<int, double>();
-        weights[-3] = 1;
-        weights[-2] = -4;
-        weights[-1] = 5;
-        weights[0] = -2;
-        return weights;
+        weights[-3] = -1;
+        weights[-2] = 4;
+        weights[-1] = -5;
+        weights[0] = 2;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 2;
+        scheme.denominatorCoefficient = 1.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _backward2_3() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _backward2_3() {
         auto weights = map<int, double>();
-        weights[-4] = 11 / 12.0;
-        weights[-3] = -56 / 12.0;
-        weights[-2] = 114 / 12.0;
-        weights[-1] = -104 / 12.0;
-        weights[0] = 35 / 12.0;
-        return weights;
+        weights[-4] = 11.0;
+        weights[-3] = -56.0;
+        weights[-2] = 114.0;
+        weights[-1] = -104.0;
+        weights[0] = 35.0;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 2;
+        scheme.denominatorCoefficient = 12.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _backward2_4() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _backward2_4() {
         auto weights = map<int, double>();
-        weights[-5] = -10 / 12.0;
-        weights[-4] = 61 / 12.0;
-        weights[-3] = -156 / 12.0;
-        weights[-2] = 214 / 12.0;
-        weights[-1] = -154 / 12.0;
-        weights[0] = 45 / 12.0;
-        return weights;
+        weights[-5] = -10.0;
+        weights[-4] = 61.0;
+        weights[-3] = -156.0;
+        weights[-2] = 214.0;
+        weights[-1] = -154.0;
+        weights[0] = 45.0;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 2;
+        scheme.denominatorCoefficient = 12.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _backward2_5() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _backward2_5() {
         auto weights = map<int, double>();
-        weights[-6] = 137 / 180.0;
-        weights[-5] = -972 / 180.0;
-        weights[-4] = 2970 / 180.0;
-        weights[-3] = -5080 / 180.0;
-        weights[-2] = 5265 / 180.0;
-        weights[-1] = -3132 / 180.0;
-        weights[0] = 812 / 180.0;
-        return weights;
+        weights[-6] = 137.0;
+        weights[-5] = -972.0;
+        weights[-4] = 2970.0;
+        weights[-3] = -5080.0;
+        weights[-2] = 5265.0;
+        weights[-1] = -3132.0;
+        weights[0] = 812.0;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 2;
+        scheme.denominatorCoefficient = 180.0;
+        
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _central2_2() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _central2_2() {
         auto weights = map<int, double>();
-        weights[-1] =  1;
+        weights[-1] = 1;
         weights[0]  = -2;
-        weights[1]  =  1;
-        return weights;
+        weights[1]  = 1;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 2;
+        scheme.denominatorCoefficient = 1.0;
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _central2_4() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _central2_4() {
         auto weights = map<int, double>();
-        weights[-2] = -1 / 12.0;
-        weights[-1] = 16 / 12.0;
-        weights[0] = -30 / 12.0;
-        weights[1] = 16 / 12.0;
-        weights[2] = -1 / 12.0;
-        return weights;
+        weights[-2] = -1;
+        weights[-1] = 16;
+        weights[0] = -30;
+        weights[1] = 16;
+        weights[2] = -1;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 2;
+        scheme.denominatorCoefficient = 12.0;
+        
+        return scheme;
     }
     
-    map<int, double> FiniteDifferenceSchemeWeightsStructuredGrid :: _central2_6() {
+    SchemeMap FiniteDifferenceSchemeWeightsStructuredGrid :: _central2_6() {
         auto weights = map<int, double>();
-        weights[-3] = 2 / 180.0;
-        weights[-2] = -27 / 180.0;
-        weights[-1] = 270 / 180.0;
-        weights[0] = -490 / 180.0;
-        weights[1] = 270 / 180.0;
-        weights[2] = -27 / 180.0;
-        weights[3] = 2 / 180.0;
-        return weights;
+        weights[-3] = 2;
+        weights[-2] = -27;
+        weights[-1] = 270;
+        weights[0] = -490;
+        weights[1] = 270;
+        weights[2] = -27;
+        weights[3] = 2;
+        
+        auto scheme = SchemeMap();
+        scheme.weights = weights;
+        scheme.power = 2;
+        scheme.denominatorCoefficient = 180.0;
+        
+        return scheme;
     }
     
-    map<tuple<FDSchemeType, unsigned>, map<int, double>> FiniteDifferenceSchemeWeightsStructuredGrid :: _schemeTypeAndOrderToWeightsDerivative2() {
-        auto secondOrderWeights = map<tuple<FDSchemeType, unsigned>, map<int, double>>();
+    map<tuple<FDSchemeType, unsigned>, SchemeMap> FiniteDifferenceSchemeWeightsStructuredGrid :: _schemeTypeAndOrderToWeightsDerivative2() {
+        auto secondOrderWeights = map<tuple<FDSchemeType, unsigned>, SchemeMap>();
         secondOrderWeights[make_tuple(FDSchemeType::Forward, 2)] = _forward2_2();
         secondOrderWeights[make_tuple(FDSchemeType::Forward, 3)] = _forward2_3();
         secondOrderWeights[make_tuple(FDSchemeType::Forward, 4)] = _forward2_4();

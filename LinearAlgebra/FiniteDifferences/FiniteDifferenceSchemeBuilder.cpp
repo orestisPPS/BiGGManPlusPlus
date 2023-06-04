@@ -290,8 +290,7 @@ namespace LinearAlgebra {
             map<vector<Position>, short>& qualifiedPositionsAndPoints,
             Direction& direction,
             unsigned short errorOrder,
-            unsigned short derivativeOrder
-    ) {
+            unsigned short derivativeOrder) {
         map<FDSchemeType, vector<double>> availableSchemes;
         auto positionsToScheme = positionsToSchemeType();
 

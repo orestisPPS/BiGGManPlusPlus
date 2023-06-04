@@ -126,7 +126,7 @@ namespace LinearAlgebra {
         }
     }
 
-    unsigned FDSchemeSpecs::getErrorOrderOfVariableSchemeTypeForDerivativeOrder(unsigned int derivativeOrder) const {
+    unsigned FDSchemeSpecs::getErrorOrderOfSchemeTypeForDerivative(unsigned int derivativeOrder) const {
         if (!schemeTypeFixed)
             return get<1>(schemeTypeAndOrderAtDirectionForDerivativeOrder->at(derivativeOrder).at(One));
         else

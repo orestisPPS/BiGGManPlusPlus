@@ -22,9 +22,6 @@ namespace LinearAlgebra {
         // Map containing the sum of the weights for each position of the
         map<Position, double>* schemeWeightAtPosition;
         
-        map<Position, double>* scheme();
-        
-        
         // The maximum number of points needed for any scheme in any direction.
         short unsigned getNumberOfGhostNodesNeeded();
         
@@ -69,8 +66,6 @@ namespace LinearAlgebra {
         vector<double> getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints,
                                                               Direction& direction, unsigned short errorOrder, unsigned short derivativeOrder);
         
-        map<Direction, map<Position, unsigned short>>
-        getNumberOfPointsForPositionsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints);
         
     };
 

@@ -54,8 +54,7 @@ namespace LinearAlgebra {
         
         void assembleMatrices();
         
-        //Take the Free-Fixed sub-matrix from the total matrix that is arranged as follows [Free-Free, Free-Fixed, Fixed-Free, Fixed-Fixed]
-        void _createFreeFixedDOFSubMatrix();
+
 
         //Take the Free-Free sub-matrix from the total matrix that is arranged as follows [Free-Free, Free-Fixed, Fixed-Free, Fixed-Fixed]
         void _createFreeFreeDOFSubMatrix();
@@ -67,9 +66,8 @@ namespace LinearAlgebra {
         static map<short unsigned, map<Direction, map<vector<Position>, short>>>
         _initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions);
 
-        static void _checkIfAvailableAreQualified(map<vector<Position>, unsigned short>& availablePositionsAndPoints,
-                                                  map<vector<Position>, short>& templatePositionsAndPoints,
-                                                  map<vector<Position>, short>& qualifiedPositionsAndPoints);
+        static map<vector<Position>,short> _getQualifiedFromAvailable(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
+                                                                      map<vector<Position>,short>& templatePositionsAndPoints);
         
         void _createRHS();
     };
@@ -146,7 +144,7 @@ namespace LinearAlgebra {
         static map<short unsigned, map<Direction, map<vector<Position>, short>>>
         _initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions);
         
-        static void _checkIfAvailableAreQualified(map<vector<Position>, unsigned short>& availablePositionsAndPoints,
+        static void _getQualifiedFromAvailable(map<vector<Position>, unsigned short>& availablePositionsAndPoints,
                                                   map<vector<Position>, short>& templatePositionsAndPoints,
                                                   map<vector<Position>, short>& qualifiedPositionsAndPoints);
         

@@ -89,7 +89,7 @@ namespace LinearAlgebra {
 
         //Define the error order for each derivative order
         auto errorOrderDerivative1 = _specs->getErrorOrderOfVariableSchemeTypeForDerivativeOrder(1);
-        auto errorOrderDerivative2 = _specs->getErrorOrderOfVariableSchemeTypeForDerivativeOrder(2);
+        auto errorOrderDerivative2 = _specs->getErrorOrderOfSchemeTypeForDerivative(2);
 
 
         //Define the positions needed for the scheme at each direction as well as the number of points needed.
@@ -133,7 +133,7 @@ namespace LinearAlgebra {
                 _checkIfAvailableAreQualified(availablePositionsAndDepth.at(direction),
                                               templatePositionsAndPointsMap[1][direction],
                                               qualifiedPositionsAndPoints[1][direction]);
-                _checkIfAvailableAreQualified(availablePositionsAndDepth.at(direction),
+                _getQualifiedFromAvailable(availablePositionsAndDepth.at(direction),
                                               templatePositionsAndPointsMap[2][direction],
                                               qualifiedPositionsAndPoints[2][direction]);
 
@@ -338,7 +338,7 @@ namespace LinearAlgebra {
         auto schemeBuilder = FiniteDifferenceSchemeBuilder(_specs);
 
         auto errorOrderDerivative1 = _specs->getErrorOrderOfVariableSchemeTypeForDerivativeOrder(1);
-        auto errorOrderDerivative2 = _specs->getErrorOrderOfVariableSchemeTypeForDerivativeOrder(2);
+        auto errorOrderDerivative2 = _specs->getErrorOrderOfSchemeTypeForDerivative(2);
 
         schemeBuilder.templatePositionsAndPoints(1, errorOrderDerivative1, directions, templatePositionsAndPointsMap[1]);
         schemeBuilder.templatePositionsAndPoints(2, errorOrderDerivative2, directions, templatePositionsAndPointsMap[2]);
@@ -356,7 +356,7 @@ namespace LinearAlgebra {
 
             for (auto &direction : directions) {
                 _checkIfAvailableAreQualified(availablePositionsAndDepth.at(direction), templatePositionsAndPointsMap[1][direction], qualifiedPositionsAndPoints[1][direction]);
-                _checkIfAvailableAreQualified(availablePositionsAndDepth.at(direction), templatePositionsAndPointsMap[2][direction], qualifiedPositionsAndPoints[2][direction]);
+                _getQualifiedFromAvailable(availablePositionsAndDepth.at(direction), templatePositionsAndPointsMap[2][direction], qualifiedPositionsAndPoints[2][direction]);
 
                 auto firstDerivativeSchemeWeights = schemeBuilder.getSchemeWeightsFromQualifiedPositions(qualifiedPositionsAndPoints[1][direction], direction, errorOrderDerivative1, 1);
                 auto secondDerivativeSchemeWeights = schemeBuilder.getSchemeWeightsFromQualifiedPositions(qualifiedPositionsAndPoints[2][direction], direction, errorOrderDerivative2, 2);
@@ -471,7 +471,7 @@ namespace LinearAlgebra {
         return positionsAndPoints;
     }
 
-    void AnalysisLinearSystemInitializer2::_checkIfAvailableAreQualified(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
+    void AnalysisLinearSystemInitializer2::_getQualifiedFromAvailable(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
                                                                         map<vector<Position>,short>& templatePositionsAndPoints,
                                                                         map<vector<Position>,short>& qualifiedPositionsAndPoints){
         //Check if the specifications of the template positions and points are met in the available positions and points
