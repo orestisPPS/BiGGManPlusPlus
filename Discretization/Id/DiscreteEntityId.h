@@ -18,12 +18,6 @@ namespace Discretization
 
         //The global value of the entity
         unsigned *global;
-
-        //The boundary value of the entity. If it is not a boundary entity, this is set to NaN
-        unsigned *boundary;
-
-        //The internal value of the entity. If it is not an internal entity, this is set to NaN
-        unsigned *internal;
     };
 }
 

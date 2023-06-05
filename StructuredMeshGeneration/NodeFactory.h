@@ -35,7 +35,7 @@ namespace StructuredMeshGenerator {
         
         //Creates boundary nodes for 1D mesh (nnOne > 0, nnTwo = 0, nnThree = 0)
         //RELATIVE : left node has value 0, right node has value nnOne - 1
-        void create1DBoundaryNodes(unsigned position) const;
+        void create1DNodes(unsigned position) const;
         
         //Creates boundary nodes for 2D mesh (nnOne > 0, nnTwo > 0, nnThree = 0),
         // with the following order in identification starting from (0,0):
@@ -44,7 +44,7 @@ namespace StructuredMeshGenerator {
         // v      ^
         // v      ^
         // ->->->->
-        void create2DBoundaryNodes(unsigned index1, unsigned index2) const;
+        void create2DNodes(unsigned index1, unsigned index2) const;
         
         //Creates boundary nodes for 3D mesh (nnOne > 0, nnTwo > 0, nnThree > 0).
         // with the following order in identification starting from (0,0,0):
@@ -55,7 +55,7 @@ namespace StructuredMeshGenerator {
         // v      ^
         // v      ^
         // ->->->->
-        void create3DBoundaryNodes() const;
+        void create3DNodes() const;
                 
         //Allocates memory for boundary node.
         static Node *allocateBoundaryNode(int boundaryId);

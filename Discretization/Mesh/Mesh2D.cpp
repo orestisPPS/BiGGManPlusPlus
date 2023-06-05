@@ -61,14 +61,10 @@ namespace Discretization {
 
     void Mesh2D::printMesh() {
         cout << "Number of Nodes : " << totalNodes() << endl;
-        for (int i = 0; i < nodesPerDirection[Two] ; ++i) {
-            for (int j = 0; j < nodesPerDirection[One] ; ++j) {
-                cout << "(i, j) : (" << j << ", " << i << ")" << endl;
-                cout << "ID (Global, Boundary, Internal) : (" << (*(*_nodesMatrix)(j, i)->id.global) << ", "
-                                                             << (*(*_nodesMatrix)(j, i)->id.boundary) << ", "
-                                                             << (*(*_nodesMatrix)(j, i)->id.internal) << ")" << endl;
-
-                cout <<" " << endl;
+        for (int j = 0; j < nodesPerDirection[Two] ; ++j) {
+            for (int i = 0; i < nodesPerDirection[One] ; ++i) {
+                cout << "(i, j) : (" << i << ", " << j << ")" << endl;
+                cout << "ID : (" << (*(*_nodesMatrix)(i, j)->id.global) << endl;
             }
 
         }
