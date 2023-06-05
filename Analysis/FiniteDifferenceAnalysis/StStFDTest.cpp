@@ -12,13 +12,13 @@ namespace NumericalAnalysis {
     
     StStFDTest::StStFDTest() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 50;
-        numberOfNodes[Direction::Two] = 11;
-        auto specs = new MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
+        numberOfNodes[Direction::One] = 60;
+        numberOfNodes[Direction::Two] = 5;
+        auto specs = new MeshSpecs(numberOfNodes, 1, 0.5, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
         //meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
-        meshFactory->domainBoundaryFactory->ripGewrgiou(numberOfNodes, 0.1, 1, M_PI_2f64x / 2, 2 * M_PI_2f64x);
+        meshFactory->domainBoundaryFactory->annulus_ripGewrgiou(numberOfNodes, 0.8, 1, 0, 359);
         meshFactory->buildMesh(2);
         
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk");

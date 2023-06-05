@@ -371,7 +371,6 @@ namespace Discretization {
         else
             throw std::runtime_error("Mesh is not initialized");
     }
-
     void Mesh::storeMeshInVTKFile(const std::string& filePath, const std::string& fileName, CoordinateType coordinateType) const {
         ofstream outputFile(filePath + fileName);
         outputFile << "# vtk DataFile Version 3.0 \n";
@@ -385,6 +384,34 @@ namespace Discretization {
         }
         outputFile.close();
     }
+
+/*    void Mesh::storeMeshInVTKFile(const std::string& filePath, const std::string& fileName, CoordinateType coordinateType) const {
+        ofstream outputFile(filePath + fileName);
+        outputFile << "# vtk DataFile Version 3.0 \n";
+        outputFile << "vtk output \n";
+        outputFile << "ASCII \n";
+        outputFile << "DATASET UNSTRUCTURED_GRID \n";
+        outputFile << "POINTS " << totalNodesVector->size() << " double\n";
+        for (auto &node: *totalNodesVector) {
+            auto coordinates = node->coordinates.positionVector3D(coordinateType);
+            outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << "\n";
+        }
+
+        // Assume a 2D grid, so each cell is a quadrilateral made of 4 points
+        unsigned int numCells = totalNodesVector->size() - nodesPerDirection.at(One) - 1;
+        outputFile << "CELLS " << numCells << " " << numCells * 5 << "\n";
+        for (unsigned int i = 0; i < totalNodesVector->size() - nodesPerDirection.at(One) - 1; i++) {
+            outputFile << 4 << " " << i << " " << i + 1 << " " << i + nodesPerDirection.at(One) + 1 << " " << i + nodesPerDirection.at(One) << "\n";
+        }
+
+        // Specify cell type. For a 2D grid, cells are quadrilaterals, which have cell type 9 in VTK.
+        outputFile << "CELL_TYPES " << numCells << "\n";
+        for (unsigned int i = 0; i < numCells; i++) {
+            outputFile << 9 << "\n";
+        }
+
+        outputFile.close();
+    }*/
 
     map<vector<double>, Node *> Mesh::getCoordinateToNodeMap(CoordinateType coordinateType) const {
         map<vector<double>, Node *> coordinateToNodeMap;

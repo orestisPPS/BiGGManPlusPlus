@@ -160,14 +160,15 @@ namespace StructuredMeshGenerator {
         _domainBoundaryConditions = new DomainBoundaryConditions(boundaryConditionsSet);
     }
 
-    void DomainBoundaryFactory::ripGewrgiou(map<Direction, unsigned int> &nodesPerDirection, double rIn, double rOut, double  thetaStart, double thetaEnd) {
+    void DomainBoundaryFactory::annulus_ripGewrgiou(map<Direction, unsigned int> &nodesPerDirection, double rIn, double rOut, double  thetaStart, double thetaEnd) {
         if (thetaStart > thetaEnd) {
             throw runtime_error("Theta start must be less than theta end.");
         }
         const double pi = acos(-1.0);
         auto theta1 = Utility::Calculators::degreesToRadians(thetaStart);
         auto theta2 = Utility::Calculators::degreesToRadians(thetaEnd);
-        double theta = 2.0 * M_PI -  (theta2 - theta1);
+        //double theta = 2.0 * M_PI -  (theta2 - theta1);
+        double theta = (theta2 - theta1);
         auto nn1 = nodesPerDirection[One];
         vector<double> coordinateVector(2, 0.0);
         auto boundaryConditionsSet = new map<Position, map<unsigned, BoundaryCondition *>>();
@@ -189,11 +190,8 @@ namespace StructuredMeshGenerator {
             dofBC = new map<DOFType, double>();
             dofBC->insert(pair<DOFType, double>(DOFType::Position1, rIn * cos(theta1 + (i) * hTheta)));
             dofBC->insert(pair<DOFType, double>(DOFType::Position2, rIn * sin(theta1 + (i) * hTheta)));
-            /*            dofBC->insert(pair<DOFType, double>(DOFType::Position1, rIn * cos(theta1 + (nn1 - 1 - i) * hTheta)));
-            dofBC->insert(pair<DOFType, double>(DOFType::Position2, rIn * sin(theta1 + (nn1 - 1 - i) * hTheta)));*/
             boundaryConditionsSet->at(Top).insert(pair<unsigned, BoundaryCondition *>(boundaryNodeID, new BoundaryCondition(Dirichlet, dofBC)));
         }
-
         //Left & Right Boundaries
         auto nn2 = nodesPerDirection[Two];
         auto hR = (rOut - rIn) / (nn2 - 1);
@@ -217,8 +215,6 @@ namespace StructuredMeshGenerator {
             dofBC->insert(pair<DOFType, double>(DOFType::Position2, rCurrent * sin(theta1)));
             boundaryConditionsSet->at(Left).insert(pair<unsigned, BoundaryCondition *>(boundaryNodeID, new BoundaryCondition(Dirichlet, dofBC)));
         }
-
-
         _domainBoundaryConditions = new DomainBoundaryConditions(boundaryConditionsSet);
     }
 

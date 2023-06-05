@@ -29,8 +29,8 @@ namespace StructuredMeshGenerator {
                                                  double rotAngleX = 0, double rotAngleY = 0, double rotAngleZ = 0,
                                                  double shearX = 0, double shearY = 0, double shearZ = 0);
 
-        void ripGewrgiou(map<Direction, unsigned int> &nodesPerDirection, double rIn, double rOut, double thetaStart,
-                         double thetaEnd);
+        void annulus_ripGewrgiou(map<Direction, unsigned int> &nodesPerDirection, double rIn, double rOut, double thetaStart,
+                                 double thetaEnd);
         
         DomainBoundaryConditions* getDomainBoundaryConditions() const;
         
