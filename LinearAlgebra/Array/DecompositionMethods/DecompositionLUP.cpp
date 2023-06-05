@@ -94,9 +94,6 @@ namespace LinearAlgebra {
 
     void DecompositionLUP::decomposeOnMatrix() {
         
-        cout<<"Matrix before decomposition:"<<endl;
-        _matrix->print();
-        
         unsigned n = _matrix->numberOfRows();
         // Initialize the permutation vector P to the identity.
         _p = new vector<unsigned>(n, 1);
@@ -154,8 +151,6 @@ namespace LinearAlgebra {
                 }
             }
         }
-        cout<<"Matrix after decomposition:"<<endl;
-        _matrix->print();
     }
 
     unique_ptr<vector<unsigned >> DecompositionLUP::getP() {

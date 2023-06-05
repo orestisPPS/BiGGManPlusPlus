@@ -39,9 +39,7 @@ namespace LinearAlgebra {
 
         auto errorOrderDerivative1 = _specs->getErrorOrderOfSchemeTypeForDerivative(1);
         auto errorOrderDerivative2 = _specs->getErrorOrderOfSchemeTypeForDerivative(2);
-
-        auto iDOFRow = make_unique<vector<double>>(*_analysisDegreesOfFreedom->numberOfDOFs, 0);
-
+        
         schemeBuilder.templatePositionsAndPoints(1, errorOrderDerivative1, directions,
                                                  templatePositionsAndPointsMap[1]);
         schemeBuilder.templatePositionsAndPoints(2, errorOrderDerivative2, directions,
@@ -117,8 +115,9 @@ namespace LinearAlgebra {
                 }
             }
         }
-        auto end = std::chrono::steady_clock::now(); // Stop the timer
         this->linearSystem = new LinearSystem(_matrix, _rhsVector);
+
+        auto end = std::chrono::steady_clock::now(); // Stop the timer
         cout << "Linear System Assembled in "
              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
     }

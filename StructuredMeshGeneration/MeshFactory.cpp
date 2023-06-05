@@ -63,23 +63,10 @@ namespace StructuredMeshGenerator{
             for (auto &dof : *node->degreesOfFreedom){
                 coords->push_back(dof->value());
             }
-            for (auto &dof : *node->degreesOfFreedom){
+/*            for (auto &dof : *node->degreesOfFreedom){
                 delete dof;
                 dof = nullptr;
-            }
-            node->degreesOfFreedom->clear();
-            node->coordinates.addPositionVector(coords);
-        }
-
-        for (auto &node : *mesh->totalNodesVector){
-            auto coords = new vector<double>();
-            for (auto &dof : *node->degreesOfFreedom){
-                coords->push_back(dof->value());
-            }
-            for (auto &dof : *node->degreesOfFreedom){
-                delete dof;
-                dof = nullptr;
-            }
+            }*/
             node->degreesOfFreedom->clear();
             node->coordinates.addPositionVector(coords);
         }

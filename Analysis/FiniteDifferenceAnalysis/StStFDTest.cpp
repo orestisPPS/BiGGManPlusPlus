@@ -12,11 +12,11 @@ namespace NumericalAnalysis {
     
     StStFDTest::StStFDTest() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 5;
-        numberOfNodes[Direction::Two] = 5;
+        numberOfNodes[Direction::One] = 21;
+        numberOfNodes[Direction::Two] = 21;
         auto specs = new MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 4, 4);
+        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
         meshFactory->buildMesh(2);
         
@@ -50,9 +50,9 @@ namespace NumericalAnalysis {
         auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 0}}));
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 100 }}));
+                {{Temperature, 500 }}));
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 00}}));
+                {{Temperature, 100}}));
         
         
         //--------------------------------https://kyleniemeyer.github.io/ME373-book/content/pdes/elliptic.html---------------------------------------------------------------------
@@ -97,33 +97,26 @@ namespace NumericalAnalysis {
         
         auto analysis =
                 new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
-        auto fileNameMatlab = "linearSystemTemperature.m";
-        auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
-        Utility::Exporters::exportLinearSystemToMatlabFile(analysis->linearSystem->matrix, analysis->linearSystem->RHS, filePath, fileNameMatlab);
+        
+        
+
         
         analysis->solve();
-        
         
         analysis->applySolutionToDegreesOfFreedom();
 
 
         
-        //auto targetCoords = vector<double>{0.5, 0.5};
-        auto targetCoords = vector<double>{2, 2};
+        auto targetCoords = vector<double>{0.5, 0.5};
+        //auto targetCoords = vector<double>{2, 2};
         auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-2);
         
         cout<<"Target Solution: "<< targetSolution[0] << endl;
-        
-        
-        auto result = analysis->linearSystem->solution;
-        
-        for (double i : *result) {
-            cout << i << endl;
-        }
 
-/*        for (auto & fixedDOF : *analysis->degreesOfFreedom->fixedDegreesOfFreedom){
-            fixedDOF->print(true);
-        }*/
+        auto fileName = "temperatureField.vtk";
+        auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
+        auto fieldType = "Temperature";
+        Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
         
         auto filenameParaview = "firstMesh.vtk";
     }

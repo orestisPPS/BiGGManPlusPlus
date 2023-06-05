@@ -17,13 +17,13 @@ namespace NumericalAnalysis {
         linearSystemInitializer->createLinearSystem();
         this->linearSystem = linearSystemInitializer->linearSystem;
         solver->setLinearSystem(linearSystem);
-        cout<<"Matrix: "<<endl;
+/*        cout<<"Matrix: "<<endl;
         this->linearSystem->matrix->print();
         cout<<"RHS: "<<endl;
         for (double i : *this->linearSystem->RHS) {
             cout<<i<<endl;
         }
-        cout<<"SYSTEM BEFORE SOLVER..."<<endl;
+        cout<<"SYSTEM BEFORE SOLVER..."<<endl;*/
         
 
         //Utility::Exporters::saveNodesToParaviewFile(mesh, filePath, filenameParaview);

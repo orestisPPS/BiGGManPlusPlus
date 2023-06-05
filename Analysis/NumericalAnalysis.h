@@ -10,6 +10,7 @@
 #include "../LinearAlgebra/AnalysisLinearSystemInitializer.h"
 #include "AnalysisDOFs/AnalysisDegreesOfFreedom.h"
 #include "../LinearAlgebra/Solvers/Solver.h"
+#include "../Utility/Exporters/Exporters.h"
 
 
 using namespace LinearAlgebra;
