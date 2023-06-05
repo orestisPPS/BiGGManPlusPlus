@@ -55,12 +55,7 @@ namespace StructuredMeshGenerator{
     }
 
     void NodeFactory::create1DBoundaryNodes(unsigned position) const {
-        int a = 1;
-        Node *node = allocateBoundaryNode(a);
-        nodesMatrix -> at (0) = node;
-        nodesMatrix -> at (a) = node;
-        nodesMatrix -> at (0) = allocateBoundaryNode(0);
-        (*nodesMatrix)(position - 1) = allocateBoundaryNode(position - 1);
+        
     }
     
     void NodeFactory::create2DBoundaryNodes(unsigned index1, unsigned index2) const {

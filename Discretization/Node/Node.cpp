@@ -11,16 +11,20 @@ namespace Discretization {
     
     void Node::printNode() {
         cout << "Node: " << (*id.global) << endl;
-/*        //cout << "Boundary value: " << (*id.boundary) << " Internal Id: "<< (*id.internal)<< endl;
-        cout << "Template coordinates [x_1, x_2, x_3] = { " <<(coordinates.positionVector(Template)[0]) << ", " <<
-                                                           coordinates.positionVector(Template)[1] << ", " <<
-                                                           coordinates.positionVector(Template)[2] << "}" << endl;
-        cout << "Parametric coordinates [x_1, x_2, x_3] = { " <<(coordinates.positionVector(Parametric)[0]) << ", " <<
-             coordinates.positionVector(Parametric)[1] << ", " <<
-             coordinates.positionVector(Parametric)[2] << "}" << endl;*/
-        auto naturalCoords = coordinates.positionVector3D(Natural);
-        cout << "Natural coordinates [x_1, x_2, x_3] = { " <<(\
-             naturalCoords[0]) << ", " << naturalCoords[1] << ", " << naturalCoords[2] << "}" << endl;
+
+        cout << "Coordinates: " << endl;
+        cout << "---------------------------------------------------------" << endl;
+        
+/*        cout << "Natural coordinates [x_1, x_2, x_3] = { " <<(\
+             coordinates(Natural, 0)) << ", " << coordinates(Natural, 1) << ", " << coordinates(Natural, 2) << "}" << endl;*/
+                     
+        auto parametricCoords = coordinates.positionVector3D(Parametric);
+        cout << "Parametric coordinates [x_1, x_2, x_3] = { " <<(\
+             parametricCoords[0]) << ", " << parametricCoords[1] << ", " << parametricCoords[2] << "}" << endl;
+                     
+        auto templateCoords = coordinates.positionVector3D(Template);
+        cout << "Template coordinates [x_1, x_2, x_3] = { " <<(\
+             templateCoords[0]) << ", " << templateCoords[1] << ", " << templateCoords[2] << "}" << endl;
         cout << "---------------------------------------------------------" << endl;
     }
     

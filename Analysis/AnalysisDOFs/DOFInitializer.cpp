@@ -96,10 +96,13 @@ namespace NumericalAnalysis {
             auto nodesAtPosition = domainBoundary.second;
             //March through the nodes at the Position  that is the key of the domainBoundary map
             for (auto & node : *nodesAtPosition){
+                node->printNode();
+
                 auto bcAtPosition = domainBoundaryConditions-> getBoundaryConditionAtPositionAndNode(position,  *node->id.global);
                 auto dofValue = -1.0;
                 for (auto& dofType : *problemDOFTypes->DegreesOfFreedom){
                     dofValue = bcAtPosition->scalarValueOfDOFAt((*dofType));
+                    cout <<"dof value: " << dofValue << endl;
                     switch (bcAtPosition->type()){
                         case Dirichlet:{
                             auto dirichletDOF = new DegreeOfFreedom(dofType, *node->id.global, true, dofValue);

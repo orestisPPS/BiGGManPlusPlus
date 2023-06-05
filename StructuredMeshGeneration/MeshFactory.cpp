@@ -84,12 +84,13 @@ namespace StructuredMeshGenerator{
             node->coordinates.addPositionVector(coords);
         }
         
-/*        delete specs;
+        delete specs;
         //delete problem;
         delete solver;
         delete analysis->linearSystem;
-        delete analysis->degreesOfFreedom;
-        delete dofTypes;*/
+        //delete analysis->degreesOfFreedom;
+        dofTypes->deallocate();
+        delete dofTypes;
 
 
         auto end = chrono::steady_clock::now();

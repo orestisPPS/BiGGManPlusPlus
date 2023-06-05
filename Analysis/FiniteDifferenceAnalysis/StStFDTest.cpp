@@ -16,7 +16,7 @@ namespace NumericalAnalysis {
         numberOfNodes[Direction::Two] = 5;
         auto specs = new MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);
+        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 4, 4);
         //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
         meshFactory->buildMesh(2);
         
@@ -108,8 +108,8 @@ namespace NumericalAnalysis {
 
 
         
-        auto targetCoords = vector<double>{0.5, 0.5};
-        //auto targetCoords = vector<double>{2, 2};
+        //auto targetCoords = vector<double>{0.5, 0.5};
+        auto targetCoords = vector<double>{2, 2};
         auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-2);
         
         cout<<"Target Solution: "<< targetSolution[0] << endl;
