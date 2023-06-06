@@ -31,6 +31,14 @@ namespace StructuredMeshGenerator {
 
         void annulus_ripGewrgiou(map<Direction, unsigned int> &nodesPerDirection, double rIn, double rOut, double thetaStart,
                                  double thetaEnd);
+
+        void cavityBot(map<Direction, unsigned>& nodesPerDirection, double lengthX, double lengthY);
+        
+        void gasTankHorizontal(map<Direction, unsigned>& nodesPerDirection, double lengthX, double lengthY);
+        
+        void gasTankVertical(map<Direction, unsigned>& nodesPerDirection, double lenghtX, double lengthY);
+
+        void sinusRiver(map<Direction, unsigned int> &nodesPerDirection, double lengthX, double bankDistanceY, double amplitude, double frequency);
         
         DomainBoundaryConditions* getDomainBoundaryConditions() const;
         
