@@ -15,23 +15,22 @@ namespace StructuredMeshGenerator {
     class MeshSpecs {
     public :
         MeshSpecs(map<Direction, unsigned> &nodesPerDirection,
-                  double templateStepOne,
-                  double templateRotAngle,
-                  double templateShearOne);
+                  double templateStepOne, unsigned short metricsOrder = 2);
         
         MeshSpecs(map<Direction, unsigned> &nodesPerDirection,
                   double templateStepOne, double templateStepTwo,
                   double templateRotAngle,
-                  double templateShearOne, double templateShearTwo);
+                  double templateShearOne, double templateShearTwo, unsigned short metricsOrder = 2);
         
         MeshSpecs(map<Direction, unsigned> &nodesPerDirection,
                   double templateStepOne, double templateStepTwo, double templateStepThree,
-                  double templateRotAngle,
-                  double templateShearOne, double templateShearTwo, double templateShearThree);
+                  double templateRotAngleOne, double templateRotAngleTwo, double templateRotAngleThree,
+                  double templateShearOne, double templateShearTwo, double templateShearThree, unsigned short metricsOrder = 2);
         
-        map<Direction, unsigned> nodesPerDirection;
+        unsigned dimensions, metricsOrder;
+        map<Direction, unsigned>& nodesPerDirection;
         double templateStepOne, templateStepTwo, templateStepThree,
-               templateRotAngle,
+               templateRotAngleOne, templateRotAngleTwo, templateRotAngleThree,
                templateShearOne, templateShearTwo, templateShearThree;
         };
     };

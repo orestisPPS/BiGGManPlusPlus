@@ -4,32 +4,18 @@
 
 #include "TransientMathematicalProblem.h"
 
-namespace MathematicalProblem {
-    TransientMathematicalProblem::TransientMathematicalProblem(PartialDifferentialEquation *pde,
-                                                               map<Position, list<BoundaryConditions::BoundaryCondition *>> *bcs,
-                                                               double *ic,
-                                                               list<DegreeOfFreedom *> *dof,
-                                                               CoordinateSystem coordinateSystem) {
-        pde = pde;
-        boundaryConditions = bcs;
-        initialCondition = ic;
-        domainInitialConditions = nullptr;
-        degreesOfFreedom = dof;
-        coordinateSystem = coordinateSystem;
-    }
+namespace MathematicalProblems {
     
-    TransientMathematicalProblem::TransientMathematicalProblem(PartialDifferentialEquation *pde,
-                                                               map<Position, list<BoundaryConditions::BoundaryCondition *>> *bcs,
-                                                               map<int *, double> *domainIC,
-                                                               list<DegreeOfFreedom *> *dof,
-                                                               CoordinateSystem coordinateSystem) {
-        pde = pde;
-        boundaryConditions = bcs;
-        initialCondition = nullptr;
-        domainInitialConditions = domainIC;
-        degreesOfFreedom = dof;
-        coordinateSystem = coordinateSystem;
+    
+    TransientMathematicalProblem :: TransientMathematicalProblem(
+            PartialDifferentialEquation *pde,
+            DomainBoundaryConditions* bcs, map<int*,double>* domainIC,
+            struct Field_DOFType *degreesOfFreedom) :
+            pde(pde), boundaryConditions(bcs), initialCondition(nullptr), domainInitialConditions(domainIC), degreesOfFreedom(degreesOfFreedom),
+            MathematicalProblem(pde, bcs, degreesOfFreedom){
+        
     }
 
 
-}// MathematicalProblem
+
+}// MathematicalProblems

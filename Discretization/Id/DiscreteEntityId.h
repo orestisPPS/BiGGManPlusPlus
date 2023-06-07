@@ -12,18 +12,12 @@ namespace Discretization
     class DiscreteEntityId {
     public:
 
-        DiscreteEntityId();
+        explicit DiscreteEntityId();
 
         ~DiscreteEntityId();
 
-        //The global id of the entity
+        //The global value of the entity
         unsigned *global;
-
-        //The boundary id of the entity. If it is not a boundary entity, this is set to NaN
-        unsigned *boundary;
-
-        //The internal id of the entity. If it is not an internal entity, this is set to NaN
-        unsigned *internal;
     };
 }
 

@@ -2,51 +2,119 @@
 // Created by hal9000 on 12/17/22.
 //
 #pragma once
-
-#include "../Node/Node.h"
 #include<vector>
-#include "../../LinearAlgebra/Array.h"
-#include "../../PositioningInSpace/SpaceCharacteristics.h"
+#include "../Node/Node.h"
+#include "../../LinearAlgebra/Array/Array.h"
+#include "../../StructuredMeshGeneration/MeshSpecs.h"
+#include "Metrics/Metrics.h"
+#include "GhostPseudoMesh/GhostPseudoMesh.h"
+#include "../../LinearAlgebra/Operations/Transformations.h"
+#include "../Node/IsoparametricNodeGraph.h"
+#include "../../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
+#include "../../LinearAlgebra/FiniteDifferences/FDWeightCalculator.h"
+
 
 using namespace Discretization;
+using namespace StructuredMeshGenerator;
 using namespace LinearAlgebra;
+
 
 namespace Discretization {
 
-    class Mesh {
-    public:
-        //Mesh(Array<Node *> *nodes, map<Direction, int> numberOfNodesPerDirection);
-        Mesh(Array<Node *> *nodes);
+     class Mesh {
+     
+     public:
+        //Mesh(Array<Node *> *nodes, map<Direction, int> nodesPerDirection);
+        Mesh();
         
-        ~Mesh();
-        
-        SpaceCharacteristics *spaceCharacteristics;
-        
-        map<Direction, unsigned > numberOfNodesPerDirection;
+        virtual ~Mesh();
+                
+        //map<Direction, unsigned > *nodesPerDirection;
+        map<Direction, unsigned > nodesPerDirection;
 
-        map<Position, list<Node *>*> *boundaryNodes;
+        map<Position, vector<Node*>*>* boundaryNodes;
         
-        unsigned TotalNodes();
-
-        unsigned MeshDimensions();
+        vector<Node*>* boundaryNodesVector;
         
-        Node *node(unsigned i);
-
-        Node *node(unsigned i, unsigned j);
-
-        Node *node(unsigned i, unsigned j, unsigned k);
+        vector<Node*>* internalNodesVector;
         
-        Node *nodeFromID(unsigned ID);
+        vector<Node*>* totalNodesVector;
+                
+        bool isInitialized;
+        
+        MeshSpecs* specs;
+        
+        map<unsigned, Metrics*> *metrics;
+        
+        //---------------Implemented parent class methods--------------
+        unsigned totalNodes();
+        
+        //Returns the node pointer of the node with the given global ID
+        //Ιf the node does not exist, returns nullptr
+        Node* nodeFromID(unsigned ID);
+
+         // Calculates the metrics of all the nodes based on the given coordinate system.
+         // If coordinateSystem is Template then the metrics are calculated based on the template coordinate system before
+         // the final coordinate system is calculated.
+         // If coordinateSystem is Natural then the metrics are calculated based on the final calculated coordinate system.
+         void calculateMeshMetrics(CoordinateType coordinateSystem, bool isUniformMesh);
+         
+         void initialize();
+         
+         void storeMeshInVTKFile(const string& filePath, const string& fileName, CoordinateType coordinateType = Natural) const;
+         
+         map<vector<double>, Node*> getCoordinateToNodeMap(CoordinateType coordinateType = Natural) const;
+        
+        //-----------------Virtual parent class methods-----------------
+        virtual unsigned dimensions();
+        
+        virtual SpaceEntityType space();
+
+        virtual vector<Direction> directions();
+
+        virtual Node* node(unsigned i);
     
-    private:
+        virtual Node* node(unsigned i, unsigned j);
+    
+        virtual Node* node(unsigned i, unsigned j, unsigned k);
+
+        virtual map<vector<double>, Node*>* createParametricCoordToNodesMap();
+        
+        virtual void printMesh();
+
+        
+     protected:
+         
         Array<Node *> *_nodesMatrix;
         
-        map<Position, list<Node*>*> *CreateBoundaries();
-
-        map<Position, list<Node*>*> *Create1DBoundaries();
-
-        map<Position, list<Node*>*> *Create2DBoundaries();
-
-        map<Position, list<Node*>*> *Create3DBoundaries();
+        map<unsigned, Node*>* _nodesMap;
+        
+        map<unsigned, Node*>* createNodesMap() const;
+        
+        void categorizeNodes();
+        
+        void createNumberOfNodesPerDirectionMap();
+        
+        void cleanMeshDataStructures();
+        
+        map<Direction, unsigned>* createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth);
+        
+        //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
+        virtual map<Position, vector<Node*>*> *addDBoundaryNodesToMap();
+        
+        //Adds the internal nodes of the mesh to a vector pointer of node pointers
+        virtual vector<Node*>* addInternalNodesToVector();
+        
+        virtual vector<Node*>* addTotalNodesToVector();
+        
+        vector<Node*>* addBoundaryNodesToVector() const;
+        
+        virtual GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth);
+        
+     private:
+         void _arbitrarilySpacedMeshMetrics(CoordinateType coordinateSystem);
+         
+         void _uniformlySpacedMetrics(CoordinateType coordinateSystem);
+         
     };
 }

@@ -3,59 +3,62 @@
 //
 
 #include "DegreeOfFreedom.h"
-#include <iostream>
-#include "limits"
+
 
 namespace DegreesOfFreedom{
-    DegreeOfFreedom::DegreeOfFreedom(DOFType dofType, FieldType fieldType) {
-        _dofType = dofType;
-        _fieldType = fieldType;
-        _value = new double(std::numeric_limits<double>::quiet_NaN());
-    }
 
-    DegreeOfFreedom::DegreeOfFreedom(DOFType dofType, FieldType fieldType, double value) {
-        _dofType = dofType;
-        _fieldType = fieldType;
-        _value = new double(value);
+    DegreeOfFreedom::DegreeOfFreedom(DOFType* dofType, unsigned parentNode, bool isConstrained, double value) :
+       _dofType(dofType), _parentNode(parentNode), _value(value), _id(numeric_limits<unsigned int>::quiet_NaN()) {
+        if (isConstrained)
+            _constraintType = Fixed;
+        else
+            _constraintType = Free;
+            
     }
-
-    DegreeOfFreedom::~DegreeOfFreedom() {
-        delete _value;
-        _value = nullptr;
-    }
-
-    DOFType DegreeOfFreedom::type() {
-        return _dofType;
-    }
-
-    FieldType DegreeOfFreedom::fieldType() {
-        return _fieldType;
-    }
-
-    double DegreeOfFreedom::value() {
-        return *_value;
-    }
-
-    void DegreeOfFreedom::setValue(double value) {
-        *_value = value;
-    }
-
+    
     bool DegreeOfFreedom::operator==(const DegreeOfFreedom &dof) {
-        switch (*_value != std::numeric_limits<double> ::quiet_NaN()) {
-            case true:
-                return _dofType == dof._dofType && _fieldType == dof._fieldType && *_value == *dof._value;
-            case false:
-                return _dofType == dof._dofType && _fieldType == dof._fieldType;
-        }
-        return false;
+        return _dofType == dof._dofType &&
+               _parentNode == dof._parentNode;
     }
 
     bool DegreeOfFreedom::operator!=(const DegreeOfFreedom &dof) {
         return !(*this == dof);
     }
-
-    void DegreeOfFreedom::Print() {
-        std::cout << "DOFType: " << _dofType << " FieldType: " << _fieldType << " Value: " << *_value <<  std::endl;
+    
+    unsigned int const &DegreeOfFreedom::ID() const{
+        return _id;
     }
-}
 
+    DOFType const &DegreeOfFreedom::type() const{
+        return *(_dofType);
+    }
+
+    ConstraintType const &DegreeOfFreedom::constraintType() const{
+        return _constraintType;
+    }
+
+    unsigned int const &DegreeOfFreedom::parentNode() const {
+        return _parentNode;
+    }
+    
+    double const &DegreeOfFreedom::value() const{
+        return _value;
+    }
+
+    void DegreeOfFreedom::setValue(double value) {
+        _value = value;
+    }
+    
+    void DegreeOfFreedom::setID(unsigned int ID) {
+        _id = ID;
+    }
+
+    void DegreeOfFreedom::print(bool printValue) {
+        if (printValue)
+            cout << "DOF ID: " << _id << "Parent Node: " << _parentNode<< " DOF type: " << *_dofType << " Constraint type: " << _constraintType << " Value: " << _value << endl;
+        else
+            cout << "DOF ID: " << _id << "Parent Node: " << _parentNode<< " DOF type: " << *_dofType << " Constraint type: " << _constraintType << endl;
+    }
+
+
+}

@@ -1,56 +1,41 @@
 //
-// Created by hal9000 on 11/29/22.
+// Created by hal9000 on 2/16/23.
 //
-
+#include <stdexcept>
+#include <utility>
 #include "BoundaryCondition.h"
-#include <limits>
-#include <iostream>
 
 namespace BoundaryConditions {
-    BoundaryCondition::BoundaryCondition(function<double(vector<double>)> *BCFunction) {
-        _boundaryConditionFunction = BCFunction;
+    
+    BoundaryCondition::BoundaryCondition(BoundaryConditionType bcType, map<DOFType, function<double (vector<double>*)>>* bcFunctionForDof) :
+            _bcType(bcType), _bcFunctionForDof(bcFunctionForDof), _bcValueForDof(nullptr) {
     }
     
-    BoundaryCondition::BoundaryCondition(list<tuple<PositioningInSpace::Direction, function<double(vector<double>)>*>> *directionalBCFunction) {
-        _directionalBoundaryConditionFunction = directionalBCFunction;
+    BoundaryCondition::BoundaryCondition(BoundaryConditionType bcType, map<DOFType, double>* bcValueForDof) :
+            _bcType(bcType), _bcValueForDof(bcValueForDof), _bcFunctionForDof(nullptr) {
     }
     
-    BoundaryCondition::~BoundaryCondition() {
-        if (_boundaryConditionFunction != nullptr) {
-            delete _boundaryConditionFunction;
-            _boundaryConditionFunction = nullptr;
-        }
-        if (_directionalBoundaryConditionFunction != nullptr) {
-            for (int i = 0; i < _directionalBoundaryConditionFunction->size(); ++i) {
-                delete &get<1>(_directionalBoundaryConditionFunction->front());
-                _directionalBoundaryConditionFunction->pop_front();
-            }
-            delete _directionalBoundaryConditionFunction;
-        }
+    double BoundaryCondition::scalarValueOfDOFAt(DOFType type, vector<double>* coordinates) {
+        return _bcFunctionForDof->at(type)(coordinates);
     }
     
-    double BoundaryCondition::valueAt(vector<double> &x) {
-        if (_boundaryConditionFunction != nullptr) {
-            return (*_boundaryConditionFunction)(x);
-        } else {
-            std::cout << "Error: No boundary condition function defined." << std::endl;
+    double BoundaryCondition::scalarValueOfDOFAt(DOFType type) {
+        return _bcValueForDof->at(type);
+    }
+
+    vector<double> BoundaryCondition::vectorValueOfAllDOFAt(vector<double> *coordinates) {
+        vector<double> result = vector<double>(_bcFunctionForDof->size());
+        for (auto &bc : *_bcFunctionForDof) {
+            result.push_back(bc.second(coordinates));
         }
-        return std::numeric_limits<double>::quiet_NaN();
+        return result;
     }
     
-    double BoundaryCondition::valueAt(Direction direction, vector<double> &x) {
-        if (_directionalBoundaryConditionFunction != nullptr) {
-            for (auto &directionalBCFunction : *_directionalBoundaryConditionFunction) {
-                if (get<0>(directionalBCFunction) == direction) {
-                    return (*get<1>(directionalBCFunction))(x);
-                }
-            }
-        }
-        else {
-            std::cout << "Error: No directional boundary condition function defined." << std::endl;
-        }
-        return std::numeric_limits<double>::quiet_NaN();
+    const BoundaryConditionType &BoundaryCondition::type() const {
+        return _bcType;
     }
-    
-    
+
+
+
+
 } // BoundaryConditions

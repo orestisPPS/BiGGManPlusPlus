@@ -3,20 +3,21 @@
 //
 
 #include "SteadyStateMathematicalProblem.h"
-namespace MathematicalProblem{
-    
-    SteadyStateMathematicalProblem::SteadyStateMathematicalProblem(PartialDifferentialEquation *pde,
-                                                                   map<Position, list<BoundaryConditions::BoundaryCondition *>> *bcs,
-                                                                   list<DegreeOfFreedom *> *dof, CoordinateSystem coordinateSystem) {
-        pde = pde;
-        boundaryConditions = bcs;
-        degreesOfFreedom = dof;
-        coordinateSystem = coordinateSystem;
-    }
+namespace MathematicalProblems {
 
-    SteadyStateMathematicalProblem::~SteadyStateMathematicalProblem() {
-/*      delete pde;
-        delete boundaryConditions;
-        delete degreesOfFreedom;*/
+    SteadyStateMathematicalProblem::SteadyStateMathematicalProblem(
+            PartialDifferentialEquation *pde, DomainBoundaryConditions *bcs, struct Field_DOFType *degreesOfFreedom) :
+            pde(pde), boundaryConditions(bcs), degreesOfFreedom(degreesOfFreedom),
+            MathematicalProblem(pde, bcs, degreesOfFreedom){
+        
     }
+    
+    SteadyStateMathematicalProblem::~SteadyStateMathematicalProblem() {
+        delete pde;
+        delete boundaryConditions;
+        pde = nullptr;
+        boundaryConditions = nullptr;
+        degreesOfFreedom = nullptr;
+    }
+    
 }
