@@ -82,10 +82,52 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Analysis/AnalysisDOFs/DOFInitializer.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Analysis/AnalysisDOFs/DOFInitializer.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Analysis/FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Analysis/FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Analysis/FiniteDifferenceAnalysis/StStFDTest.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Analysis/FiniteDifferenceAnalysis/StStFDTest.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Analysis/NumericalAnalysis.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Analysis/NumericalAnalysis.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/BoundaryConditions/BoundaryCondition.cpp">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/BoundaryConditions/BoundaryCondition.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/BoundaryConditions/DomainBoundaryConditions.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/BoundaryConditions/DomainBoundaryConditions.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/DegreesOfFreedom/DegreeOfFreedom.cpp">
@@ -94,10 +136,22 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/DegreesOfFreedom/DegreeOfFreedom.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/DegreesOfFreedom/DegreeOfFreedomTypes.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/DegreesOfFreedom/DegreesOfFreedomCategorization.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Id/DiscreteEntityId.cpp">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Id/DiscreteEntityId.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Mesh/Mesh.cpp">
@@ -106,13 +160,103 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Mesh/Mesh.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Mesh/Mesh1D.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Mesh/Mesh1D.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Mesh/Mesh2D.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Mesh/Mesh2D.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Mesh/Mesh3D.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Mesh/Mesh3D.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Mesh/Metrics/Metrics.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Mesh/Metrics/Metrics.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Node/IsoparametricNodeGraph.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Node/IsoparametricNodeGraph.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Node/NodalCoordinates.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Node/NodalCoordinates.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Node/Node.cpp">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Discretization/Node/Node.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/AnalysisLinearSystemInitializer.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/AnalysisLinearSystemInitializer.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/AnalysisLinearSystemInitializer2.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/AnalysisLinearSystemInitializer2.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/Array.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FDSchemeType.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FDWeightCalculator.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeWeightsStructuredGrid.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeWeightsStructuredGrid.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/LinearSystem.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/LinearSystem.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/MatrixTest.cpp">
@@ -121,16 +265,67 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/MatrixTest.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/TransformationTensors.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Norms/VectorNorm.cpp">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/TransformationTensors.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Norms/VectorNorm.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Transformations.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/NumberOperations.cpp">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Transformations.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/NumberOperations.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/TransformationTensors.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/Transformations.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/Transformations.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/VectorOperations.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/VectorOperations.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Direct/Cholesky.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Direct/Cholesky.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Direct/DirectSolver.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Direct/DirectSolver.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Direct/SolverLUP.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Direct/SolverLUP.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/IterativeSolver.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Solver.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Solver.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalProblem/MathematicalProblem.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalProblem/MathematicalProblem.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalProblem/SteadyStateMathematicalProblem.cpp">
@@ -145,10 +340,19 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalProblem/TransientMathematicalProblem.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/FieldProperties.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/HeatTransfer/EnergyTransferEquation.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/PartialDifferentialEquation.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/PartialDifferentialEquation.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp">
@@ -157,22 +361,19 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/SecondOrderLinearPDEProperties.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/PositioningInSpace/Coordinate.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/PositioningInSpace/Coordinate.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/StructuredMeshGeneration/DomainBoundaryFactory.cpp">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/PositioningInSpace/PhysicalSpaceCharacteristics.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/StructuredMeshGeneration/DomainBoundaryFactory.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/PositioningInSpace/SpaceCharacteristics.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/StructuredMeshGeneration/MeshFactory.cpp">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/StructuredMeshGeneration/MeshPreProcessor.h">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/StructuredMeshGeneration/MeshPreProcessor2D.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/StructuredMeshGeneration/MeshFactory.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/StructuredMeshGeneration/MeshSpecs.cpp">
@@ -194,6 +395,15 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Utility/Calculators.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Utility/EnumerablesTranformations.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Utility/Exporters/Exporters.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Utility/Exporters/Exporters.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/main.cpp">
