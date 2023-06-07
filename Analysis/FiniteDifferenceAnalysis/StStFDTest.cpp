@@ -21,6 +21,7 @@ namespace NumericalAnalysis {
         //meshFactory->domainBoundaryFactory->annulus_ripGewrgiou(numberOfNodes, 0.8, 1, 0, 359);
         //meshFactory->domainBoundaryFactory->cavityBot(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->gasTankHorizontal(numberOfNodes, 1, 1);
+        cout<<"yo"<<endl;
         meshFactory->domainBoundaryFactory->sinusRiver(numberOfNodes, 1.5, 1, 0.1, 4);
         meshFactory->buildMesh(2);
         

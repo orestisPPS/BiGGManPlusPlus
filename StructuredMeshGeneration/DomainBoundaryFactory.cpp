@@ -407,7 +407,9 @@ namespace StructuredMeshGenerator {
             _domainBoundaryConditions = new DomainBoundaryConditions(boundaryConditionsSet);
         }
     }
-
+    //set xrange [0:0.6]
+    //set yrange [-3:1]
+    //plot sin(15*x) , - 2 + sin(15*x)
     void DomainBoundaryFactory::sinusRiver(map<Direction, unsigned int> &nodesPerDirection, double lengthX,
                                            double bankDistanceY, double amplitude, double frequency) {
         if (bankDistanceY <= 0.0)
