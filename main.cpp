@@ -18,7 +18,7 @@ int main() {
 
     auto analysisTest = new NumericalAnalysis::StStFDTest();
     
-    cout << "y000o" << endl;
+    cout << "y000000o" << endl;
     
 }
 
