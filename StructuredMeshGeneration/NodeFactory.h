@@ -56,30 +56,7 @@ namespace StructuredMeshGenerator {
         // v      ^
         // ->->->->
         void create3DNodes() const;
-                
-        //Allocates memory for boundary node.
-        static Node *allocateBoundaryNode(int boundaryId);
-        
-        //Creates internal nodes for 1D mesh (nnOne > 0, nnTwo = 0, nnThree = 0).
-        void create1DInternalNodes(unsigned maxIndex) const;
-        
-        //Creates internal nodes for 2D mesh (nnOne > 0, nnTwo > 0, nnThree = 0).
-        void create2DInternalNodes(unsigned index1, unsigned index2) const;
-        
-        //Creates internal nodes for 3D mesh (nnOne > 0, nnTwo > 0, nnThree > 0).
-        void create3DInternalNodes() const;
 
-        //Allocates memory for internal node.
-        static Node *allocateInternalNode(unsigned internalId);
-        
-        //Assigns global value to the nodes of a 1D mesh.        
-        void assign1DGlobalId() const;
-        
-        //Assigns global value to the nodes of a 2D mesh.
-        void assign2DGlobalId() const;
-        
-        //Assigns global value to the nodes of a 3D mesh.
-        void Assign3DGlobalId() const;
     };
     
 

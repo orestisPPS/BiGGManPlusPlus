@@ -12,18 +12,18 @@ namespace NumericalAnalysis {
     
     StStFDTest::StStFDTest() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 50;
-        numberOfNodes[Direction::Two] = 10;
+        numberOfNodes[Direction::One] = 20;
+        numberOfNodes[Direction::Two] = 20;
         auto specs = new MeshSpecs(numberOfNodes, 1, 0.5, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        //meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);
+        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 2, 1);
         //meshFactory->domainBoundaryFactory->annulus_ripGewrgiou(numberOfNodes, 0.8, 1, 0, 359);
         //meshFactory->domainBoundaryFactory->cavityBot(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->gasTankHorizontal(numberOfNodes, 1, 1);
-        cout<<"yo"<<endl;
-        meshFactory->domainBoundaryFactory->sinusRiver(numberOfNodes, 1.5, 1, 0.1, 4);
-        meshFactory->buildMesh(2);
+        //cout<<"yo"<<endl;
+        //meshFactory->domainBoundaryFactory->sinusRiver(numberOfNodes, 1.5, 1, 0.1, 4);
+        meshFactory->buildMesh(4);
         
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk");
         
@@ -99,15 +99,12 @@ namespace NumericalAnalysis {
         
         auto solver = new SolverLUP(1E-20, true);
         
-        auto analysis =
-                new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
+        auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
         
         
-
+        analysis->solve();
         
-        //analysis->solve();
-        
-        //analysis->applySolutionToDegreesOfFreedom();
+        analysis->applySolutionToDegreesOfFreedom();
 
 
         
