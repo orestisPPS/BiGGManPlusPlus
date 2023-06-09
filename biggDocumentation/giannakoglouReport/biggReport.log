@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2023.6.5)  8 JUN 2023 07:33
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2023.6.5)  8 JUN 2023 16:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -456,103 +456,127 @@ LaTeX Info: Redefining \nameref on input line 18.
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-<./images/uml.jpg, id=80, 942.52126pt x 1067.99pt>
+<./images/uml.jpg, id=77, 942.52126pt x 1067.99pt>
 File: ./images/uml.jpg Graphic file (type jpg)
 <use ./images/uml.jpg>
-Package pdftex.def Info: ./images/uml.jpg  used on input line 74.
+Package pdftex.def Info: ./images/uml.jpg  used on input line 64.
 (pdftex.def)             Requested size: 465.76567pt x 527.76855pt.
 
-Overfull \hbox (22.1872pt too wide) in paragraph at lines 74--75
+Overfull \hbox (22.1872pt too wide) in paragraph at lines 64--65
 [][] 
  []
 
 [2] [3 <./images/uml.jpg>] [4]
-<./images/mesh.jpg, id=97, 974.64125pt x 1032.85875pt>
+<./images/mesh.jpg, id=95, 974.64125pt x 1032.85875pt>
 File: ./images/mesh.jpg Graphic file (type jpg)
 <use ./images/mesh.jpg>
-Package pdftex.def Info: ./images/mesh.jpg  used on input line 158.
+Package pdftex.def Info: ./images/mesh.jpg  used on input line 148.
 (pdftex.def)             Requested size: 465.75531pt x 493.57591pt.
 
-Overfull \hbox (22.17683pt too wide) in paragraph at lines 158--159
+Overfull \hbox (22.17683pt too wide) in paragraph at lines 148--149
 [][] 
  []
 
 [5] [6 <./images/mesh.jpg>]
-Overfull \hbox (4.53256pt too wide) in paragraph at lines 181--182
+Overfull \hbox (4.53256pt too wide) in paragraph at lines 171--172
 []\OT1/cmr/m/n/10 The para-met-ric and tem-plate co-or-di-nate vec-tors are cal
 -cu-lated and added to the \OT1/cmtt/m/n/10 PositionVectors
  []
 
 
-Overfull \hbox (30.70316pt too wide) in paragraph at lines 181--182
-\OT1/cmr/m/n/10 one of the meth-ods []\OT1/cmtt/m/n/10 assign1DCoordinates()\OT
-1/cmr/m/n/10 , []\OT1/cmtt/m/n/10 assign2DCoordinates()\OT1/cmr/m/n/10 , or []\
-OT1/cmtt/m/n/10 assign3DCoordinates()\OT1/cmr/m/n/10 . 
+Overfull \hbox (13.48091pt too wide) in paragraph at lines 171--172
+\OT1/cmr/m/n/10 of the meth-ods []\OT1/cmtt/m/n/10 assign1DCoordinates()\OT1/cm
+r/m/n/10 , []\OT1/cmtt/m/n/10 assign2DCoordinates()\OT1/cmr/m/n/10 , or []\OT1/
+cmtt/m/n/10 assign3DCoordinates()\OT1/cmr/m/n/10 . 
  []
 
 [7]
-Overfull \hbox (0.83615pt too wide) in paragraph at lines 229--230
+Overfull \hbox (0.83615pt too wide) in paragraph at lines 219--220
 \OT1/cmr/m/n/10 afor-men-tioned \OT1/cmtt/m/n/10 SteadyStateMathematicalProblem
 \OT1/cmr/m/n/10 , \OT1/cmtt/m/n/10 Mesh \OT1/cmr/m/n/10 and user de-fined \OT1/
 cmtt/m/n/10 Solver\OT1/cmr/m/n/10 , \OT1/cmtt/m/n/10 SchemeSpecs\OT1/cmr/m/n/10
  ,
  []
 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.231 ... the linearSystem instance and sets the _
-                                                  mesh pointer to null.
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 224.
+[8] [9]
+<./images/square_1_1_5_5.png, id=118, 1610.015pt x 785.93625pt>
+File: ./images/square_1_1_5_5.png Graphic file (type png)
+<use ./images/square_1_1_5_5.png>
+Package pdftex.def Info: ./images/square_1_1_5_5.png  used on input line 260.
+(pdftex.def)             Requested size: 465.73776pt x 227.35202pt.
 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.232  	
-        
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.235 ...omprises several helper methods such as _
-                                                  initiatePositionsAndPoints...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.236 	
-       
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-
-Overfull \hbox (1614.83705pt too wide) in paragraph at lines 235--236
-[]\OT1/cmr/m/n/10 In ad-di-tion to the prin-ci-pal method, the class com-prises
- sev-eral helper meth-ods such as $[]\OML/cmm/m/it/10 nitiatePositionsAndPoints
-Map;[] etQualifiedFromAvailable; and[]etPDECoefficient:Thesemethodsprovideaddit
-ionalfunctionality; includingtheinitializationofcomplexdatastructures; filterin
-gavailablepositionsbasedonasetofcriteria; andretrievingspecificcoefficientsasso
-ciatedwiththepartialdifferentialequationataparticularnode; giventhederivativeor
-deranddirection:$ 
+Overfull \hbox (22.15929pt too wide) in paragraph at lines 260--261
+[][] 
  []
 
-[8] (./biggReport.aux)
+<./images/square_2_1_5_5.png, id=120, 1610.015pt x 785.93625pt>
+File: ./images/square_2_1_5_5.png Graphic file (type png)
+<use ./images/square_2_1_5_5.png>
+Package pdftex.def Info: ./images/square_2_1_5_5.png  used on input line 266.
+(pdftex.def)             Requested size: 465.73776pt x 227.35202pt.
+
+Overfull \hbox (22.15929pt too wide) in paragraph at lines 266--267
+[][] 
+ []
+
+[10 <./images/square_1_1_5_5.png> <./images/square_2_1_5_5.png>]
+<./images/ellipse_21_21_1_2.png, id=129, 1610.015pt x 785.93625pt>
+File: ./images/ellipse_21_21_1_2.png Graphic file (type png)
+<use ./images/ellipse_21_21_1_2.png>
+Package pdftex.def Info: ./images/ellipse_21_21_1_2.png  used on input line 274
+.
+(pdftex.def)             Requested size: 465.73776pt x 227.35202pt.
+
+Overfull \hbox (22.15929pt too wide) in paragraph at lines 274--275
+[][] 
+ []
+
+<./images/circle_1_1_31_31.png, id=130, 1610.015pt x 785.93625pt>
+File: ./images/circle_1_1_31_31.png Graphic file (type png)
+<use ./images/circle_1_1_31_31.png>
+Package pdftex.def Info: ./images/circle_1_1_31_31.png  used on input line 280.
+
+(pdftex.def)             Requested size: 465.73776pt x 227.35202pt.
+
+Overfull \hbox (22.15929pt too wide) in paragraph at lines 280--281
+[][] 
+ []
+
+[11 <./images/ellipse_21_21_1_2.png> <./images/circle_1_1_31_31.png>]
+<./images/windowsLogo.png, id=139, 1618.045pt x 830.10126pt>
+File: ./images/windowsLogo.png Graphic file (type png)
+<use ./images/windowsLogo.png>
+Package pdftex.def Info: ./images/windowsLogo.png  used on input line 288.
+(pdftex.def)             Requested size: 465.73984pt x 238.93726pt.
+
+Overfull \hbox (22.16136pt too wide) in paragraph at lines 288--289
+[][] 
+ []
+
+<./images/c_51_21.png, id=140, 1610.015pt x 785.93625pt>
+File: ./images/c_51_21.png Graphic file (type png)
+<use ./images/c_51_21.png>
+Package pdftex.def Info: ./images/c_51_21.png  used on input line 294.
+(pdftex.def)             Requested size: 465.73776pt x 227.35202pt.
+
+Overfull \hbox (22.15929pt too wide) in paragraph at lines 294--295
+[][] 
+ []
+
+[12 <./images/windowsLogo.png> <./images/c_51_21.png>] (./biggReport.aux)
 Package rerunfilecheck Info: File `biggReport.out' has not changed.
-(rerunfilecheck)             Checksum: 479C82464D4ABAA735049A60598AC776;3359.
+(rerunfilecheck)             Checksum: 9226BE94A5169C36E6C12BCCC36B017F;2958.
  ) 
 Here is how much of TeX's memory you used:
- 11518 strings out of 478287
- 184688 string characters out of 5849290
- 507704 words of memory out of 5000000
- 29531 multiletter control sequences out of 15000+600000
- 474529 words of font info for 46 fonts, out of 8000000 for 9000
+ 11599 strings out of 478287
+ 186307 string characters out of 5849290
+ 506091 words of memory out of 5000000
+ 29588 multiletter control sequences out of 15000+600000
+ 478433 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,7n,63p,1388b,475s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,7n,63p,1388b,538s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/share/texli
 ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dis
@@ -560,14 +584,15 @@ t/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/font
 s/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
 ic/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb><
-/usr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on biggReport.pdf (8 pages, 530582 bytes).
+onts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/sha
+re/texmf/fonts/type1/public/cm-super/sfrm1000.pfb>
+Output written on biggReport.pdf (12 pages, 1165923 bytes).
 PDF statistics:
- 174 PDF objects out of 1000 (max. 8388607)
- 138 compressed objects within 2 object streams
- 27 named destinations out of 1000 (max. 500000)
- 139 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 211 PDF objects out of 1000 (max. 8388607)
+ 157 compressed objects within 2 object streams
+ 36 named destinations out of 1000 (max. 500000)
+ 161 words of extra memory for PDF output out of 10000 (max. 10000000)
 

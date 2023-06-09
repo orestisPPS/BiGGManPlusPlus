@@ -11,11 +11,12 @@
 
 
 
-\title{Bigg Mann$++$ Documentation}
+\title{Bigg Mann$++$ 6PDE Solver. A Complete Framework for Taylor Made Finite Difference Numerical Analysis}
 \author{Ch. Orestis Papas}
 
 
 \begin{document}
+	\maketitle
 	
 	\section{Abstract}
 	This report presents the development and implementation of BiggMann++, an object-oriented C++ software specifically designed to solve second order partial differential equations (PDEs) in their most generalized form. The extensive utility of the software extends across numerous fields and disciplines, highlighting the universal presence of second order PDEs in a wide array of scientific phenomena. BiggMann++ embodies the developer's perspective on the physical world, the transition from continuum to discrete, from the beautiful mathematical symbols to computer memory pointers, and encapsulates a shift towards a more abstract interpretation of engineering problems. This perspective acknowledges that beneath the myriad physical phenomena and their varied coefficient nomenclatures reside identical core mathematical structures.
@@ -23,9 +24,11 @@
 	BiggMann++ was originally devised as a $C\#$ project for the "Mesh Generation" course during my master's program, with its primary focus being the generation of structured node grids by solving elliptic PDEs in parametric space. As the software evolved, so did my perspective, particularly during my research in the area of tumor development modeling. An insightful observation dawned upon me: the core mathematical constructs remained essentially unchanged, regardless of whether the coefficient represented the oxygen diffusivity in an oxygen mass transport equation, the $g_{ij}$ component of the contravariant tensor in mesh generation. This epiphany underscored the universality of second order PDEs, revealing their beauty and pervasive presence across diverse scientific disciplines. Recognizing this pattern was a significant shift in perspective and ultimately inspired the transformation of BiggMann++ into a more generalized and parametrized tool for that offers control over the complete simulation process. The framework has transitioned to C++ over the course of the last 6 after the need for custom memory management emerged. It allows user friendly manipulation of every aspect of the simulation from computational domain definition and mesh metrics to node and direction dependent PDE coefficients. Performance is also considered, but 
 	
 
+
+	\section{Framework Description}
+	The program aims to provide a complete simulation package for the user. It starts with an analysis that solves the Poisson equation for the structured grid creation, then proceeds to the actual engineering application. The underlying mechanisms for each analysis type are exactly the same.
 	
-	\section{Software Framework}
-	\subsection{Core Development Principles}
+		\subsection{Core Development Principles}
 	The primary objective of this development effort was to construct a codebase that is easy to understand, readable, and indicative of the thought process embedded in its creation. The code employs terms familiar to any engineer for clarity. The adoption of object-oriented principles was an essential strategy to boost maintainability and circumvent error susceptibility, specifically by avoiding code repetition and casuistry. The key concepts are presented below:
 	
 	
@@ -34,7 +37,7 @@
 		\item Complete Avoidance of External Libraries: The only non-custom utility used is the standard library. All numerical methods such as matrix-matrix and matrix-vector multiplication, as well as matrix decomposition, are based on the custom $std::vector<T>$ container class \texttt{Array<T>}. This approach improves understanding and control of the data structures used and leads to a better understanding of C++.
 		
 		\item Descriptive Naming and Avoidance of "Master Classes": Each variable, function, and class is named in a highly readable and explanatory manner. Classes are organized in such a way that their actions align with user intuition.
-
+		
 		
 		\item Space Description: The computational space where the PDE is applied, and the relative positioning of two random points, is described with enumerations (enums).
 		
@@ -54,20 +57,7 @@
 		\item Consistent Cut-off Error Scheme: To apply a scheme with consistent accuracy across the entire domain, Finite Difference Schemes of different types (Forward, Backward, Central) and the same accuracy are applied according to the number of available neighbors. The algorithm successfully determines the graph of each node without considering special cases, leading to accurate higher order schemes.
 		
 		\item Space Decomposition: The implementation of enums and maps allows for the decomposition of the domain into Directions. The contribution of each Direction in all parts of the analysis is treated in loops without taking special cases under consideration.
-		\end{itemize}
-	\subsection{Generalized Second Order Partial Differential Equation}
-
-
-	\noindent In the current development state the user can solve the following equations in 2D with Dirichlet Boundary Conditions
-		\begin{itemize}
-			\item Laplace Equation
-			\item Poisson Equation
-			\item Steady State Transfer of any scalar or vector $\phi$ via the Convection-Diffusion-Reaction Equation
-		\end{itemize}
-
-		
-	\section{Framework Description}
-	The program aims to provide a complete simulation package for the user. It starts with an analysis that solves the Poisson equation for the structured grid creation, then proceeds to the actual engineering application. The underlying mechanisms for each analysis type are exactly the same.	
+	\end{itemize}
 
 	\begin{figure}[H]
 
@@ -80,12 +70,12 @@
 	
 	\subsection {Numerical Analysis}
 	
-	The entire framework is built around the concept that a numerical analysis consists of a well-defined mathematical problem, a computational domain, and a solver. The mathematical problem comprises a Second Order Linear Partial Differential Equation with its corresponding coefficients, Degrees of Freedom, and Boundary Conditions. The coefficients and degrees of freedom define the scientific domain of the analysis.
+	The entire framework is built around the concept that a numerical analysis consists of a well-defined mathematical problem, a computational domain, and a solver.
 
 	\subsection{Mathematical Problem}
 	
 	\subsubsection{Mathematical Problem - PDE and PDE Properties}
-	The PDE is mostly defined by its coefficients. The user can choose between isotropic and anisotropic properties that apply in the whole domain or vary for each node. For a scalar or vector function $\phi = \phi(x_1, x_2, x_3,t)$ the general second order PDE takes the form:	$\boldsymbol{A} = Aij$ : 
+	The mathematical problem comprises a Second Order Linear Partial Differential Equation with its corresponding coefficients, Degrees of Freedom, and Boundary Conditions. The coefficients and degrees of freedom define the scientific domain of the analysis. The PDE is mostly defined by its coefficients. The user can choose between isotropic and anisotropic properties that apply in the whole domain or vary for each node. For a scalar or vector function $\phi = \phi(x_1, x_2, x_3,t)$ the general second order PDE takes the form:	$\boldsymbol{A} = Aij$ : 
 	
 	
 	
@@ -139,7 +129,7 @@
 	
 	\subsection{Nodes}
 	
-	The \texttt{Node} class encapsulates the fundamental attributes and behaviors associated with a node in a discretized domain. It contains the following properties:
+	The \texttt{Node} class encapsulates the fundamental attributes and behaviors associated with a discrete point (node) in a discretized domain. It contains the following properties:
 	\begin{itemize}
 		\item \texttt{ID} : Unique Global ID
 		
@@ -178,13 +168,13 @@
 	
 	\item The \texttt{NodeFactory} class, which resides in the \texttt{StructuredMeshGenerator} namespace, is responsible for allocating the \texttt{Node*} objects and storing them in an \texttt{Array$<$\texttt{Node}*$>$*}. It also gives the nodes IDs that ascend from Left to Right, Bottom to Top, Back to Front.
 	
-	\item The parametric and template coordinate vectors are calculated and added to the \texttt{PositionVectors} . by invoking the \texttt{\_assignCoordinates()} method. The appropriate rotation and shear transformations are applied at the parametric coordinates Depending on the type of space entity, it calls one of the methods \texttt{\_assign1DCoordinates()}, \texttt{\_assign2DCoordinates()}, or \texttt{\_assign3DCoordinates()}.
+	\item The parametric and template coordinate vectors are calculated and added to the \texttt{PositionVectors} . by invoking the \texttt{\_assignCoordinates()} method. The appropriate rotation and shear transformations are applied at the template coordinates Depending on the type of space entity, it calls one of the methods \texttt{\_assign1DCoordinates()}, \texttt{\_assign2DCoordinates()}, or \texttt{\_assign3DCoordinates()}.
 	
 	
 	\item After assigning the coordinates, \texttt{MeshFactory} calculates the mesh metrics and uses them to compute the PDE properties, which are then stored in \texttt{pdePropertiesFromMetrics}.
-	\item Finally, the \texttt{MeshFactory} constructs a \texttt{DomainBoundaryFactory} object for the mesh.
 	
-	\item After assigning the coordinates, \texttt{MeshFactory} calculates the mesh metrics at each node and uses them to compute the PDE properties, which are then stored in \textit{pdePropertiesFromMetrics}.
+	\item Finally, the \texttt{MeshFactory} constructs a \texttt{DomainBoundaryFactory} object for the mesh. The geometry of the boundaries is set from the user, where the programm is called.
+
 
 \end{itemize}
 
@@ -224,17 +214,91 @@
  				\item \texttt{sinusRiver} : Top and Bottom boundaries are shapes as sinus curves with the same input A and $\omega$ varying 	by an input distance
  			\end{itemize}
  	\end{itemize}	
- 			\item The analysis is performed on the parametric space so all the information regarding the nodal coorinates is provided in the initialize \texttt{Mesh}
+ 			\item The analysis is performed on the parametric space so all the information regarding the nodal coorinates is provided in the initialized \texttt{Mesh}
  			
  			\item The \texttt{buildMesh} function checks if the boundary conditions have been initialized, creates a \texttt{SteadyStateMathematicalProblem} object which includes the PDE, the boundary conditions, and the DOF, and sets up a solver for this mathematical problem. \newline A \texttt{SteadyStateFiniteDifferenceAnalysis} object is then created. The constructor takes the aformentioned \texttt{SteadyStateMathematicalProblem}, \texttt{Mesh} and user defined \texttt{Solver}, \texttt{SchemeSpecs}, and Parametric coordinate system as input.
+ 			
+ 			\item When \texttt{SteadyStateFiniteDifferenceAnalysis} is created it calls \texttt{LinearSystemAnalyzer}.
+ 			The class constructor accepts several pointers to objects including AnalysisDegreesOfFreedom, Mesh, MathematicalProblem, FDSchemeSpecs, and a CoordinateType enum. The constructor subsequently initializes a number of member variables and data structures, including the right-hand side vector, the system matrix, and a map that correlates parametric coordinates with their corresponding nodes in the mesh. The class contains the following functions:
+ 			\begin{itemize}
+	 			\item \textbf{\texttt{\_initiatePositionsAndPointsMap()}}: This function initializes a map to keep track of positions and points corresponding to different derivative orders and directions.
+ 				
+ 				\item \textbf{\texttt{\_getQualifiedFromAvailable()}}: This function returns the positions and points that satisfy template conditions from a pool of available positions and points.
+ 				
+ 				\item \textbf{\texttt{\_getPDECoefficient()}}: This function retrieves the partial differential equation coefficient for a given derivative order, node, and direction.
+ 					\item \textbf{\texttt{createLinearSystem()}}: This function constructs a finite difference scheme builder, and defines template positions and points that are needed for all scheme types (forward etc) that correspond to the input error order. It then iterates over all degrees of freedom, defining the node, identifying the maximum number of points needed for a scheme with consistent order and calculates the  and PDE coefficients at the node. Next, it marches through all the non-zero derivative orders. For each order and each spatial direction, the method checks available positions, filters the node graph, calculates colinear coordinates and degrees of freedom and finally and calculates scheme weights. The Linear System components are calculated as follows:
+ 				\begin{itemize}
+ 					\item The loop iterates over all colinear degrees of freedom (colinearDOF). Colinear DOFs are those which are along the same isoparametric line in the particular spatial direction being considered.
+ 					\item For each colinear DOF, it identifies the neighboring DOF (neighbourDOF).
+ 					\item It calculates a 'weight' which is the product of the scheme weight for that DOF (schemeWeights[iDof]), the coefficient of the i-th derivative of the PDE (iThDerivativePDECoefficient), and the reciprocal of the denominator. This weight represents the contribution of the neighbor node to the specific entry of the matrix or vector being assembled.
+ 					\item Depending on the constraint type of the neighboring DOF, it contributes differently to the matrix or vector:
+ 					\begin{itemize}
+ 						\item If the neighbor DOF is free, it contributes to the matrix. Specifically, the contribution is added to the matrix entry corresponding to the current DOF (thisDOFPosition) and the neighbor DOF (neighbourDOFPosition). The position is based on the global identification of DOF.
+ 						\item If the neighbor DOF is fixed, it contributes to the right-hand side vector. The contribution, termed as 'dirichletContribution', is calculated as the product of the fixed value of the DOF and the weight. This contribution is subtracted from the vector entry corresponding to the examined Free DOF, leading to proper implementation of the Dirichlet boundary conditions into the Linear System
+ 					\end{itemize}
+ 					\item A new \texttt{LinearSystem} instance is created with the constructed matrix and rhs
+ 			\end{itemize}
+ 			
+ 		
+ 			\end{itemize}
+ 			
+ 		
+ 			
+ 			\item \texttt{buildMesh} calls the \texttt{solve} function. LUP Decomposition is performed on the matrix (The result is stored in the already existing matrix), and the linear system is solved with backward and forward substitution.
+ 			\item The solution of the system is applied to the nodes as their corresponding Natural Coordinates vector.
+ 			\item Analysis components except for the mesh are deallocated.
+ 			\item Mesh is optionally stored in a VTK file.
+ 		
  		\end{itemize}
  	
+ 	\newpage
  	
- 	The class constructor accepts several pointers to objects including AnalysisDegreesOfFreedom, Mesh, MathematicalProblem, FDSchemeSpecs, and a CoordinateType enum. The constructor subsequently initializes a number of member variables and data structures, including the right-hand side vector, the system matrix, and a map that correlates parametric coordinates with their corresponding nodes in the mesh. Memory management is facilitated by the class destructor, which deletes the linearSystem instance and sets the _mesh pointer to null.
+ 	\section{Results}
+ 	In the following section some exported meshes are showm: It should be noted that the code has been benchmarked with COMSOL MultiPhysics in the Steady State Laplace equation with $0\%$ errors.
  	
- 	The core functionality of this class is embodied in the createLinearSystem() method. This function is responsible for assembling the linear system by iterating over all the free degrees of freedom in the system. For each degree of freedom, a finite difference scheme is calculated based on the problem's specifications, including the order of error for each derivative. The scheme takes into account the neighboring nodes of each degree of freedom, and incorporates the boundary conditions accordingly. Once the coefficients have been calculated, they are incorporated into the system matrix, and the right-hand side vector is updated. The method also records and reports the duration of the system assembly process, providing valuable insights into the performance of the operation.
+	\begin{figure}[H]
+ 		\includegraphics[height=1.0\textheight, width=1.05\textwidth, keepaspectratio]{./images/square_1_1_5_5.png}
+ 		\caption{5 x 5 Nodes, $L_x = 1$, $L_y = 1$}
+ 		\label{fig:square}
+ 	\end{figure}
+ 
+ 	\begin{figure}[H]
+ 	\includegraphics[height=1.0\textheight, width=1.05\textwidth, keepaspectratio]{./images/square_2_1_5_5.png}
+ 	\caption{5 x 5 Nodes, $L_x = 2$, $L_y = 1$}
+ 	\label{fig:parallelo}
+ 	\end{figure}
+ 
+ 	\newpage
  	
- 	In addition to the principal method, the class comprises several helper methods such as _initiatePositionsAndPointsMap, _getQualifiedFromAvailable, and _getPDECoefficient. These methods provide additional functionality, including the initialization of complex data structures, filtering available positions based on a set of criteria, and retrieving specific coefficients associated with the partial differential equation at a particular node, given the derivative order and direction.	
+ 	\begin{figure}[H]
+		\includegraphics[height=1.0\textheight, width=1.05\textwidth, keepaspectratio]{./images/ellipse_21_21_1_2.png}
+		\caption{11 x 11 Nodes, $\alpha = 2$, $\beta = 1$}
+		\label{ellipse]}
+ 	\end{figure}
+ 	
+ 	\begin{figure}[H]
+ 		\includegraphics[height=1.0\textheight, width=1.05\textwidth, keepaspectratio]{./images/circle_1_1_31_31.png}
+ 		\caption{31 x 31 Nodes, $\alpha = 1$, $\beta = 1$}
+ 		\label{cicle}
+	\end{figure}
+
+	\newpage
+	
+ 	\begin{figure}[H]
+	\includegraphics[height=1.0\textheight, width=1.05\textwidth, keepaspectratio]{./images/windowsLogo.png}
+	\caption{Windows Logo}
+	\label{win}
+	\end{figure}
+
+ 	\begin{figure}[H]
+		\includegraphics[height=1.0\textheight, width=1.05\textwidth, keepaspectratio]{./images/c_51_21.png}
+		\caption{Annulus 51 x 21 Nodes, $r_{in} = 0.5$, $r_{in} = 1$}
+		\label{c}
+	\end{figure}
+ 	
+ 	
+ 	
+ 
 	
 	
 	
