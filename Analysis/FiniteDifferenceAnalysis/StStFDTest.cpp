@@ -13,17 +13,17 @@ namespace NumericalAnalysis {
     StStFDTest::StStFDTest() {
         map<Direction, unsigned> numberOfNodes;
         numberOfNodes[Direction::One] = 51;
-        numberOfNodes[Direction::Two] = 20;
-        auto specs = new MeshSpecs(numberOfNodes, 2, 1, 0, 0, 0);
+        numberOfNodes[Direction::Two] = 51;
+        auto specs = new MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        //meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 2, 1);
+        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
-        meshFactory->domainBoundaryFactory->annulus_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 330);
+        //meshFactory->domainBoundaryFactory->annulus_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 270);
         //meshFactory->domainBoundaryFactory->cavityBot(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->gasTankHorizontal(numberOfNodes, 1, 1);
         //cout<<"yo"<<endl;
         //meshFactory->domainBoundaryFactory->sinusRiver(numberOfNodes, 1.5, 1, 0.1, 4);
-        meshFactory->buildMesh(2);
+        meshFactory->buildMesh(4);
         
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk");
         
