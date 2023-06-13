@@ -12,8 +12,8 @@ namespace NumericalAnalysis {
     
     StStFDTest::StStFDTest() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 21;
-        numberOfNodes[Direction::Two] = 21;
+        numberOfNodes[Direction::One] = 51;
+        numberOfNodes[Direction::Two] = 51;
         auto specs = new MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
         meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);

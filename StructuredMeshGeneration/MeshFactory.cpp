@@ -51,7 +51,7 @@ namespace StructuredMeshGenerator{
         auto problem = new SteadyStateMathematicalProblem(pde, boundaryConditions, dofTypes);
 
         //auto solver = new SolverLUP(1E-20, true);
-        auto solver  = new JacobiSolver(false, VectorNormType::L1, 1E-10, 1000, true);
+        auto solver  = new JacobiSolver(true, VectorNormType::L1, 1E-10, 1000, true);
         
         auto analysis =
                 new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specs, Parametric);

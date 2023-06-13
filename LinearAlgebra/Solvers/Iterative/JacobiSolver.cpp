@@ -15,7 +15,7 @@ namespace LinearAlgebra {
 
     void JacobiSolver::_iterativeSolution() {
         auto start = std::chrono::high_resolution_clock::now();
-        double n = _linearSystem->matrix->numberOfRows();
+        unsigned n = _linearSystem->matrix->numberOfRows();
         unsigned short iteration = 0;
         double norm = 1.0;
         double sum = 0.0;
@@ -27,10 +27,16 @@ namespace LinearAlgebra {
         
         if (_vTechKickInYoo) {
             cout << "----------------------------------------" << endl;
-            cout << "Jacobi Solver Multi Thread" << endl;
-            
+            cout << "Jacobi Solver Multi Thread - VTEC KICKED IN YO!" << endl;
+            //Find the number of threads available for parallel execution
+            unsigned numberOfThreads = std::thread::hardware_concurrency();
+            cout << "Total Number of threads available for parallel execution: " << numberOfThreads << endl;
+            cout << "Number of threads involved in parallel solution: " << numberOfThreads << endl;
+
+            //Define the available threads (2 less than the number of threads available for parallel execution)
             while (iteration < _maxIterations && norm >= _tolerance) {
-                multiThreadSolution();
+                
+                _multiThreadSolution(numberOfThreads, n);
                 // Calculate the norm of the _difference
                 norm = VectorNorm(_difference, _normType).value();
                 // Add the norm to the list of norms
@@ -42,9 +48,10 @@ namespace LinearAlgebra {
             cout << "----------------------------------------" << endl;
             cout << "Jacobi Solver Single Thread" << endl;
             while (iteration < _maxIterations && norm >= _tolerance) {
-                singleThreadSolution();
+                _singleThreadSolution();
                 // Calculate the norm of the _difference
                 norm = VectorNorm(_difference, _normType).value();
+                _difference->clear();
                 // Add the norm to the list of norms
                 _residualNorms->push_back(norm);
                 iteration++;
@@ -74,69 +81,37 @@ namespace LinearAlgebra {
         }
     }
     
-    void JacobiSolver::multiThreadSolution() {
-        double n = _linearSystem->matrix->numberOfRows();
-        unsigned short iteration = 0;
-        double norm = 0.0;
-        double sum = 0.0;
+    void JacobiSolver::_multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows) {
         
-        //Find the number of threads available for parallel execution
-        unsigned numberOfThreads = std::thread::hardware_concurrency();
-        cout << "Number of threads available for parallel execution: " << numberOfThreads << endl;
-        
-        //Define the available threads (2 less than the number of threads available for parallel execution)
-        unsigned numberOfThreadsToUse = numberOfThreads - 2;
-        cout << "Number of threads to use: " << numberOfThreadsToUse << endl;
-        
-        //Initiate the thread vector
-        vector<thread> threads(numberOfThreads - 2);
-
-        for (int i = 0; i < n ; ++i) {
-            
+        //Initiate the thread pool map
+        map<unsigned, thread> threadPool = map <unsigned, thread>();
+        for (unsigned int i = 0; i < availableThreads; ++i) {
+            threadPool.insert(pair<unsigned, thread>(i, thread()));
         }
-        
-        
-        // Define the thread task for each row
-        auto threadTask = [this, n](unsigned startRow, unsigned endRow) {
-            // Iterate over the rows assigned to the thread
-            for (unsigned int i = startRow; i < endRow; ++i) {
-                // Calculate the sum of the row
-                double sum = 0.0;
-                for (unsigned int j = 0; j < n; ++j) {
-                    if (i != j) {
-                        sum += _linearSystem->matrix->at(i, j) * _xOld->at(j);
-                    }
-                }
-            }
-        };
 
         // Calculate the number of rows to assign to each thread
-        unsigned int rowsPerThread = n / numberOfThreadsToUse;
-        unsigned int startRow = 0;
-        unsigned int endRow = rowsPerThread;
+        unsigned rowsPerThread = numberOfRows / availableThreads;
+        unsigned lastRows = numberOfRows % availableThreads;
 
         // Launch the threads and assign the work
-        for (unsigned int i = 0; i < numberOfThreadsToUse; ++i) {
-            // For the last thread, adjust the endRow to cover the remaining rows
-            if (i == numberOfThreadsToUse - 1) {
-                endRow = n;
+        unsigned startRow = 0;
+        unsigned endRow = 0;
+        for (unsigned i = 0; i < availableThreads; ++i) {
+            endRow = startRow + rowsPerThread;
+            if (i == availableThreads - 1) {
+                endRow = endRow + lastRows;
             }
-
-            // Launch the thread and assign the task
-            threads[i] = thread(threadTask, startRow, endRow);
-
-            // Update the startRow and endRow for the next thread
+            threadPool[i] = thread(&JacobiSolver::_parallelForEachRow, this, startRow, endRow);
             startRow = endRow;
-            endRow += rowsPerThread;
+        }
+        // Wait for all the threads to finish
+        for (auto& thread : threadPool) {
+            thread.second.join();
         }
 
-        // Wait for all the threads to finish
-        for (auto& thread : threads) {
-            thread.join();
-        }
     }
 
-    void JacobiSolver::singleThreadSolution() {
+    void JacobiSolver::_singleThreadSolution() {
 
         double n = _linearSystem->matrix->numberOfRows();
         unsigned short iteration = 0;
@@ -159,6 +134,25 @@ namespace LinearAlgebra {
             _difference->at(i) = _xNew->at(i) - _xOld->at(i);
             //Replace the old solution with the new one
             _xOld->at(i) = _xNew->at(i);
+        }
+    }
+
+    void JacobiSolver::_parallelForEachRow(unsigned start, unsigned end) {
+        unsigned n = _linearSystem->matrix->numberOfRows();
+        for (unsigned row = start; row < end; ++row) {
+            double sum = 0.0;
+            for (unsigned j = 0; j < n; j++) {
+                if (row != j) {
+                    // sum = sum + A_ij * xOld_j
+                    sum += _linearSystem->matrix->at(row, j) * _xOld->at(j);
+                }
+            }
+            // xNew_i = (b_i - sum) / A_ii
+            _xNew->at(row) = (_linearSystem->RHS->at(row) - sum) / _linearSystem->matrix->at(row, row);
+            // Calculate the _difference
+            _difference->at(row) = _xNew->at(row) - _xOld->at(row);
+            //Replace the old solution with the new one
+            _xOld->at(row) = _xNew->at(row);
         }
     }
 

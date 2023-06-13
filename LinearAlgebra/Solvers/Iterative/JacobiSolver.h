@@ -20,9 +20,11 @@ namespace LinearAlgebra {
         void _iterativeSolution() override;
 
     private:
-        void multiThreadSolution();
+        void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows);
 
-        void singleThreadSolution();
+        void _singleThreadSolution();
+        
+        void _parallelForEachRow(unsigned start, unsigned end);
 
         bool _vTechKickInYoo;
     };
