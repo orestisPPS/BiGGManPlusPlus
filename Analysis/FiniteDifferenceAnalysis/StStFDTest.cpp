@@ -5,7 +5,7 @@
 #include "StStFDTest.h"
 #include "../../Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.h"
 #include "../../Utility/Exporters/Exporters.h"
-
+#include "../../LinearAlgebra/Solvers/Iterative/JacobiSolver.h"
 
 
 namespace NumericalAnalysis {
@@ -13,12 +13,12 @@ namespace NumericalAnalysis {
     StStFDTest::StStFDTest() {
         map<Direction, unsigned> numberOfNodes;
         numberOfNodes[Direction::One] = 51;
-        numberOfNodes[Direction::Two] = 20;
-        auto specs = new MeshSpecs(numberOfNodes, 2, 1, 0, 0, 0);
+        numberOfNodes[Direction::Two] = 51;
+        auto specs = new MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        //meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 2, 1);
+        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
-        meshFactory->domainBoundaryFactory->annulus_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 330);
+        //meshFactory->domainBoundaryFactory->annulus_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 270);
         //meshFactory->domainBoundaryFactory->cavityBot(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->gasTankHorizontal(numberOfNodes, 1, 1);
         //cout<<"yo"<<endl;
@@ -29,7 +29,7 @@ namespace NumericalAnalysis {
         
         Mesh* mesh = meshFactory->mesh;
         
-/*        auto pdeProperties = new SecondOrderLinearPDEProperties(2, false, Isotropic);
+        auto pdeProperties = new SecondOrderLinearPDEProperties(2, false, Isotropic);
         pdeProperties->setIsotropicProperties(1,0,0,0);
         
         auto heatTransferPDE = new PartialDifferentialEquation(pdeProperties, Laplace);
@@ -38,7 +38,7 @@ namespace NumericalAnalysis {
 
         //--------------------------------CHAPRA PG 857---------------------------------------------------------------------
         //--------------------------Passes-----------------------------
-*//*
+/*
         auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                                                                         {{Temperature, 0}}));
         auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
@@ -46,7 +46,7 @@ namespace NumericalAnalysis {
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                                                                         {{Temperature, 50}}));
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                                                                        {{Temperature, 75}}));*//*
+                                                                        {{Temperature, 75}}));*/
         
         //--------------------------------COMSOL TEST---------------------------------------------------------------------
         auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
@@ -58,21 +58,21 @@ namespace NumericalAnalysis {
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 0}}));
         
-        
+/*        
         //--------------------------------https://kyleniemeyer.github.io/ME373-book/content/pdes/elliptic.html---------------------------------------------------------------------
         //-------------------------------------------------------------------------Passes-----------------------------
-*//*        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 100}}));
         auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 00}}));
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 100}}));
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 100}}));*//*
+                {{Temperature, 100}}));*/
         
-        //--------------------------Valougeorgis examples10 pg. 6 (0 Dirichlet, -1 Source)-----------------------------
+/*        //--------------------------Valougeorgis examples10 pg. 6 (0 Dirichlet, -1 Source)-----------------------------
         //--------------------------Passes-----------------------------
-*//*        auto pdeProperties =
+        auto pdeProperties =
                 new SecondOrderLinearPDEProperties(2, false, Isotropic);
         pdeProperties->setIsotropicProperties(1,0,0,-1);
         
@@ -83,7 +83,7 @@ namespace NumericalAnalysis {
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 0}}));
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 0}}));*//*
+                {{Temperature, 0}}));*/
 
         auto dummyBCMap = new map<Position, BoundaryCondition*>();
         dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Left, leftBC));
@@ -97,8 +97,10 @@ namespace NumericalAnalysis {
         
         auto problem = new SteadyStateMathematicalProblem(heatTransferPDE, boundaryConditions, temperatureDOF);
         
-        auto solver = new SolverLUP(1E-20, true);
-        
+        //auto solver = new SolverLUP(1E-20, true);//
+        auto solver  = new JacobiSolver(true, VectorNormType::LInf, 1E-10, 1000, true);
+
+
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
         
         
@@ -119,7 +121,7 @@ namespace NumericalAnalysis {
         auto fieldType = "Temperature";
         Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
         
-        auto filenameParaview = "firstMesh.vtk";*/
+        auto filenameParaview = "firstMesh.vtk";
     }
 
 

@@ -13,24 +13,56 @@ namespace LinearAlgebra {
 
     class IterativeSolver : public Solver {
     public:
-        IterativeSolver(AnalysisLinearSystemInitializer* linearSystem,
-                        VectorNormType normType, double tolerance, unsigned maxIterations);
-
+        explicit IterativeSolver(VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4, bool throwExceptionOnMaxFailure = true);
+        
         ~IterativeSolver();
+
+        void setTolerance(double tolerance);
         
-        AnalysisLinearSystemInitializer* linearSystem;
+        const double& getTolerance() const;
         
-        VectorNormType normType;
+        void setMaxIterations(unsigned maxIterations);
         
-        double tolerance;
+        const unsigned& getMaxIterations() const;
         
-        unsigned maxIterations;
+        void setNormType(VectorNormType normType);
         
+        const VectorNormType& getNormType() const;
+        
+        void setLinearSystem(LinearSystem* linearSystem) override;
+        
+        void setInitialSolution(unique_ptr<vector<double>> initialValue);
+        
+        void setInitialSolution(double initialValue);
+        
+        void solve() override;
         
     protected:
         
-
+        virtual void _iterativeSolution();
+        
+        VectorNormType _normType;
+        
+        double _tolerance;
+        
+        unsigned _maxIterations;
+        
+        unique_ptr<vector<double>> _xNew;
+        
+        unique_ptr<vector<double>> _xOld;
+        
+        shared_ptr<vector<double>> _difference;
+        
+        bool _isInitialized;
+        
+        bool _throwExceptionOnMaxFailure;
+        
+        shared_ptr<list<double>> _residualNorms;
+        
     };
+    
+
+
 
 } // LinearAlgebra
 

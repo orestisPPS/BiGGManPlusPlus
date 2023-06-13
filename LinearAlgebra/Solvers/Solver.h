@@ -32,6 +32,9 @@ namespace LinearAlgebra {
         LinearSystem* _linearSystem;        
         
         SolverType _solverType;
+
+        bool _isLinearSystemSet;
+
     };
 
 } // LinearAlgebra
