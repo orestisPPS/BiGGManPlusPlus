@@ -12,15 +12,12 @@ namespace LinearAlgebra {
     auto x = VectorNorm::_calculateLInfNorm(new vector<double>());
 */
 
-    IterativeSolver::IterativeSolver(VectorNormType normType, double tolerance, unsigned maxIterations) : 
-        Solver(), _normType(normType), _tolerance(tolerance), _maxIterations(maxIterations), _isLinearSystemSet(false), _isInitialized(false) {
-        _xInitial = nullptr;
-        _xNew = nullptr;
-        _xOld = nullptr;
+    IterativeSolver::IterativeSolver(VectorNormType normType, double tolerance, unsigned maxIterations, bool throwExceptionOnMaxFailure) : 
+        Solver(), _normType(normType), _tolerance(tolerance), _maxIterations(maxIterations),
+        _throwExceptionOnMaxFailure(throwExceptionOnMaxFailure), _isInitialized(false), _xNew(nullptr), _xOld(nullptr){
     }
     
     IterativeSolver::~IterativeSolver(){
-        _xInitial.reset();
         _xNew.reset();
         _xOld.reset();
     }
@@ -61,16 +58,31 @@ namespace LinearAlgebra {
         if (initialValue->size() != _linearSystem->RHS->size()){
             throw std::invalid_argument("Initial solution vector must have the same size as the RHS vector.");
         }
-        _xInitial = std::move(initialValue);
+        _xOld = std::move(initialValue);
+        _xNew = make_unique<vector<double>>(_xOld->size(), 0.0);
+        _difference = make_shared<vector<double>>(_xOld->size(), 0.0);
+        _isInitialized = true;
     }
     
     void IterativeSolver::setInitialSolution(double initialValue){
         if (!_isLinearSystemSet)
             throw std::invalid_argument("Linear system must be set before setting the initial solution.");
-        _xInitial = make_unique<vector<double>>(_linearSystem->RHS->size(), initialValue);
+        _xOld = make_unique<vector<double>>(_linearSystem->RHS->size(), initialValue);
+        _xNew = make_unique<vector<double>>(_xOld->size(), 0.0);
+        _difference = make_shared<vector<double>>(_xOld->size(), 0.0);
+        _isInitialized = true;
     }
     
+    void IterativeSolver::_iterativeSolution() {
         
-    
-    
+    }
+
+    void IterativeSolver::solve() {
+        if (!_isLinearSystemSet)
+            throw std::invalid_argument("Linear system must be set before solving.");
+        _iterativeSolution();
+        _linearSystem->solution = new vector<double>(*_xNew);
+    }
+
+
 } // LinearAlgebra

@@ -49,37 +49,25 @@ namespace LinearAlgebra {
         
     public:
         
-        VectorNorm(vector<double>* vector, VectorNormType normType);
-        
-        VectorNorm(vector<double>* vector, VectorNormType normType, unsigned order);
+        VectorNorm(shared_ptr<vector<double>> vector, VectorNormType normType, unsigned short lP_Order = 2);
         
         VectorNormType & type();
         
         double value() const;
-        static double _calculateLInfNorm(vector<double>* vector);
+        
     private: 
         
         VectorNormType _normType;
-
-/*        //double (*func)(vector<double>* vector);
-        map<VectorNormType, double (vector<double>* vector)> _normTypeToFunction = {
-                {L1, _calculateL1Norm},
-                {L2, _calculateL2Norm},
-                {LInf, _calculateLInfNorm},
-                {Lp, _calculateLpNorm}
-        };*/
-        
-        
         
         double _value;
         
-        double _calculateL1Norm(vector<double>* vector);
+        static double _calculateL1Norm(const shared_ptr<vector<double>>& vector);
 
-        double _calculateL2Norm(vector<double>* vector);
+        static double _calculateL2Norm(const shared_ptr<vector<double>>& vector);
 
-        //static double _calculateLInfNorm(vector<double>* vector);
+        static double _calculateLInfNorm(const shared_ptr<vector<double>>& vector);
 
-        static double _calculateLpNorm(vector<double>* vector, double order);
+        static double _calculateLpNorm(const shared_ptr<vector<double>>& vector, double order);
     };
 } // LinearAlgebra
 

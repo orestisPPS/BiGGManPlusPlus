@@ -33,6 +33,9 @@ namespace NumericalAnalysis {
     }
 
     void NumericalAnalysis::applySolutionToDegreesOfFreedom() const {
+        if (linearSystem->solution == nullptr) {
+            throw runtime_error("Linear System has not been solved");
+        }
         for (auto i = 0; i < degreesOfFreedom->freeDegreesOfFreedom->size(); i++) {
             degreesOfFreedom->freeDegreesOfFreedom->at(i)->setValue(linearSystem->solution->at(i));
         }

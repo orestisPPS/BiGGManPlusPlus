@@ -993,6 +993,30 @@ LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp.s
 .PHONY : LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp.s
 
+LinearAlgebra/Solvers/Iterative/JacobiSolver.o: LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.o
+.PHONY : LinearAlgebra/Solvers/Iterative/JacobiSolver.o
+
+# target to build an object file
+LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.o
+.PHONY : LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.o
+
+LinearAlgebra/Solvers/Iterative/JacobiSolver.i: LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.i
+.PHONY : LinearAlgebra/Solvers/Iterative/JacobiSolver.i
+
+# target to preprocess a source file
+LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.i
+.PHONY : LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.i
+
+LinearAlgebra/Solvers/Iterative/JacobiSolver.s: LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.s
+.PHONY : LinearAlgebra/Solvers/Iterative/JacobiSolver.s
+
+# target to generate assembly for a file
+LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.s
+.PHONY : LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.s
+
 LinearAlgebra/Solvers/Solver.o: LinearAlgebra/Solvers/Solver.cpp.o
 .PHONY : LinearAlgebra/Solvers/Solver.o
 
@@ -1446,6 +1470,9 @@ help:
 	@echo "... LinearAlgebra/Solvers/Iterative/IterativeSolver.o"
 	@echo "... LinearAlgebra/Solvers/Iterative/IterativeSolver.i"
 	@echo "... LinearAlgebra/Solvers/Iterative/IterativeSolver.s"
+	@echo "... LinearAlgebra/Solvers/Iterative/JacobiSolver.o"
+	@echo "... LinearAlgebra/Solvers/Iterative/JacobiSolver.i"
+	@echo "... LinearAlgebra/Solvers/Iterative/JacobiSolver.s"
 	@echo "... LinearAlgebra/Solvers/Solver.o"
 	@echo "... LinearAlgebra/Solvers/Solver.i"
 	@echo "... LinearAlgebra/Solvers/Solver.s"
