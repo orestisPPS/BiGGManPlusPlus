@@ -7,6 +7,7 @@
 #define UNTITLED_JACOBISOLVER_H
 
 #include "IterativeSolver.h"
+#include <thread>
 
 namespace LinearAlgebra {
 

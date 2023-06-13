@@ -23,6 +23,8 @@ namespace LinearAlgebra {
         if (!_isInitialized) {
             setInitialSolution(0.0);
         }
+        //TODO Check if the matrix is diagonally dominant
+        
         if (_vTechKickInYoo) {
             cout << "----------------------------------------" << endl;
             cout << "Jacobi Solver Multi Thread" << endl;
@@ -77,23 +79,60 @@ namespace LinearAlgebra {
         unsigned short iteration = 0;
         double norm = 0.0;
         double sum = 0.0;
+        
+        //Find the number of threads available for parallel execution
+        unsigned numberOfThreads = std::thread::hardware_concurrency();
+        cout << "Number of threads available for parallel execution: " << numberOfThreads << endl;
+        
+        //Define the available threads (2 less than the number of threads available for parallel execution)
+        unsigned numberOfThreadsToUse = numberOfThreads - 2;
+        cout << "Number of threads to use: " << numberOfThreadsToUse << endl;
+        
+        //Initiate the thread vector
+        vector<thread> threads(numberOfThreads - 2);
 
-        for (unsigned i = 0; i < n; i++) {
-            //Zero difference and sum
-            sum = 0.0;
-            _difference->assign(unsigned(n), 0.0);
-            for (unsigned j = 0; j < n; j++) {
-                if (i != j) {
-                    // sum = sum + A_ij * xOld_j
-                    sum += _linearSystem->matrix->at(i, j) * _xOld->at(j);
+        for (int i = 0; i < n ; ++i) {
+            
+        }
+        
+        
+        // Define the thread task for each row
+        auto threadTask = [this, n](unsigned startRow, unsigned endRow) {
+            // Iterate over the rows assigned to the thread
+            for (unsigned int i = startRow; i < endRow; ++i) {
+                // Calculate the sum of the row
+                double sum = 0.0;
+                for (unsigned int j = 0; j < n; ++j) {
+                    if (i != j) {
+                        sum += _linearSystem->matrix->at(i, j) * _xOld->at(j);
+                    }
                 }
             }
-            // xNew_i = (b_i - sum) / A_ii
-            _xNew->at(i) = (_linearSystem->RHS->at(i) - sum) / _linearSystem->matrix->at(i, i);
-            // Calculate the _difference
-            _difference->at(i) = _xNew->at(i) - _xOld->at(i);
-            //Replace the old solution with the new one
-            _xOld->at(i) = _xNew->at(i);
+        };
+
+        // Calculate the number of rows to assign to each thread
+        unsigned int rowsPerThread = n / numberOfThreadsToUse;
+        unsigned int startRow = 0;
+        unsigned int endRow = rowsPerThread;
+
+        // Launch the threads and assign the work
+        for (unsigned int i = 0; i < numberOfThreadsToUse; ++i) {
+            // For the last thread, adjust the endRow to cover the remaining rows
+            if (i == numberOfThreadsToUse - 1) {
+                endRow = n;
+            }
+
+            // Launch the thread and assign the task
+            threads[i] = thread(threadTask, startRow, endRow);
+
+            // Update the startRow and endRow for the next thread
+            startRow = endRow;
+            endRow += rowsPerThread;
+        }
+
+        // Wait for all the threads to finish
+        for (auto& thread : threads) {
+            thread.join();
         }
     }
 

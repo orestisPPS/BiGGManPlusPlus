@@ -98,7 +98,7 @@ namespace NumericalAnalysis {
         auto problem = new SteadyStateMathematicalProblem(heatTransferPDE, boundaryConditions, temperatureDOF);
         
         //auto solver = new SolverLUP(1E-20, true);//
-        auto solver  = new JacobiSolver(false, VectorNormType::LInf, 1E-10, 1000, true);
+        auto solver  = new JacobiSolver(true, VectorNormType::LInf, 1E-10, 1000, true);
 
 
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);

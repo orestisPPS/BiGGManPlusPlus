@@ -461,6 +461,25 @@ namespace LinearAlgebra {
             }
         }
 
+        bool isDiagonallyDominant() {
+            auto size = _numberOfRows;
+            for (int i = 0; i < size; ++i) {
+                double diagonalElement = _array[i * size + i];
+                double sum = 0.0;
+
+                for (int j = 0; j < size; ++j) {
+                    if (j != i) {
+                        sum += std::abs(_array[i * size + j]);
+                    }
+                }
+
+                if (diagonalElement <= sum) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         unsigned numberOfRows() const{
             return _numberOfRows;
         }
