@@ -16,6 +16,8 @@
 #include "../PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
 #include "../Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.h"
 #include "../LinearAlgebra/Solvers/Direct/SolverLUP.h"
+#include "../LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.h"
+#include "../LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.h"
 
 
 using namespace PartialDifferentialEquations;

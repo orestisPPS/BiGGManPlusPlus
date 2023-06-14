@@ -316,10 +316,28 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/IterativeSolver.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/JacobiSolver.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Solver.cpp">

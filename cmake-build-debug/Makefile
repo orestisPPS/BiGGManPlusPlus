@@ -993,29 +993,101 @@ LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp.s
 .PHONY : LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp.s
 
-LinearAlgebra/Solvers/Iterative/JacobiSolver.o: LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.o
-.PHONY : LinearAlgebra/Solvers/Iterative/JacobiSolver.o
+LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.o: LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp.o
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.o
 
 # target to build an object file
-LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.o
-.PHONY : LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.o
+LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp.o
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp.o
 
-LinearAlgebra/Solvers/Iterative/JacobiSolver.i: LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.i
-.PHONY : LinearAlgebra/Solvers/Iterative/JacobiSolver.i
+LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.i: LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp.i
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.i
 
 # target to preprocess a source file
-LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.i
-.PHONY : LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.i
+LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp.i
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp.i
 
-LinearAlgebra/Solvers/Iterative/JacobiSolver.s: LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.s
-.PHONY : LinearAlgebra/Solvers/Iterative/JacobiSolver.s
+LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.s: LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp.s
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.s
 
 # target to generate assembly for a file
-LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.s
-.PHONY : LinearAlgebra/Solvers/Iterative/JacobiSolver.cpp.s
+LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp.s
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp.s
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.o: LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp.o
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.o
+
+# target to build an object file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp.o
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp.o
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.i: LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp.i
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.i
+
+# target to preprocess a source file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp.i
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp.i
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.s: LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp.s
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.s
+
+# target to generate assembly for a file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp.s
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp.s
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.o: LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp.o
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.o
+
+# target to build an object file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp.o
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp.o
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.i: LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp.i
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.i
+
+# target to preprocess a source file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp.i
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp.i
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.s: LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp.s
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.s
+
+# target to generate assembly for a file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp.s
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp.s
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.o: LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.o
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.o
+
+# target to build an object file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.o
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.o
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.i: LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.i
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.i
+
+# target to preprocess a source file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.i
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.i
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.s: LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.s
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.s
+
+# target to generate assembly for a file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.s
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.s
 
 LinearAlgebra/Solvers/Solver.o: LinearAlgebra/Solvers/Solver.cpp.o
 .PHONY : LinearAlgebra/Solvers/Solver.o
@@ -1470,9 +1542,18 @@ help:
 	@echo "... LinearAlgebra/Solvers/Iterative/IterativeSolver.o"
 	@echo "... LinearAlgebra/Solvers/Iterative/IterativeSolver.i"
 	@echo "... LinearAlgebra/Solvers/Iterative/IterativeSolver.s"
-	@echo "... LinearAlgebra/Solvers/Iterative/JacobiSolver.o"
-	@echo "... LinearAlgebra/Solvers/Iterative/JacobiSolver.i"
-	@echo "... LinearAlgebra/Solvers/Iterative/JacobiSolver.s"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.o"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.i"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.s"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.o"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.i"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.s"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.o"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.i"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.s"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.o"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.i"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.s"
 	@echo "... LinearAlgebra/Solvers/Solver.o"
 	@echo "... LinearAlgebra/Solvers/Solver.i"
 	@echo "... LinearAlgebra/Solvers/Solver.s"

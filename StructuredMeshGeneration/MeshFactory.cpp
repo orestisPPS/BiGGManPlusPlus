@@ -3,7 +3,7 @@
 //
 
 #include "MeshFactory.h"
-#include "../LinearAlgebra/Solvers/Iterative/JacobiSolver.h"
+
 
 namespace StructuredMeshGenerator{
     
@@ -51,8 +51,9 @@ namespace StructuredMeshGenerator{
         auto problem = new SteadyStateMathematicalProblem(pde, boundaryConditions, dofTypes);
 
         //auto solver = new SolverLUP(1E-20, true);
-        auto solver  = new JacobiSolver(true, VectorNormType::L1, 1E-10, 1000, true);
-        
+        //auto solver  = new JacobiSolver(true, VectorNormType::L1, 1E-8, 1E4, true);
+        auto solver  = new GaussSeidelSolver(true, VectorNormType::LInf);
+
         auto analysis =
                 new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specs, Parametric);
 

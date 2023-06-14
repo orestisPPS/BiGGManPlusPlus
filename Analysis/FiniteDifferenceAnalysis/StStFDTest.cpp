@@ -5,15 +5,17 @@
 #include "StStFDTest.h"
 #include "../../Discretization/Mesh/GhostPseudoMesh/GhostPseudoMesh.h"
 #include "../../Utility/Exporters/Exporters.h"
-#include "../../LinearAlgebra/Solvers/Iterative/JacobiSolver.h"
+#include "../../LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.h"
+#include "../../LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.h"
+#include "../../LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h"
 
 
 namespace NumericalAnalysis {
     
     StStFDTest::StStFDTest() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 51;
-        numberOfNodes[Direction::Two] = 51;
+        numberOfNodes[Direction::One] = 11;
+        numberOfNodes[Direction::Two] = 11;
         auto specs = new MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
         meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);
@@ -98,17 +100,15 @@ namespace NumericalAnalysis {
         auto problem = new SteadyStateMathematicalProblem(heatTransferPDE, boundaryConditions, temperatureDOF);
         
         //auto solver = new SolverLUP(1E-20, true);//
-        auto solver  = new JacobiSolver(true, VectorNormType::LInf, 1E-10, 1000, true);
-
-
-        auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
+        //auto solver  = new JacobiSolver(false, VectorNormType::LInf);
+        //auto solver  = new GaussSeidelSolver(true, VectorNormType::LInf);
+        auto solver  = new SORSolver(1.6, false, VectorNormType::LInf);
         
+        auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
         
         analysis->solve();
         
         analysis->applySolutionToDegreesOfFreedom();
-
-
         
         auto targetCoords = vector<double>{0.5, 0.5};
         //auto targetCoords = vector<double>{2, 2};

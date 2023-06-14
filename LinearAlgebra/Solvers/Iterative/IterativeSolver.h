@@ -5,6 +5,7 @@
 #ifndef UNTITLED_ITERATIVESOLVER_H
 #define UNTITLED_ITERATIVESOLVER_H
 
+#include <thread>
 #include "../Solver.h"
 #include "../../AnalysisLinearSystemInitializer.h"
 #include "../../Norms/VectorNorm.h"
