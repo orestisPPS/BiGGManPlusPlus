@@ -67,6 +67,7 @@ namespace NumericalAnalysis {
                 for (auto i = 0; i < nodeDOFs->size(); i++) {
                     nodeSolution[i] = nodeDOFs->at(i)->value();
                 }
+                cout<<"Node Coordinates: "<<iNodeCoords[0]<<", "<<iNodeCoords[1]<<", "<<iNodeCoords[2]<<endl;
                 return nodeSolution;
             }
         }

@@ -3,6 +3,7 @@
 //
 
 #include "MeshFactory.h"
+#include "../LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h"
 
 
 namespace StructuredMeshGenerator{
@@ -52,7 +53,9 @@ namespace StructuredMeshGenerator{
 
         //auto solver = new SolverLUP(1E-20, true);
         //auto solver  = new JacobiSolver(true, VectorNormType::L1, 1E-8, 1E4, true);
-        auto solver  = new GaussSeidelSolver(true, VectorNormType::LInf);
+        //auto solver  = new GaussSeidelSolver(true, VectorNormType::LInf, 1E-9);
+        auto solver = new SORSolver(1.8, true, VectorNormType::LInf, 1E-9);
+        
 
         auto analysis =
                 new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specs, Parametric);

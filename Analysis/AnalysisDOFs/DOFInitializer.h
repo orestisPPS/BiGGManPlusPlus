@@ -14,20 +14,26 @@ namespace NumericalAnalysis {
     class DOFInitializer {
     public:
         DOFInitializer(Mesh *mesh, DomainBoundaryConditions *domainBoundaryConditions, struct Field_DOFType* degreesOfFreedom);
-        
-        vector<DegreeOfFreedom*> *freeDegreesOfFreedom;
-        vector<DegreeOfFreedom*> *boundedDegreesOfFreedom;
-        vector<tuple<DegreeOfFreedom*, double>> *fluxDegreesOfFreedom;
-        vector<DegreeOfFreedom*> *totalDegreesOfFreedom;
-        map<unsigned, DegreeOfFreedom*> *totalDegreesOfFreedomMap;
-        map<DegreeOfFreedom*, unsigned> *totalDegreesOfFreedomMapInverse;
+
+        shared_ptr<vector<DegreeOfFreedom*>> fixedDegreesOfFreedom;
+
+        shared_ptr<vector<tuple<DegreeOfFreedom*, double>>> fluxDegreesOfFreedom;
+
+        shared_ptr<map<unsigned, DegreeOfFreedom*>> totalDegreesOfFreedomMap;
+
+        shared_ptr<map<DegreeOfFreedom*, unsigned>> totalDegreesOfFreedomMapInverse;
+
+        shared_ptr<unsigned int> numberOfFixedDOF;
+
+        shared_ptr<unsigned int> numberOfFreeDOF;
+
+        shared_ptr<unsigned int> numberOfDOF;
         
     private:
         
-        list<DegreeOfFreedom*> *_freeDegreesOfFreedomList;
-        list<DegreeOfFreedom*> *_boundedDegreesOfFreedomList;
-        list<tuple<DegreeOfFreedom*, double>> *_fluxDegreesOfFreedomList;
-        list<DegreeOfFreedom*> *_totalDegreesOfFreedomList;
+        unique_ptr<list<DegreeOfFreedom*>> _freeDegreesOfFreedomList;
+        unique_ptr<list<DegreeOfFreedom*>> _fluxDegreesOfFreedomList;
+        unique_ptr<list<DegreeOfFreedom*>> _boundedDegreesOfFreedomList;
         
         void _initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType* degreesOfFreedom);
         

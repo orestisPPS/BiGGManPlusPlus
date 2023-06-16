@@ -14,8 +14,8 @@ namespace NumericalAnalysis {
     
     StStFDTest::StStFDTest() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 11;
-        numberOfNodes[Direction::Two] = 11;
+        numberOfNodes[Direction::One] = 31;
+        numberOfNodes[Direction::Two] = 31;
         auto specs = new MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
         meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);
@@ -29,14 +29,7 @@ namespace NumericalAnalysis {
         
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk");
         
-        Mesh* mesh = meshFactory->mesh;
-        
-        auto pdeProperties = new SecondOrderLinearPDEProperties(2, false, Isotropic);
-        pdeProperties->setIsotropicProperties(1,0,0,0);
-        
-        auto heatTransferPDE = new PartialDifferentialEquation(pdeProperties, Laplace);
-        
-        auto specsFD = new FDSchemeSpecs(2, 2, mesh->directions());
+
 
         //--------------------------------CHAPRA PG 857---------------------------------------------------------------------
         //--------------------------Passes-----------------------------
@@ -87,6 +80,15 @@ namespace NumericalAnalysis {
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 0}}));*/
 
+        Mesh* mesh = meshFactory->mesh;
+
+        auto pdeProperties = new SecondOrderLinearPDEProperties(2, false, Isotropic);
+        pdeProperties->setIsotropicProperties(1,0,0,0);
+
+        auto heatTransferPDE = new PartialDifferentialEquation(pdeProperties, Laplace);
+
+        auto specsFD = new FDSchemeSpecs(2, 2, mesh->directions());
+
         auto dummyBCMap = new map<Position, BoundaryCondition*>();
         dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Left, leftBC));
         dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Right, rightBC));
@@ -101,8 +103,8 @@ namespace NumericalAnalysis {
         
         //auto solver = new SolverLUP(1E-20, true);//
         //auto solver  = new JacobiSolver(false, VectorNormType::LInf);
-        //auto solver  = new GaussSeidelSolver(true, VectorNormType::LInf);
-        auto solver  = new SORSolver(1.6, false, VectorNormType::LInf);
+        //auto solver  = new GaussSeidelSolver(true, VectorNormType::LInf, 1E-9);
+        auto solver  = new SORSolver(1.8, true, VectorNormType::L2, 1E-4);
         
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
         
@@ -122,19 +124,6 @@ namespace NumericalAnalysis {
         Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
         
         auto filenameParaview = "firstMesh.vtk";
-    }
-
-
-    
-    Field_DOFType* StStFDTest::createDOF() {
-        //return new TemperatureScalar_DOFType();
-        return new nodalPositionVectorField2D_DOFType();
-        //return new DisplacementVectorField2D_DOFType();
-    }
-    
-    FDSchemeSpecs* StStFDTest::createSchemeSpecs() {
-
-        return new FDSchemeSpecs(2, 2, {One, Two});
     }
     
     

@@ -23,21 +23,6 @@ namespace NumericalAnalysis {
     
     AnalysisDegreesOfFreedom::~AnalysisDegreesOfFreedom() {
         _deallocateDegreesOfFreedom();
-        delete totalDegreesOfFreedom;
-        delete freeDegreesOfFreedom;
-        delete fixedDegreesOfFreedom;
-        delete fluxDegreesOfFreedom;
-        delete numberOfFreeDOFs;
-        delete numberOfFixedDOFs;
-        delete numberOfDOFs;
-        totalDegreesOfFreedom = nullptr;
-        freeDegreesOfFreedom = nullptr;
-        fixedDegreesOfFreedom = nullptr;
-        fluxDegreesOfFreedom = nullptr;
-        numberOfFreeDOFs = nullptr;
-        numberOfFixedDOFs = nullptr;
-        numberOfDOFs = nullptr;
-        
     }
     
 
