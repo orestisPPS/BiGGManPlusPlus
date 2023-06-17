@@ -3,29 +3,17 @@
 //
 
 #include <fstream>
+#include <utility>
 #include "LinearSystem.h"
 
 namespace LinearAlgebra {
     
-    LinearSystem::LinearSystem(Array<double> *inputMatrix, vector<double> *inputRHS) :
-            matrix(inputMatrix),
-            RHS(inputRHS),
+    LinearSystem::LinearSystem(shared_ptr<Array<double>> inputMatrix, shared_ptr<vector<double>> inputRHS) :
+            matrix(std::move(inputMatrix)),
+            rhs(std::move(inputRHS)),
             solution(nullptr) {}
     
-    LinearSystem::~LinearSystem() {
-        if (matrix != nullptr){
-            delete matrix;
-            matrix = nullptr;
-        }
-        if (RHS != nullptr){
-            delete RHS;
-            RHS = nullptr;
-        }
-        if (solution != nullptr){
-            delete solution;
-            solution = nullptr;
-        }
-    }
+
 
 
     void LinearSystem::exportToMatlabFile(const string& fileName, const string& filePath, bool printSolution) const {
@@ -46,7 +34,7 @@ namespace LinearAlgebra {
 
         // Write the vector to the file
         outputFile << "b = [";
-        for (double i: *RHS) {
+        for (double i: *rhs) {
             outputFile << i << " ";
         }
         outputFile << "]';" << endl;

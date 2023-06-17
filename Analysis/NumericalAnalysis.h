@@ -22,19 +22,19 @@ namespace NumericalAnalysis {
 
     class NumericalAnalysis {
         public:
-        NumericalAnalysis(MathematicalProblem* mathematicalProblem, Mesh *mesh, Solver* solver, CoordinateType coordinateSystem = Natural);
+        NumericalAnalysis(shared_ptr<MathematicalProblem> mathematicalProblem, shared_ptr<Mesh> mesh,
+                          shared_ptr<Solver> solver, CoordinateType coordinateSystem = Natural);
         
-        ~NumericalAnalysis();
         
-        MathematicalProblem* mathematicalProblem;
+        shared_ptr<MathematicalProblem> mathematicalProblem;
         
-        Mesh* mesh;
+        shared_ptr<Mesh> mesh;
                 
-        AnalysisDegreesOfFreedom* degreesOfFreedom;
+        shared_ptr<AnalysisDegreesOfFreedom> degreesOfFreedom;
         
-        LinearSystem* linearSystem;
+        shared_ptr<LinearSystem> linearSystem;
         
-        Solver *solver;
+        shared_ptr<Solver> solver;
 
         void solve() const;
         
@@ -44,7 +44,7 @@ namespace NumericalAnalysis {
         
     protected:
 
-        AnalysisDegreesOfFreedom* initiateDegreesOfFreedom() const;
+        shared_ptr<AnalysisDegreesOfFreedom> initiateDegreesOfFreedom() const;
     };
 
 } // NumericalAnalysis

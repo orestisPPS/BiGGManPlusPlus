@@ -13,15 +13,14 @@ namespace LinearAlgebra {
         
     public:
         
-        LinearSystem(Array<double> *matrix, vector<double> *rhs);
+        LinearSystem(shared_ptr<Array<double>> matrix, shared_ptr<vector<double>> rhs);
         
-        ~LinearSystem();
 
-        Array<double>* matrix;
-        
-        vector<double>* RHS;
-        
-        vector<double>* solution;
+        shared_ptr<Array<double>> matrix;
+
+        shared_ptr<vector<double>> rhs;
+
+        shared_ptr<vector<double>> solution;
         
         void exportToMatlabFile(const string& fileName, const string& filePath, bool printSolution ) const;
     };

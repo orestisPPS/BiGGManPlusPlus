@@ -12,7 +12,7 @@ namespace Discretization {
     class Mesh2D : public Mesh {
         
     public:
-        Mesh2D(Array<Node *> *nodes);
+        Mesh2D(shared_ptr<Array<Node*>>nodes);
         
         ~Mesh2D();
         
@@ -28,17 +28,17 @@ namespace Discretization {
         
         Node* node(unsigned i, unsigned j, unsigned k) override;
 
-        map<vector<double>, Node*>* createParametricCoordToNodesMap() override;
+        shared_ptr<map<vector<double>, Node*>> createParametricCoordToNodesMap() override;
         
         void printMesh() override;
         
     protected:
 
-        map<Position, vector<Node*>*> *addDBoundaryNodesToMap() override;
+        shared_ptr<map<Position, shared_ptr<vector<Node*>>>> addDBoundaryNodesToMap() override;
 
-        vector<Node*>* addInternalNodesToVector() override;
+        shared_ptr<vector<Node*>> addInternalNodesToVector() override;
 
-        vector<Node*>* addTotalNodesToVector() override;
+        shared_ptr<vector<Node*>> addTotalNodesToVector() override;
         
         GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth) override;
 

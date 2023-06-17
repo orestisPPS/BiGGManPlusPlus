@@ -7,17 +7,10 @@ using namespace MathematicalProblems;
 
 namespace MathematicalProblems {
     
-    MathematicalProblem::MathematicalProblem(PartialDifferentialEquation* pde,
-                                             DomainBoundaryConditions* bcs,
+    MathematicalProblem::MathematicalProblem(shared_ptr<PartialDifferentialEquation> pde,
+                                             shared_ptr<DomainBoundaryConditions> bcs,
                                              struct Field_DOFType* degreesOfFreedom) :
                                                      pde(pde), boundaryConditions(bcs), degreesOfFreedom(degreesOfFreedom) {
     }
     
-    MathematicalProblem::~MathematicalProblem() {
-        delete pde;
-        delete boundaryConditions;
-        pde = nullptr;
-        boundaryConditions = nullptr;
-        degreesOfFreedom = nullptr;
-    }
 } // MathematicalProblems

@@ -18,18 +18,18 @@ namespace Discretization {
         
     public:
         
-        GhostPseudoMesh(list<Node*>* ghostNodesList,
-                        map<Direction, unsigned>* ghostNodesPerDirection,
-                        map<vector<double>, Node*>* parametricCoordToNodeMap);
+        GhostPseudoMesh(shared_ptr<list<Node*>> ghostNodesList,
+                        const shared_ptr<map<Direction, unsigned>>& ghostNodesPerDirection,
+                        const shared_ptr<map<vector<double>, Node*>>& parametricCoordToNodeMap);
         
         ~GhostPseudoMesh();
         
-        list<Node*>* ghostNodesList;
+        shared_ptr<list<Node*>> ghostNodesList;
 
-        map<Direction, unsigned>* ghostNodesPerDirection;
+        shared_ptr<map<Direction, unsigned>> ghostNodesPerDirection;
         
         //Contains the parametric coordinates of the nodes in the mesh (real and ghost)
-        map<vector<double>, Node*> *parametricCoordToNodeMap;
+        shared_ptr<map<vector<double>, Node*>>parametricCoordToNodeMap;
     };
 
 } // Discretization

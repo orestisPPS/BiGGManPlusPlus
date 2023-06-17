@@ -30,9 +30,9 @@ namespace LinearAlgebra {
         
         const VectorNormType& getNormType() const;
         
-        void setLinearSystem(LinearSystem* linearSystem) override;
+        void setLinearSystem(shared_ptr<LinearSystem> linearSystem) override;
         
-        void setInitialSolution(unique_ptr<vector<double>> initialValue);
+        void setInitialSolution(shared_ptr<vector<double>> initialValue);
         
         void setInitialSolution(double initialValue);
         
@@ -48,9 +48,9 @@ namespace LinearAlgebra {
         
         unsigned _maxIterations;
         
-        unique_ptr<vector<double>> _xNew;
+        shared_ptr<vector<double>> _xNew;
         
-        unique_ptr<vector<double>> _xOld;
+        shared_ptr<vector<double>> _xOld;
         
         shared_ptr<vector<double>> _difference;
         

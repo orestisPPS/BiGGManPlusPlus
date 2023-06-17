@@ -6,7 +6,7 @@
 
 namespace PartialDifferentialEquations {
 /*    EnergyTransferEquation::EnergyTransferEquation(double *density, double *specialHeatCapacity,
-                                                   double *thermalConductivity, vector<double> *flowVelocity,
+                                                   double *thermalConductivity, shared_ptr<Array<double>>flowVelocity,
                                                    double *reaction) {
         _type = EnergyTransfer;
         auto dimensions = flowVelocity->size();

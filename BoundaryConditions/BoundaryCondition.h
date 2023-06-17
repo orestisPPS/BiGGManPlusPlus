@@ -25,20 +25,21 @@ namespace BoundaryConditions {
     class BoundaryCondition {
     public:
         //Boundary Condition for all degrees of freedom of the problem defined for a single boundary position
-        explicit BoundaryCondition(BoundaryConditionType bcType, map<DOFType, function<double (vector<double>*)>>* bcForDof);
+        explicit BoundaryCondition(BoundaryConditionType bcType, shared_ptr<map<DOFType,
+                                   function<double (shared_ptr<vector<double>>)>>> bcForDof);
         
         //Only for double bc
         explicit BoundaryCondition(BoundaryConditionType bcType, map<DOFType, double>* bcForDof);
         
         //Returns the double value of the boundary condition for the given degree of freedom
         //at the given boundary node coordinates vector pointer.
-        double scalarValueOfDOFAt(DOFType type, vector<double>* coordinates);
+        double scalarValueOfDOFAt(DOFType type, const shared_ptr<vector<double>> &coordinates);
         
         double scalarValueOfDOFAt(DOFType type);
         
         //Returns the vector value of all boundary conditions for all degrees of freedom 
         //at the given boundary node coordinates vector pointer.
-        vector<double> vectorValueOfAllDOFAt(vector<double> *coordinates);
+        vector<double> vectorValueOfAllDOFAt(const shared_ptr<vector<double>>&coordinates);
         
         //Returns an BoundaryConditionType enum constant reference of the type of the boundary condition
         const BoundaryConditionType& type() const;
@@ -47,9 +48,9 @@ namespace BoundaryConditions {
     private:
         BoundaryConditionType _bcType;
 
-        map<DOFType, function<double (vector<double>*)>>* _bcFunctionForDof;
+        shared_ptr<map<DOFType, function<double (shared_ptr<vector<double>>)>>> _bcFunctionForDof;
         
-        map<DOFType, double>* _bcValueForDof;
+        shared_ptr<map<DOFType, double>> _bcValueForDof;
     };
 } // BoundaryConditions
 

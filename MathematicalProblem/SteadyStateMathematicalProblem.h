@@ -7,13 +7,12 @@
 namespace MathematicalProblems{
     class SteadyStateMathematicalProblem : public MathematicalProblem{
     public:
-        SteadyStateMathematicalProblem(PartialDifferentialEquation* pde,
-                                       DomainBoundaryConditions* bcs,
+        SteadyStateMathematicalProblem(shared_ptr<PartialDifferentialEquation> pde,
+                                       shared_ptr<DomainBoundaryConditions> bcs,
                                        struct Field_DOFType* degreesOfFreedom) ;
 
-        ~SteadyStateMathematicalProblem();
-        PartialDifferentialEquation* pde;
-        DomainBoundaryConditions* boundaryConditions;
+        shared_ptr<PartialDifferentialEquation> pde;
+        shared_ptr<DomainBoundaryConditions> boundaryConditions;
         Field_DOFType *degreesOfFreedom;
     };
     

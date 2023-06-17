@@ -14,15 +14,13 @@ namespace LinearAlgebra {
     public:
 
         explicit Cholesky(bool storeDecompositionOnMatrix);
-
-        ~Cholesky();
-
+        
         void solve() override;
 
     private:
-        Array<double>* _l;
+        shared_ptr<Array<double>> _l;
 
-        Array<double>* _lT;
+        shared_ptr<Array<double>> _lT;
     };
 
 } // LinearAlgebra

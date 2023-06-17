@@ -11,14 +11,14 @@ namespace LinearAlgebra {
                     _storeDecompositionOnMatrix(storeDecompositionOnMatrix),
                     _linearSystem(nullptr){}
 
-    unique_ptr<LinearSystem> DirectSolver::getLinearSystem() {
+    shared_ptr<LinearSystem> DirectSolver::getLinearSystem() {
         if (_linearSystem == nullptr) {
             throw runtime_error("LinearSystem is not set");
         }
-        return unique_ptr<LinearSystem>(_linearSystem);
+        return _linearSystem;
     }
     
-    unique_ptr<MatrixDecomposition> DirectSolver::getDecomposition() {
+    shared_ptr<MatrixDecomposition> DirectSolver::getDecomposition() {
         return nullptr;
     }
     

@@ -9,10 +9,10 @@
 namespace Discretization {
     
 
-    GhostPseudoMesh::GhostPseudoMesh(list<Node*>* ghostNodesList,
-                                     map<Direction, unsigned>* ghostNodesPerDirection,
-                                     map<vector<double>, Node*>* parametricCoordToNodeMap) :
-            ghostNodesList(ghostNodesList),
+    GhostPseudoMesh::GhostPseudoMesh(shared_ptr<list<Node*>> ghostNodesList,
+                                     const shared_ptr<map<Direction, unsigned>>& ghostNodesPerDirection,
+                                     const shared_ptr<map<vector<double>, Node*>>& parametricCoordToNodeMap) :
+            ghostNodesList(std::move(ghostNodesList)),
             ghostNodesPerDirection(ghostNodesPerDirection),
             parametricCoordToNodeMap(parametricCoordToNodeMap) {}
     
@@ -20,10 +20,7 @@ namespace Discretization {
         for (auto& node : *ghostNodesList){
             delete node;
             node = nullptr;
-        }         
-        delete ghostNodesList;
-        delete ghostNodesPerDirection;
-        delete parametricCoordToNodeMap;
+        }
     }
 
     

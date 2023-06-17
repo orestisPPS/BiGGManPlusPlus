@@ -8,8 +8,8 @@ namespace MathematicalProblems {
     
     
     TransientMathematicalProblem :: TransientMathematicalProblem(
-            PartialDifferentialEquation *pde,
-            DomainBoundaryConditions* bcs, map<int*,double>* domainIC,
+            shared_ptr<PartialDifferentialEquation>pde,
+            shared_ptr<DomainBoundaryConditions> bcs, map<int*,double>* domainIC,
             struct Field_DOFType *degreesOfFreedom) :
             pde(pde), boundaryConditions(bcs), initialCondition(nullptr), domainInitialConditions(domainIC), degreesOfFreedom(degreesOfFreedom),
             MathematicalProblem(pde, bcs, degreesOfFreedom){

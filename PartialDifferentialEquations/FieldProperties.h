@@ -16,10 +16,10 @@ namespace PartialDifferentialEquations {
     };*/
 
     struct FieldProperties {
-        Array<double> *secondOrderCoefficients;
-        vector<double> *firstOrderCoefficients;
-        double *zerothOrderCoefficient;
-        double *sourceTerm;
+        shared_ptr<Array<double>> secondOrderCoefficients;
+        shared_ptr<vector<double>> firstOrderCoefficients;
+        shared_ptr<double> zerothOrderCoefficient;
+        shared_ptr<double> sourceTerm;
     };
     
 } // PartialDifferentialEquations

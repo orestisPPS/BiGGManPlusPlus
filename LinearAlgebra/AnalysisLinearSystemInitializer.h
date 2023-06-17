@@ -21,12 +21,10 @@ namespace LinearAlgebra {
     class AnalysisLinearSystemInitializer{
 
     public:
-        explicit AnalysisLinearSystemInitializer(AnalysisDegreesOfFreedom* analysisDegreesOfFreedom, Mesh* mesh,
-                                                 MathematicalProblem* mathematicalProblem, FDSchemeSpecs* specs, CoordinateType = Natural);
-
-        ~AnalysisLinearSystemInitializer();
-
-        LinearSystem* linearSystem;
+        explicit AnalysisLinearSystemInitializer(shared_ptr<AnalysisDegreesOfFreedom> analysisDegreesOfFreedom, const shared_ptr<Mesh> &mesh,
+                                                 shared_ptr<MathematicalProblem> mathematicalProblem, shared_ptr<FDSchemeSpecs> specs, CoordinateType = Natural);
+        
+        shared_ptr<LinearSystem> linearSystem;
         
         void createLinearSystem();
 
@@ -34,34 +32,21 @@ namespace LinearAlgebra {
 
     private:
 
-        MathematicalProblem* _mathematicalProblem;
+        shared_ptr<MathematicalProblem> _mathematicalProblem;
 
-        FDSchemeSpecs* _specs;
+        shared_ptr<FDSchemeSpecs> _specs;
         
         CoordinateType _coordinateType;
         
-        vector<double> *_rhsVector;
-
-        Mesh* _mesh;
-
-        AnalysisDegreesOfFreedom* _analysisDegreesOfFreedom;
-
-        Array<double>* _matrix;
+        shared_ptr<vector<double>> _rhsVector;
         
-/*        Array<double>* _fixedFreeMatrix;
+        shared_ptr<Array<double>> _matrix;
 
-        Array<double>* _freeFreeFreeFixedSubMatrix;*/
+        shared_ptr<Mesh> _mesh;
+
+        shared_ptr<AnalysisDegreesOfFreedom> _analysisDegreesOfFreedom;
         
-        void _assembleMatrices();
-        
-
-
-        //Take the Free-Free sub-matrix from the total matrix that is arranged as follows [Free-Free, Free-Fixed, Fixed-Free, Fixed-Fixed]
-        void _createFreeFreeDOFSubMatrix();
-
-        void _createFreeFreeFreeFixedSubMatrix();
-
-        map<vector<double>, Node*>* _parametricCoordToNodeMap;
+        shared_ptr<map<vector<double>, Node*>> _parametricCoordToNodeMap;
 
         static map<short unsigned, map<Direction, map<vector<Position>, short>>>
         _initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions);
@@ -69,95 +54,9 @@ namespace LinearAlgebra {
         static map<vector<Position>,short> _getQualifiedFromAvailable(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
                                                                       map<vector<Position>,short>& templatePositionsAndPoints);
         
-        void _createRHS();
-        
         double _getPDECoefficient(unsigned short derivativeOrder, Node* parentNode, Direction direction = None);
     };
 
 } // LinearAlgebra
 
 #endif //UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
-
-
-
-
-/*
-//
-// Created by hal9000 on 3/28/23.
-//
-
-#ifndef UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
-#define UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
-
-#include "Array/Array.h"
-#include "../Discretization/Node/IsoparametricNodeGraph.h"
-#include "../Utility/Exporters/Exporters.h"
-#include "LinearSystem.h"
-#include "../Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.h"
-#include "../Discretization/Mesh/Mesh.h"
-#include "../MathematicalProblem/MathematicalProblem.h"
-#include "../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
-using namespace MathematicalProblems;
-
-using namespace NumericalAnalysis;
-
-namespace LinearAlgebra {
-
-    class AnalysisLinearSystemInitializer{
-        
-        public:
-            explicit AnalysisLinearSystemInitializer(AnalysisDegreesOfFreedom* analysisDegreesOfFreedom, Mesh* mesh,
-                                                     MathematicalProblem* mathematicalProblem, FDSchemeSpecs* specs);
-            
-            ~AnalysisLinearSystemInitializer();
-            
-            LinearSystem* linearSystem;
-            
-            void createLinearSystem();
-            
-            void updateRHS();
-            
-    private:
-        
-        MathematicalProblem* _mathematicalProblem;
-        
-        FDSchemeSpecs* _specs;
-        
-        Array<double> *_matrix;
-        
-        vector<double> *_rhsVector;
-        
-        Mesh* _mesh;
-        
-        AnalysisDegreesOfFreedom* _analysisDegreesOfFreedom;
-        
-        Array<double>* _matrix;
-        
-        map<DegreeOfFreedom*, double>* _fixedDOFCoefficients;
-        
-        void _assembleMatrices();
-        
-        void _calculateFixedDOFCoefficients();
-        
-        void _createFreeDOFSubMatrixAndRHS();
-        
-        map<vector<double>, Node*>* _parametricCoordToNodeMap;
-
-        static map<short unsigned, map<Direction, map<vector<Position>, short>>>
-        _initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions);
-        
-        static void _getQualifiedFromAvailable(map<vector<Position>, unsigned short>& availablePositionsAndPoints,
-                                                  map<vector<Position>, short>& templatePositionsAndPoints,
-                                                  map<vector<Position>, short>& qualifiedPositionsAndPoints);
-        
-        tuple<FDSchemeType, short>
-        _getSchemeTypeAndOrderFromQualified(map<vector<Position>, short>& qualifiedPositionsAndPoints);
-        
-        void _createRHS();
-    };
-
-} // LinearAlgebra
-
-#endif //UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
-
-*/

@@ -16,9 +16,9 @@ namespace NumericalAnalysis {
 
     class FiniteDifferenceAnalysis : public NumericalAnalysis {
     public:
-        FiniteDifferenceAnalysis(MathematicalProblem *mathematicalProblem, Mesh *mesh, Solver* solver, FDSchemeSpecs *schemeSpecs, CoordinateType coordinateSystem = Natural);
+        FiniteDifferenceAnalysis(shared_ptr<MathematicalProblem>mathematicalProblem, shared_ptr<Mesh> mesh,shared_ptr<Solver> solver, shared_ptr<FDSchemeSpecs>schemeSpecs, CoordinateType coordinateSystem = Natural);
         
-        FDSchemeSpecs* schemeSpecs;
+        shared_ptr<FDSchemeSpecs> schemeSpecs;
        
     };
 

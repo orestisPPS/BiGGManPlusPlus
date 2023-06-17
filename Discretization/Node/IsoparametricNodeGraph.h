@@ -18,7 +18,7 @@ namespace Discretization {
         
     public:
         
-        IsoParametricNodeGraph(Node* node, unsigned graphDepth, map<vector<double>, Node*> *nodeMap,
+        IsoParametricNodeGraph(Node* node, unsigned graphDepth, shared_ptr<map<vector<double>, Node*>>nodeMap,
                                map<Direction, unsigned>& nodesPerDirection, bool includeDiagonalNeighbours = true);
         
         // Returns a map ptr of the input node neighbours graph
@@ -97,7 +97,7 @@ namespace Discretization {
         
         unsigned int _graphDepth;
         
-        map<vector<double>, Node*>* _nodeMap;
+        shared_ptr<map<vector<double>, Node*>> _nodeMap;
         
         map<Direction, unsigned> _nodesPerDirection;
                 

@@ -4,28 +4,22 @@
 
 #include "MatrixDecomposition.h"
 
+#include <utility>
+
 namespace LinearAlgebra {
 
-    MatrixDecomposition::MatrixDecomposition(Array<double>* matrix) {
-        _matrix = matrix;
+    MatrixDecomposition::MatrixDecomposition(shared_ptr<Array<double>> matrix) {
+        _matrix = std::move(matrix);
         _l = nullptr;
         _u = nullptr;
     }
     
-    MatrixDecomposition::~MatrixDecomposition() {
-        if (_l != nullptr) {
-            delete _l;
-        }
-        if (_u != nullptr) {
-            delete _u;
-        }
-    }
-    
-    unique_ptr<Array<double>> MatrixDecomposition::getL() {
+
+    shared_ptr<Array<double>> MatrixDecomposition::getL() {
         if (_l == nullptr) {
             // create _l
             unsigned n = _matrix->numberOfRows();
-            _l = new Array<double>(n, n);
+            _l = make_shared<Array<double>>(n, n);
             for (unsigned i = 0; i < n; i++) {
                 _l->at(i, i) = 1.0;
                 for (unsigned j = 0; j <= i; j++) {
@@ -33,21 +27,20 @@ namespace LinearAlgebra {
                 }
             }
         }
-        return unique_ptr<Array<double>>(_l);
+        return _l;
     }
-
-    unique_ptr<Array<double>> MatrixDecomposition::getU() {
+    shared_ptr<Array<double>> MatrixDecomposition::getU() {
         if (_u == nullptr) {
             // create _u
             unsigned n = _matrix->numberOfRows();
-            _u = new Array<double>(n, n);
+            _u = make_shared<Array<double>>(n, n);
             for (unsigned i = 0; i < n; i++) {
                 for (unsigned j = i; j < n; j++) {
                     _u->at(i, j) = _matrix->at(i, j);
                 }
             }
         }
-        return unique_ptr<Array<double>>(_u);
+        return _u;
     }
 
     bool MatrixDecomposition::isStoredOnMatrix(){
@@ -59,7 +52,7 @@ namespace LinearAlgebra {
         }
     }
     
-    void MatrixDecomposition::decompose(bool deleteMatrixAfterDecomposition) {
+    void MatrixDecomposition::decompose() {
         
     }
 
@@ -67,7 +60,7 @@ namespace LinearAlgebra {
         
     }
     
-    Array<double>* MatrixDecomposition::invertMatrix() {
+    shared_ptr<Array<double>> MatrixDecomposition::invertMatrix() {
         return nullptr;
     }
     
@@ -75,7 +68,7 @@ namespace LinearAlgebra {
         return 0;
     }
     
-    vector<double>* MatrixDecomposition::solve(vector<double>* b) {
+    shared_ptr<vector<double>> MatrixDecomposition::solve(shared_ptr<vector<double>> b) {
         return nullptr;
     }
 

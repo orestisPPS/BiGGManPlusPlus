@@ -13,7 +13,7 @@ namespace NumericalAnalysis {
 
     class AnalysisDegreesOfFreedom {
     public:
-        AnalysisDegreesOfFreedom(Mesh *mesh, DomainBoundaryConditions *domainBoundaryConditions,
+        AnalysisDegreesOfFreedom(shared_ptr<Mesh> mesh, shared_ptr<DomainBoundaryConditions>domainBoundaryConditions,
                                  Field_DOFType* degreesOfFreedom);
         
         ~AnalysisDegreesOfFreedom();

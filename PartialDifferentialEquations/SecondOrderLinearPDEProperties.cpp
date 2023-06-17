@@ -2,6 +2,8 @@
 // Created by hal9000 on 12/6/22.
 //
 #include "SecondOrderLinearPDEProperties.h"
+
+#include <utility>
 #include "../LinearAlgebra/Array/Array.h"
 #include "iostream"
 #include "vector"
@@ -35,23 +37,6 @@ namespace PartialDifferentialEquations {
         _locallyAnisotropic1Properties = nullptr;
     }
     
-    SecondOrderLinearPDEProperties::~SecondOrderLinearPDEProperties() {
-        if (_secondDerivativeProperties != nullptr){
-            delete _secondDerivativeProperties;
-        }
-        if (_firstDerivativeProperties != nullptr){
-            delete _firstDerivativeProperties;
-        }
-        if (_zeroDerivativeProperties != nullptr){
-            delete _zeroDerivativeProperties;
-        }
-        if (_sourceTerm != nullptr){
-            delete _sourceTerm;
-        }
-        if (_locallyAnisotropic1Properties != nullptr){
-            delete _locallyAnisotropic1Properties;
-        }
-    }
     
     PropertiesDistributionType SecondOrderLinearPDEProperties::Type(){
         return _type;
@@ -76,16 +61,16 @@ namespace PartialDifferentialEquations {
                                                                 double zerothOrderCoefficient, double sourceTerm) {
         if (_type == Isotropic and not _isInitialized){
             auto totalDimensions = this->totalDimensions();
-            _firstDerivativeProperties = new vector<double>(totalDimensions);
-            _secondDerivativeProperties = new Array<double>(totalDimensions, totalDimensions);
+            _firstDerivativeProperties = make_shared<vector<double> >(totalDimensions);
+            _secondDerivativeProperties = make_shared<Array<double> >(totalDimensions, totalDimensions);
             for (unsigned short i = 0; i < totalDimensions; i++){
                 _firstDerivativeProperties->at(i) = firstOrderCoefficient;
                 for (int j = 0; j < totalDimensions; ++j) {
                     _secondDerivativeProperties->at(i,j) = secondOrderCoefficient;
                 }
             }
-            _zeroDerivativeProperties = new double(zerothOrderCoefficient);
-            _sourceTerm = new double(sourceTerm);
+            _zeroDerivativeProperties = shared_ptr<double>(_zeroDerivativeProperties);
+            _sourceTerm = shared_ptr<double>(_sourceTerm);
             _isInitialized = true;
         } else {
             //throw argument
@@ -106,9 +91,10 @@ namespace PartialDifferentialEquations {
         }
     }
     
-    void SecondOrderLinearPDEProperties::setLocallyAnisotropicProperties(map<unsigned, FieldProperties>* properties) {
+    void SecondOrderLinearPDEProperties::setLocallyAnisotropicProperties(
+            shared_ptr<map<unsigned int, FieldProperties>> properties) {
         if (_type == LocallyAnisotropic and not _isInitialized) {
-            _locallyAnisotropic1Properties = properties;
+            _locallyAnisotropic1Properties = std::move(properties);
         }
     }
 

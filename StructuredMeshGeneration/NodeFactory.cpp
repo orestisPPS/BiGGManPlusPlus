@@ -16,7 +16,7 @@ namespace StructuredMeshGenerator{
     }
     
     SpaceEntityType NodeFactory::findSpaceEntityType() const  {
-        auto space = NullSpace;
+        SpaceEntityType space;
         if (_nn2 == 1 && _nn3 == 1){
             space = Axis;
         }
@@ -32,20 +32,20 @@ namespace StructuredMeshGenerator{
     void NodeFactory :: createNodesArray(SpaceEntityType space){
         switch (space) {
             case SpaceEntityType::Axis:
-                nodesMatrix = new Array<Node*>(_nn1, unsigned (1));
+                nodesMatrix = make_shared<Array<Node*>>(_nn1);
                 create1DNodes(_nn1);
 
                 break;
             case SpaceEntityType::Plane:
-                nodesMatrix = new Array<Node*>(_nn1, _nn2);
+                nodesMatrix = make_shared<Array<Node*>>(_nn1, _nn2);
                 create2DNodes(_nn1, _nn2);
                 break;
             case SpaceEntityType::Volume:
-                nodesMatrix = new Array<Node*>(_nn1, _nn2, _nn3);
+                nodesMatrix = make_shared<Array<Node*>>(_nn1, _nn2, _nn3);
                 create3DNodes();
                 break;
-            default:
-                throw runtime_error("Invalid space type");
+            case NullSpace:
+                break;
         }
     }
 

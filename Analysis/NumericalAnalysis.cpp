@@ -4,32 +4,24 @@
 
 #include "NumericalAnalysis.h"
 
-namespace NumericalAnalysis {
-    NumericalAnalysis::NumericalAnalysis(MathematicalProblem *mathematicalProblem, Mesh *mesh, Solver* solver, CoordinateType coordinateSystem) :
-            mathematicalProblem(mathematicalProblem), mesh(mesh), linearSystem(nullptr),
-            degreesOfFreedom(initiateDegreesOfFreedom()), solver(solver) {
-    }
-    
-    NumericalAnalysis::~NumericalAnalysis() {
-        delete mathematicalProblem;
-        delete mesh;
-        delete degreesOfFreedom;
-        mathematicalProblem = nullptr;
-        mesh = nullptr;
-        degreesOfFreedom = nullptr;
-    }
-    
-    AnalysisDegreesOfFreedom* NumericalAnalysis::initiateDegreesOfFreedom() const {
-        auto dofs = new AnalysisDegreesOfFreedom(mesh, mathematicalProblem->boundaryConditions,
-                                                 mathematicalProblem->degreesOfFreedom);
+#include <utility>
 
-        return dofs;
+namespace NumericalAnalysis {
+    NumericalAnalysis::NumericalAnalysis(shared_ptr<MathematicalProblem>mathematicalProblem,
+                                         shared_ptr<Mesh> mesh,
+                                         shared_ptr<Solver> solver,
+                                         CoordinateType coordinateSystem) :
+            mathematicalProblem(std::move(mathematicalProblem)), mesh(std::move(mesh)), linearSystem(nullptr),
+            degreesOfFreedom(initiateDegreesOfFreedom()), solver(std::move(solver)) {
+    }
+    
+    shared_ptr<AnalysisDegreesOfFreedom> NumericalAnalysis::initiateDegreesOfFreedom() const {
+        return make_shared<AnalysisDegreesOfFreedom>(
+                mesh, mathematicalProblem->boundaryConditions,mathematicalProblem->degreesOfFreedom);
     }
     
     void NumericalAnalysis::solve() const {
         solver->solve();
-        
-        cout<<"Linear System solved..."<<endl;
     }
 
     void NumericalAnalysis::applySolutionToDegreesOfFreedom() const {

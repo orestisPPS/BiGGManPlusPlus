@@ -25,24 +25,24 @@ namespace StructuredMeshGenerator {
     
     class MeshFactory {
     public:
-        explicit MeshFactory(MeshSpecs *meshSpecs);
+        explicit MeshFactory(shared_ptr<MeshSpecs>meshSpecs);
         
-        Mesh *mesh;
+        shared_ptr<Mesh> mesh;
 
-        map<unsigned, FieldProperties>* pdePropertiesFromMetrics;
+        shared_ptr<map<unsigned, FieldProperties>> pdePropertiesFromMetrics;
         
-        DomainBoundaryFactory* domainBoundaryFactory;
+        shared_ptr<DomainBoundaryFactory> domainBoundaryFactory;
         
         void buildMesh(unsigned short schemeOrder) const;
         
     private:
-        MeshSpecs *_meshSpecs;
+        shared_ptr<MeshSpecs>_meshSpecs;
         
         bool _boundaryFactoryInitialized;
         
-        DomainBoundaryConditions* _boundaryConditions;
+        shared_ptr<DomainBoundaryConditions> _boundaryConditions;
 
-        Mesh* _initiateRegularMesh();
+        shared_ptr<Mesh> _initiateRegularMesh();
         
         void _assignCoordinates();
         
@@ -55,8 +55,6 @@ namespace StructuredMeshGenerator {
         SpaceEntityType _calculateSpaceEntityType();
 
         void _calculatePDEPropertiesFromMetrics();
-        
-        
     };
 
 };

@@ -25,9 +25,7 @@ namespace PartialDifferentialEquations {
     public :
         SecondOrderLinearPDEProperties(unsigned short physicalSpaceDimensions, bool isTransient,
                                        PropertiesDistributionType type);
-    
-        ~SecondOrderLinearPDEProperties();
-        
+         
         PropertiesDistributionType Type();
         
         bool IsTransient() const;
@@ -39,7 +37,7 @@ namespace PartialDifferentialEquations {
         
         void setFieldAnisotropicProperties(FieldProperties globalProperties);
         
-        void setLocallyAnisotropicProperties(map<unsigned, FieldProperties> *localProperties);
+        void setLocallyAnisotropicProperties(shared_ptr<map<unsigned int, FieldProperties>> properties);
         
 
         FieldProperties getLocalProperties(unsigned nodeId);
@@ -57,15 +55,15 @@ namespace PartialDifferentialEquations {
         
         short unsigned _physicalSpaceDimensions;
         
-        Array<double> *_secondDerivativeProperties;
+        shared_ptr<Array<double>> _secondDerivativeProperties;
         
-        vector<double> *_firstDerivativeProperties;
+        shared_ptr<vector<double>> _firstDerivativeProperties;
         
-        double *_zeroDerivativeProperties;
+        shared_ptr<double> _zeroDerivativeProperties;
         
-        double *_sourceTerm;
+        shared_ptr<double> _sourceTerm;
         
-        map<unsigned, FieldProperties> *_locallyAnisotropic1Properties;
+        shared_ptr<map<unsigned, FieldProperties>> _locallyAnisotropic1Properties;
         
         bool _isInitialized;
 

@@ -4,10 +4,12 @@
 
 #include "Mesh2D.h"
 
+#include <utility>
+
 namespace Discretization {
     
-    Mesh2D::Mesh2D(Array<Node *> *nodes) : Mesh() {
-        this->_nodesMatrix = nodes;
+    Mesh2D::Mesh2D(shared_ptr<Array<Node*>>nodes) : Mesh() {
+        this->_nodesMatrix = std::move(nodes);
         initialize();
         _nodesMap = createNodesMap();
     }
@@ -19,9 +21,7 @@ namespace Discretization {
             delete (*_nodesMatrix)(i, j);
             (*_nodesMatrix)(i, j) = nullptr;
         }
-        delete _nodesMatrix;
         _nodesMatrix = nullptr;
-        
         cleanMeshDataStructures();
     }
 
@@ -69,9 +69,9 @@ namespace Discretization {
 
         }
     }
-    
-    map<Position, vector<Node*>*>* Mesh2D::addDBoundaryNodesToMap() {
-        auto boundaryNodes = new map<Position, vector<Node*>*>();
+
+    shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh2D::addDBoundaryNodesToMap() {
+        auto boundaryNodes = make_shared<map<Position, shared_ptr<vector<Node*>>>>();
                   
         auto *leftBoundaryNodes = new vector<Node*>(nodesPerDirection[Two]);
         auto *rightBoundaryNodes = new vector<Node*>(nodesPerDirection[Two]);
@@ -79,8 +79,8 @@ namespace Discretization {
             (*leftBoundaryNodes)[i] = (*_nodesMatrix)(0, i);
             (*rightBoundaryNodes)[i] = (*_nodesMatrix)(nodesPerDirection[One] - 1, i);
         }
-        boundaryNodes->insert( pair<Position, vector<Node*>*>(Position::Left, leftBoundaryNodes));
-        boundaryNodes->insert( pair<Position, vector<Node*>*>(Position::Right, rightBoundaryNodes));
+        boundaryNodes->insert( pair<Position, shared_ptr<vector<Node*>>>(Position::Left, leftBoundaryNodes));
+        boundaryNodes->insert( pair<Position, shared_ptr<vector<Node*>>>(Position::Right, rightBoundaryNodes));
         
         auto *bottomBoundaryNodes = new vector<Node*>(nodesPerDirection[One]);
         auto *topBoundaryNodes = new vector<Node*>(nodesPerDirection[One]);
@@ -88,14 +88,14 @@ namespace Discretization {
             (*bottomBoundaryNodes)[i] = (*_nodesMatrix)(i, 0);
             (*topBoundaryNodes)[i] = (*_nodesMatrix)(i, nodesPerDirection[Two] - 1);
         }
-        boundaryNodes->insert( pair<Position, vector<Node*>*>(Position::Bottom, bottomBoundaryNodes));
-        boundaryNodes->insert( pair<Position, vector<Node*>*>(Position::Top, topBoundaryNodes));
+        boundaryNodes->insert( pair<Position, shared_ptr<vector<Node*>>>(Position::Bottom, bottomBoundaryNodes));
+        boundaryNodes->insert( pair<Position, shared_ptr<vector<Node*>>>(Position::Top, topBoundaryNodes));
         
         return boundaryNodes;
     }
     
-    vector<Node*>* Mesh2D::addInternalNodesToVector() {
-        auto internalNodes = new vector<Node*>();
+    shared_ptr<vector<Node*>> Mesh2D::addInternalNodesToVector() {
+        auto internalNodes = make_shared<vector<Node*>>();
         for (int j = 1; j < nodesPerDirection[Two] - 1; j++){
             for (int i = 1; i < nodesPerDirection[One] - 1; ++i) {
                 internalNodes->push_back((*_nodesMatrix)(i, j));
@@ -104,8 +104,8 @@ namespace Discretization {
         return internalNodes;
     }
 
-    vector<Node*>* Mesh2D::addTotalNodesToVector() {
-        auto totalNodes = new vector<Node*>(_nodesMatrix->size());
+    shared_ptr<vector<Node*>> Mesh2D::addTotalNodesToVector() {
+        auto totalNodes = make_shared<vector<Node*>>(_nodesMatrix->size());
         for (int j = 0; j < nodesPerDirection[Two] ; j++){
             for (int i = 0; i < nodesPerDirection[One] ; ++i) {
                 (*totalNodes)[i + j * nodesPerDirection[One]] = (*_nodesMatrix)(i, j);
@@ -119,7 +119,7 @@ namespace Discretization {
         //
         auto ghostNodesPerDirection = createNumberOfGhostNodesPerDirectionMap(ghostLayerDepth);
 
-        auto ghostNodesList = new list<Node*>();
+        auto ghostNodesList = make_shared<list<Node*>>();
         
         // Parametric coordinate 1 of nodes in the new ghost mesh
         auto nodeArrayPositionI = 0;
@@ -139,7 +139,7 @@ namespace Discretization {
                 // If node is inside the original mesh add it to the ghost mesh Array
                 if (parametricCoordToNodeMap->find(parametricCoords) == parametricCoordToNodeMap->end()) {
                     auto node = new Node();
-                    node->coordinates.setPositionVector(new vector<double>(parametricCoords), Parametric);
+                    node->coordinates.setPositionVector(make_shared<vector<double>>(parametricCoords), Parametric);
                     vector<double> templateCoord = {static_cast<double>(i) * specs->templateStepOne,
                                                     static_cast<double>(j) * specs->templateStepTwo};
                     // Rotate 
@@ -147,7 +147,7 @@ namespace Discretization {
                     // Shear
                     Transformations::shear(templateCoord, specs->templateShearOne,specs->templateShearTwo);
 
-                    node->coordinates.setPositionVector(new vector<double>(templateCoord), Template);
+                    node->coordinates.setPositionVector(make_shared<vector<double>>(templateCoord), Template);
                     ghostNodesList->push_back(node);
                     parametricCoordToNodeMap->insert(pair<vector<double>, Node*>(parametricCoords, node));
                 }
@@ -161,8 +161,8 @@ namespace Discretization {
         return new GhostPseudoMesh(ghostNodesList, ghostNodesPerDirection, parametricCoordToNodeMap);
     }
 
-    map<vector<double>, Node*>* Mesh2D::createParametricCoordToNodesMap() {
-        auto parametricCoordToNodeMap = new map<vector<double>, Node*>();
+    shared_ptr<map<vector<double>, Node*>> Mesh2D::createParametricCoordToNodesMap() {
+        auto parametricCoordToNodeMap = make_shared<map<vector<double>, Node*>>();
         for (auto& node : *totalNodesVector) {
             auto parametricCoords = node->coordinates.positionVector(Parametric);
             parametricCoords.push_back(0.0);

@@ -6,18 +6,9 @@
 namespace MathematicalProblems {
 
     SteadyStateMathematicalProblem::SteadyStateMathematicalProblem(
-            PartialDifferentialEquation *pde, DomainBoundaryConditions *bcs, struct Field_DOFType *degreesOfFreedom) :
-            pde(pde), boundaryConditions(bcs), degreesOfFreedom(degreesOfFreedom),
+            shared_ptr<PartialDifferentialEquation>pde, shared_ptr<DomainBoundaryConditions>bcs, struct Field_DOFType *degreesOfFreedom) :
+            pde(std::move(pde)), boundaryConditions(std::move(bcs)), degreesOfFreedom(degreesOfFreedom),
             MathematicalProblem(pde, bcs, degreesOfFreedom){
         
     }
-    
-    SteadyStateMathematicalProblem::~SteadyStateMathematicalProblem() {
-        delete pde;
-        delete boundaryConditions;
-        pde = nullptr;
-        boundaryConditions = nullptr;
-        degreesOfFreedom = nullptr;
-    }
-    
 }

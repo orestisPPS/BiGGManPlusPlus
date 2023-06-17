@@ -32,16 +32,15 @@ namespace LinearAlgebra {
          * @param throwExceptionOnSingularMatrix (can be excluded) If true, throws an exception when a singular matrix is detected.
          *                                      If false, prints a warning message and continues.
          */
-        explicit DecompositionLUP(Array<double>* matrix, double pivotTolerance = 1e-10, bool throwExceptionOnSingularMatrix = true);
+        explicit DecompositionLUP(shared_ptr<Array<double>> matrix, double pivotTolerance = 1e-10, bool throwExceptionOnSingularMatrix = true);
         
-        ~DecompositionLUP();
 
         /**
         * Performs the SolverLUP decomposition and creates new Array* for the L, U matrices.
         *
         * @param deleteMatrixAfterDecomposition If true, deletes the original matrix after decomposition.
         */
-        void decompose (bool deleteMatrixAfterDecomposition) override;
+        void decompose() override;
         
         /**
          * Performs the SolverLUP and saves the L, U matrices on the original matrix.
@@ -53,14 +52,14 @@ namespace LinearAlgebra {
          *
          * @return The permutation matrix P
          */
-        unique_ptr<vector<unsigned>> getP();
+        shared_ptr<vector<unsigned>> getP();
 
         /**
          * Returns the invert of the matrix
          *
          * @return The inverse of the matrix
          */
-         Array<double>* invertMatrix() override;
+         shared_ptr<Array<double>> invertMatrix() override;
 
         /**
          * Returns the determinant of the matrix
@@ -70,19 +69,19 @@ namespace LinearAlgebra {
          double determinant() override;
 
         /**
-         * Returns a vector with the solution of the linear system composed by the matrix and the input RHS.
+         * Returns a vector with the solution of the linear system composed by the matrix and the input rhs.
          *
          * @param rhs The right-hand side of the linear system
          *
          * @return A vector with the solution of the linear system
          */
-         vector<double>* solve(vector<double>* rhs) override;
+         shared_ptr<vector<double>> solve(shared_ptr<vector<double>> rhs) override;
 
     private:
         /**
         * Permutation matrix P
         */
-        vector<unsigned >* _p;
+        shared_ptr<vector<unsigned>> _p;
         
         /**
         * Pivot tolerance

@@ -24,7 +24,7 @@ namespace Discretization {
      class Mesh {
      
      public:
-        //Mesh(Array<Node *> *nodes, map<Direction, int> nodesPerDirection);
+        //Mesh(shared_ptr<Array<Node*>>nodes, map<Direction, int> nodesPerDirection);
         Mesh();
         
         virtual ~Mesh();
@@ -32,17 +32,17 @@ namespace Discretization {
         //map<Direction, unsigned > *nodesPerDirection;
         map<Direction, unsigned > nodesPerDirection;
 
-        map<Position, vector<Node*>*>* boundaryNodes;
+        shared_ptr<map<Position, shared_ptr<vector<Node*>>>> boundaryNodes;
         
-        vector<Node*>* boundaryNodesVector;
+        shared_ptr<vector<Node*>> boundaryNodesVector;
         
-        vector<Node*>* internalNodesVector;
+        shared_ptr<vector<Node*>> internalNodesVector;
         
-        vector<Node*>* totalNodesVector;
+        shared_ptr<vector<Node*>> totalNodesVector;
                 
         bool isInitialized;
         
-        MeshSpecs* specs;
+        shared_ptr<MeshSpecs> specs;
         
         map<unsigned, Metrics*> *metrics;
         
@@ -78,14 +78,14 @@ namespace Discretization {
     
         virtual Node* node(unsigned i, unsigned j, unsigned k);
 
-        virtual map<vector<double>, Node*>* createParametricCoordToNodesMap();
+        virtual shared_ptr<map<vector<double>, Node*>> createParametricCoordToNodesMap();
         
         virtual void printMesh();
 
         
      protected:
          
-        Array<Node *> *_nodesMatrix;
+        shared_ptr<Array<Node*>>_nodesMatrix;
         
         map<unsigned, Node*>* _nodesMap;
         
@@ -96,18 +96,18 @@ namespace Discretization {
         void createNumberOfNodesPerDirectionMap();
         
         void cleanMeshDataStructures();
-        
-        map<Direction, unsigned>* createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth);
+
+         shared_ptr<map<Direction, unsigned>> createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth);
         
         //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
-        virtual map<Position, vector<Node*>*> *addDBoundaryNodesToMap();
+        virtual shared_ptr<map<Position, shared_ptr<vector<Node*>>>>addDBoundaryNodesToMap();
         
         //Adds the internal nodes of the mesh to a vector pointer of node pointers
-        virtual vector<Node*>* addInternalNodesToVector();
+        virtual shared_ptr<vector<Node*>> addInternalNodesToVector();
         
-        virtual vector<Node*>* addTotalNodesToVector();
+        virtual shared_ptr<vector<Node*>> addTotalNodesToVector();
         
-        vector<Node*>* addBoundaryNodesToVector() const;
+        shared_ptr<vector<Node*>> addBoundaryNodesToVector() const;
         
         virtual GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth);
         

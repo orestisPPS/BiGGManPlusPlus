@@ -14,11 +14,11 @@ namespace NumericalAnalysis {
     
     StStFDTest::StStFDTest() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 31;
-        numberOfNodes[Direction::Two] = 31;
-        auto specs = new MeshSpecs(numberOfNodes, 1, 1, 0, 0, 0);
+        numberOfNodes[Direction::One] = 5;
+        numberOfNodes[Direction::Two] = 5;
+        auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);
+        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 5, 5);
         //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->annulus_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 270);
         //meshFactory->domainBoundaryFactory->cavityBot(numberOfNodes, 1, 1);
@@ -80,32 +80,31 @@ namespace NumericalAnalysis {
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 0}}));*/
 
-        Mesh* mesh = meshFactory->mesh;
+        shared_ptr<Mesh> mesh = meshFactory->mesh;
 
-        auto pdeProperties = new SecondOrderLinearPDEProperties(2, false, Isotropic);
+        auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(2, false, Isotropic);
         pdeProperties->setIsotropicProperties(1,0,0,0);
 
-        auto heatTransferPDE = new PartialDifferentialEquation(pdeProperties, Laplace);
+        auto heatTransferPDE = make_shared<PartialDifferentialEquation>(pdeProperties, Laplace);
 
-        auto specsFD = new FDSchemeSpecs(2, 2, mesh->directions());
+        auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
 
-        auto dummyBCMap = new map<Position, BoundaryCondition*>();
-        dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Left, leftBC));
-        dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Right, rightBC));
-        dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Top, topBC));
-        dummyBCMap->insert(pair<Position, BoundaryCondition*>(Position::Bottom, bottomBC));
+        auto dummyBCMap = make_shared<map<Position, shared_ptr<BoundaryCondition>>>();
+        dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Left, leftBC));
+        dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Right, rightBC));
+        dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Top, topBC));
+        dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Bottom, bottomBC));
         
-        auto boundaryConditions = new DomainBoundaryConditions(dummyBCMap);
+        auto boundaryConditions = make_shared<DomainBoundaryConditions>(dummyBCMap);
         
         auto temperatureDOF = new TemperatureScalar_DOFType();
         
-        auto problem = new SteadyStateMathematicalProblem(heatTransferPDE, boundaryConditions, temperatureDOF);
+        auto problem = make_shared<SteadyStateMathematicalProblem>(heatTransferPDE, boundaryConditions, temperatureDOF);
         
         //auto solver = new SolverLUP(1E-20, true);//
         //auto solver  = new JacobiSolver(false, VectorNormType::LInf);
         //auto solver  = new GaussSeidelSolver(true, VectorNormType::LInf, 1E-9);
-        auto solver  = new SORSolver(1.8, true, VectorNormType::L2, 1E-4);
-        
+        auto solver = make_shared<SORSolver>(1.8, true, VectorNormType::L2, 1E-4);
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
         
         analysis->solve();

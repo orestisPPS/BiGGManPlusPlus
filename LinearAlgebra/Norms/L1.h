@@ -11,7 +11,7 @@ namespace LinearAlgebra {
 
     class L1 : public VectorNorm {
     public:
-        L1(vector<double>* vector, VectorNormType normType) : VectorNorm(vector, normType) {
+        L1(shared_ptr<vector<double>> vector, VectorNormType normType) : VectorNorm(vector, normType) {
 
         }
         

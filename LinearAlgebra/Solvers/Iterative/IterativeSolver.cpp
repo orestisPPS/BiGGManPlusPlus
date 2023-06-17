@@ -47,16 +47,16 @@ namespace LinearAlgebra {
         return _normType;
     }
     
-    void IterativeSolver::setLinearSystem(LinearSystem* linearSystem){
+    void IterativeSolver::setLinearSystem(shared_ptr<LinearSystem> linearSystem){
         _linearSystem = linearSystem;
         _isLinearSystemSet = true;
     }
     
-    void IterativeSolver::setInitialSolution(unique_ptr<vector<double>> initialValue){
+    void IterativeSolver::setInitialSolution(shared_ptr<vector<double>> initialValue){
         if (!_isLinearSystemSet)
             throw std::invalid_argument("Linear system must be set before setting the initial solution.");
-        if (initialValue->size() != _linearSystem->RHS->size()){
-            throw std::invalid_argument("Initial solution vector must have the same size as the RHS vector.");
+        if (initialValue->size() != _linearSystem->rhs->size()){
+            throw std::invalid_argument("Initial solution vector must have the same size as the rhs vector.");
         }
         _xOld = std::move(initialValue);
         _xNew = make_unique<vector<double>>(_xOld->size(), 0.0);
@@ -67,7 +67,7 @@ namespace LinearAlgebra {
     void IterativeSolver::setInitialSolution(double initialValue){
         if (!_isLinearSystemSet)
             throw std::invalid_argument("Linear system must be set before setting the initial solution.");
-        _xOld = make_unique<vector<double>>(_linearSystem->RHS->size(), initialValue);
+        _xOld = make_unique<vector<double>>(_linearSystem->rhs->size(), initialValue);
         _xNew = make_unique<vector<double>>(_xOld->size(), 0.0);
         _difference = make_shared<vector<double>>(_xOld->size(), 0.0);
         _isInitialized = true;
@@ -81,7 +81,7 @@ namespace LinearAlgebra {
         if (!_isLinearSystemSet)
             throw std::invalid_argument("Linear system must be set before solving.");
         _iterativeSolution();
-        _linearSystem->solution = new vector<double>(*_xNew);
+        _linearSystem->solution = std::move(_xNew);
     }
 
 

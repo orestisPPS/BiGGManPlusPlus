@@ -5,29 +5,27 @@
 #include "AnalysisLinearSystemInitializer.h"
 
 #include <memory>
+#include <utility>
 
 namespace LinearAlgebra {
-
-
-
+    
     AnalysisLinearSystemInitializer::
-    AnalysisLinearSystemInitializer(AnalysisDegreesOfFreedom* analysisDegreesOfFreedom, Mesh* mesh, MathematicalProblem* problem,
-                                    FDSchemeSpecs* specs, CoordinateType coordinateType) :
+    AnalysisLinearSystemInitializer(shared_ptr<AnalysisDegreesOfFreedom> analysisDegreesOfFreedom,
+                                    const shared_ptr<Mesh> &mesh,
+                                    shared_ptr<MathematicalProblem> problem,
+                                    shared_ptr<FDSchemeSpecs> specs,
+                                    CoordinateType coordinateType) :
                                     linearSystem(nullptr),
-                                    _analysisDegreesOfFreedom(analysisDegreesOfFreedom),
+                                    _analysisDegreesOfFreedom(std::move(analysisDegreesOfFreedom)),
                                     _mesh(mesh),
-                                    _mathematicalProblem(problem),
-                                    _specs(specs),
+                                    _mathematicalProblem(std::move(problem)),
+                                    _specs(std::move(specs)),
                                     _coordinateType(coordinateType) {
-        _rhsVector = new vector<double>(*_analysisDegreesOfFreedom->numberOfFreeDOFs, 0);
-        _matrix = new Array<double>(*_analysisDegreesOfFreedom->numberOfFreeDOFs, *_analysisDegreesOfFreedom->numberOfFreeDOFs, 1, 0);
+        _rhsVector = make_shared<vector<double>>(*_analysisDegreesOfFreedom->numberOfFreeDOF, 0);
+        _matrix = make_shared<Array<double>>(*_analysisDegreesOfFreedom->numberOfFreeDOF, *_analysisDegreesOfFreedom->numberOfFreeDOF, 1);
         _parametricCoordToNodeMap = _mesh->createParametricCoordToNodesMap();
     }
-
-    AnalysisLinearSystemInitializer::~AnalysisLinearSystemInitializer() {
-        delete linearSystem;
-        _mesh = nullptr;
-    }
+    
 
     void AnalysisLinearSystemInitializer::createLinearSystem() {
         auto start = std::chrono::steady_clock::now(); // Start the timer
@@ -115,7 +113,11 @@ namespace LinearAlgebra {
                 }
             }
         }
-        this->linearSystem = new LinearSystem(_matrix, _rhsVector);
+        this->linearSystem = make_shared<LinearSystem>(std::move(_matrix), std::move(_rhsVector) );
+        
+        this->linearSystem->matrix->print();
+        
+        
 
         auto end = std::chrono::steady_clock::now(); // Stop the timer
         cout << "Linear System Assembled in "

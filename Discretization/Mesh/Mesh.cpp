@@ -22,13 +22,9 @@ namespace Discretization {
     }
 
     Mesh::~Mesh() {
-        delete _nodesMatrix;
         _nodesMatrix = nullptr;
-        delete boundaryNodes;
         boundaryNodes = nullptr;
-        delete internalNodesVector;
         internalNodesVector = nullptr;
-        delete totalNodesVector;
         totalNodesVector = nullptr;
     }
 
@@ -68,7 +64,7 @@ namespace Discretization {
         return nullptr;
     }
 
-    map<vector<double>, Node *> *Mesh::createParametricCoordToNodesMap() {
+    shared_ptr<map<vector<double>, Node *>>Mesh::createParametricCoordToNodesMap() {
         return nullptr;
     }
 
@@ -80,25 +76,25 @@ namespace Discretization {
         categorizeNodes();
     }
 
-    map<Position, vector<Node *> *> *Mesh::addDBoundaryNodesToMap() {
+    shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh::addDBoundaryNodesToMap() {
         return nullptr;
     }
 
-    vector<Node *> *Mesh::addInternalNodesToVector() {
+    shared_ptr<vector<Node *>>Mesh::addInternalNodesToVector() {
         return nullptr;
     }
 
-    vector<Node *> *Mesh::addTotalNodesToVector() {
+    shared_ptr<vector<Node *>>Mesh::addTotalNodesToVector() {
         return nullptr;
     }
     
-    vector<Node*> *Mesh::addBoundaryNodesToVector() const {
+    shared_ptr<vector<Node*>>Mesh::addBoundaryNodesToVector() const {
         auto boundaryNodesList = list<Node*>();
         for (auto &boundaryNodesMap : *boundaryNodes)
             for (auto &node : *boundaryNodesMap.second)
                 if (find(boundaryNodesList.begin(), boundaryNodesList.end(), node) == boundaryNodesList.end())
                     boundaryNodesList.push_back(node);
-        return new vector<Node*>(boundaryNodesList.begin(), boundaryNodesList.end());
+        return make_shared<vector<Node*>>(boundaryNodesList.begin(), boundaryNodesList.end());
     }
 
 
@@ -142,27 +138,19 @@ namespace Discretization {
             delete node;
             node = nullptr;
         }
-        delete totalNodesVector;
         totalNodesVector = nullptr;
-        delete internalNodesVector;
         internalNodesVector = nullptr;
-        for (auto &boundaryNodesVector : *boundaryNodes) {
-            delete boundaryNodesVector.second;
-            boundaryNodesVector.second = nullptr;
-        }
-        delete boundaryNodes;
         boundaryNodes = nullptr;
         delete _nodesMap;
         _nodesMap = nullptr;
     }
 
-    map<Direction, unsigned> *Mesh::createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth) {
-        auto numberOfGhostNodesPerDirection = new map<Direction, unsigned>();
+    shared_ptr<map<Direction, unsigned>> Mesh::createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth) {
+        auto numberOfGhostNodesPerDirection = make_shared<map<Direction, unsigned>>();
         for (auto &direction: directions()) {
             numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(direction, ghostLayerDepth));
         }
         return numberOfGhostNodesPerDirection;
-
     }
 
     void Mesh::calculateMeshMetrics(CoordinateType coordinateSystem, bool isUniformMesh) {
@@ -193,7 +181,7 @@ namespace Discretization {
             metrics = new map<unsigned, Metrics *>();
 
             //Create Scheme Specs. Metrics are calculated by a central ("diamond") scheme
-            auto schemeSpecs = new FDSchemeSpecs(Central, specs->metricsOrder, directions());
+            auto schemeSpecs = make_shared<FDSchemeSpecs>(Central, specs->metricsOrder, directions());
             //Create Scheme Builder to gain access to utility functions for the scheme creation
             auto schemeBuilder = new FiniteDifferenceSchemeBuilder(schemeSpecs);
             // Initiate GhostPseudoMesh
@@ -261,7 +249,6 @@ namespace Discretization {
             delete ghostMesh;
             delete schemeBuilder;
             schemeBuilder = nullptr;
-            delete schemeSpecs;
             schemeSpecs = nullptr;
         }
         else
@@ -275,7 +262,8 @@ namespace Discretization {
             metrics = new map<unsigned, Metrics *>();
 
             //Create Scheme Specs. Metrics are calculated by a central ("diamond") scheme
-            auto schemeSpecs = new FDSchemeSpecs(Central, specs->metricsOrder, directions());
+            auto schemeSpecs = make_shared<FDSchemeSpecs>(Central, specs->metricsOrder, directions());
+            
             //Create Scheme Builder to gain access to utility functions for the scheme creation
             auto schemeBuilder = new FiniteDifferenceSchemeBuilder(schemeSpecs);
             // Initiate GhostPseudoMesh
@@ -365,8 +353,6 @@ namespace Discretization {
             }
             delete ghostMesh;
             delete schemeBuilder;
-            delete schemeSpecs;
-            
         }
         else
             throw std::runtime_error("Mesh is not initialized");

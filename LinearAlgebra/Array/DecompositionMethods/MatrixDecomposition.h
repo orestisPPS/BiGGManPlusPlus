@@ -13,23 +13,21 @@ namespace LinearAlgebra {
     class MatrixDecomposition {
 
     public:
-        explicit MatrixDecomposition(Array<double>* matrix);
-        
-        virtual ~MatrixDecomposition();
+        explicit MatrixDecomposition(shared_ptr<Array<double>> matrix);
         
         /**
         * Returns an Array* with the lower triangular matrix L
         *
         * @return The lower triangular matrix L
         */
-        unique_ptr<Array<double>> getL();
+        shared_ptr<Array<double>> getL();
         
         /**
         * Returns an Array* with the upper triangular matrix U
         *
         * @return The upper triangular matrix U
         */
-        unique_ptr<Array<double>> getU();
+        shared_ptr<Array<double>> getU();
         
         
         
@@ -38,7 +36,7 @@ namespace LinearAlgebra {
         *
         * @param deleteMatrixAfterDecomposition If true, deletes the original matrix after decomposition.
         */
-        virtual void decompose(bool deleteMatrixAfterDecomposition);
+        virtual void decompose();
         
         /**
         * Performs the SolverLUP and saves the L, U matrices on the original matrix.
@@ -50,7 +48,7 @@ namespace LinearAlgebra {
         *
         * @return The inverse of the matrix
         */
-        virtual Array<double>* invertMatrix();
+        virtual shared_ptr<Array<double>> invertMatrix();
         
         /**
         * Returns the determinant of the matrix
@@ -60,29 +58,29 @@ namespace LinearAlgebra {
         virtual double determinant();
         
         /**
-        * Returns a vector with the solution of the linear system composed by the matrix and the input RHS.
+        * Returns a vector with the solution of the linear system composed by the matrix and the input rhs.
         *
         * @param rhs The right-hand side of the linear system
         *
         * @return A vector with the solution of the linear system
         */
-        virtual vector<double>* solve(vector<double>* rhs);
+        virtual shared_ptr<vector<double>> solve(shared_ptr<vector<double>> rhs);
 
 
     protected:
         /**
         * Matrix to be decomposed
         */
-        Array<double>* _matrix;
+        shared_ptr<Array<double>> _matrix;
         /**
         * Lower triangular matrix L
         */
-        Array<double>* _l;
+        shared_ptr<Array<double>> _l;
 
         /**
         * Upper triangular matrix U
         */
-        Array<double>* _u;
+        shared_ptr<Array<double>> _u;
 
         bool isStoredOnMatrix();
 

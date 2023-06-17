@@ -10,7 +10,7 @@
 namespace Discretization {
 
     IsoParametricNodeGraph::IsoParametricNodeGraph(Node *node, unsigned graphDepth,
-                                                   map<vector<double>, Node *> *nodeMap,
+                                                   shared_ptr<map<vector<double>, Node *>>nodeMap,
                                                    map<Direction, unsigned> &nodesPerDirection,
                                                    bool includeDiagonalNeighbours) :
             _node(node), _graphDepth(graphDepth), _nodesPerDirection(nodesPerDirection),
