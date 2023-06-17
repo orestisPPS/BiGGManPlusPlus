@@ -69,8 +69,8 @@ namespace PartialDifferentialEquations {
                     _secondDerivativeProperties->at(i,j) = secondOrderCoefficient;
                 }
             }
-            _zeroDerivativeProperties = shared_ptr<double>(_zeroDerivativeProperties);
-            _sourceTerm = shared_ptr<double>(_sourceTerm);
+            _zeroDerivativeProperties = make_shared<double>(zerothOrderCoefficient);
+            _sourceTerm = make_shared<double>(sourceTerm);
             _isInitialized = true;
         } else {
             //throw argument

@@ -14,11 +14,11 @@ namespace NumericalAnalysis {
     
     StStFDTest::StStFDTest() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 5;
-        numberOfNodes[Direction::Two] = 5;
+        numberOfNodes[Direction::One] = 11;
+        numberOfNodes[Direction::Two] = 11;
         auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 5, 5);
+        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->annulus_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 270);
         //meshFactory->domainBoundaryFactory->cavityBot(numberOfNodes, 1, 1);
@@ -104,7 +104,7 @@ namespace NumericalAnalysis {
         //auto solver = new SolverLUP(1E-20, true);//
         //auto solver  = new JacobiSolver(false, VectorNormType::LInf);
         //auto solver  = new GaussSeidelSolver(true, VectorNormType::LInf, 1E-9);
-        auto solver = make_shared<SORSolver>(1.8, true, VectorNormType::L2, 1E-4);
+        auto solver = make_shared<SORSolver>(1.8, true, VectorNormType::L2, 1E-10);
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
         
         analysis->solve();

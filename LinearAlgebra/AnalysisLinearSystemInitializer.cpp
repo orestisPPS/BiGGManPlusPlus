@@ -115,10 +115,8 @@ namespace LinearAlgebra {
         }
         this->linearSystem = make_shared<LinearSystem>(std::move(_matrix), std::move(_rhsVector) );
         
-        this->linearSystem->matrix->print();
+        //this->linearSystem->matrix->print();
         
-        
-
         auto end = std::chrono::steady_clock::now(); // Stop the timer
         cout << "Linear System Assembled in "
              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
@@ -159,13 +157,14 @@ namespace LinearAlgebra {
     double AnalysisLinearSystemInitializer::_getPDECoefficient(unsigned short derivativeOrder, Node *parentNode,
                                                                Direction direction) {
         auto directionIndex = spatialDirectionToUnsigned[direction];
+        auto properties = _mathematicalProblem->pde->properties->getLocalProperties(*parentNode->id.global);
         switch (derivativeOrder){
             case 0:
-               return *_mathematicalProblem->pde->properties->getLocalProperties(*parentNode->id.global).zerothOrderCoefficient;
+               return *properties.zerothOrderCoefficient;
             case 1:
-                return _mathematicalProblem->pde->properties->getLocalProperties(*parentNode->id.global).firstOrderCoefficients->at(directionIndex);
+                return properties.firstOrderCoefficients->at(directionIndex);
             case 2:
-                return _mathematicalProblem->pde->properties->getLocalProperties(*parentNode->id.global).secondOrderCoefficients->at(directionIndex, directionIndex);
+                return properties.secondOrderCoefficients->at(directionIndex, directionIndex);
             default:
                 throw runtime_error("Derivative order should be 0, 1 or 2");
         }
