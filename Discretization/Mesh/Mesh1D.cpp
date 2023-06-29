@@ -11,7 +11,7 @@ namespace Discretization {
     Mesh1D::Mesh1D(shared_ptr<Array<Node*>>nodes) : Mesh(){
         this->_nodesMatrix = std::move(nodes);
         initialize();
-        _nodesMap = createNodesMap();
+        _nodesMap = _createNodesMap();
     }
     
     Mesh1D::~Mesh1D() {
@@ -21,8 +21,8 @@ namespace Discretization {
             (*_nodesMatrix)(i) = nullptr;
         }
         _nodesMatrix = nullptr;
-        
-        cleanMeshDataStructures();
+
+        _cleanMeshDataStructures();
         
     }
     
@@ -61,16 +61,22 @@ namespace Discretization {
                                 "Second and third entries must be 0.");
     }
     
+    unique_ptr<vector<Node*>> Mesh1D::getInternalNodesVector() {
+        auto internalNodes = make_unique<vector<Node*>>(numberOfTotalNodes());
+        for (int i = 1; i < nodesPerDirection[Direction::One] - 1; i++) 
+            *internalNodes->at(i) = *node(i);
+        return internalNodes;
+    }
+    
+    
     void Mesh1D::printMesh() {
         cout << "Mesh1D" << endl;
         for (int i = 0 ; i < nodesPerDirection[Direction::One] ; i++) {
             (*_nodesMatrix)(i)->printNode();
         }
     }
-
-
-
-        shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh1D::addDBoundaryNodesToMap() {
+    
+    shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh1D::_addDBoundaryNodesToMap() {
         auto boundaries = make_shared<map<Position, shared_ptr<vector<Node*>>>>();
         auto leftBoundary = new vector<Node*>(1);
         auto rightBoundary = new vector<Node*>(1);
@@ -80,15 +86,7 @@ namespace Discretization {
         return boundaries;
     }
     
-    shared_ptr<vector<Node*>> Mesh1D::addInternalNodesToVector() {
-        auto internalNodes = make_shared<vector<Node*>>();
-        for (int i = 1; i < nodesPerDirection[Direction::One] - 1; i++) {
-            internalNodes->push_back(Mesh::node(i));
-        }
-        return internalNodes;
-    }
-    
-    shared_ptr<vector<Node*>> Mesh1D::addTotalNodesToVector() {
+    shared_ptr<vector<Node*>> Mesh1D::_addTotalNodesToVector() {
         auto totalNodes = make_shared<vector<Node*>>();
         for (int i = 0; i < nodesPerDirection[Direction::One]; i++) {
             totalNodes->push_back(Mesh::node(i));
@@ -96,9 +94,9 @@ namespace Discretization {
         return totalNodes;
     }
     
-    GhostPseudoMesh* Mesh1D::createGhostPseudoMesh(unsigned ghostLayerDepth) {
+    GhostPseudoMesh* Mesh1D::_createGhostPseudoMesh(unsigned ghostLayerDepth) {
         //
-        auto ghostNodesPerDirection = createNumberOfGhostNodesPerDirectionMap(ghostLayerDepth);
+        auto ghostNodesPerDirection = _createNumberOfGhostNodesPerDirectionMap(ghostLayerDepth);
 
         auto ghostNodesList = make_shared<list<Node*>>();
 

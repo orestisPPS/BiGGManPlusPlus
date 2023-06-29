@@ -364,9 +364,6 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalProblem/TransientMathematicalProblem.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/FieldProperties.h">
-			<Option target="untitled"/>
-		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/HeatTransfer/EnergyTransferEquation.h">
 			<Option target="untitled"/>
 		</Unit>
@@ -383,6 +380,9 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/SecondOrderLinearPDEProperties.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/SpaceFieldProperties.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h">

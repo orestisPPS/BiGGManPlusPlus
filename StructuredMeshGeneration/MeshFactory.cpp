@@ -74,7 +74,13 @@ namespace StructuredMeshGenerator{
         //delete analysis->degreesOfFreedom;
         dofTypes->deallocate();
         delete dofTypes;
-
+        
+        auto lol = mesh->metrics->at(10);
+        auto g1 = lol->contravariantBaseVectors->at(One);
+        auto g2 = lol->contravariantBaseVectors->at(Two);
+        //auto g1 = lol->covariantBaseVectors->at(One);
+        //auto g2 = lol->covariantBaseVectors->at(Two);
+        auto cross = VectorOperations::crossProduct(g1, g2);
 
         auto end = chrono::steady_clock::now();
         cout<< "Mesh Built in " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
@@ -167,9 +173,9 @@ namespace StructuredMeshGenerator{
                                                     static_cast<double>(j) * _meshSpecs->templateStepTwo,
                                                     static_cast<double>(k) * _meshSpecs->templateStepThree};
                     // Rotate 
-                    Transformations::rotate(templateCoord, _meshSpecs->templateRotAngleOne);
+                    //Transformations::rotate(templateCoord, _meshSpecs->templateRotAngleOne);
                     // Shear
-                    Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
+                    //Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
                     
                     mesh->node(i, j, k)->coordinates.addPositionVector(make_shared<vector<double>>(templateCoord), Template);
                 }
@@ -190,15 +196,15 @@ namespace StructuredMeshGenerator{
     }
 
     void MeshFactory::_calculatePDEPropertiesFromMetrics() {
-        pdePropertiesFromMetrics = make_shared<map<unsigned, FieldProperties>>();
+        pdePropertiesFromMetrics = make_shared<map<unsigned, SpaceFieldProperties>>();
         for (auto &node : *mesh->totalNodesVector) {
-            auto nodeFieldProperties = FieldProperties();
+            auto nodeFieldProperties = SpaceFieldProperties();
             nodeFieldProperties.secondOrderCoefficients = mesh->metrics->at(*node->id.global)->contravariantTensor;
             auto firstDerivativeCoefficients = vector<double>{0, 0, 0};
             nodeFieldProperties.firstOrderCoefficients = make_shared<vector<double>>(firstDerivativeCoefficients);
             nodeFieldProperties.zerothOrderCoefficient = make_shared<double>(0);
             nodeFieldProperties.sourceTerm = make_shared<double>(0);
-            pdePropertiesFromMetrics->insert(pair<unsigned, FieldProperties>(*node->id.global, nodeFieldProperties));
+            pdePropertiesFromMetrics->insert(pair<unsigned, SpaceFieldProperties>(*node->id.global, nodeFieldProperties));
         }
 /*        for (auto &metrics : *mesh->metrics) {
             delete metrics.second;

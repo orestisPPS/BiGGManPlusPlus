@@ -33,13 +33,13 @@ namespace Discretization {
         
     protected:
         
-        shared_ptr<map<Position, shared_ptr<vector<Node*>>>>addDBoundaryNodesToMap() override;
+        shared_ptr<map<Position, shared_ptr<vector<Node*>>>>_addDBoundaryNodesToMap() override;
         
-        shared_ptr<vector<Node*>> addInternalNodesToVector() override;
+        unique_ptr<vector<Node*>> getInternalNodesVector() override;
 
-        shared_ptr<vector<Node*>> addTotalNodesToVector() override;
+        shared_ptr<vector<Node*>> _addTotalNodesToVector() override;
         
-        GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth) override;
+        GhostPseudoMesh* _createGhostPseudoMesh(unsigned ghostLayerDepth) override;
     };
 
 } // Discretization

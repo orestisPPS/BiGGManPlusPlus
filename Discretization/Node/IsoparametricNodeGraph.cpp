@@ -117,8 +117,10 @@ namespace Discretization {
                         const auto colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
                         coLinearNodes[Two] = colinearNodesVector;
                     }
-                    const auto colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
-                    coLinearNodes[Three] = colinearNodesVector;
+                    else if ((n1[0] == n2[0]) && (n1[1] == n2[1]) && (n1[2] + n2[2] == 0)) {
+                        const auto colinearNodesVector = _mergeAndSortColinearNodes(nodes1, nodes2, _node);
+                        coLinearNodes[Three] = colinearNodesVector;
+                    }
                 }
             }
         }
@@ -542,12 +544,12 @@ namespace Discretization {
         parametricCoords = {nodeCoords[0], nodeCoords[1] - depth, nodeCoords[2]};
         _addNeighbourNodeIfParametricCoordsExist(Bottom, parametricCoords);
 
-        if (k > 0) {
+        if (k >= 0) {
             //Front
             parametricCoords = {nodeCoords[0], nodeCoords[1], nodeCoords[2] + depth};
             _addNeighbourNodeIfParametricCoordsExist(Front, parametricCoords);
         }
-        if (k < nn3 - 1) {
+        if (k <= nn3 - 1) {
             //Back
             parametricCoords = {nodeCoords[0], nodeCoords[1], nodeCoords[2] - depth};
             _addNeighbourNodeIfParametricCoordsExist(Back, parametricCoords);

@@ -307,6 +307,40 @@ namespace LinearAlgebra {
         }
         return weights;
     }
+
+
+    map<vector<Position>,short> FiniteDifferenceSchemeBuilder::
+    getQualifiedFromAvailable(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
+                               map<vector<Position>,short>& templatePositionsAndPoints){
+        map<vector<Position>,short> qualifiedPositionsAndPoints = map<vector<Position>,short>();
+        //Check if the specifications of the template positions and points are met in the available positions and points
+        for (auto &templatePositionAndPoints : templatePositionsAndPoints) {
+            for (auto &availablePositionAndPoints : availablePositionsAndPoints) {
+                //Check if the template positions and points are met in the available positions and points
+                if (availablePositionAndPoints.first == templatePositionAndPoints.first &&
+                    availablePositionAndPoints.second >= templatePositionAndPoints.second) {
+                    qualifiedPositionsAndPoints.insert(pair<vector<Position>, short>(
+                            templatePositionAndPoints.first, templatePositionAndPoints.second));
+                }
+            }
+        }
+        return qualifiedPositionsAndPoints;
+    }
+
+    map<short unsigned, map<Direction, map<vector<Position>, short>>> FiniteDifferenceSchemeBuilder::
+    initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions) {
+        map<short unsigned, map<Direction, map<vector<Position>, short>>> positionsAndPoints;
+        for (short unsigned derivativeOrder = 1; derivativeOrder <= maxDerivativeOrder; derivativeOrder++) {
+            positionsAndPoints.insert(pair<short unsigned, map<Direction, map<vector<Position>, short>>>(
+                    derivativeOrder, map<Direction, map<vector<Position>, short>>()));
+            for (auto &direction : directions) {
+                positionsAndPoints[derivativeOrder].insert(pair<Direction, map<vector<Position>, short>>(
+                        direction, map<vector<Position>, short>()));
+            }
+        }
+        return positionsAndPoints;
+    }
+    
 } // LinearAlgebra
 
 

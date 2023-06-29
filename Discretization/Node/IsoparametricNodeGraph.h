@@ -69,13 +69,11 @@ namespace Discretization {
         getColinearPositionsAndPoints(vector<Direction>& availableDirections, map<Position, vector<Node*>>& customNodeGraph) ;
 
         map<Direction, vector<vector<double>>> getSameColinearNodalCoordinates(CoordinateType coordinateType) const;
-        
-        map<Direction, vector<vector<double>>> getSameColinearNodalCoordinatesOnBoundary(CoordinateType coordinateType,
-                                                                                         map<Position, vector<Node*>>& customNodeGraph) const;
-        
-        
+
         map<Direction, vector<vector<double>>>
         getSameColinearNodalCoordinates(CoordinateType coordinateType, map<Position, vector<Node*>>& customNodeGraph) const;
+        
+        map<Direction, vector<vector<double>>> getSameColinearNodalCoordinatesOnBoundary(CoordinateType coordinateType, map<Position, vector<Node*>>& customNodeGraph) const;
         
         map<Direction, vector<DegreeOfFreedom*>> getColinearDOF(DOFType dofType) const;
         

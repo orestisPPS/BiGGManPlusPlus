@@ -16,15 +16,15 @@ namespace BoundaryConditions {
             _bcType(bcType), _bcValueForDof(bcValueForDof), _bcFunctionForDof(nullptr) {
     }
     
-    double BoundaryCondition::scalarValueOfDOFAt(DOFType type, const shared_ptr<vector<double>> &coordinates) {
+    double BoundaryCondition::getBoundaryConditionValueAtCoordinates(DOFType type, const shared_ptr<vector<double>> &coordinates) {
         return _bcFunctionForDof->at(type)(coordinates);
     }
     
-    double BoundaryCondition::scalarValueOfDOFAt(DOFType type) {
+    double BoundaryCondition::getBoundaryConditionValue(DOFType type) {
         return _bcValueForDof->at(type);
     }
 
-    vector<double> BoundaryCondition::vectorValueOfAllDOFAt(const shared_ptr<vector<double>>&coordinates) {
+    vector<double> BoundaryCondition::getAllBoundaryConditionValuesAtCoordinates(const shared_ptr<vector < double>>&coordinates) {
         vector<double> result = vector<double>(_bcFunctionForDof->size());
         for (auto &bc : *_bcFunctionForDof) {
             result.push_back(bc.second(coordinates));

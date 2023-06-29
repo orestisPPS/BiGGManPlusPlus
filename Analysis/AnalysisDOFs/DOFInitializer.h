@@ -13,7 +13,7 @@ namespace NumericalAnalysis {
 
     class DOFInitializer {
     public:
-        DOFInitializer(shared_ptr<Mesh> mesh, shared_ptr<DomainBoundaryConditions>domainBoundaryConditions, struct Field_DOFType* degreesOfFreedom);
+        DOFInitializer(const shared_ptr<Mesh>& mesh, const shared_ptr<DomainBoundaryConditions>&domainBoundaryConditions, struct Field_DOFType* degreesOfFreedom);
 
         shared_ptr<vector<DegreeOfFreedom*>> totalDegreesOfFreedom;
         
@@ -21,7 +21,7 @@ namespace NumericalAnalysis {
 
         shared_ptr<vector<DegreeOfFreedom*>> freeDegreesOfFreedom;
         
-        shared_ptr<vector<tuple<DegreeOfFreedom*, double>>> fluxDegreesOfFreedom;
+        shared_ptr<map<DegreeOfFreedom*, double>> fluxDegreesOfFreedom;
 
         shared_ptr<map<unsigned, DegreeOfFreedom*>> totalDegreesOfFreedomMap;
 
@@ -38,8 +38,6 @@ namespace NumericalAnalysis {
         
         shared_ptr<list<DegreeOfFreedom*>> _freeDegreesOfFreedomList;
         
-        shared_ptr<list<tuple<DegreeOfFreedom*, double>>> _fluxDegreesOfFreedomList;
-        
         shared_ptr<list<DegreeOfFreedom*>> _fixedDegreesOfFreedomList;
         
         void _initiateInternalNodeDOFs(const shared_ptr<Mesh>& mesh, Field_DOFType* degreesOfFreedom);
@@ -52,11 +50,11 @@ namespace NumericalAnalysis {
         
         void _assignDOFIDs() const;
         
-        void _createTotalDOFList(shared_ptr<Mesh> mesh) const;
+        void _createTotalDOFList(const shared_ptr<Mesh>& mesh) const;
         
-        void _createTotalDOFDataStructures(shared_ptr<Mesh> mesh) const;
+        void _createTotalDOFDataStructures(const shared_ptr<Mesh>& mesh) const;
         
-        static void _listPtrToVectorPtr(shared_ptr<list<DegreeOfFreedom*>> listPtr, shared_ptr<vector<DegreeOfFreedom*>> vectorPtr) ;
+        static void _listPtrToVectorPtr(const shared_ptr<list<DegreeOfFreedom*>>& listPtr, const shared_ptr<vector<DegreeOfFreedom*>>& vectorPtr) ;
         
         //TODO: Implement initial conditions. Check if there is meaning in domain  initial conditions as a mathematical object.
         void applyInitialConditions(list<DegreeOfFreedom*>);

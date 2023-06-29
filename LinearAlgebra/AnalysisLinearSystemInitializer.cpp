@@ -121,6 +121,82 @@ namespace LinearAlgebra {
         cout << "Linear System Assembled in "
              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
     }
+    
+/*    void AnalysisLinearSystemInitializer:: addNeumannBoundaryConditions(){
+        auto start = std::chrono::steady_clock::now(); // Start the timer
+        
+        auto directions = _mesh->directions();
+        short unsigned derivativeOrder = 1;
+        auto errorOrderDerivative1 = _specs->getErrorOrderOfSchemeTypeForDerivative(1);
+
+        auto templatePositionsAndPointsMap = _initiatePositionsAndPointsMap(derivativeOrder, directions);
+        auto schemeBuilder = FiniteDifferenceSchemeBuilder(_specs)
+        schemeBuilder.templatePositionsAndPoints(1, errorOrderDerivative1, directions, templatePositionsAndPointsMap[1]);
+        auto maxNeighbours = schemeBuilder.getMaximumNumberOfPointsForArbitrarySchemeType();
+
+        //Iterate over all the free degrees of freedom
+        for (auto &dofTuple: *_analysisDegreesOfFreedom->fluxDegreesOfFreedom) {
+            
+            auto dof = dofTuple.first;
+            double fluxValue = dofTuple.second;
+            //Define the node where the dof belongs
+            auto node = _mesh->nodeFromID(dof->parentNode());
+            auto thisDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
+
+            //Find the node neighbours with a span equal to the maximum number of points needed for the scheme to be consistent
+            auto graph = IsoParametricNodeGraph(node, 1, _parametricCoordToNodeMap, _mesh->nodesPerDirection);
+            auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
+
+                //Decompose scheme into directional components
+            for (auto &direction: directions) {
+                    auto directionIndex = spatialDirectionToUnsigned[direction];
+
+                    //Check if the available positions are qualified for the current derivative order
+                    auto qualifiedPositions = _getQualifiedFromAvailable(availablePositionsAndDepth[direction],templatePositionsAndPointsMap[derivativeOrder][direction]);
+                    auto scheme = FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
+                            qualifiedPositions, direction,_specs->getErrorOrderOfSchemeTypeForDerivative(derivativeOrder), derivativeOrder);
+
+                    auto graphFilter = map<Position, unsigned short>();
+                    for (auto &tuple: qualifiedPositions) {
+                        for (auto &point: tuple.first) {
+                            graphFilter.insert(pair<Position, unsigned short>(point, tuple.second));
+                        }
+                    }
+                    auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
+
+                    auto colinearCoordinates = graph.getSameColinearNodalCoordinates(_coordinateType, filteredNodeGraph);
+                    auto colinearDOF = graph.getColinearDOF(dof->type(), direction, filteredNodeGraph);
+
+                    auto step = VectorOperations::averageAbsoluteDifference(colinearCoordinates[direction][directionIndex]);
+                    //Calculate the denominator (h^p)
+                    double denominator = scheme.denominatorCoefficient * pow(step, scheme.power);
+                    vector<double> &schemeWeights = scheme.weights;
+                    for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
+                        auto neighbourDOF = colinearDOF[iDof];
+                        auto weight = schemeWeights[iDof] * iThDerivativePDECoefficient / denominator;
+
+                        if (neighbourDOF->constraintType() == Free) {
+                            auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOF[iDof]);
+                            _matrix->at(thisDOFPosition, neighbourDOFPosition) =
+                                    //_matrix->at(thisDOFPosition, neighbourDOFPosition) + schemeWeights[iDof] * iThDerivativePDECoefficient;
+                                    _matrix->at(thisDOFPosition, neighbourDOFPosition) + weight;
+                        }
+                        else if(neighbourDOF->constraintType() == Fixed){
+                            auto dirichletContribution = neighbourDOF->value() * weight;
+                            _rhsVector->at(thisDOFPosition) -= dirichletContribution;
+                        }
+                    }
+                }
+            }
+        }
+        this->linearSystem = make_shared<LinearSystem>(std::move(_matrix), std::move(_rhsVector) );
+
+        //this->linearSystem->matrix->print();
+
+        auto end = std::chrono::steady_clock::now(); // Stop the timer
+        cout << "Linear System Assembled in "
+             << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
+    }*/
 
     map<short unsigned, map<Direction, map<vector<Position>, short>>> AnalysisLinearSystemInitializer::
     _initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions) {

@@ -33,13 +33,14 @@ namespace BoundaryConditions {
         
         //Returns the double value of the boundary condition for the given degree of freedom
         //at the given boundary node coordinates vector pointer.
-        double scalarValueOfDOFAt(DOFType type, const shared_ptr<vector<double>> &coordinates);
+        double getBoundaryConditionValueAtCoordinates(DOFType type, const shared_ptr<vector<double>> &coordinates);
         
-        double scalarValueOfDOFAt(DOFType type);
+        //Returns the double value of the boundary condition for the given degree of freedom
+        double getBoundaryConditionValue(DOFType type);
         
         //Returns the vector value of all boundary conditions for all degrees of freedom 
         //at the given boundary node coordinates vector pointer.
-        vector<double> vectorValueOfAllDOFAt(const shared_ptr<vector<double>>&coordinates);
+        vector<double> getAllBoundaryConditionValuesAtCoordinates(const shared_ptr<vector < double>>&coordinates);
         
         //Returns an BoundaryConditionType enum constant reference of the type of the boundary condition
         const BoundaryConditionType& type() const;

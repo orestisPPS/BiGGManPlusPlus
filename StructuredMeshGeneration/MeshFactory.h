@@ -29,7 +29,7 @@ namespace StructuredMeshGenerator {
         
         shared_ptr<Mesh> mesh;
 
-        shared_ptr<map<unsigned, FieldProperties>> pdePropertiesFromMetrics;
+        shared_ptr<map<unsigned, SpaceFieldProperties>> pdePropertiesFromMetrics;
         
         shared_ptr<DomainBoundaryFactory> domainBoundaryFactory;
         

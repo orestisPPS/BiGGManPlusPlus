@@ -23,7 +23,9 @@ namespace NumericalAnalysis {
 
         shared_ptr<vector<DegreeOfFreedom*>> fixedDegreesOfFreedom;
         
-        shared_ptr<vector<tuple<DegreeOfFreedom*, double>>> fluxDegreesOfFreedom;
+        shared_ptr<vector<DegreeOfFreedom*>> internalDegreesOfFreedom;
+        
+        shared_ptr<map<DegreeOfFreedom*, double>> fluxDegreesOfFreedom;
         
         shared_ptr<map<unsigned, DegreeOfFreedom*>> totalDegreesOfFreedomMap; 
         

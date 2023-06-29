@@ -6,7 +6,7 @@
 #include "../Discretization/Node/Node.h"
 #include "iostream"
 #include "map"
-#include "FieldProperties.h"
+#include "SpaceFieldProperties.h"
 using namespace std;
 using namespace LinearAlgebra;
 using namespace Discretization;
@@ -35,14 +35,14 @@ namespace PartialDifferentialEquations {
         void setIsotropicProperties(double secondOrderCoefficient, double firstOrderCoefficient,
                                     double zerothOrderCoefficient, double sourceTerm);
         
-        void setFieldAnisotropicProperties(FieldProperties globalProperties);
+        void setFieldAnisotropicProperties(SpaceFieldProperties globalProperties);
         
-        void setLocallyAnisotropicProperties(shared_ptr<map<unsigned int, FieldProperties>> properties);
+        void setLocallyAnisotropicProperties(shared_ptr<map<unsigned int, SpaceFieldProperties>> properties);
         
 
-        FieldProperties getLocalProperties(unsigned nodeId);
+        SpaceFieldProperties getLocalProperties(unsigned nodeId);
         
-        FieldProperties getLocalProperties();
+        SpaceFieldProperties getLocalProperties();
         
 
 
@@ -63,7 +63,7 @@ namespace PartialDifferentialEquations {
         
         shared_ptr<double> _sourceTerm;
         
-        shared_ptr<map<unsigned, FieldProperties>> _locallyAnisotropic1Properties;
+        shared_ptr<map<unsigned, SpaceFieldProperties>> _locallyAnisotropic1Properties;
         
         bool _isInitialized;
 

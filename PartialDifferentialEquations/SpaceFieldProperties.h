@@ -2,20 +2,27 @@
 // Created by hal9000 on 5/5/23.
 //
 
-#ifndef UNTITLED_FIELDPROPERTIES_H
-#define UNTITLED_FIELDPROPERTIES_H
+#ifndef UNTITLED_SPACEFIELDPROPERTIES_H
+#define UNTITLED_SPACEFIELDPROPERTIES_H
 #include "../LinearAlgebra/Array/Array.h"
 #include "SecondOrderLinearPDEProperties.h"
 
 namespace PartialDifferentialEquations {
     
-/*    enum FieldProperties {
+/*    enum SpaceFieldProperties {
         Scalar,
         Vector,
         Tensor
     };*/
 
-    struct FieldProperties {
+    struct SpaceFieldProperties {
+        shared_ptr<Array<double>> secondOrderCoefficients;
+        shared_ptr<vector<double>> firstOrderCoefficients;
+        shared_ptr<double> zerothOrderCoefficient;
+        shared_ptr<double> sourceTerm;
+    };
+
+    struct TimeFieldProperties {
         shared_ptr<Array<double>> secondOrderCoefficients;
         shared_ptr<vector<double>> firstOrderCoefficients;
         shared_ptr<double> zerothOrderCoefficient;
@@ -24,4 +31,4 @@ namespace PartialDifferentialEquations {
     
 } // PartialDifferentialEquations
 
-#endif //UNTITLED_FIELDPROPERTIES_H
+#endif //UNTITLED_SPACEFIELDPROPERTIES_H

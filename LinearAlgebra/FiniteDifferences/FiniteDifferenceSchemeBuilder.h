@@ -60,8 +60,12 @@ namespace LinearAlgebra {
 
         static Scheme getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints,
                                                               Direction& direction, unsigned short errorOrder, unsigned short derivativeOrder);
-        
-        
+
+        map<vector<Position>,short> getQualifiedFromAvailable(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
+                                                               map<vector<Position>,short>& templatePositionsAndPoints);
+
+        map<short unsigned, map<Direction, map<vector<Position>, short>>>
+        initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions);
     };
 
 } // LinearAlgebra

@@ -11,7 +11,7 @@ namespace Discretization {
     Mesh3D::Mesh3D(shared_ptr<Array<Node*>> nodes) : Mesh(){
         this->_nodesMatrix = std::move(nodes);
         initialize();
-        _nodesMap = createNodesMap();
+        _nodesMap = _createNodesMap();
     }
     
     Mesh3D::~Mesh3D() {
@@ -22,8 +22,8 @@ namespace Discretization {
                 (*_nodesMatrix)(i, j, k) = nullptr;
             }
         _nodesMatrix = nullptr;
-        
-        cleanMeshDataStructures();
+
+        _cleanMeshDataStructures();
     }
     
     unsigned Mesh3D::dimensions() {
@@ -67,7 +67,7 @@ namespace Discretization {
                 }   
     }
 
-    shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh3D::addDBoundaryNodesToMap() {
+    shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh3D::_addDBoundaryNodesToMap() {
         auto boundaryNodes = make_shared<map<Position, shared_ptr<vector<Node*>>>>();
         
         auto bottomNodes = new vector<Node*>();
@@ -105,9 +105,9 @@ namespace Discretization {
         
         return boundaryNodes;
     }
-    
-    shared_ptr<vector<Node*>> Mesh3D::addInternalNodesToVector() {
-        auto internalNodes = make_shared<vector<Node*>>();
+
+    unique_ptr<vector<Node*>> Mesh3D::getInternalNodesVector() {
+        auto internalNodes = make_unique<vector<Node*>>(numberOfTotalNodes());
         for (int k = 1; k < nodesPerDirection[Three] - 1; k++){
             for (int j = 1; j < nodesPerDirection[Two] - 1; j++){
                 for (int i = 1; i < nodesPerDirection[One] - 1; ++i) {
@@ -118,7 +118,7 @@ namespace Discretization {
         return internalNodes;
     }
 
-    shared_ptr<vector<Node*>> Mesh3D::addTotalNodesToVector() {
+    shared_ptr<vector<Node*>> Mesh3D::_addTotalNodesToVector() {
         auto totalNodes = make_shared<vector<Node*>>();
         for (int k = 0; k < nodesPerDirection[Three]; k++){
             for (int j = 0; j < nodesPerDirection[Two]; j++){
@@ -130,8 +130,8 @@ namespace Discretization {
         return totalNodes;      
     }
     
-    GhostPseudoMesh* Mesh3D::createGhostPseudoMesh(unsigned ghostLayerDepth) {
-        auto ghostNodesPerDirection = createNumberOfGhostNodesPerDirectionMap(ghostLayerDepth);
+    GhostPseudoMesh* Mesh3D::_createGhostPseudoMesh(unsigned ghostLayerDepth) {
+        auto ghostNodesPerDirection = _createNumberOfGhostNodesPerDirectionMap(ghostLayerDepth);
 
         auto ghostNodesList = make_shared<list <Node*>>(0);
 

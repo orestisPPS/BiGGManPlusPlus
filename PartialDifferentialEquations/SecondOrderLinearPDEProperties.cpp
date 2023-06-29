@@ -78,7 +78,7 @@ namespace PartialDifferentialEquations {
         }
     }
     
-    void SecondOrderLinearPDEProperties::setFieldAnisotropicProperties(FieldProperties globalProperties) {
+    void SecondOrderLinearPDEProperties::setFieldAnisotropicProperties(SpaceFieldProperties globalProperties) {
         if (_type == FieldAnisotropic and not _isInitialized){
             _firstDerivativeProperties = globalProperties.firstOrderCoefficients;
             _secondDerivativeProperties = globalProperties.secondOrderCoefficients;
@@ -92,17 +92,17 @@ namespace PartialDifferentialEquations {
     }
     
     void SecondOrderLinearPDEProperties::setLocallyAnisotropicProperties(
-            shared_ptr<map<unsigned int, FieldProperties>> properties) {
+            shared_ptr<map<unsigned int, SpaceFieldProperties>> properties) {
         if (_type == LocallyAnisotropic and not _isInitialized) {
             _locallyAnisotropic1Properties = std::move(properties);
         }
     }
 
-    FieldProperties SecondOrderLinearPDEProperties::getLocalProperties(unsigned nodeId) {
+    SpaceFieldProperties SecondOrderLinearPDEProperties::getLocalProperties(unsigned nodeId) {
         if (_type == LocallyAnisotropic){
             return _locallyAnisotropic1Properties->at(nodeId);
         } else {
-            auto localProperties = FieldProperties();
+            auto localProperties = SpaceFieldProperties();
             localProperties.secondOrderCoefficients = _secondDerivativeProperties;
             localProperties.firstOrderCoefficients = _firstDerivativeProperties;
             localProperties.zerothOrderCoefficient = _zeroDerivativeProperties;
@@ -111,11 +111,11 @@ namespace PartialDifferentialEquations {
         }
     }
     
-    FieldProperties SecondOrderLinearPDEProperties::getLocalProperties() {
+    SpaceFieldProperties SecondOrderLinearPDEProperties::getLocalProperties() {
         if (_type == LocallyAnisotropic){
             throw std::invalid_argument("The PDE is locally anisotropic. Node ID must be specified");
         } else {
-            auto localProperties = FieldProperties();
+            auto localProperties = SpaceFieldProperties();
             localProperties.secondOrderCoefficients = _secondDerivativeProperties;
             localProperties.firstOrderCoefficients = _firstDerivativeProperties;
             localProperties.zerothOrderCoefficient = _zeroDerivativeProperties;

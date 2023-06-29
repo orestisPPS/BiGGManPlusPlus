@@ -62,14 +62,13 @@ namespace LinearAlgebra {
         
         
         vector<double> VectorOperations::crossProduct(vector<double> &vector1, vector<double> &vector2) {
+            if (vector1.size() != vector2.size())
+                throw std::invalid_argument("Vectors must have the same size");
             switch (vector1.size()) {
                 case 2:
-                    if (vector2.size() != 2)
-                        throw std::invalid_argument("Vectors must have 2 dimensions");
-                    return {vector1.at(0) * vector2.at(1) - vector1.at(1) * vector2.at(0)};
+                    return {vector1.at(0) * vector2.at(1) - vector1.at(1) * vector2.at(0),
+                            vector1.at(1) * vector2.at(0) - vector1.at(0) * vector2.at(1)};
                 case 3:
-                    if (vector2.size() != 3)
-                        throw std::invalid_argument("Vectors must have 3 dimensions");
                     return {vector1.at(1) * vector2.at(2) - vector1.at(2) * vector2.at(1),
                             vector1.at(2) * vector2.at(0) - vector1.at(0) * vector2.at(2),
                             vector1.at(0) * vector2.at(1) - vector1.at(1) * vector2.at(0)};

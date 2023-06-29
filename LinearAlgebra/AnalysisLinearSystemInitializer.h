@@ -27,6 +27,8 @@ namespace LinearAlgebra {
         shared_ptr<LinearSystem> linearSystem;
         
         void createLinearSystem();
+        
+        void addNeumannBoundaryConditions();
 
         void updateRHS();
 
