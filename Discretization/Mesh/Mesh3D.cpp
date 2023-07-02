@@ -4,12 +4,14 @@
 
 #include "Mesh3D.h"
 
+#include <utility>
+
 namespace Discretization {
     
-    Mesh3D::Mesh3D(Array<Node*>* nodes) : Mesh(){
-        this->_nodesMatrix = nodes;
+    Mesh3D::Mesh3D(shared_ptr<Array<Node*>> nodes) : Mesh(){
+        this->_nodesMatrix = std::move(nodes);
         initialize();
-        _nodesMap = createNodesMap();
+        _nodesMap = _createNodesMap();
     }
     
     Mesh3D::~Mesh3D() {
@@ -19,10 +21,9 @@ namespace Discretization {
                 delete (*_nodesMatrix)(i, j, k);
                 (*_nodesMatrix)(i, j, k) = nullptr;
             }
-        delete _nodesMatrix;
         _nodesMatrix = nullptr;
-        
-        cleanMeshDataStructures();
+
+        _cleanMeshDataStructures();
     }
     
     unsigned Mesh3D::dimensions() {
@@ -65,9 +66,9 @@ namespace Discretization {
                     (*_nodesMatrix)(i, j, k)->printNode();
                 }   
     }
-    
-    map<Position, vector<Node*>*>* Mesh3D::addDBoundaryNodesToMap() {
-        auto boundaryNodes = new map<Position, vector<Node*>*>();
+
+    shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh3D::_addDBoundaryNodesToMap() {
+        auto boundaryNodes = make_shared<map<Position, shared_ptr<vector<Node*>>>>();
         
         auto bottomNodes = new vector<Node*>();
         auto topNodes = new vector<Node*>();
@@ -77,8 +78,8 @@ namespace Discretization {
                 topNodes->push_back((*_nodesMatrix)(i, j, nodesPerDirection[Three] - 1));
             }
         }
-        boundaryNodes->insert(pair<Position, vector<Node*>*>(Bottom, bottomNodes));
-        boundaryNodes->insert(pair<Position, vector<Node*>*>(Top, topNodes));
+        boundaryNodes->insert(pair<Position, shared_ptr<vector<Node*>>>(Bottom, bottomNodes));
+        boundaryNodes->insert(pair<Position, shared_ptr<vector<Node*>>>(Top, topNodes));
         
         auto leftNodes = new vector<Node*>();
         auto rightNodes = new vector<Node*>();
@@ -88,8 +89,8 @@ namespace Discretization {
                 rightNodes->push_back((*_nodesMatrix)(nodesPerDirection[One] - 1, j, i));
             }
         }
-        boundaryNodes->insert(pair<Position, vector<Node*>*>(Left, leftNodes));
-        boundaryNodes->insert(pair<Position, vector<Node*>*>(Right, rightNodes));
+        boundaryNodes->insert(pair<Position, shared_ptr<vector<Node*>>>(Left, leftNodes));
+        boundaryNodes->insert(pair<Position, shared_ptr<vector<Node*>>>(Right, rightNodes));
     
         auto frontNodes = new vector<Node*>();
         auto backNodes = new vector<Node*>();
@@ -99,40 +100,42 @@ namespace Discretization {
                 backNodes->push_back((*_nodesMatrix)(j, nodesPerDirection[Two] - 1, i));
             }
         }
-        boundaryNodes->insert(pair<Position, vector<Node*>*>(Front, frontNodes));
-        boundaryNodes->insert(pair<Position, vector<Node*>*>(Back, backNodes));
+        boundaryNodes->insert(pair<Position, shared_ptr<vector<Node*>>>(Front, frontNodes));
+        boundaryNodes->insert(pair<Position, shared_ptr<vector<Node*>>>(Back, backNodes));
         
         return boundaryNodes;
     }
-    
-    vector<Node*>* Mesh3D::addInternalNodesToVector() {
-        auto internalNodes = new vector<Node*>();
+
+    unique_ptr<vector<Node*>> Mesh3D::getInternalNodesVector() {
+        auto internalNodes = make_unique<vector<Node*>>(numberOfInternalNodes());
+        auto counter = 0;
         for (int k = 1; k < nodesPerDirection[Three] - 1; k++){
             for (int j = 1; j < nodesPerDirection[Two] - 1; j++){
                 for (int i = 1; i < nodesPerDirection[One] - 1; ++i) {
-                    internalNodes->push_back((*_nodesMatrix)(i, j, k));
+                    internalNodes->at(counter) = (*_nodesMatrix)(i, j, k);
+                    counter++;
                 }
             }
         }
         return internalNodes;
     }
 
-    vector<Node*>* Mesh3D::addTotalNodesToVector() {
-        auto totalNodes = new vector<Node*>(_nodesMatrix->size());
+    shared_ptr<vector<Node*>> Mesh3D::_addTotalNodesToVector() {
+        auto totalNodes = make_shared<vector<Node*>>(numberOfTotalNodes());
         for (int k = 0; k < nodesPerDirection[Three]; k++){
             for (int j = 0; j < nodesPerDirection[Two]; j++){
                 for (int i = 0; i < nodesPerDirection[One]; ++i) {
-                    totalNodes->push_back((*_nodesMatrix)(i, j, k));
+                    totalNodes->at(i + j * nodesPerDirection[One] + k * nodesPerDirection[One] * nodesPerDirection[Two]) = (*_nodesMatrix)(i, j, k);    
                 }
             }
         }
         return totalNodes;      
     }
     
-    GhostPseudoMesh* Mesh3D::createGhostPseudoMesh(unsigned ghostLayerDepth) {
-        auto ghostNodesPerDirection = createNumberOfGhostNodesPerDirectionMap(ghostLayerDepth);
+    GhostPseudoMesh* Mesh3D::_createGhostPseudoMesh(unsigned ghostLayerDepth) {
+        auto ghostNodesPerDirection = _createNumberOfGhostNodesPerDirectionMap(ghostLayerDepth);
 
-        auto ghostNodesList = new list<Node*>();
+        auto ghostNodesList = make_shared<list <Node*>>(0);
 
         // Parametric coordinate 1 of nodes in the new ghost mesh
         auto nodeArrayPositionI = 0;
@@ -158,7 +161,7 @@ namespace Discretization {
                     // If node is inside the original mesh add it to the ghost mesh Array
                     if (parametricCoordToNodeMap->find(parametricCoords) == parametricCoordToNodeMap->end()) {
                         auto node = new Node();
-                        node->coordinates.setPositionVector(new vector<double>(parametricCoords), Parametric);
+                        node->coordinates.setPositionVector(make_shared<vector<double>>(parametricCoords), Parametric);
                         vector<double> templateCoord = {static_cast<double>(i) * specs->templateStepOne,
                                                         static_cast<double>(j) * specs->templateStepTwo};
                         // Rotate 
@@ -166,7 +169,7 @@ namespace Discretization {
                         // Shear
                         Transformations::shear(templateCoord, specs->templateShearOne, specs->templateShearTwo);
 
-                        node->coordinates.setPositionVector(new vector<double>, Template);
+                        node->coordinates.setPositionVector(make_shared<vector<double>>(templateCoord), Template);
                         ghostNodesList->push_back(node);
                     }
                     nodeArrayPositionI++;
@@ -180,8 +183,8 @@ namespace Discretization {
         return new GhostPseudoMesh(ghostNodesList, ghostNodesPerDirection, parametricCoordToNodeMap);
     }
     
-    map<vector<double>, Node*>* Mesh3D::createParametricCoordToNodesMap() {
-        auto parametricCoordToNodeMap = new map<vector<double>, Node*>();
+    shared_ptr<map<vector<double>, Node*>> Mesh3D::createParametricCoordToNodesMap() {
+        auto parametricCoordToNodeMap = make_shared<map<vector<double>, Node*>>();
         for (auto& node : *totalNodesVector) {
             auto parametricCoords = node->coordinates.positionVector(Parametric);
             parametricCoordToNodeMap->insert(pair<vector<double>, Node*>(parametricCoords, node));

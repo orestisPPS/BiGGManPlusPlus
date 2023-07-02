@@ -10,8 +10,8 @@ namespace LinearAlgebra {
 
 
 
-    AnalysisLinearSystemInitializer2::AnalysisLinearSystemInitializer2(AnalysisDegreesOfFreedom* analysisDegreesOfFreedom, Mesh* mesh,
-                                                                     MathematicalProblem* problem, FDSchemeSpecs* specs) {
+    AnalysisLinearSystemInitializer2::AnalysisLinearSystemInitializer2(shared_ptr<AnalysisDegreesOfFreedom> analysisDegreesOfFreedom, shared_ptr<Mesh> mesh,
+                                                                     shared_ptr<MathematicalProblem> problem, shared_ptr<FDSchemeSpecs> specs) {
         linearSystem = nullptr;
         this->_analysisDegreesOfFreedom = analysisDegreesOfFreedom;
         this->_mesh = mesh;

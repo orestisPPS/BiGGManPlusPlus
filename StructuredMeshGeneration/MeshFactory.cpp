@@ -4,37 +4,37 @@
 
 #include "MeshFactory.h"
 
+#include <utility>
+#include "../LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h"
+
 
 namespace StructuredMeshGenerator{
     
-    MeshFactory :: MeshFactory(MeshSpecs *meshSpecs) : _meshSpecs(meshSpecs) {
+    MeshFactory :: MeshFactory(shared_ptr<MeshSpecs> meshSpecs) : _meshSpecs(std::move(meshSpecs)) {
         mesh = _initiateRegularMesh();
         _assignCoordinates();
         mesh->specs = _meshSpecs;
         mesh->calculateMeshMetrics(Template, true);
         _calculatePDEPropertiesFromMetrics();
-        domainBoundaryFactory = new DomainBoundaryFactory(mesh);
-        
+        domainBoundaryFactory = make_shared<DomainBoundaryFactory>(mesh);
     }
     
     void MeshFactory::buildMesh(unsigned short schemeOrder) const {
         
         auto start = chrono::steady_clock::now();
         
-        auto pdeProperties = new SecondOrderLinearPDEProperties(2, false, LocallyAnisotropic);
+        auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(2, false, LocallyAnisotropic);
+        
         pdeProperties->setLocallyAnisotropicProperties(pdePropertiesFromMetrics);
 
-        auto pde = new PartialDifferentialEquation(pdeProperties, Laplace);
+        auto pde = make_shared<PartialDifferentialEquation>(pdeProperties, Laplace);
         
-        auto specs = new FDSchemeSpecs(schemeOrder, schemeOrder, mesh->directions());
+        auto specs = make_shared<FDSchemeSpecs>(schemeOrder, schemeOrder, mesh->directions());
         
-        DomainBoundaryConditions* boundaryConditions = nullptr;
-        if (_boundaryFactoryInitialized) {
-            boundaryConditions = domainBoundaryFactory->getDomainBoundaryConditions();
-        }
-        else
-            throw invalid_argument("Boundary conditions not initialized");
-        
+        shared_ptr<DomainBoundaryConditions> boundaryConditions = nullptr;
+
+        boundaryConditions = domainBoundaryFactory->getDomainBoundaryConditions();
+
         Field_DOFType* dofTypes = nullptr;
         switch (mesh->dimensions()) {
             case 1:
@@ -48,56 +48,49 @@ namespace StructuredMeshGenerator{
                 break;
         }
         
-        auto problem = new SteadyStateMathematicalProblem(pde, boundaryConditions, dofTypes);
+        auto problem = make_shared<SteadyStateMathematicalProblem>(pde, boundaryConditions, dofTypes);
 
-        //auto solver = new SolverLUP(1E-20, true);
+        //auto solver = make_shared<SolverLUP>(1E-20, true);
         //auto solver  = new JacobiSolver(true, VectorNormType::L1, 1E-8, 1E4, true);
-        auto solver  = new GaussSeidelSolver(true, VectorNormType::LInf);
+        //auto solver  = new GaussSeidelSolver(true, VectorNormType::LInf, 1E-9);
+        auto solver = make_shared<SORSolver>(1.7, true, VectorNormType::LInf, 1E-9);
+        
 
-        auto analysis =
-                new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specs, Parametric);
+        auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specs, Parametric);
+        
 
-        analysis->solve();
+         analysis->solve();
         
         analysis->applySolutionToDegreesOfFreedom();
         
         for (auto &node : *mesh->totalNodesVector){
-            auto coords = new vector<double>();
+            auto coords = make_shared<vector<double>>();
             for (auto &dof : *node->degreesOfFreedom){
                 coords->push_back(dof->value());
             }
-/*            for (auto &dof : *node->degreesOfFreedom){
-                delete dof;
-                dof = nullptr;
-            }*/
             node->degreesOfFreedom->clear();
             node->coordinates.addPositionVector(coords);
         }
-        
-        delete specs;
-        //delete problem;
-        delete solver;
-        delete analysis->linearSystem;
         //delete analysis->degreesOfFreedom;
         dofTypes->deallocate();
         delete dofTypes;
-
+        
 
         auto end = chrono::steady_clock::now();
         cout<< "Mesh Built in " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
     }
     
-    Mesh* MeshFactory::_initiateRegularMesh() {
+    shared_ptr<Mesh> MeshFactory::_initiateRegularMesh() {
         auto nodesPerDirection = _meshSpecs->nodesPerDirection;
         auto nodeFactory = NodeFactory(_meshSpecs->nodesPerDirection);
         auto space = _calculateSpaceEntityType();
         switch (space) {
             case Axis:
-                return new Mesh1D(nodeFactory.nodesMatrix);
+                return make_shared<Mesh1D>(nodeFactory.nodesMatrix);
             case Plane:
-                return new Mesh2D(nodeFactory.nodesMatrix);
+                return make_shared<Mesh2D>(nodeFactory.nodesMatrix);
             case Volume:
-                return new Mesh3D(nodeFactory.nodesMatrix);
+                return make_shared<Mesh3D>(nodeFactory.nodesMatrix);
             default:
                 throw runtime_error("Invalid space type");
         }
@@ -131,10 +124,12 @@ namespace StructuredMeshGenerator{
     void MeshFactory::_assign1DCoordinates() const {
         for (unsigned i = 0; i < mesh->nodesPerDirection.at(One); ++i) {
             //mesh->node(i)->coordinates.addPositionVector(Natural);
+            auto coords = {static_cast<double>(i)};
             mesh->node(i)->coordinates.setPositionVector(
-                    new vector<double>{static_cast<double>(i)}, Parametric);
+                    make_shared<vector<double>>(coords), Template);
+            coords = {static_cast<double>(i) * _meshSpecs->templateStepOne};
             mesh->node(i)->coordinates.setPositionVector(
-                    new vector<double>{static_cast<double>(i) * _meshSpecs->templateStepOne}, Template);
+                    make_shared<vector<double>>(coords), Parametric);   
         }
     }
     
@@ -143,8 +138,8 @@ namespace StructuredMeshGenerator{
             for (unsigned i = 0; i < mesh->nodesPerDirection.at(One); ++i) {
                 
                 // Parametric coordinates
-                mesh->node(i, j)->coordinates.addPositionVector(
-                        new vector<double>{static_cast<double>(i), static_cast<double>(j)}, Parametric);
+                vector<double> parametricCoord = {static_cast<double>(i), static_cast<double>(j)};
+                mesh->node(i, j)->coordinates.addPositionVector(make_shared<vector<double>>(parametricCoord), Parametric);
                 // Template coordinates
                 vector<double> templateCoord = {static_cast<double>(i) * _meshSpecs->templateStepOne,
                                                 static_cast<double>(j) * _meshSpecs->templateStepTwo};
@@ -153,7 +148,7 @@ namespace StructuredMeshGenerator{
                 // Shear
                 Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
 
-                mesh->node(i, j)->coordinates.addPositionVector(new vector<double>(templateCoord), Template);
+                mesh->node(i, j)->coordinates.addPositionVector(make_shared<vector<double>>(templateCoord), Template);
             }
         }
     }
@@ -165,18 +160,18 @@ namespace StructuredMeshGenerator{
                     // Natural coordinates
                     //mesh->node(i, j, k)->coordinates.addPositionVector(Natural);
                     // Parametric coordinates
-                    mesh->node(i, j, k)->coordinates.addPositionVector(
-                            new vector<double>{static_cast<double>(i), static_cast<double>(j), static_cast<double>(k)}, Parametric);
+                    vector<double> parametricCoord = {static_cast<double>(i), static_cast<double>(j), static_cast<double>(k)};
+                    mesh->node(i, j, k)->coordinates.addPositionVector(make_shared<vector<double>>(parametricCoord), Parametric);
                     // Template coordinates
                     vector<double> templateCoord = {static_cast<double>(i) * _meshSpecs->templateStepOne,
                                                     static_cast<double>(j) * _meshSpecs->templateStepTwo,
                                                     static_cast<double>(k) * _meshSpecs->templateStepThree};
                     // Rotate 
-                    Transformations::rotate(templateCoord, _meshSpecs->templateRotAngleOne);
+                    //Transformations::rotate(templateCoord, _meshSpecs->templateRotAngleOne);
                     // Shear
-                    Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
+                    //Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
                     
-                    mesh->node(i, j, k)->coordinates.addPositionVector(new vector<double>(templateCoord), Template);
+                    mesh->node(i, j, k)->coordinates.addPositionVector(make_shared<vector<double>>(templateCoord), Template);
                 }
             }
         }
@@ -195,15 +190,15 @@ namespace StructuredMeshGenerator{
     }
 
     void MeshFactory::_calculatePDEPropertiesFromMetrics() {
-        pdePropertiesFromMetrics = new map<unsigned, FieldProperties>();
+        pdePropertiesFromMetrics = make_shared<map<unsigned, SpaceFieldProperties>>();
         for (auto &node : *mesh->totalNodesVector) {
-            auto nodeFieldProperties = FieldProperties();
-            auto loliti = *mesh->metrics->at(*node->id.global)->contravariantTensor;
+            auto nodeFieldProperties = SpaceFieldProperties();
             nodeFieldProperties.secondOrderCoefficients = mesh->metrics->at(*node->id.global)->contravariantTensor;
-            nodeFieldProperties.firstOrderCoefficients = new vector<double>(2, 0);
-            nodeFieldProperties.zerothOrderCoefficient = new double(0);
-            nodeFieldProperties.sourceTerm = new double(0);
-            pdePropertiesFromMetrics->insert(pair<unsigned, FieldProperties>(*node->id.global, nodeFieldProperties));
+            auto firstDerivativeCoefficients = vector<double>{0, 0, 0};
+            nodeFieldProperties.firstOrderCoefficients = make_shared<vector<double>>(firstDerivativeCoefficients);
+            nodeFieldProperties.zerothOrderCoefficient = make_shared<double>(0);
+            nodeFieldProperties.sourceTerm = make_shared<double>(0);
+            pdePropertiesFromMetrics->insert(pair<unsigned, SpaceFieldProperties>(*node->id.global, nodeFieldProperties));
         }
 /*        for (auto &metrics : *mesh->metrics) {
             delete metrics.second;

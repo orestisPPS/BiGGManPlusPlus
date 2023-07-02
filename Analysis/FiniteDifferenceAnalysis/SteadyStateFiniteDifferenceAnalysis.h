@@ -12,8 +12,8 @@ namespace NumericalAnalysis {
     class SteadyStateFiniteDifferenceAnalysis : public FiniteDifferenceAnalysis{
     public:
         
-        SteadyStateFiniteDifferenceAnalysis(SteadyStateMathematicalProblem *mathematicalProblem, Mesh *mesh,
-                                            Solver *solver, FDSchemeSpecs *schemeSpecs, CoordinateType coordinateSystem = Natural);
+        SteadyStateFiniteDifferenceAnalysis(const shared_ptr<SteadyStateMathematicalProblem>& mathematicalProblem, const shared_ptr<Mesh>& mesh,
+                                            const shared_ptr<Solver>& solver, const shared_ptr<FDSchemeSpecs>&schemeSpecs, CoordinateType coordinateSystem = Natural);
     };
 
 } // NumericalAnalysis

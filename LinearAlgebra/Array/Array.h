@@ -604,7 +604,7 @@ namespace LinearAlgebra {
 
         //Performs the cholesky decomposition (A=LL^T) and returns L and L^T.
         //Applies only to symmetric positive definite matrices
-        tuple<Array<double>*, Array<double>*> CholeskyDecomposition(){
+        tuple<shared_ptr<Array<double>>, shared_ptr<Array<double>>> CholeskyDecomposition(){
             if (!_isPositiveDefinite){
                 throw invalid_argument("The matrix is not square");
             }
@@ -634,7 +634,7 @@ namespace LinearAlgebra {
                 }
             }
             //Return the Cholesky Decomposition of the matrix (A=LL^T)
-            auto LLT = tuple<Array<double>*, Array<double>*>(l, lT);
+            auto LLT = tuple<shared_ptr<Array<double>>, shared_ptr<Array<double>>>(l, lT);
             return LLT;
         }
 

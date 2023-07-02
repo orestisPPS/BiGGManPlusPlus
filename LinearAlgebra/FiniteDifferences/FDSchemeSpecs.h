@@ -60,6 +60,9 @@ namespace LinearAlgebra {
         FDSchemeSpecs(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder, const vector<Direction> &directions);
         
         
+        FDSchemeSpecs(unsigned short firstDerivativeOrder, const vector<Direction> &directions);
+        
+        
         
         // Specifications of a first and second derivative finite difference scheme.
         // Use this constructor for equations up to second order where the scheme type and order are 
@@ -81,9 +84,12 @@ namespace LinearAlgebra {
         unsigned getErrorOrderOfSchemeTypeForDerivative(unsigned derivativeOrder) const;
     
         bool schemeTypeFixed;
-        
+
+        unsigned int getErrorForDerivativeOfArbitraryScheme(unsigned int derivativeOrder) const;
+
     private:
         void checkInput() const;
+
     };
 
 } // LinearAlgebra

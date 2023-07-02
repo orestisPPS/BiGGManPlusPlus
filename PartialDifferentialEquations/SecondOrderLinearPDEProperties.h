@@ -6,7 +6,7 @@
 #include "../Discretization/Node/Node.h"
 #include "iostream"
 #include "map"
-#include "FieldProperties.h"
+#include "SpaceFieldProperties.h"
 using namespace std;
 using namespace LinearAlgebra;
 using namespace Discretization;
@@ -25,9 +25,7 @@ namespace PartialDifferentialEquations {
     public :
         SecondOrderLinearPDEProperties(unsigned short physicalSpaceDimensions, bool isTransient,
                                        PropertiesDistributionType type);
-    
-        ~SecondOrderLinearPDEProperties();
-        
+         
         PropertiesDistributionType Type();
         
         bool IsTransient() const;
@@ -37,14 +35,14 @@ namespace PartialDifferentialEquations {
         void setIsotropicProperties(double secondOrderCoefficient, double firstOrderCoefficient,
                                     double zerothOrderCoefficient, double sourceTerm);
         
-        void setFieldAnisotropicProperties(FieldProperties globalProperties);
+        void setFieldAnisotropicProperties(SpaceFieldProperties globalProperties);
         
-        void setLocallyAnisotropicProperties(map<unsigned, FieldProperties> *localProperties);
+        void setLocallyAnisotropicProperties(shared_ptr<map<unsigned int, SpaceFieldProperties>> properties);
         
 
-        FieldProperties getLocalProperties(unsigned nodeId);
+        SpaceFieldProperties getLocalProperties(unsigned nodeId);
         
-        FieldProperties getLocalProperties();
+        SpaceFieldProperties getLocalProperties();
         
 
 
@@ -57,15 +55,15 @@ namespace PartialDifferentialEquations {
         
         short unsigned _physicalSpaceDimensions;
         
-        Array<double> *_secondDerivativeProperties;
+        shared_ptr<Array<double>> _secondDerivativeProperties;
         
-        vector<double> *_firstDerivativeProperties;
+        shared_ptr<vector<double>> _firstDerivativeProperties;
         
-        double *_zeroDerivativeProperties;
+        shared_ptr<double> _zeroDerivativeProperties;
         
-        double *_sourceTerm;
+        shared_ptr<double> _sourceTerm;
         
-        map<unsigned, FieldProperties> *_locallyAnisotropic1Properties;
+        shared_ptr<map<unsigned, SpaceFieldProperties>> _locallyAnisotropic1Properties;
         
         bool _isInitialized;
 

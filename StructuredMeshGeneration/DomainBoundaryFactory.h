@@ -15,10 +15,8 @@ namespace StructuredMeshGenerator {
     class DomainBoundaryFactory {
         
     public:
-        explicit DomainBoundaryFactory(Mesh* mesh);
+        explicit DomainBoundaryFactory(const shared_ptr<Mesh> &mesh);
         
-        ~DomainBoundaryFactory();
-
         void parallelogram(map<Direction, unsigned>& nodesPerDirection, double lengthX, double lengthY,
                            double rotAngle = 0, double shearX = 0, double shearY = 0);
 
@@ -40,12 +38,12 @@ namespace StructuredMeshGenerator {
 
         void sinusRiver(map<Direction, unsigned int> &nodesPerDirection, double lengthX, double bankDistanceY, double amplitude, double frequency);
         
-        DomainBoundaryConditions* getDomainBoundaryConditions() const;
+        shared_ptr<DomainBoundaryConditions> getDomainBoundaryConditions() const;
         
     private:
-        Mesh* _mesh;
+        shared_ptr<Mesh> _mesh;
         
-        DomainBoundaryConditions* _domainBoundaryConditions;
+        shared_ptr<DomainBoundaryConditions> _domainBoundaryConditions;
 
 
     };

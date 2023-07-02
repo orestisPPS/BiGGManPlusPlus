@@ -26,7 +26,7 @@ namespace LinearAlgebra {
         Geometrically, the dot product of two vectors gives the cosine of the angle between them multiplied by the magnitudes
         of the vectors. If the dot product is zero, it means the vectors are orthogonal (perpendicular) to each other.
         */
-        static double dotProduct(vector<double> *vector1, vector<double> *vector2);
+        static double dotProduct(const shared_ptr<vector<double>> &vector1, const shared_ptr<vector<double>> &vector2);
         
         /**
         Calculates the dot product of two vectors.
@@ -44,7 +44,7 @@ namespace LinearAlgebra {
         static double dotProduct(vector<double> &vector1, vector<double> &vector2);
         
         
-        static int dotProduct(vector<int> *vector1, vector<int> *vector2);
+        static int dotProduct(const shared_ptr<vector<int>> &vector1, const shared_ptr<vector<int>> &vector2);
         
         static int dotProduct(vector<int> &vector1, vector<int> &vector2);
 
@@ -60,7 +60,7 @@ namespace LinearAlgebra {
         Given two 3-dimensional vectors v = [v1, v2, v3] and w = [w1, w2, w3], their cross product is calculated as:
         cross(v, w) = [v2w3 - v3w2, v3w1 - v1w3, v1w2 - v2w1]
         */
-        static vector<double> crossProduct(vector<double>* vector1, vector<double>* vector2);
+        static vector<double> crossProduct(const shared_ptr<vector<double>>& vector1, const shared_ptr<vector<double>>& vector2);
         
         /**
         Calculates the cross product of two 3-dimensional vectors.
@@ -75,27 +75,27 @@ namespace LinearAlgebra {
         */
         static vector<double> crossProduct(vector<double>& vector1, vector<double> &vector2);
         
-        static bool areEqualVectors(vector<double>* array1, vector<double>* array2);
+        static bool areEqualVectors(const shared_ptr<vector<double>>& array1, const shared_ptr<vector<double>>& array2);
         
         static bool areEqualVectors(vector<double> &array1, vector<double> &array2);
         
-        static bool areEqualVectors(vector<int>* array1, vector<int>* array2);
+        static bool areEqualVectors(const shared_ptr<vector<int>> & array1, const shared_ptr<vector<int>> & array2);
         
         static bool areEqualVectors(vector<int> &array1, vector<int> &array2);
         
-        static double sum(vector<double>* vector);
+        static double sum(const shared_ptr<vector<double>>& vector);
         
         static double sum(vector<double> &vector);
         
-        static int sum(vector<int>* vector);
+        static int sum(const shared_ptr<vector<int>> & vector);
         
         static int sum(vector<int> &vector);
         
-        static double average(vector<double>* vector);
+        static double average(const shared_ptr<vector<double>>& vector);
         
         static double average(vector<double> &vector);
         
-        static double average(vector<int>* vector);
+        static double average(const shared_ptr<vector<int>> & vector);
         
         static double average(vector<int> &vector);
         
@@ -110,7 +110,7 @@ namespace LinearAlgebra {
         Given a vector x with n elements, the variance is calculated as:
         variance(x) = (1/n) * (sum of (x[i] - mean(x))^2 for i=1 to n)
         */
-        static double variance(vector<double>* vector);
+        static double variance(const shared_ptr<vector<double>>& vector);
         
         /**
         Calculates the variance of a vector of doubles.
@@ -136,7 +136,7 @@ namespace LinearAlgebra {
         Given a vector x with n elements, the variance is calculated as:
         variance(x) = (1/n) * (sum of (x[i] - mean(x))^2 for i=1 to n)
         */
-        static double variance(vector<int>* vector);
+        static double variance(const shared_ptr<vector<int>> & vector);
         
         /**
         Calculates the variance of a vector of integers.
@@ -160,7 +160,7 @@ namespace LinearAlgebra {
         The standard deviation of a vector is the square root of its variance. It is a measure of how spread out its values
         are, but it is expressed in the same units as the original data.
         */
-        static double standardDeviation(vector<double>* vector);
+        static double standardDeviation(const shared_ptr<vector<double>>& vector);
         
         /**
         Calculates the standard deviation of a vector of doubles.
@@ -182,7 +182,7 @@ namespace LinearAlgebra {
         The standard deviation of a vector is the square root of its variance. It is a measure of how spread out its values
         are, but it is expressed in the same units as the original data.
         */
-        static double standardDeviation(vector<int>* vector);
+        static double standardDeviation(const shared_ptr<vector<int>> & vector);
         
         /**
         Calculates the standard deviation of a vector of integers.
@@ -211,7 +211,7 @@ namespace LinearAlgebra {
         If the two vectors have the same length, the formula simplifies to:
         cov(X, Y) = 1/n * dot(X - mean(X), Y - mean(Y)), where dot() is the dot product.
         */
-        static double covariance(vector<double>* vector1, vector<double>* vector2);
+        static double covariance(const shared_ptr<vector<double>>& vector1, const shared_ptr<vector<double>>& vector2);
         
         /**
         Calculates the covariance between two vectors of doubles.
@@ -247,7 +247,7 @@ namespace LinearAlgebra {
         If the two vectors have the same length, the formula simplifies to:
         cov(X, Y) = 1/n * dot(X - mean(X), Y - mean(Y)), where dot() is the dot product.
         */
-        static double covariance(vector<int>* vector1, vector<int>* vector2);
+        static double covariance(const shared_ptr<vector<int>> & vector1, const shared_ptr<vector<int>> & vector2);
         
         /**
         Calculates the covariance between two vectors of integers.
@@ -280,7 +280,7 @@ namespace LinearAlgebra {
         cor(X, Y) = cov(X, Y) / (sd(X) * sd(Y)), where cov(X, Y) is the covariance between X and Y, and sd(X) and sd(Y) are the
         standard deviations of X and Y, respectively.
         */
-        static double correlation(vector<double> *vector1, vector<double>* vector2);
+        static double correlation(const shared_ptr<vector<double>> &vector1, const shared_ptr<vector<double>>& vector2);
         
         /**
         Calculates the correlation coefficient between two vectors of doubles.
@@ -310,7 +310,7 @@ namespace LinearAlgebra {
         cor(X, Y) = cov(X, Y) / (sd(X) * sd(Y)), where cov(X, Y) is the covariance between X and Y, and sd(X) and sd(Y) are the
         standard deviations of X and Y, respectively.
         */
-        static double correlation(vector<int>* vector1, vector<int>* vector2);
+        static double correlation(const shared_ptr<vector<int>> & vector1, const shared_ptr<vector<int>> & vector2);
         
         /**
         Calculates the correlation between two vectors of integers.
@@ -338,6 +338,8 @@ namespace LinearAlgebra {
          Suitable for the average distance between the same coordinate component of different nodes.
         */
         static double averageAbsoluteDifference(vector<double>& vector1);
+
+    
     };
 
 } // LinearAlgebra

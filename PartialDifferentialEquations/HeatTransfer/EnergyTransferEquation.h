@@ -16,17 +16,17 @@ namespace PartialDifferentialEquations {
     class EnergyTransferEquation : public PartialDifferentialEquation {
     public:
         EnergyTransferEquation(double *density, double *specialHeatCapacity,
-                               double *thermalConductivity, vector<double> *flowVelocity,
+                               double *thermalConductivity, shared_ptr<Array<double>>flowVelocity,
                                double *reaction, double *source);
         EnergyTransferEquation(double *density, double *specialHeatCapacity,
-                               Array<double> *anisotropicThermalConductivity, vector<double> *flowVelocity,
+                               shared_ptr<Array<double>>anisotropicThermalConductivity, shared_ptr<Array<double>>flowVelocity,
                                double *reaction, double *source);
-        EnergyTransferEquation(map<int*, Array<double>*> localDensity, double *specialHeatCapacity,
-                               map<int*, Array<double>*> *locallyAnisotropicThermalConductivity, map<int*, vector<double>*> *localFlowVelocity,
+        EnergyTransferEquation(map<int*, shared_ptr<Array<double>>> localDensity, double *specialHeatCapacity,
+                               map<int*, shared_ptr<Array<double>>> *locallyAnisotropicThermalConductivity, map<int*, shared_ptr<vector<double>>> *localFlowVelocity,
                                map<int*,double*> *localReaction, map<int*,double*> *localSource);
         ~EnergyTransferEquation();
         
-        SecondOrderLinearPDEProperties *properties;
+        shared_ptr<SecondOrderLinearPDEProperties>properties;
         
         PDEType Type();
         

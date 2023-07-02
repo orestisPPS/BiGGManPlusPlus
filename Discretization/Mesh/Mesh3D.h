@@ -11,7 +11,7 @@ namespace Discretization {
 
     class Mesh3D : public Mesh {
     public:
-        Mesh3D(Array<Node *> *nodes);
+        Mesh3D(shared_ptr<Array<Node*>>nodes);
 
         ~Mesh3D();
 
@@ -21,25 +21,25 @@ namespace Discretization {
 
         vector<Direction> directions() override;
 
+        unique_ptr<vector<Node*>> getInternalNodesVector() override;
+        
         Node* node(unsigned i) override;
 
         Node* node(unsigned i, unsigned j) override;
 
         Node* node(unsigned i, unsigned j, unsigned k) override;
 
-        map<vector<double>, Node*>* createParametricCoordToNodesMap() override;
+        shared_ptr<map<vector<double>, Node*>> createParametricCoordToNodesMap() override;
         
         void printMesh() override;
         
     protected:
         
-        map<Position, vector<Node*>*> *addDBoundaryNodesToMap() override;
+        shared_ptr<map<Position, shared_ptr<vector<Node*>>>>_addDBoundaryNodesToMap() override;
         
-        vector<Node*>* addInternalNodesToVector() override;
-
-        vector<Node*>* addTotalNodesToVector() override;
+        shared_ptr<vector<Node*>> _addTotalNodesToVector() override;
         
-        GhostPseudoMesh* createGhostPseudoMesh(unsigned ghostLayerDepth) override;
+        GhostPseudoMesh* _createGhostPseudoMesh(unsigned ghostLayerDepth) override;
     };
 
 } // Discretization

@@ -13,28 +13,29 @@ namespace NumericalAnalysis {
 
     class AnalysisDegreesOfFreedom {
     public:
-        AnalysisDegreesOfFreedom(Mesh *mesh, DomainBoundaryConditions *domainBoundaryConditions,
+        AnalysisDegreesOfFreedom(shared_ptr<Mesh> mesh, shared_ptr<DomainBoundaryConditions>domainBoundaryConditions,
                                  Field_DOFType* degreesOfFreedom);
         
         ~AnalysisDegreesOfFreedom();
-        
-        vector<DegreeOfFreedom*> *totalDegreesOfFreedom;
+        shared_ptr<vector<DegreeOfFreedom*>> totalDegreesOfFreedom;
 
-        vector<DegreeOfFreedom*> *freeDegreesOfFreedom;
+        shared_ptr<vector<DegreeOfFreedom*>> freeDegreesOfFreedom;
 
-        vector<DegreeOfFreedom*> *fixedDegreesOfFreedom;
+        shared_ptr<vector<DegreeOfFreedom*>> fixedDegreesOfFreedom;
         
-        vector<tuple<DegreeOfFreedom*, double>> *fluxDegreesOfFreedom;
+        shared_ptr<vector<DegreeOfFreedom*>> internalDegreesOfFreedom;
         
-        map<unsigned, DegreeOfFreedom*> *totalDegreesOfFreedomMap;
+        shared_ptr<map<DegreeOfFreedom*, double>> fluxDegreesOfFreedom;
         
-        map<DegreeOfFreedom*, unsigned> *totalDegreesOfFreedomMapInverse;
+        shared_ptr<map<unsigned, DegreeOfFreedom*>> totalDegreesOfFreedomMap; 
         
-        unsigned* numberOfFreeDOFs;
+        shared_ptr<map<DegreeOfFreedom*, unsigned>> totalDegreesOfFreedomMapInverse;
 
-        unsigned* numberOfFixedDOFs;
+        shared_ptr<unsigned int> numberOfFixedDOF;
 
-        unsigned* numberOfDOFs;
+        shared_ptr<unsigned int> numberOfFreeDOF;
+
+        shared_ptr<unsigned int> numberOfDOF;
         
         void printDOFCount() const;
         

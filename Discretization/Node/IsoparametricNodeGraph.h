@@ -18,7 +18,7 @@ namespace Discretization {
         
     public:
         
-        IsoParametricNodeGraph(Node* node, unsigned graphDepth, map<vector<double>, Node*> *nodeMap,
+        IsoParametricNodeGraph(Node* node, unsigned graphDepth, shared_ptr<map<vector<double>, Node*>>nodeMap,
                                map<Direction, unsigned>& nodesPerDirection, bool includeDiagonalNeighbours = true);
         
         // Returns a map ptr of the input node neighbours graph
@@ -69,13 +69,11 @@ namespace Discretization {
         getColinearPositionsAndPoints(vector<Direction>& availableDirections, map<Position, vector<Node*>>& customNodeGraph) ;
 
         map<Direction, vector<vector<double>>> getSameColinearNodalCoordinates(CoordinateType coordinateType) const;
-        
-        map<Direction, vector<vector<double>>> getSameColinearNodalCoordinatesOnBoundary(CoordinateType coordinateType,
-                                                                                         map<Position, vector<Node*>>& customNodeGraph) const;
-        
-        
+
         map<Direction, vector<vector<double>>>
         getSameColinearNodalCoordinates(CoordinateType coordinateType, map<Position, vector<Node*>>& customNodeGraph) const;
+        
+        map<Direction, vector<vector<double>>> getSameColinearNodalCoordinatesOnBoundary(CoordinateType coordinateType, map<Position, vector<Node*>>& customNodeGraph) const;
         
         map<Direction, vector<DegreeOfFreedom*>> getColinearDOF(DOFType dofType) const;
         
@@ -97,7 +95,7 @@ namespace Discretization {
         
         unsigned int _graphDepth;
         
-        map<vector<double>, Node*>* _nodeMap;
+        shared_ptr<map<vector<double>, Node*>> _nodeMap;
         
         map<Direction, unsigned> _nodesPerDirection;
                 

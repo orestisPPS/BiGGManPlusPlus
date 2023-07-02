@@ -20,23 +20,21 @@ namespace BoundaryConditions {
     
     class DomainBoundaryConditions {
     public:
-        explicit DomainBoundaryConditions(map <Position, BoundaryCondition*>* bcAtPosition);
+        explicit DomainBoundaryConditions( shared_ptr<map<Position, shared_ptr<BoundaryCondition>>> bcAtPosition);
         
-        explicit DomainBoundaryConditions(map <Position, map<unsigned, BoundaryCondition*>>* nodalBcAtPosition);
+        explicit DomainBoundaryConditions(shared_ptr<map <Position, map<unsigned, shared_ptr<BoundaryCondition>>>> nodalBcAtPosition);
         
-        ~DomainBoundaryConditions();
+        shared_ptr<BoundaryCondition> getBoundaryConditionAtPosition(Position boundaryPosition);
         
-        BoundaryCondition* getBoundaryConditionAtPosition(Position boundaryPosition);
-        
-        BoundaryCondition* getBoundaryConditionAtPositionAndNode(Position boundaryPosition, unsigned nodeID);
+        shared_ptr<BoundaryCondition> getBoundaryConditionAtPositionAndNode(Position boundaryPosition, unsigned nodeID);
         
         bool varyWithNode() const;
     private:
         bool _varyWithNode;
-        
-        map <Position, BoundaryCondition*>* _bcAtPosition;
 
-        map<Position, map<unsigned, BoundaryCondition*>>* _nodalBcAtPosition;
+        shared_ptr<map<Position, map<unsigned int, shared_ptr<BoundaryCondition>>>> _nodalBcAtPosition;
+
+        shared_ptr<map<Position, shared_ptr<BoundaryCondition>>> _bcAtPosition;
     };
 
 } // BoundaryConditions

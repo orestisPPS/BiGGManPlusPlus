@@ -21,7 +21,7 @@ namespace LinearAlgebra {
         
     public:
 
-        virtual void setLinearSystem(LinearSystem* linearSystem);
+        virtual void setLinearSystem(shared_ptr<LinearSystem> linearSystem);
 
         SolverType type();
 
@@ -29,7 +29,7 @@ namespace LinearAlgebra {
 
 
     protected:
-        LinearSystem* _linearSystem;        
+        shared_ptr<LinearSystem> _linearSystem;        
         
         SolverType _solverType;
 

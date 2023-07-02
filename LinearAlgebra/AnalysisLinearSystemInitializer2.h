@@ -22,12 +22,12 @@ namespace LinearAlgebra {
     class AnalysisLinearSystemInitializer2{
 
     public:
-        explicit AnalysisLinearSystemInitializer2(AnalysisDegreesOfFreedom* analysisDegreesOfFreedom, Mesh* mesh,
-                                                 MathematicalProblem* mathematicalProblem, FDSchemeSpecs* specs);
+        explicit AnalysisLinearSystemInitializer2(shared_ptr<AnalysisDegreesOfFreedom> analysisDegreesOfFreedom, shared_ptr<Mesh> mesh,
+                                                 shared_ptr<MathematicalProblem> mathematicalProblem, shared_ptr<FDSchemeSpecs> specs);
 
         ~AnalysisLinearSystemInitializer2();
 
-        LinearSystem* linearSystem;
+        shared_ptr<LinearSystem> linearSystem;
         
         void createLinearSystem();
 
@@ -35,26 +35,26 @@ namespace LinearAlgebra {
 
     private:
 
-        MathematicalProblem* _mathematicalProblem;
+        shared_ptr<MathematicalProblem> _mathematicalProblem;
 
-        FDSchemeSpecs* _specs;
+        shared_ptr<FDSchemeSpecs> _specs;
 
-        Array<double> *_matrix;
+        shared_ptr<Array<double>>_matrix;
         
-        Array<double> *_permutationMatrix;
+        shared_ptr<Array<double>>_permutationMatrix;
 
-        vector<double> *_RHS;
+        shared_ptr<Array<double>>_RHS;
 
-        Mesh* _mesh;
+        shared_ptr<Mesh> _mesh;
 
-        AnalysisDegreesOfFreedom* _analysisDegreesOfFreedom;
+        shared_ptr<AnalysisDegreesOfFreedom> _analysisDegreesOfFreedom;
 
-        Array<double>* _freeDOFMatrix;
+        shared_ptr<Array<double>> _freeDOFMatrix;
 
         // Fixed DOF x Total DOF
-        Array<double>* _fixedFreeDOFMatrix;
+        shared_ptr<Array<double>> _fixedFreeDOFMatrix;
 
-        Array<double>* _totalDOFMatrix;
+        shared_ptr<Array<double>> _totalDOFMatrix;
         
         void _createMatrix();
         
@@ -66,7 +66,7 @@ namespace LinearAlgebra {
 
         void _createTotalDOFSubMatrix();
 
-        map<vector<double>, Node*>* _parametricCoordToNodeMap;
+        shared_ptr<map<vector<double>, Node*>> _parametricCoordToNodeMap;
 
         static map<short unsigned, map<Direction, map<vector<Position>, short>>>
         _initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions);

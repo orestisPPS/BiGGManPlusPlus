@@ -15,7 +15,7 @@ namespace StructuredMeshGenerator {
     public:
         NodeFactory(map<Direction, unsigned> &nodesPerDirection);
                 
-        Array<Node*> *nodesMatrix;
+        shared_ptr<Array<Node*>> nodesMatrix;
         
     private:
         //Number of nodes at direction One. (can be x, ξ, θ)

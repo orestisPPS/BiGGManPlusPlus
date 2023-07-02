@@ -6,7 +6,7 @@
 
 namespace Utility {
     //Author: Chat GPT
-    void Exporters::exportLinearSystemToMatlabFile(Array<double> *matrix, vector<double> *vector, const std::string& filePath,
+    void Exporters::exportLinearSystemToMatlabFile(const shared_ptr<Array<double>>& matrix, const shared_ptr<vector<double>>&vector, const std::string& filePath,
                                                    const std::string& fileName, bool print) {
         ofstream outputFile(filePath + fileName);
 
@@ -99,7 +99,8 @@ namespace Utility {
         outputFile.close();
     }
     
-/*    void Exporters::saveNodesToParaviewFile(Mesh *mesh, const std::string& filePath, const std::string& fileName) {
+
+/*    void Exporters::saveNodesToParaviewFile(shared_ptr<Mesh> mesh, const std::string& filePath, const std::string& fileName) {
         ofstream outputFile(filePath + fileName);
         outputFile << "# vtk DataFile Version 3.0 \n";
         outputFile << "vtk output \n" ;

@@ -20,9 +20,9 @@ namespace LinearAlgebra {
         
         ~SolverLUP();
 
-        void setLinearSystem(LinearSystem* linearSystem) override;
+        void setLinearSystem(shared_ptr<LinearSystem> linearSystem) override;
         
-        unique_ptr<MatrixDecomposition> getDecomposition() override;
+        shared_ptr<MatrixDecomposition> getDecomposition() override;
         
         void solve() override;
         

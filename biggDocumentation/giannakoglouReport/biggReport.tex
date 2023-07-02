@@ -11,7 +11,7 @@
 
 
 
-\title{Bigg Mann$++$ 6PDE Solver. A Complete Framework for Taylor Made Finite Difference Numerical Analysis}
+\title{Bigg Mann$++$ PDE Solver. A Complete Framework for Taylor Made Finite Difference Numerical Analysis}
 \author{Ch. Orestis Papas}
 
 
@@ -21,7 +21,7 @@
 	\section{Abstract}
 	This report presents the development and implementation of BiggMann++, an object-oriented C++ software specifically designed to solve second order partial differential equations (PDEs) in their most generalized form. The extensive utility of the software extends across numerous fields and disciplines, highlighting the universal presence of second order PDEs in a wide array of scientific phenomena. BiggMann++ embodies the developer's perspective on the physical world, the transition from continuum to discrete, from the beautiful mathematical symbols to computer memory pointers, and encapsulates a shift towards a more abstract interpretation of engineering problems. This perspective acknowledges that beneath the myriad physical phenomena and their varied coefficient nomenclatures reside identical core mathematical structures.
 	
-	BiggMann++ was originally devised as a $C\#$ project for the "Mesh Generation" course during my master's program, with its primary focus being the generation of structured node grids by solving elliptic PDEs in parametric space. As the software evolved, so did my perspective, particularly during my research in the area of tumor development modeling. An insightful observation dawned upon me: the core mathematical constructs remained essentially unchanged, regardless of whether the coefficient represented the oxygen diffusivity in an oxygen mass transport equation, the $g_{ij}$ component of the contravariant tensor in mesh generation. This epiphany underscored the universality of second order PDEs, revealing their beauty and pervasive presence across diverse scientific disciplines. Recognizing this pattern was a significant shift in perspective and ultimately inspired the transformation of BiggMann++ into a more generalized and parametrized tool for that offers control over the complete simulation process. The framework has transitioned to C++ over the course of the last 6 after the need for custom memory management emerged. It allows user friendly manipulation of every aspect of the simulation from computational domain definition and mesh metrics to node and direction dependent PDE coefficients. Performance is also considered, but 
+	BiggMann++ was originally devised as a $C\#$ project for the "Mesh Generation" course during my master's program, with its primary focus being the generation of structured node grids by solving elliptic PDEs in parametric space. As the software evolved, so did my perspective, particularly during my research in the area of tumor development modeling. An insightful observation dawned upon me: the core mathematical constructs remained essentially unchanged, regardless of whether the coefficient represented the oxygen diffusivity in an oxygen mass transport equation, the $g_{ij}$ component of the contravariant tensor in mesh generation. This epiphany underscored the universality of second order PDEs, revealing their beauty and pervasive presence across diverse scientific disciplines. Recognizing this pattern was a significant shift in perspective and ultimately inspired the transformation of BiggMann++ into a more generalized and parametrized tool for that offers control over the complete simulation process. The framework has transitioned to C++ over the course of the last 6 months after the need for custom memory management emerged. It allows user friendly manipulation of every aspect of the simulation from computational domain definition and mesh metrics to node and direction dependent PDE coefficients. Performance is also considered, but 
 	
 
 
@@ -57,6 +57,14 @@
 		\item Consistent Cut-off Error Scheme: To apply a scheme with consistent accuracy across the entire domain, Finite Difference Schemes of different types (Forward, Backward, Central) and the same accuracy are applied according to the number of available neighbors. The algorithm successfully determines the graph of each node without considering special cases, leading to accurate higher order schemes.
 		
 		\item Space Decomposition: The implementation of enums and maps allows for the decomposition of the domain into Directions. The contribution of each Direction in all parts of the analysis is treated in loops without taking special cases under consideration.
+		
+		\item Variety of Numerical Solvers: A wide range of solvers is developed or under development.
+		\begin{itemize}
+			\item Stationary Iterative Methods (Single / Multi Thread) : Jacobi, Gauss-Seidel, SOR
+			\item Krylov Subspace Methods (Single / Multi Thread) : Steepest Descent, CG, Preconditioned CG GMRES, Preconditioned GMRES (all under development)
+		\end{itemize}
+	
+		\item {High Performance Computing Options} : All Stationary Iterative Methods have parallelized version with \texttt{std::thread}. GPU Implementation with \texttt{openCL} under development. 
 	\end{itemize}
 
 	\begin{figure}[H]

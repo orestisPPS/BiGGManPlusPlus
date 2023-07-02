@@ -23,14 +23,11 @@ namespace Utility {
 
         // Creates a .m file that can be takes as input the linear system matrix and vector and solves the system.
         // Then the solution is plotted.
-        static void exportLinearSystemToMatlabFile(Array<double>* matrix, vector<double>* vector, const string& filePath, 
-                                                   const string& fileName, bool print = false);
-
         static void exportLinearSystemToMatlabFile(Array<double> matrix, vector<double> vector, const string& filePath,
                                                    const string& fileName,  bool print = false);
 
         static void exportScalarFieldResultInVTK(const std::string& filePath, const std::string& fileName,
-                                                 const std::string& fieldName, Mesh* mesh) {
+                                                 const std::string& fieldName, shared_ptr<Mesh> mesh) {
             ofstream outputFile(filePath + fileName);
             outputFile << "# vtk DataFile Version 3.0 \n";
             outputFile << "vtk output \n";
@@ -58,9 +55,16 @@ namespace Utility {
         }
         
         // Creates a .vtk file that can be opened in Paraview to visualize the mesh.
-        //static void saveNodesToParaviewFile(Mesh* mesh, const std::string &filePath, const std::string &fileName);
+        //static void saveNodesToParaviewFile(shared_ptr<Mesh> mesh, const std::string &filePath, const std::string &fileName);
         
         //static void saveGhostNodesToParaviewFile(GhostPseudoMesh* mesh, const std::string &filePath, const std::string &fileName);
+        static void
+        exportLinearSystemToMatlabFile(const shared_ptr<Array<double>> &matrix, const shared_ptr<Array<double>> &vector,
+                                       const string &filePath, const string &fileName, bool print);
+
+        void exportLinearSystemToMatlabFile(const shared_ptr<Array<double>> &matrix,
+                                            const shared_ptr<vector<double>> &vector,
+                                            const string &filePath, const string &fileName, bool print);
     };
 
 } // Utility

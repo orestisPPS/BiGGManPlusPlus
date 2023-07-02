@@ -8,7 +8,7 @@ SORSolver::SORSolver(double relaxationParameter, bool vTechKickInYoo, VectorNorm
         StationaryIterative(vTechKickInYoo, normType, tolerance, maxIterations, throwExceptionOnMaxFailure) {
     _relaxationParameter = relaxationParameter;
     _residualNorms = make_shared<list<double>>();
-    _solverName = "Gauss-Seidel";
+    _solverName = "SOR";
 }
 
 void SORSolver::_threadJob(unsigned start, unsigned end) {
@@ -23,10 +23,9 @@ void SORSolver::_threadJob(unsigned start, unsigned end) {
             // sum = sum + A_ij * xOld_j
             sum += _linearSystem->matrix->at(row, j) * _xOld->at(j);
         }
-
         
         // xNew_i = (b_i - w * sum) / A_ii
-        auto gsPart = (_linearSystem->RHS->at(row) - sum) * (_relaxationParameter  / _linearSystem->matrix->at(row, row));
+        auto gsPart = (_linearSystem->rhs->at(row) - sum) * (_relaxationParameter  / _linearSystem->matrix->at(row, row));
         _xNew->at(row) = (1.0 - _relaxationParameter) * _xOld->at(row) + gsPart;
         // Calculate the _difference
         _difference->at(row) = _xNew->at(row) - _xOld->at(row);

@@ -26,7 +26,7 @@ namespace LinearAlgebra {
                 sum += _linearSystem->matrix->at(row, j) * _xOld->at(j);
             }
             // xNew_i = (b_i - sum) / A_ii
-            _xNew->at(row) = (_linearSystem->RHS->at(row) - sum) / _linearSystem->matrix->at(row, row);
+            _xNew->at(row) = (_linearSystem->rhs->at(row) - sum) / _linearSystem->matrix->at(row, row);
             // Calculate the _difference
             _difference->at(row) = _xNew->at(row) - _xOld->at(row);
             //Replace the old solution with the new one

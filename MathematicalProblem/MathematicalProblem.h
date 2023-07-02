@@ -15,13 +15,12 @@ namespace MathematicalProblems {
 
     class MathematicalProblem {
         public:
-        MathematicalProblem(PartialDifferentialEquation* pde,
-                            DomainBoundaryConditions* bcs,
+        MathematicalProblem(shared_ptr<PartialDifferentialEquation> pde,
+                            shared_ptr<DomainBoundaryConditions> bcs,
                             Field_DOFType* degreesOfFreedom);
-        ~MathematicalProblem();
-
-        PartialDifferentialEquation* pde;
-        DomainBoundaryConditions* boundaryConditions;
+        
+        shared_ptr<PartialDifferentialEquation> pde;
+        shared_ptr<DomainBoundaryConditions> boundaryConditions;
         Field_DOFType *degreesOfFreedom;
     };
 

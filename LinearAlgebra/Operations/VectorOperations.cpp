@@ -6,7 +6,7 @@
 
 namespace LinearAlgebra {
     
-        double VectorOperations::dotProduct(vector<double> *vector1, vector<double> *vector2) {
+        double VectorOperations::dotProduct(const shared_ptr<vector<double>>&vector1, const shared_ptr<vector<double>>&vector2) {
             auto result = 0.0;
             if (vector1->size() != vector2->size())
                 throw std::invalid_argument("Vectors must have the same size");
@@ -14,6 +14,7 @@ namespace LinearAlgebra {
                 result += vector1->at(i) * vector2->at(i);
             return result;
         }
+        
         
         double VectorOperations::dotProduct(vector<double> &vector1, vector<double> &vector2) {
             auto result = 0.0;
@@ -24,7 +25,7 @@ namespace LinearAlgebra {
             return result;
         }
         
-        int VectorOperations::dotProduct(vector<int> *vector1, vector<int> *vector2) {
+        int VectorOperations::dotProduct(const shared_ptr<vector<int>>&vector1, const shared_ptr<vector<int>>&vector2) {
             auto result = 0;
             if (vector1->size() != vector2->size())
                 throw std::invalid_argument("Vectors must have the same size");
@@ -42,7 +43,7 @@ namespace LinearAlgebra {
             return result;
         }
         
-        vector<double> VectorOperations::crossProduct(vector<double>* vector1, vector<double>* vector2) {
+        vector<double> VectorOperations::crossProduct(const shared_ptr<vector<double>>& vector1, const shared_ptr<vector<double>>& vector2) {
             switch (vector1->size()) {
                 case 2:
                     if (vector2->size() != 2)
@@ -61,14 +62,13 @@ namespace LinearAlgebra {
         
         
         vector<double> VectorOperations::crossProduct(vector<double> &vector1, vector<double> &vector2) {
+            if (vector1.size() != vector2.size())
+                throw std::invalid_argument("Vectors must have the same size");
             switch (vector1.size()) {
                 case 2:
-                    if (vector2.size() != 2)
-                        throw std::invalid_argument("Vectors must have 2 dimensions");
-                    return {vector1.at(0) * vector2.at(1) - vector1.at(1) * vector2.at(0)};
+                    return {vector1.at(0) * vector2.at(1) - vector1.at(1) * vector2.at(0),
+                            vector1.at(1) * vector2.at(0) - vector1.at(0) * vector2.at(1)};
                 case 3:
-                    if (vector2.size() != 3)
-                        throw std::invalid_argument("Vectors must have 3 dimensions");
                     return {vector1.at(1) * vector2.at(2) - vector1.at(2) * vector2.at(1),
                             vector1.at(2) * vector2.at(0) - vector1.at(0) * vector2.at(2),
                             vector1.at(0) * vector2.at(1) - vector1.at(1) * vector2.at(0)};
@@ -77,7 +77,7 @@ namespace LinearAlgebra {
             }
         }
         
-        bool VectorOperations::areEqualVectors(vector<double>* array1, vector<double>* array2) {
+        bool VectorOperations::areEqualVectors(const shared_ptr<vector<double>>& array1, const shared_ptr<vector<double>>& array2) {
             if (array1->size() != array2->size())
                 return false;
             for (auto i = 0; i < array1->size(); i++)
@@ -95,7 +95,7 @@ namespace LinearAlgebra {
             return true;
         }
         
-        bool VectorOperations::areEqualVectors(vector<int>* array1, vector<int>* array2) {
+        bool VectorOperations::areEqualVectors(const shared_ptr<vector<int>> & array1, const shared_ptr<vector<int>> & array2) {
             if (array1->size() != array2->size())
                 return false;
             for (auto i = 0; i < array1->size(); i++)
@@ -113,7 +113,7 @@ namespace LinearAlgebra {
             return true;
         }
         
-        double VectorOperations::sum(vector<double>* vector) {
+        double VectorOperations::sum(const shared_ptr<vector<double>>& vector) {
             auto result = 0.0;
             for(auto& element : *vector)
                 result += element;
@@ -127,7 +127,7 @@ namespace LinearAlgebra {
             return result;
         }
         
-        int VectorOperations::sum(vector<int>* vector) {
+        int VectorOperations::sum(const shared_ptr<vector<int>> & vector) {
             auto result = 0;
             for(auto& element : *vector)
                 result += element;
@@ -141,7 +141,7 @@ namespace LinearAlgebra {
             return result;
         }
         
-        double VectorOperations::average(vector<double>* vector) {
+        double VectorOperations::average(const shared_ptr<vector<double>>& vector) {
             return sum(vector) / static_cast<double>(vector->size());
         }
         
@@ -149,7 +149,7 @@ namespace LinearAlgebra {
             return sum(vector) / static_cast<double>(vector.size());
         }
 
-        double VectorOperations::average(vector<int>* vector) {
+        double VectorOperations::average(const shared_ptr<vector<int>> & vector) {
             return sum(vector) / static_cast<double>(vector->size());
         }
     
@@ -157,7 +157,7 @@ namespace LinearAlgebra {
             return sum(vector) / static_cast<double>(vector.size());
         }
         
-        double VectorOperations::variance(vector<double>* vector) {
+        double VectorOperations::variance(const shared_ptr<vector<double>>& vector) {
             auto average = VectorOperations::average(vector);
             auto result = 0.0;
             for(auto& element : *vector)
@@ -173,7 +173,7 @@ namespace LinearAlgebra {
             return result / static_cast<double>(vector.size());
         }
 
-        double VectorOperations::variance(vector<int>* vector) {
+        double VectorOperations::variance(const shared_ptr<vector<int>> & vector) {
             auto average = VectorOperations::average(vector);
             auto result = 0.0;
             for(auto& element : *vector)
@@ -189,7 +189,7 @@ namespace LinearAlgebra {
             return result / static_cast<double>(vector.size());
         }
         
-        double VectorOperations::standardDeviation(vector<double>* vector) {
+        double VectorOperations::standardDeviation(const shared_ptr<vector<double>>& vector) {
             return sqrt(variance(vector));
         }
         
@@ -197,7 +197,7 @@ namespace LinearAlgebra {
             return sqrt(variance(vector));
         }
         
-        double VectorOperations::standardDeviation(vector<int>* vector) {
+        double VectorOperations::standardDeviation(const shared_ptr<vector<int>> & vector) {
             return sqrt(variance(vector));
         }
         
@@ -205,7 +205,7 @@ namespace LinearAlgebra {
             return sqrt(variance(vector));
         }
         
-        double VectorOperations::covariance(vector<double>* vector1, vector<double>* vector2) {
+        double VectorOperations::covariance(const shared_ptr<vector<double>>& vector1, const shared_ptr<vector<double>>& vector2) {
             if (vector1->size() != vector2->size())
                 throw std::invalid_argument("Vectors must have the same size");
             auto average1 = VectorOperations::average(vector1);
@@ -227,7 +227,7 @@ namespace LinearAlgebra {
             return result / static_cast<double>(vector1.size());
         }
         
-        double VectorOperations::covariance(vector<int>* vector1, vector<int>* vector2) {
+        double VectorOperations::covariance(const shared_ptr<vector<int>> & vector1, const shared_ptr<vector<int>> & vector2) {
             if (vector1->size() != vector2->size())
                 throw std::invalid_argument("Vectors must have the same size");
             auto average1 = VectorOperations::average(vector1);
@@ -249,7 +249,7 @@ namespace LinearAlgebra {
             return result / static_cast<double>(vector1.size());
         }
         
-        double VectorOperations::correlation(vector<double>* vector1, vector<double>* vector2) {
+        double VectorOperations::correlation(const shared_ptr<vector<double>>& vector1, const shared_ptr<vector<double>>& vector2) {
             if (vector1->size() != vector2->size())
                 throw std::invalid_argument("Vectors must have the same size");
             auto covariance = VectorOperations::covariance(vector1, vector2);
@@ -267,7 +267,7 @@ namespace LinearAlgebra {
             return covariance / (standardDeviation1 * standardDeviation2);
         }
         
-        double VectorOperations::correlation(vector<int>* vector1, vector<int>* vector2) {
+        double VectorOperations::correlation(const shared_ptr<vector<int>> & vector1, const shared_ptr<vector<int>> & vector2) {
             if (vector1->size() != vector2->size())
                 throw std::invalid_argument("Vectors must have the same size");
             auto covariance = VectorOperations::covariance(vector1, vector2);

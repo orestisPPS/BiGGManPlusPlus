@@ -4,14 +4,12 @@
 
 #include "PartialDifferentialEquation.h"
 
+#include <utility>
+
 namespace PartialDifferentialEquations {
     
-        PartialDifferentialEquation::PartialDifferentialEquation(SecondOrderLinearPDEProperties* properties, PDEType type) :
-        properties(properties), _type(type) { }
-        
-        PartialDifferentialEquation::~PartialDifferentialEquation() {
-            delete properties;
-        }
+        PartialDifferentialEquation::PartialDifferentialEquation(shared_ptr<SecondOrderLinearPDEProperties> properties, PDEType type) :
+        properties(std::move(properties)), _type(type) { }
         
         PDEType PartialDifferentialEquation::Type() {
             return _type;

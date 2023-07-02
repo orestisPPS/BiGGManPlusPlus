@@ -16,13 +16,13 @@ namespace LinearAlgebra {
         
         explicit DirectSolver(bool storeDecompositionOnMatrix);
 
-        unique_ptr<LinearSystem> getLinearSystem();
+        shared_ptr<LinearSystem> getLinearSystem();
         
-        virtual unique_ptr<MatrixDecomposition> getDecomposition();
+        virtual shared_ptr<MatrixDecomposition> getDecomposition();
         
     protected:
         
-        LinearSystem* _linearSystem;
+        shared_ptr<LinearSystem> _linearSystem;
         
         bool _storeDecompositionOnMatrix;
     };

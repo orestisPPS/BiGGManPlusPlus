@@ -12,13 +12,13 @@ namespace MathematicalProblems {
         
     public:
         
-        TransientMathematicalProblem(PartialDifferentialEquation *pde,
-                                     DomainBoundaryConditions* bcs, map<int*,double>* domainIC,
+        TransientMathematicalProblem(shared_ptr<PartialDifferentialEquation>pde,
+                                     shared_ptr<DomainBoundaryConditions> bcs, map<int*,double>* domainIC,
                                      struct Field_DOFType *degreesOfFreedom);
         
-        PartialDifferentialEquation *pde;
+        shared_ptr<PartialDifferentialEquation>pde;
         
-        DomainBoundaryConditions* boundaryConditions;
+        shared_ptr<DomainBoundaryConditions> boundaryConditions;
         
         double* initialCondition;
         

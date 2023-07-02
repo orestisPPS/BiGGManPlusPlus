@@ -6,7 +6,7 @@
 
 namespace LinearAlgebra {
     
-    DecompositionLUP::DecompositionLUP(Array<double>* matrix, double pivotTolerance, bool throwExceptionOnSingularMatrix) :
+    DecompositionLUP::DecompositionLUP(shared_ptr<Array<double>> matrix, double pivotTolerance, bool throwExceptionOnSingularMatrix) :
             MatrixDecomposition(matrix),
             _p(nullptr),
             _pivotTolerance(pivotTolerance),
@@ -15,18 +15,14 @@ namespace LinearAlgebra {
         
     }
 
+    
 
-    DecompositionLUP::~DecompositionLUP() {
-        if (_p != nullptr) {
-            delete _p;
-        }
-    }
-
-    void DecompositionLUP::decompose(bool deleteMatrixAfterDecomposition) {
+    void DecompositionLUP::decompose() {
         unsigned n = _matrix->numberOfRows();
-        _l = new Array<double>(n, n);
-        _u = new Array<double>(n, n);
-        _p = new vector<unsigned>(n, 1);
+        _l = make_shared<Array<double>>(n, n);
+        _u = make_shared<Array<double>>(n, n);
+        _p = make_shared<vector<unsigned>>(n, 1);
+
 
         unsigned i, j, k, iMax;
         double maxA, absA;
@@ -84,11 +80,6 @@ namespace LinearAlgebra {
                     _u->at(i, j) = _matrix->at(i, j);
                 }
             }
-
-            // Delete the original matrix if specified
-            if (deleteMatrixAfterDecomposition) {
-                delete _matrix;
-            }
         }
     }
 
@@ -96,8 +87,7 @@ namespace LinearAlgebra {
         
         unsigned n = _matrix->numberOfRows();
         // Initialize the permutation vector P to the identity.
-        _p = new vector<unsigned>(n, 1);
-
+        _p = make_shared<vector<unsigned>>(n, 1);
         // Declare some loop variables
         unsigned i, j, k, iMax;
         double maxA, absA;
@@ -153,13 +143,13 @@ namespace LinearAlgebra {
         }
     }
 
-    unique_ptr<vector<unsigned >> DecompositionLUP::getP() {
-        return unique_ptr<vector<unsigned >>(_p);
+    shared_ptr<vector<unsigned >> DecompositionLUP::getP() {
+        return _p;
     }
 
-    Array<double>* DecompositionLUP::invertMatrix() {
+    shared_ptr<Array<double>> DecompositionLUP::invertMatrix() {
         unsigned n = _matrix->numberOfRows();
-        auto inverse = new Array<double>(n, n);
+        auto inverse = make_shared<Array<double>>(n, n);
 
         for(unsigned j = 0; j < n; j++){
             for (unsigned i = 0; i < n; i++){
@@ -194,10 +184,10 @@ namespace LinearAlgebra {
         return (_p->at(n) - n) % 2 == 0 ? det : -det;
     }
 
-    vector<double>* DecompositionLUP::solve(vector<double>* rhs) {
+    shared_ptr<vector<double>> DecompositionLUP::solve(shared_ptr<vector<double>> rhs) {
         unsigned n = _matrix->numberOfRows();
-        auto x = new vector<double>(n);
-        auto y = new vector<double>(n);
+        auto x = make_shared<vector<double>>(n);
+        auto y = make_shared<vector<double>>(n);
 
         cout<<"FORWARD SUBSTITUTION"<<endl;
         
@@ -220,8 +210,6 @@ namespace LinearAlgebra {
                 }
                 x->at(i) /= _matrix->at(i, i);
             }
-            delete y;
-            return x;
         }
         else{
             // Solve Ly = b using forward substitution
@@ -240,8 +228,6 @@ namespace LinearAlgebra {
                 }
                 x->at(i) /= _u->at(i, i);
             }
-            delete y;
-            return x;
         }
 
     }

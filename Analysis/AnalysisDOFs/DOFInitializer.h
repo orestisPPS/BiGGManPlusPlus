@@ -13,37 +13,48 @@ namespace NumericalAnalysis {
 
     class DOFInitializer {
     public:
-        DOFInitializer(Mesh *mesh, DomainBoundaryConditions *domainBoundaryConditions, struct Field_DOFType* degreesOfFreedom);
+        DOFInitializer(const shared_ptr<Mesh>& mesh, const shared_ptr<DomainBoundaryConditions>&domainBoundaryConditions, struct Field_DOFType* degreesOfFreedom);
+
+        shared_ptr<vector<DegreeOfFreedom*>> totalDegreesOfFreedom;
         
-        vector<DegreeOfFreedom*> *freeDegreesOfFreedom;
-        vector<DegreeOfFreedom*> *boundedDegreesOfFreedom;
-        vector<tuple<DegreeOfFreedom*, double>> *fluxDegreesOfFreedom;
-        vector<DegreeOfFreedom*> *totalDegreesOfFreedom;
-        map<unsigned, DegreeOfFreedom*> *totalDegreesOfFreedomMap;
-        map<DegreeOfFreedom*, unsigned> *totalDegreesOfFreedomMapInverse;
+        shared_ptr<vector<DegreeOfFreedom*>> fixedDegreesOfFreedom;
+
+        shared_ptr<vector<DegreeOfFreedom*>> freeDegreesOfFreedom;
+        
+        shared_ptr<map<DegreeOfFreedom*, double>> fluxDegreesOfFreedom;
+
+        shared_ptr<map<unsigned, DegreeOfFreedom*>> totalDegreesOfFreedomMap;
+
+        shared_ptr<map<DegreeOfFreedom*, unsigned>> totalDegreesOfFreedomMapInverse;
+
+        shared_ptr<unsigned int> numberOfFixedDOF;
+
+        shared_ptr<unsigned int> numberOfFreeDOF;
+
+        shared_ptr<unsigned int> numberOfDOF;
         
     private:
+        shared_ptr<list<DegreeOfFreedom*>> _totalDegreesOfFreedomList;
         
-        list<DegreeOfFreedom*> *_freeDegreesOfFreedomList;
-        list<DegreeOfFreedom*> *_boundedDegreesOfFreedomList;
-        list<tuple<DegreeOfFreedom*, double>> *_fluxDegreesOfFreedomList;
-        list<DegreeOfFreedom*> *_totalDegreesOfFreedomList;
+        shared_ptr<list<DegreeOfFreedom*>> _freeDegreesOfFreedomList;
         
-        void _initiateInternalNodeDOFs(Mesh *mesh, Field_DOFType* degreesOfFreedom);
+        shared_ptr<list<DegreeOfFreedom*>> _fixedDegreesOfFreedomList;
         
-        void _initiateBoundaryNodeDOFWithHomogenousBC(Mesh *mesh, Field_DOFType *problemDOFTypes,
-                                                      DomainBoundaryConditions *domainBoundaryConditions) ;
+        void _initiateInternalNodeDOFs(const shared_ptr<Mesh>& mesh, Field_DOFType* degreesOfFreedom);
         
-        void _initiateBoundaryNodeDOFWithNonHomogenousBC(Mesh *mesh, Field_DOFType *problemDOFTypes,
-                                                         DomainBoundaryConditions *domainBoundaryConditions) ;
+        void _initiateBoundaryNodeDOFWithHomogenousBC(const shared_ptr<Mesh>& mesh, Field_DOFType *problemDOFTypes,
+                                                      const shared_ptr<DomainBoundaryConditions>&domainBoundaryConditions) ;
+        
+        void _initiateBoundaryNodeDOFWithNonHomogenousBC(const shared_ptr<Mesh>& mesh, Field_DOFType *problemDOFTypes,
+                                                         const shared_ptr<DomainBoundaryConditions>&domainBoundaryConditions) ;
         
         void _assignDOFIDs() const;
         
-        void _createTotalDOFList(Mesh* mesh) const;
+        void _createTotalDOFList(const shared_ptr<Mesh>& mesh) const;
         
-        void _createTotalDOFDataStructures(Mesh *mesh) const;
+        void _createTotalDOFDataStructures(const shared_ptr<Mesh>& mesh) const;
         
-        static void _listPtrToVectorPtr(vector<DegreeOfFreedom*> *vector, list<DegreeOfFreedom*> *list) ;
+        static void _listPtrToVectorPtr(const shared_ptr<list<DegreeOfFreedom*>>& listPtr, const shared_ptr<vector<DegreeOfFreedom*>>& vectorPtr) ;
         
         //TODO: Implement initial conditions. Check if there is meaning in domain  initial conditions as a mathematical object.
         void applyInitialConditions(list<DegreeOfFreedom*>);

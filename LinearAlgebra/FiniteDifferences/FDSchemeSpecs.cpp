@@ -46,6 +46,18 @@ namespace LinearAlgebra {
 
     }
     
+    FDSchemeSpecs::FDSchemeSpecs(unsigned short firstDerivativeErrorOrder, const vector<Direction> &directions) {
+        schemeTypeAndOrderAtDirectionForDerivativeOrder = new map<unsigned, map<Direction, tuple<FDSchemeType, int>>>();
+        //Insert Specs for first derivative
+        schemeTypeAndOrderAtDirectionForDerivativeOrder->insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>
+                                                                        (1, map<Direction, tuple<FDSchemeType, int>>()));
+        for (auto &direction : directions) {
+            schemeTypeAndOrderAtDirectionForDerivativeOrder->at(1).insert(pair<Direction, tuple<FDSchemeType, int>>(
+                    direction,make_tuple(FDSchemeType::Arbitrary,firstDerivativeErrorOrder)));
+        }
+        schemeTypeFixed = true;
+    }
+    
     FDSchemeSpecs::FDSchemeSpecs(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder,
                                  FDSchemeType secondDerivativeSchemeType, unsigned secondDerivativeOrder,
                                  const vector<Direction> &directions, bool diagonalTermsCalculated) {
@@ -133,8 +145,27 @@ namespace LinearAlgebra {
             throw std::invalid_argument(" The scheme type is fixed. Use this method only if the error order is fixed"
                                         " and the scheme type varies across the domain depending on the neighbours in order"
                                         " to achieve the desired error order.");
-            
+        
+    }
 
+    unsigned FDSchemeSpecs::getErrorForDerivativeOfArbitraryScheme(unsigned int derivativeOrder) const {
+        if (schemeTypeFixed){
+            bool found = false;
+            for (auto &direction : schemeTypeAndOrderAtDirectionForDerivativeOrder->at(derivativeOrder))
+                if (get<0>(direction.second) == Arbitrary)
+                    found = true;
+            if (found)
+                return get<1>(schemeTypeAndOrderAtDirectionForDerivativeOrder->at(derivativeOrder).at(One));
+            else
+                throw std::invalid_argument(" The scheme type is fixed. Use this method only if the error order is fixed"
+                                            " and the scheme type varies across the domain depending on the neighbours in order"
+                                            " to achieve the desired error order.");
+        }
+        else{
+            throw std::invalid_argument(" The scheme type is not fixed. Use this method only if the error order is fixed"
+                                        " and the scheme type varies across the domain depending on the neighbours in order"
+                                        " to achieve the desired error order.");
+        }
     }
     
 }// LinearAlgebra

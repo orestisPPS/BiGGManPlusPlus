@@ -17,7 +17,7 @@ namespace LinearAlgebra {
     class FiniteDifferenceSchemeBuilder {
     public:
         //
-        explicit FiniteDifferenceSchemeBuilder(FDSchemeSpecs* schemeSpecs);
+        explicit FiniteDifferenceSchemeBuilder(shared_ptr<FDSchemeSpecs> schemeSpecs);
 
         // Map containing the sum of the weights for each position of the
         map<Position, double>* schemeWeightAtPosition;
@@ -34,7 +34,7 @@ namespace LinearAlgebra {
         
         Scheme getSchemeAtDirection(Direction direction, unsigned derivativeOrder, unsigned errorOrder) const;
         
-        FDSchemeSpecs* _schemeSpecs;
+        shared_ptr<FDSchemeSpecs> _schemeSpecs;
         //Maps the order of the scheme to the type of the scheme and the neighbouring points needed to build it
         // for a first derivative finite difference scheme.
         //For example Order 2, type central, 3 points
@@ -60,8 +60,12 @@ namespace LinearAlgebra {
 
         static Scheme getSchemeWeightsFromQualifiedPositions(map<vector<Position>, short>& qualifiedPositionsAndPoints,
                                                               Direction& direction, unsigned short errorOrder, unsigned short derivativeOrder);
-        
-        
+
+        map<vector<Position>,short> getQualifiedFromAvailable(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
+                                                               map<vector<Position>,short>& templatePositionsAndPoints);
+
+        map<short unsigned, map<Direction, map<vector<Position>, short>>>
+        initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions);
     };
 
 } // LinearAlgebra

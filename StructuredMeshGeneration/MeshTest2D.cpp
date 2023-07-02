@@ -11,8 +11,9 @@ namespace StructuredMeshGenerator {
             map<Direction, unsigned> numberOfNodes;
             numberOfNodes[Direction::One] = 5;
             numberOfNodes[Direction::Two] = 5;
-            auto specs = new MeshSpecs(numberOfNodes, 1, 1, 
-                                       0, 0, 0);
+            auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1,
+                                                0, 0, 0);
+
             auto space = (PositioningInSpace::Plane);
             auto mesh = MeshFactory(specs).mesh;
             mesh->printMesh();

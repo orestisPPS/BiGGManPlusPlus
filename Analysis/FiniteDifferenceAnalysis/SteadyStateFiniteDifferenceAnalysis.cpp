@@ -9,24 +9,13 @@
 namespace NumericalAnalysis {
     
     SteadyStateFiniteDifferenceAnalysis::SteadyStateFiniteDifferenceAnalysis(
-        SteadyStateMathematicalProblem *mathematicalProblem, Mesh *mesh, Solver* solver,  FDSchemeSpecs *schemeSpecs, CoordinateType coordinateSystem) :
-        FiniteDifferenceAnalysis(mathematicalProblem, mesh, solver, schemeSpecs){
-        
-        auto linearSystemInitializer =
-                new AnalysisLinearSystemInitializer(degreesOfFreedom, mesh, mathematicalProblem, schemeSpecs, coordinateSystem);
+            const shared_ptr<SteadyStateMathematicalProblem>& mathematicalProblem, const shared_ptr<Mesh>& mesh, const shared_ptr<Solver>& solver,
+            const shared_ptr<FDSchemeSpecs>&schemeSpecs, CoordinateType coordinateSystem) :
+        FiniteDifferenceAnalysis(mathematicalProblem, mesh, solver, schemeSpecs, coordinateSystem) {
+        auto linearSystemInitializer = make_unique<AnalysisLinearSystemInitializer>(degreesOfFreedom, mesh, mathematicalProblem, schemeSpecs, coordinateSystem);
         linearSystemInitializer->createLinearSystem();
         this->linearSystem = linearSystemInitializer->linearSystem;
         solver->setLinearSystem(linearSystem);
-/*        cout<<"Matrix: "<<endl;
-        this->linearSystem->matrix->print();
-        cout<<"RHS: "<<endl;
-        for (double i : *this->linearSystem->RHS) {
-            cout<<i<<endl;
-        }
-        cout<<"SYSTEM BEFORE SOLVER..."<<endl;*/
-        
-
-        //Utility::Exporters::saveNodesToParaviewFile(mesh, filePath, filenameParaview);
     }
     
     //void SteadyStateFiniteDifferenceAnalysis::createLinearSystem() {

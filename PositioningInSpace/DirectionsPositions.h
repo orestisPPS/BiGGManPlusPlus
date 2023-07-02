@@ -105,8 +105,10 @@ namespace PositioningInSpace {
             {Left,            {-1, 0,  0}},
             {Top,             {0,  1,  0}},
             {Bottom,          {0,  -1, 0}},
+            
             {Front,           {0,  0,  1}},
             {Back,            {0,  0,  -1}},
+            
             {RightTop,        {1,  1,  0}},
             {LeftTop,         {-1, 1,  0}},
             {RightBottom,     {1,  -1, 0}},
