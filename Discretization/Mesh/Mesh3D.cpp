@@ -107,11 +107,13 @@ namespace Discretization {
     }
 
     unique_ptr<vector<Node*>> Mesh3D::getInternalNodesVector() {
-        auto internalNodes = make_unique<vector<Node*>>(numberOfTotalNodes());
+        auto internalNodes = make_unique<vector<Node*>>(numberOfInternalNodes());
+        auto counter = 0;
         for (int k = 1; k < nodesPerDirection[Three] - 1; k++){
             for (int j = 1; j < nodesPerDirection[Two] - 1; j++){
                 for (int i = 1; i < nodesPerDirection[One] - 1; ++i) {
-                    internalNodes->push_back((*_nodesMatrix)(i, j, k));
+                    internalNodes->at(counter) = (*_nodesMatrix)(i, j, k);
+                    counter++;
                 }
             }
         }
@@ -119,11 +121,11 @@ namespace Discretization {
     }
 
     shared_ptr<vector<Node*>> Mesh3D::_addTotalNodesToVector() {
-        auto totalNodes = make_shared<vector<Node*>>();
+        auto totalNodes = make_shared<vector<Node*>>(numberOfTotalNodes());
         for (int k = 0; k < nodesPerDirection[Three]; k++){
             for (int j = 0; j < nodesPerDirection[Two]; j++){
                 for (int i = 0; i < nodesPerDirection[One]; ++i) {
-                    totalNodes->push_back((*_nodesMatrix)(i, j, k));
+                    totalNodes->at(i + j * nodesPerDirection[One] + k * nodesPerDirection[One] * nodesPerDirection[Two]) = (*_nodesMatrix)(i, j, k);    
                 }
             }
         }

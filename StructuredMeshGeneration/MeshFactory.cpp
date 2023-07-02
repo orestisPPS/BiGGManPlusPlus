@@ -59,7 +59,7 @@ namespace StructuredMeshGenerator{
         auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specs, Parametric);
         
 
-        analysis->solve();
+         analysis->solve();
         
         analysis->applySolutionToDegreesOfFreedom();
         
@@ -75,12 +75,6 @@ namespace StructuredMeshGenerator{
         dofTypes->deallocate();
         delete dofTypes;
         
-        auto lol = mesh->metrics->at(10);
-        auto g1 = lol->contravariantBaseVectors->at(One);
-        auto g2 = lol->contravariantBaseVectors->at(Two);
-        //auto g1 = lol->covariantBaseVectors->at(One);
-        //auto g2 = lol->covariantBaseVectors->at(Two);
-        auto cross = VectorOperations::crossProduct(g1, g2);
 
         auto end = chrono::steady_clock::now();
         cout<< "Mesh Built in " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;

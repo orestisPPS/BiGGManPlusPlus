@@ -14,12 +14,12 @@ namespace NumericalAnalysis {
     
     StStFDTest::StStFDTest() {
         
-/*        map<Direction, unsigned> numberOfNodes;
+        /*map<Direction, unsigned> numberOfNodes;
         numberOfNodes[Direction::One] = 5;
         numberOfNodes[Direction::Two] = 5;
         auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 5, 5);
+        meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 4, 4);
         //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->annulus_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 270);
         //meshFactory->domainBoundaryFactory->cavityBot(numberOfNodes, 1, 1);
@@ -29,7 +29,6 @@ namespace NumericalAnalysis {
         meshFactory->buildMesh(2);
         
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk");*/
-
         map<Direction, unsigned> numberOfNodes;
         numberOfNodes[Direction::One] = 3;
         numberOfNodes[Direction::Two] = 3;
@@ -132,7 +131,7 @@ namespace NumericalAnalysis {
         
         //auto targetCoords = vector<double>{0.5, 0.5};
         auto targetCoords = vector<double>{2, 2};
-        auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-2);
+        auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-6);
         
         cout<<"Target Solution: "<< targetSolution[0] << endl;
 

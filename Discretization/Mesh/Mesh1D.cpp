@@ -62,7 +62,7 @@ namespace Discretization {
     }
     
     unique_ptr<vector<Node*>> Mesh1D::getInternalNodesVector() {
-        auto internalNodes = make_unique<vector<Node*>>(numberOfTotalNodes());
+        auto internalNodes = make_unique<vector<Node*>>(numberOfInternalNodes());
         for (int i = 1; i < nodesPerDirection[Direction::One] - 1; i++) 
             *internalNodes->at(i) = *node(i);
         return internalNodes;
@@ -87,9 +87,9 @@ namespace Discretization {
     }
     
     shared_ptr<vector<Node*>> Mesh1D::_addTotalNodesToVector() {
-        auto totalNodes = make_shared<vector<Node*>>();
+        auto totalNodes = make_shared<vector<Node*>>(numberOfTotalNodes());
         for (int i = 0; i < nodesPerDirection[Direction::One]; i++) {
-            totalNodes->push_back(Mesh::node(i));
+            totalNodes->at(i) = node(i);
         }
         return totalNodes;
     }

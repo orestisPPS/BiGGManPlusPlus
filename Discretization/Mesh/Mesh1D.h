@@ -31,13 +31,12 @@ namespace Discretization {
         shared_ptr<map<vector<double>, Node*>> createParametricCoordToNodesMap() override;
         
         void printMesh() override;
-        
+
+        unique_ptr<vector<Node*>> getInternalNodesVector() override;
         
     protected:
         
         shared_ptr<map<Position, shared_ptr<vector<Node*>>>>_addDBoundaryNodesToMap() override;
-
-        unique_ptr<vector<Node*>> getInternalNodesVector() override;
         
         shared_ptr<vector<Node*>> _addTotalNodesToVector() override;
         

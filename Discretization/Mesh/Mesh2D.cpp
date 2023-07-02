@@ -65,6 +65,7 @@ namespace Discretization {
             for (int i = 0; i < nodesPerDirection[One] ; ++i) {
                 cout << "(i, j) : (" << i << ", " << j << ")" << endl;
                 cout << "ID : (" << (*(*_nodesMatrix)(i, j)->id.global) << endl;
+                (*(_nodesMatrix))(i, j)->printNode();
             }
 
         }
@@ -95,11 +96,13 @@ namespace Discretization {
     }
 
     unique_ptr<vector<Node*>> Mesh2D::getInternalNodesVector() {
-        auto internalNodes = make_unique<vector<Node*>>(numberOfTotalNodes());
+        auto internalNodes = make_unique<vector<Node*>>(numberOfInternalNodes());
+        auto counter = 0;
         for (int j = 1; j < nodesPerDirection[Two] - 1; j++)
-            for (int i = 1; i < nodesPerDirection[One] - 1; ++i)
-                internalNodes->at(i) = (*_nodesMatrix)(i, j);
-        
+            for (int i = 1; i < nodesPerDirection[One] - 1; ++i){
+                internalNodes->at(counter) = (*_nodesMatrix)(i, j);
+                counter++;
+            }
         return internalNodes;
     }
 

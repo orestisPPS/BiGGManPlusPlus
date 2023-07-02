@@ -21,6 +21,8 @@ namespace Discretization {
 
         vector<Direction> directions() override;
 
+        unique_ptr<vector<Node*>> getInternalNodesVector() override;
+        
         Node* node(unsigned i) override;
 
         Node* node(unsigned i, unsigned j) override;
@@ -35,8 +37,6 @@ namespace Discretization {
         
         shared_ptr<map<Position, shared_ptr<vector<Node*>>>>_addDBoundaryNodesToMap() override;
         
-        unique_ptr<vector<Node*>> getInternalNodesVector() override;
-
         shared_ptr<vector<Node*>> _addTotalNodesToVector() override;
         
         GhostPseudoMesh* _createGhostPseudoMesh(unsigned ghostLayerDepth) override;

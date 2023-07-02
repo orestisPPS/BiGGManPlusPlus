@@ -40,14 +40,24 @@ namespace Discretization {
         
         shared_ptr<MeshSpecs> specs;
         
-        map<unsigned, Metrics*> *metrics;
+        shared_ptr<map<unsigned, shared_ptr<Metrics>>> metrics;
         
         //---------------Implemented parent class methods--------------
         
-        /// \brief Returns the total number of nodes in the mesh
+        /// \brief Returns the number of nodes in the mesh
         /// \return An unsigned integer representing the total number of nodes in the mesh
         /// \exception std::runtime_error Thrown when the Mesh has not been initialized
         unsigned numberOfTotalNodes();
+
+        /// \brief Returns the number of internal (non boundary) nodes in the mesh
+        /// \return An unsigned integer representing the total number of the internal nodes of the mesh
+        /// \exception std::runtime_error Thrown when the Mesh has not been initialized
+        unsigned numberOfInternalNodes();
+
+        /// \brief Returns the number of boundary nodes in the mesh
+        /// \return An unsigned integer representing the total number of the boundary nodes of the mesh
+        /// \exception std::runtime_error Thrown when the Mesh has not been initialized
+        unsigned numberOfBoundaryNodes();
         
         /// \brief Retrieves a node given its ID
         /// \param ID  (unsigned int) The ID of the node to retrieve
@@ -127,11 +137,10 @@ namespace Discretization {
         /// \brief Calculates the metrics of all the nodes of a uniformly spaced mesh.
         /// @param coordinateSystem _The coordinate system that the metrics will be calculated. If the metrics are calculated
         ///             during the mesh generation, then the coordinate system is Template. If the metrics are calculated for another
-        ///             analysis, then the coordinate system is Natural.
-        /// \param dofs 
-        void _uniformlySpacedMetrics(CoordinateType coordinateSystem, list<DegreeOfFreedom*> dofs);
+        ///             analysis, then the coordinate system is Natural. This is called twice for internal and boundary nodes 
+        /// \param nodes A unique pointer to a vector of Node pointers that are either internal or boundary nodes
+        void _uniformlySpacedMetrics(CoordinateType coordinateSystem, unique_ptr<vector<Discretization::Node *>> nodes, bool areBoundary);
         
-        void _uniformlySpacedMetrics2(CoordinateType coordinateSystem);
     
     };
 }
