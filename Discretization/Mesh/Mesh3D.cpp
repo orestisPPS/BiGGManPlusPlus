@@ -111,8 +111,8 @@ namespace Discretization {
         auto counter = 0;
         for (int k = 1; k < nodesPerDirection[Three] - 1; k++){
             for (int j = 1; j < nodesPerDirection[Two] - 1; j++){
-                for (int i = 1; i < nodesPerDirection[One] - 1; ++i) {
-                    internalNodes->at(counter) = (*_nodesMatrix)(i, j, k);
+                for (int i = 1; i < nodesPerDirection[One] - 1; i++) {
+                    internalNodes->at(counter) = _nodesMatrix->at(i, j, k);
                     counter++;
                 }
             }

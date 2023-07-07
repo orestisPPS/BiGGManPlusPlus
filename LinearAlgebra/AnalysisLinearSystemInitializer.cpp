@@ -53,8 +53,7 @@ namespace LinearAlgebra {
             auto thisDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
             
             //Find the node neighbours with a span equal to the maximum number of points needed for the scheme to be consistent
-            auto graph = IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap,
-                                                _mesh->nodesPerDirection);
+            auto graph = IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap, _mesh->nodesPerDirection, false);
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
 
             //Derivative order 0

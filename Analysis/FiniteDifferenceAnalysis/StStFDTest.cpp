@@ -30,12 +30,14 @@ namespace NumericalAnalysis {
         
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk");*/
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 3;
-        numberOfNodes[Direction::Two] = 3;
+        numberOfNodes[Direction::One] = 11;
+        numberOfNodes[Direction::Two] = 11;
         numberOfNodes[Direction::Three] = 3;
-        auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 1, 0, 0, 0, 0, 0, 0);
+        auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 0.25, 0, 0, 0, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk", Template);
+        meshFactory->domainBoundaryFactory->parallelepiped(numberOfNodes, 4, 4, 1);
+        meshFactory->buildMesh(2);
+        meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural);
 
         //meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 5, 5);
         //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
@@ -46,7 +48,7 @@ namespace NumericalAnalysis {
         //meshFactory->domainBoundaryFactory->sinusRiver(numberOfNodes, 1.5, 1, 0.1, 4);
         //meshFactory->buildMesh(2);
 
-        meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk");
+        //meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk");
         
 
         //--------------------------------CHAPRA PG 857---------------------------------------------------------------------
@@ -61,7 +63,7 @@ namespace NumericalAnalysis {
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                                                                         {{Temperature, 75}}));*/
         
-        //--------------------------------COMSOL TEST---------------------------------------------------------------------
+/*        //--------------------------------COMSOL TEST---------------------------------------------------------------------
         auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 0}}));
         auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
@@ -71,7 +73,7 @@ namespace NumericalAnalysis {
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 0}}));
         
-/*        
+*//*        
         //--------------------------------https://kyleniemeyer.github.io/ME373-book/content/pdes/elliptic.html---------------------------------------------------------------------
         //-------------------------------------------------------------------------Passes-----------------------------
         auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
@@ -81,9 +83,9 @@ namespace NumericalAnalysis {
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 100}}));
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 100}}));*/
+                {{Temperature, 100}}));*//*
         
-/*        //--------------------------Valougeorgis examples10 pg. 6 (0 Dirichlet, -1 Source)-----------------------------
+*//*        //--------------------------Valougeorgis examples10 pg. 6 (0 Dirichlet, -1 Source)-----------------------------
         //--------------------------Passes-----------------------------
         auto pdeProperties =
                 new SecondOrderLinearPDEProperties(2, false, Isotropic);
@@ -96,7 +98,7 @@ namespace NumericalAnalysis {
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 0}}));
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 0}}));*/
+                {{Temperature, 0}}));*//*
 
         shared_ptr<Mesh> mesh = meshFactory->mesh;
 
@@ -140,7 +142,7 @@ namespace NumericalAnalysis {
         auto fieldType = "Temperature";
         Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
         
-        auto filenameParaview = "firstMesh.vtk";
+        auto filenameParaview = "firstMesh.vtk";*/
     }
     
     

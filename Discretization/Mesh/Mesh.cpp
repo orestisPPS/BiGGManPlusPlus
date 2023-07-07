@@ -39,7 +39,7 @@ namespace Discretization {
     
     unsigned Mesh::numberOfInternalNodes() {
         if (isInitialized){
-            auto internalNodes = (nodesPerDirection[One] - 2) * (nodesPerDirection[Two] - 2);
+            auto internalNodes = (nodesPerDirection[One] - 2) * (nodesPerDirection[Two] - 2) * (nodesPerDirection[Three] - 2);
             return internalNodes;
 
         }

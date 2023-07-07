@@ -23,9 +23,9 @@ namespace StructuredMeshGenerator {
         void ellipse(map<Direction, unsigned> &nodesPerDirection, double radius1, double radius2);
         
         void parallelepiped(map<Direction, unsigned>& nodesPerDirection,
-                                                 double stepX, double stepY, double stepZ,
-                                                 double rotAngleX = 0, double rotAngleY = 0, double rotAngleZ = 0,
-                                                 double shearX = 0, double shearY = 0, double shearZ = 0);
+                            double lengthX, double lengthY, double lengthZ,
+                            double rotAngleX = 0, double rotAngleY = 0, double rotAngleZ = 0,
+                            double shearX = 0, double shearY = 0, double shearZ = 0);
 
         void annulus_ripGewrgiou(map<Direction, unsigned int> &nodesPerDirection, double rIn, double rOut, double thetaStart,
                                  double thetaEnd);

@@ -91,10 +91,123 @@ namespace StructuredMeshGenerator {
     }
 
     void DomainBoundaryFactory::parallelepiped(map<Direction, unsigned> &nodesPerDirection,
-                                               double stepX, double stepY, double stepZ,
+                                               double lengthX, double lengthY, double lengthZ,
                                                double rotAngleX, double rotAngleY, double rotAngleZ,
                                                double shearX, double shearY, double shearZ) {
+        auto nnX = nodesPerDirection[One];
+        auto nnY = nodesPerDirection[Two];
+        auto nnZ = nodesPerDirection[Three];
 
+        auto stepX = lengthX / (nnX - 1.0);
+        auto stepY = lengthY / (nnY - 1.0);
+        auto stepZ = lengthZ / (nnZ - 1.0);
+        
+        vector<double> coordinateVector(3, 0);
+        auto boundaryConditionsSet = make_shared<map<Position, map<unsigned, shared_ptr<BoundaryCondition>>>>();
+
+        for (auto &boundary: *_mesh->boundaryNodes) {
+
+            boundaryConditionsSet->insert(pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(
+                    boundary.first, map<unsigned, shared_ptr<BoundaryCondition>>()));\
+
+            switch (boundary.first) {
+                case Bottom:
+                    for (auto &node: *boundary.second) {
+                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        coordinateVector[0] = nodalParametricCoords[0] * stepX;
+                        coordinateVector[1] = nodalParametricCoords[1] * stepY;
+                        coordinateVector[2] = 0.0;
+
+                        auto dofBC = new map<DOFType, double>();
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position1, coordinateVector[0]));
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position2, coordinateVector[1]));
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position3, coordinateVector[2]));
+                        auto bc =
+                                boundaryConditionsSet->at(boundary.first).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(
+                                        *node->id.global, new BoundaryCondition(Dirichlet, dofBC)));
+                    }
+                    break;
+                case Top:
+                    for (auto &node: *boundary.second) {
+                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        coordinateVector[0] = nodalParametricCoords[0] * stepX;
+                        coordinateVector[1] = nodalParametricCoords[1] * stepY;
+                        coordinateVector[2] = lengthZ;
+                        
+                        auto dofBC = new map<DOFType, double>();
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position1, coordinateVector[0]));
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position2, coordinateVector[1]));
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position3, coordinateVector[2]));
+                        boundaryConditionsSet->at(boundary.first).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(
+                                *node->id.global, new BoundaryCondition(Dirichlet, dofBC)));
+                    }
+                    break;
+                case Right:
+                    for (auto &node: *boundary.second) {
+                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        coordinateVector[0] = lengthX;
+                        coordinateVector[1] = nodalParametricCoords[1] * stepY;
+                        coordinateVector[2] = nodalParametricCoords[2] * stepZ;
+                        
+                        auto dofBC = new map<DOFType, double>();
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position1, coordinateVector[0]));
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position2, coordinateVector[1]));
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position3, coordinateVector[2]));
+                        boundaryConditionsSet->at(boundary.first).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(
+                                *node->id.global, new BoundaryCondition(Dirichlet, dofBC)));
+                    }
+                    break;
+
+                case Left:
+                    for (auto &node: *boundary.second) {
+                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        coordinateVector[0] = 0.0;
+                        coordinateVector[1] = nodalParametricCoords[1] * stepY;
+                        coordinateVector[2] = nodalParametricCoords[2] * stepZ; 
+                        
+                        auto dofBC = new map<DOFType, double>();
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position1, coordinateVector[0]));
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position2, coordinateVector[1]));
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position3, coordinateVector[2]));
+                        boundaryConditionsSet->at(boundary.first).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(
+                                *node->id.global, new BoundaryCondition(Dirichlet, dofBC)));
+                    }
+                    break;
+                case Front:
+                    for (auto &node: *boundary.second) {
+                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        coordinateVector[0] = nodalParametricCoords[0] * stepX;
+                        coordinateVector[1] = 0.0;
+                        coordinateVector[2] = nodalParametricCoords[2] * stepZ;
+                        
+                        auto dofBC = new map<DOFType, double>();
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position1, coordinateVector[0]));
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position2, coordinateVector[1]));
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position3, coordinateVector[2]));
+                        boundaryConditionsSet->at(boundary.first).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(
+                                *node->id.global, new BoundaryCondition(Dirichlet, dofBC)));
+                    }
+                    break;
+                case Back:
+                    for (auto &node: *boundary.second) {
+                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        coordinateVector[0] = nodalParametricCoords[0] * stepX;
+                        coordinateVector[1] = lengthY;
+                        coordinateVector[2] = nodalParametricCoords[2] * stepZ;
+                        
+                        auto dofBC = new map<DOFType, double>();
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position1, coordinateVector[0]));
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position2, coordinateVector[1]));
+                        dofBC->insert(pair<DOFType, double>(DOFType::Position3, coordinateVector[2]));
+                        boundaryConditionsSet->at(boundary.first).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(
+                                *node->id.global, new BoundaryCondition(Dirichlet, dofBC)));
+                    }
+                    break;
+                default:
+                    throw runtime_error("A parallelogram can only have bottom, right, top, and left boundaries.");
+            }
+        }
+        _domainBoundaryConditions = make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
     }
 
     shared_ptr<DomainBoundaryConditions>DomainBoundaryFactory::getDomainBoundaryConditions() const {
