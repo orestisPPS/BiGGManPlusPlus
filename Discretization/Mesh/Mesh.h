@@ -48,12 +48,7 @@ namespace Discretization {
         /// \return An unsigned integer representing the total number of nodes in the mesh
         /// \exception std::runtime_error Thrown when the Mesh has not been initialized
         unsigned numberOfTotalNodes();
-
-        /// \brief Returns the number of internal (non boundary) nodes in the mesh
-        /// \return An unsigned integer representing the total number of the internal nodes of the mesh
-        /// \exception std::runtime_error Thrown when the Mesh has not been initialized
-        unsigned numberOfInternalNodes();
-
+        
         /// \brief Returns the number of boundary nodes in the mesh
         /// \return An unsigned integer representing the total number of the boundary nodes of the mesh
         /// \exception std::runtime_error Thrown when the Mesh has not been initialized
@@ -88,6 +83,11 @@ namespace Discretization {
         virtual SpaceEntityType space();
         
         virtual vector<Direction> directions();
+
+        /// \brief Returns the number of internal (non boundary) nodes in the mesh
+        /// \return An unsigned integer representing the total number of the internal nodes of the mesh
+        /// \exception std::runtime_error Thrown when the Mesh has not been initialized
+        virtual unsigned numberOfInternalNodes();
         
         virtual Node* node(unsigned i);
         

@@ -30,6 +30,10 @@ namespace Discretization {
         return 1;
     }
     
+    unsigned Mesh1D::numberOfInternalNodes() {
+        return nodesPerDirection[One] - 2;
+    }
+    
     SpaceEntityType Mesh1D::space() {
         return Axis;
     }

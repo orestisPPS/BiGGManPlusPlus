@@ -17,11 +17,14 @@ namespace Discretization {
 
         unsigned dimensions() override;
 
+        unsigned numberOfInternalNodes() override;
+
         SpaceEntityType space() override;
 
         vector<Direction> directions() override;
 
         unique_ptr<vector<Node*>> getInternalNodesVector() override;
+
         
         Node* node(unsigned i) override;
 

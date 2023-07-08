@@ -31,9 +31,7 @@ namespace StructuredMeshGenerator {
 
         shared_ptr<map<unsigned, SpaceFieldProperties>> pdePropertiesFromMetrics;
         
-        shared_ptr<DomainBoundaryFactory> domainBoundaryFactory;
-        
-        void buildMesh(unsigned short schemeOrder) const;
+        void buildMesh(unsigned short schemeOrder, shared_ptr<DomainBoundaryConditions>) const;
         
     private:
         shared_ptr<MeshSpecs>_meshSpecs;

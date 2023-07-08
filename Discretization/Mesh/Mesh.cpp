@@ -37,16 +37,6 @@ namespace Discretization {
         return numberOfTotalNodes() - numberOfInternalNodes();
     }
     
-    unsigned Mesh::numberOfInternalNodes() {
-        if (isInitialized){
-            auto internalNodes = (nodesPerDirection[One] - 2) * (nodesPerDirection[Two] - 2) * (nodesPerDirection[Three] - 2);
-            return internalNodes;
-
-        }
-        else
-            throw std::runtime_error("Mesh has not been initialized");
-    }
-
     Node *Mesh::nodeFromID(unsigned ID) {
         if (isInitialized)
             return _nodesMap->at(ID);
@@ -373,8 +363,8 @@ namespace Discretization {
             nodeMetrics->calculateCovariantTensor();
             nodeMetrics->calculateContravariantTensor();
             metrics->insert(pair<unsigned, shared_ptr<Metrics> >(*node->id.global, nodeMetrics));
-            cout << "Node " << *node->id.global << " calculated" << endl;
-            nodeMetrics->covariantTensor->print();
+/*            cout << "Node " << *node->id.global << " calculated" << endl;
+            nodeMetrics->covariantTensor->print();*/
         }
     }
     
@@ -427,6 +417,10 @@ namespace Discretization {
             coordinateToNodeMap.insert(pair<vector<double>, Node *>(node->coordinates.positionVector3D(coordinateType), node));
         }
         return coordinateToNodeMap;
+    }
+
+    unsigned Mesh::numberOfInternalNodes() {
+        return 0;
     }
 
 

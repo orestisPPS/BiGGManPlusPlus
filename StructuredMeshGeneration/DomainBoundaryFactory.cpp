@@ -6,11 +6,10 @@
 
 namespace StructuredMeshGenerator {
 
-    DomainBoundaryFactory::DomainBoundaryFactory(const shared_ptr<Mesh> &mesh) : _mesh(mesh), _domainBoundaryConditions(nullptr) {
+    DomainBoundaryFactory::DomainBoundaryFactory(const shared_ptr<Mesh> &mesh) : _mesh(mesh) {
     }
 
-    void
-    DomainBoundaryFactory::parallelogram(map<Direction, unsigned> &nodesPerDirection, double lengthX, double lengthY,
+    shared_ptr<DomainBoundaryConditions> DomainBoundaryFactory::parallelogram(map<Direction, unsigned> &nodesPerDirection, double lengthX, double lengthY,
                                          double rotAngle, double shearX, double shearY) {
         auto nnX = nodesPerDirection[One];
         auto nnY = nodesPerDirection[Two];
@@ -87,10 +86,10 @@ namespace StructuredMeshGenerator {
                     throw runtime_error("A parallelogram can only have bottom, right, top, and left boundaries.");
             }
         }
-        _domainBoundaryConditions = make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
+        return make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
     }
 
-    void DomainBoundaryFactory::parallelepiped(map<Direction, unsigned> &nodesPerDirection,
+    shared_ptr<DomainBoundaryConditions> DomainBoundaryFactory::parallelepiped(map<Direction, unsigned> &nodesPerDirection,
                                                double lengthX, double lengthY, double lengthZ,
                                                double rotAngleX, double rotAngleY, double rotAngleZ,
                                                double shearX, double shearY, double shearZ) {
@@ -207,15 +206,12 @@ namespace StructuredMeshGenerator {
                     throw runtime_error("A parallelogram can only have bottom, right, top, and left boundaries.");
             }
         }
-        _domainBoundaryConditions = make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
-    }
-
-    shared_ptr<DomainBoundaryConditions>DomainBoundaryFactory::getDomainBoundaryConditions() const {
-        return _domainBoundaryConditions;
+        return make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
     }
 
 
-    void DomainBoundaryFactory::ellipse(map<Direction, unsigned int> &nodesPerDirection, double radius1, double radius2) {
+
+    shared_ptr<DomainBoundaryConditions> DomainBoundaryFactory::ellipse(map<Direction, unsigned int> &nodesPerDirection, double radius1, double radius2) {
         const double pi = acos(-1.0);
         auto nn1 = nodesPerDirection[One];
         auto nn2 = nodesPerDirection[Two];
@@ -287,10 +283,134 @@ namespace StructuredMeshGenerator {
                     pair<unsigned, shared_ptr<BoundaryCondition>>(boundaryNodeID, new BoundaryCondition(Dirichlet, dofBC)));
         }
 
-        _domainBoundaryConditions = make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
+        return make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
     }
 
-    void
+/*    void DomainBoundaryFactory::ellipse3D(map<Direction, unsigned int> &nodesPerDirection, double radius1, double radius2, double radius3) {
+        const double pi = acos(-1.0);
+        auto nn1 = nodesPerDirection[One];
+        auto nn2 = nodesPerDirection[Two];
+        auto nn3 = nodesPerDirection[Three];
+
+        auto boundaryConditionsSet = make_shared<map<Position, map<unsigned, shared_ptr<BoundaryCondition>>>>();
+        unsigned int boundaryNodeID = 0;
+
+        // Bottom & Top Boundaries
+
+        //Bottom
+        double theta1 = 5.0 * pi / 4.0;
+        double theta2 = 7.0 * pi / 4.0;
+        double phi1 = 5.0 * pi / 4.0;
+        double phi2 = 7.0 * pi / 4.0;
+        auto hTheta = (theta2 - theta1) / (nn1 - 1);
+        auto hPhi = (phi2 - phi1) / (nn2 - 1);
+        boundaryConditionsSet->insert(
+                pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Bottom, map<unsigned, shared_ptr<BoundaryCondition>>()));
+        for (unsigned i = 0; i < nn1; i++) {
+            for (unsigned j = 0; j < nn2; j++) {
+                boundaryNodeID = *_mesh->boundaryNodes->at(Bottom)->at(i * nn2 + j)->id.global;
+                auto dofBC = new map<DOFType, double>();
+                dofBC->insert(pair<DOFType, double>(DOFType::Position1, radius1 * cos(theta1 + i * hTheta) * cos(phi1 + j * hPhi)));
+                dofBC->insert(pair<DOFType, double>(DOFType::Position2, radius2 * sin(theta1 + i * hTheta) * cos(phi1 + j * hPhi)));
+                dofBC->insert(pair<DOFType, double>(DOFType::Position3, radius3 * sin(phi1 + j * hPhi)));
+                boundaryConditionsSet->at(Bottom).insert(
+                        pair<unsigned, shared_ptr<BoundaryCondition>>(boundaryNodeID, new BoundaryCondition(Dirichlet, dofBC)));
+            }
+        }
+        
+        //Top
+        theta1 = 3.0 * pi / 4.0;
+        theta2 = 5.0 * pi / 4.0;
+        phi1 = 3.0 * pi / 4.0;
+        phi2 = 5.0 * pi / 4.0;
+        hTheta = (theta2 - theta1) / (nn1 - 1);
+        hPhi = (phi2 - phi1) / (nn2 - 1);
+        boundaryConditionsSet->insert(
+                pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Top, map<unsigned, shared_ptr<BoundaryCondition>>()));
+        for (unsigned i = 0; i < nn1; i++) {
+            for (unsigned j = 0; j < nn2; j++) {
+                boundaryNodeID = *_mesh->boundaryNodes->at(Top)->at(i * nn2 + j)->id.global;
+                auto dofBC = new map<DOFType, double>();
+                dofBC->insert(pair<DOFType, double>(DOFType::Position1, radius1 * cos(theta1 + i * hTheta) * cos(phi1 + j * hPhi)));
+                dofBC->insert(pair<DOFType, double>(DOFType::Position2, radius2 * sin(theta1 + i * hTheta) * cos(phi1 + j * hPhi)));
+                dofBC->insert(pair<DOFType, double>(DOFType::Position3, radius3 * sin(phi1 + j * hPhi)));
+                boundaryConditionsSet->at(Top).insert(
+                        pair<unsigned, shared_ptr<BoundaryCondition>>(boundaryNodeID, new BoundaryCondition(Dirichlet, dofBC)));
+            }
+        }
+        
+
+        //Left
+        theta1 = 11.0 * pi / 4.0;
+        theta2 = 13.0 * pi / 4.0;
+        phi1 = 11.0 * pi / 4.0;
+        phi2 = 13.0 * pi / 4.0;
+        hTheta = (theta2 - theta1) / (nn2 - 1);
+        hPhi = (phi2 - phi1) / (nn3 - 1);
+        boundaryConditionsSet->insert(
+                pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Left, map<unsigned, shared_ptr<BoundaryCondition>>()));
+        for (unsigned i = 0; i < nn2; i++) {
+            for (unsigned j = 0; j < nn3; j++) {
+                boundaryNodeID = *_mesh->boundaryNodes->at(Left)->at(i * nn3 + j)->id.global;
+                auto dofBC = new map<DOFType, double>();
+                dofBC->insert(pair<DOFType, double>(DOFType::Position1, radius1 * cos(theta1 + i * hTheta) * cos(phi1 + j * hPhi)));
+                dofBC->insert(pair<DOFType, double>(DOFType::Position2, radius1 * sin(theta1 + i * hTheta) * cos(phi1 + j * hPhi)));
+                dofBC->insert(pair<DOFType, double>(DOFType::Position3, radius3 * sin(phi1 + j * hPhi)));
+                boundaryConditionsSet->at(Left).insert(
+                        pair<unsigned, shared_ptr<BoundaryCondition>>(boundaryNodeID, new BoundaryCondition(Dirichlet, dofBC)));
+            }
+        }
+        
+        //Right
+        theta1 = 7.0 * pi / 4.0;
+        theta2 = 9.0 * pi / 4.0;
+        phi1 = 7.0 * pi / 4.0;
+        phi2 = 9.0 * pi / 4.0;
+        hTheta = (theta2 - theta1) / (nn2 - 1);
+        hPhi = (phi2 - phi1) / (nn3 - 1);
+        boundaryConditionsSet->insert(
+                pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Right, map<unsigned, shared_ptr<BoundaryCondition>>()));
+        for (unsigned i = 0; i < nn2; i++) {
+            for (unsigned j = 0; j < nn3; j++) {
+                boundaryNodeID = *_mesh->boundaryNodes->at(Right)->at(i * nn3 + j)->id.global;
+                auto dofBC = new map<DOFType, double>();
+                dofBC->insert(pair<DOFType, double>(DOFType::Position1, radius1 * cos(theta1 + i * hTheta) * cos(phi1 + j * hPhi)));
+                dofBC->insert(pair<DOFType, double>(DOFType::Position2, radius1 * sin(theta1 + i * hTheta) * cos(phi1 + j * hPhi)));
+                dofBC->insert(pair<DOFType, double>(DOFType::Position3, radius3 * sin(phi1 + j * hPhi)));
+                boundaryConditionsSet->at(Right).insert(
+                        pair<unsigned, shared_ptr<BoundaryCondition>>(boundaryNodeID, new BoundaryCondition(Dirichlet, dofBC)));
+            }
+        }
+
+        //Top
+        theta1 = 9.0 * pi / 4.0;
+        theta2 = 11.0 * pi / 4.0;
+        phi1 = 9.0 * pi / 4.0;
+        phi2 = 11.0 * pi / 4.0;
+        hTheta = (theta2 - theta1) / (nn1 - 1);
+        hPhi = (phi2 - phi1) / (nn2 - 1);
+        boundaryConditionsSet->insert(
+                pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Top, map<unsigned, shared_ptr<BoundaryCondition>>()));
+        for (unsigned i = 0; i < nn1; i++) {
+            for (unsigned j = 0; j < nn2; j++) {
+                boundaryNodeID = *_mesh->boundaryNodes->at(Top)->at(i * nn2 + j)->id.global;
+                auto dofBC = new map<DOFType, double>();
+                dofBC->insert(pair<DOFType, double>(DOFType::Position1, radius1 * cos(theta1 + i * hTheta) * cos(phi1 + j * hPhi)));
+                dofBC->insert(pair<DOFType, double>(DOFType::Position2, radius2 * sin(theta1 + i * hTheta) * cos(phi1 + j * hPhi)));
+                dofBC->insert(pair<DOFType, double>(DOFType::Position3, radius3 * sin(phi1 + j * hPhi)));
+                boundaryConditionsSet->at(Top).insert(
+                        pair<unsigned, shared_ptr<BoundaryCondition>>(boundaryNodeID, new BoundaryCondition(Dirichlet, dofBC)));
+            }
+        }
+        
+
+        
+        //Bottom
+        
+
+    }*/
+
+    shared_ptr<DomainBoundaryConditions>
     DomainBoundaryFactory::annulus_ripGewrgiou(map<Direction, unsigned int> &nodesPerDirection, double rIn, double rOut,
                                                double thetaStart, double thetaEnd) {
         if (thetaStart > thetaEnd) {
@@ -354,10 +474,10 @@ namespace StructuredMeshGenerator {
             boundaryConditionsSet->at(Left).insert(
                     pair<unsigned, shared_ptr<BoundaryCondition>>(boundaryNodeID, new BoundaryCondition(Dirichlet, dofBC)));
         }
-        _domainBoundaryConditions = make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
+        return make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
     }
 
-    void DomainBoundaryFactory::cavityBot(map<Direction, unsigned> &nodesPerDirection, double lengthX, double lengthY) {
+    shared_ptr<DomainBoundaryConditions> DomainBoundaryFactory::cavityBot(map<Direction, unsigned> &nodesPerDirection, double lengthX, double lengthY) {
         auto nnX = nodesPerDirection[One];
         auto nnY = nodesPerDirection[Two];
 
@@ -430,11 +550,11 @@ namespace StructuredMeshGenerator {
                     throw runtime_error("A parallelogram can only have bottom, right, top, and left boundaries.");
             }
         }
-        _domainBoundaryConditions = make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
+        return make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
     }
 
 
-    void DomainBoundaryFactory::gasTankHorizontal(map<Direction, unsigned int> &nodesPerDirection, double lengthX,
+    shared_ptr<DomainBoundaryConditions> DomainBoundaryFactory::gasTankHorizontal(map<Direction, unsigned int> &nodesPerDirection, double lengthX,
                                                   double lengthY) {
         auto nnX = nodesPerDirection[One];
         auto nnY = nodesPerDirection[Two];
@@ -511,13 +631,13 @@ namespace StructuredMeshGenerator {
                 default:
                     throw runtime_error("A parallelogram can only have bottom, right, top, and left boundaries.");
             }
-            _domainBoundaryConditions = make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
+            return make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
         }
     }
     //set xrange [0:0.6]
     //set yrange [-3:1]
     //plot sin(15*x) , - 2 + sin(15*x)
-    void DomainBoundaryFactory::sinusRiver(map<Direction, unsigned int> &nodesPerDirection, double lengthX,
+    shared_ptr<DomainBoundaryConditions> DomainBoundaryFactory::sinusRiver(map<Direction, unsigned int> &nodesPerDirection, double lengthX,
                                            double bankDistanceY, double amplitude, double frequency) {
         if (bankDistanceY <= 0.0)
             throw runtime_error("The bank distance must be positive.");
@@ -578,12 +698,125 @@ namespace StructuredMeshGenerator {
                     pair<unsigned, shared_ptr<BoundaryCondition>>(boundaryNodeID, new BoundaryCondition(Dirichlet, dofBC)));
         }
 
-        _domainBoundaryConditions = make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
+        return make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
     }
-    
-    void DomainBoundaryFactory::gasTankVertical(map<Direction, unsigned int> &nodesPerDirection, double lenghtX,
+
+    shared_ptr<DomainBoundaryConditions> DomainBoundaryFactory::gasTankVertical(map<Direction, unsigned int> &nodesPerDirection, double lenghtX,
                                                 double lengthY) {
     
 
+    }
+
+    shared_ptr<DomainBoundaryConditions> DomainBoundaryFactory::annulus_3D_ripGewrgiou(map<Direction, unsigned int> &nodesPerDirection, double rIn,
+                                                       double rOut, double thetaStart, double thetaEnd, double height) {
+        
+    
+        auto nn1 = nodesPerDirection[One];
+        auto nn2 = nodesPerDirection[Two];
+        auto nn3 = nodesPerDirection[Three];
+        
+        auto step3 = height / (nn3 - 1.0);
+
+        auto boundaryConditionsSet = make_shared<map<Position, map<unsigned, shared_ptr<BoundaryCondition>>>>();
+
+        map<Direction, unsigned int> nodesPerDirection2D = {{One, nn1}, {Two, nn2}};
+        auto specs = make_shared<MeshSpecs>(nodesPerDirection2D, 1, 1, 0, 0, 0);
+        auto meshFactory = new MeshFactory(specs);
+        auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh)->annulus_ripGewrgiou(nodesPerDirection2D, rIn, rOut, thetaStart, thetaEnd);
+        meshFactory->buildMesh(2, meshBoundaries);
+        auto mesh = meshFactory->mesh;
+        meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural);
+
+
+
+
+        //bottom and top
+        for (unsigned i = 0; i < nn2; i++) {
+            for (unsigned j = 0; j < nn1; j++) {
+                auto nodalCoords = mesh->node(j, i)->coordinates.positionVector(Natural);
+                vector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], 0.0};
+                
+                auto botBCValues = new map<DOFType, double>();
+                botBCValues->insert(pair<DOFType, double>(DOFType::Position1, new3DCoords[0]));
+                botBCValues->insert(pair<DOFType, double>(DOFType::Position2, new3DCoords[1]));
+                botBCValues->insert(pair<DOFType, double>(DOFType::Position3, new3DCoords[2]));
+                auto bcBot = new BoundaryCondition(Dirichlet, botBCValues);
+                boundaryConditionsSet->insert(pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Bottom, map<unsigned, shared_ptr<BoundaryCondition>>()));
+                //boundaryConditionsSet->at(Bottom).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(j, i, 0)->id.global, bcBot));
+                boundaryConditionsSet->at(Bottom).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(j, i, 0)->id.global, bcBot));
+
+                auto topBCValues = new map<DOFType, double>();
+                topBCValues->insert(pair<DOFType, double>(DOFType::Position1, new3DCoords[0]));
+                topBCValues->insert(pair<DOFType, double>(DOFType::Position2, new3DCoords[1]));
+                topBCValues->insert(pair<DOFType, double>(DOFType::Position3, new3DCoords[2] + height));
+                auto bcTop = new BoundaryCondition(Dirichlet, topBCValues);
+                boundaryConditionsSet->insert(pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Top, map<unsigned, shared_ptr<BoundaryCondition>>()));
+                //boundaryConditionsSet->at(Top).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(j, i, nodesPerDirection[Three] - 1)->id.global, bcTop));
+                boundaryConditionsSet->at(Top).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(j, i, nodesPerDirection[Three] - 1)->id.global, bcTop));
+
+            }
+        }
+        
+        //left and right
+        auto leftNodes = mesh->boundaryNodes->at(Left);
+        auto rightNodes = mesh->boundaryNodes->at(Right);
+        for (unsigned i = 0; i < nn3; i++) {
+            for (unsigned j = 0; j < nn2; j++) {
+                auto nodalCoords = leftNodes->at(j)->coordinates.positionVector3D(Natural);
+                vector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
+                auto leftBCValues = new map<DOFType, double>();
+                leftBCValues->insert(pair<DOFType, double>(DOFType::Position1, new3DCoords[0]));
+                leftBCValues->insert(pair<DOFType, double>(DOFType::Position2, new3DCoords[1]));
+                leftBCValues->insert(pair<DOFType, double>(DOFType::Position3, new3DCoords[2]));
+                auto bcLeft = new BoundaryCondition(Dirichlet, leftBCValues);
+                boundaryConditionsSet->insert(pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Left, map<unsigned, shared_ptr<BoundaryCondition>>()));
+                //boundaryConditionsSet->at(Left).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*leftNodes->at(j)->id.global, bcLeft));
+                boundaryConditionsSet->at(Left).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(0, j, i)->id.global, bcLeft));
+
+
+                nodalCoords = rightNodes->at(j)->coordinates.positionVector3D(Natural);
+                new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
+                auto rightBCValues = new map<DOFType, double>();
+                rightBCValues->insert(pair<DOFType, double>(DOFType::Position1, new3DCoords[0]));
+                rightBCValues->insert(pair<DOFType, double>(DOFType::Position2, new3DCoords[1]));
+                rightBCValues->insert(pair<DOFType, double>(DOFType::Position3, new3DCoords[2]));
+                auto bcRight = new BoundaryCondition(Dirichlet, rightBCValues);
+                boundaryConditionsSet->insert(pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Right, map<unsigned, shared_ptr<BoundaryCondition>>()));
+                //boundaryConditionsSet->at(Right).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*leftNodes->at(j)->id.global, bcRight));
+                boundaryConditionsSet->at(Right).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(nodesPerDirection[One] - 1, j, i)->id.global, bcRight));
+
+            }
+        }
+        
+        //front and back
+        auto frontNodes = mesh->boundaryNodes->at(Top);
+        auto backNodes = mesh->boundaryNodes->at(Bottom);
+        for (unsigned i = 0; i < nn3; i++) {
+            for (unsigned j = 0; j < nn1; j++) {
+                auto nodalCoords = frontNodes->at(j)->coordinates.positionVector3D(Natural);
+                vector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
+                auto frontBCValues = new map<DOFType, double>();
+                frontBCValues->insert(pair<DOFType, double>(DOFType::Position1, new3DCoords[0]));
+                frontBCValues->insert(pair<DOFType, double>(DOFType::Position2, new3DCoords[1]));
+                frontBCValues->insert(pair<DOFType, double>(DOFType::Position3, new3DCoords[2]));
+                auto bcFront = new BoundaryCondition(Dirichlet, frontBCValues);
+                boundaryConditionsSet->insert(pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Front, map<unsigned, shared_ptr<BoundaryCondition>>()));
+                //boundaryConditionsSet->at(Front).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*frontNodes->at(j)->id.global, bcFront));
+                boundaryConditionsSet->at(Front).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(j, 0, i)->id.global, bcFront));
+
+                nodalCoords = backNodes->at(j)->coordinates.positionVector3D(Natural);
+                new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
+                auto backBCValues = new map<DOFType, double>();
+                backBCValues->insert(pair<DOFType, double>(DOFType::Position1, new3DCoords[0]));
+                backBCValues->insert(pair<DOFType, double>(DOFType::Position2, new3DCoords[1]));
+                backBCValues->insert(pair<DOFType, double>(DOFType::Position3, new3DCoords[2]));
+                auto bcBack = new BoundaryCondition(Dirichlet, backBCValues);
+                boundaryConditionsSet->insert(pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Back, map<unsigned, shared_ptr<BoundaryCondition>>()));
+                //boundaryConditionsSet->at(Back).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*backNodes->at(j)->id//.global, bcBack));
+                boundaryConditionsSet->at(Back).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(j, nodesPerDirection[Two] - 1, i)->id.global, bcBack));
+
+            }
+        }
+        return make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
     }
 }// StructuredMeshGenerator

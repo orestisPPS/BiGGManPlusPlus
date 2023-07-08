@@ -16,10 +16,9 @@ namespace StructuredMeshGenerator{
         mesh->specs = _meshSpecs;
         mesh->calculateMeshMetrics(Template, true);
         _calculatePDEPropertiesFromMetrics();
-        domainBoundaryFactory = make_shared<DomainBoundaryFactory>(mesh);
     }
     
-    void MeshFactory::buildMesh(unsigned short schemeOrder) const {
+    void MeshFactory::buildMesh(unsigned short schemeOrder, shared_ptr<DomainBoundaryConditions> boundaryConditions) const {
         
         auto start = chrono::steady_clock::now();
         
@@ -31,9 +30,6 @@ namespace StructuredMeshGenerator{
         
         auto specs = make_shared<FDSchemeSpecs>(schemeOrder, schemeOrder, mesh->directions());
         
-        shared_ptr<DomainBoundaryConditions> boundaryConditions = nullptr;
-
-        boundaryConditions = domainBoundaryFactory->getDomainBoundaryConditions();
 
         Field_DOFType* dofTypes = nullptr;
         switch (mesh->dimensions()) {

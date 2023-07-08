@@ -28,6 +28,10 @@ namespace Discretization {
     unsigned Mesh2D::dimensions() {
         return 2;
     }
+    
+    unsigned Mesh2D::numberOfInternalNodes() {
+        return ((nodesPerDirection[One] - 2) * (nodesPerDirection[Two] - 2));
+    }
 
     SpaceEntityType Mesh2D::space() {
         return Plane;

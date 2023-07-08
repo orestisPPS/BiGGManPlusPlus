@@ -18,6 +18,8 @@ namespace Discretization {
         
         unsigned dimensions() override;
         
+        unsigned numberOfInternalNodes() override;
+        
         SpaceEntityType space() override;
 
         vector<Direction> directions() override;

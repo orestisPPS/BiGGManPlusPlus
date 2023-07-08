@@ -38,6 +38,10 @@ namespace Discretization {
         return {One, Two, Three};
     }
     
+    unsigned Mesh3D::numberOfInternalNodes() {
+        return ((nodesPerDirection[One] - 2) * (nodesPerDirection[Two] - 2) * (nodesPerDirection[Three] - 2));
+    }
+    
     Node* Mesh3D::node(unsigned i) {
         if (isInitialized)
             return (*_nodesMatrix)(i);
@@ -74,8 +78,8 @@ namespace Discretization {
         auto topNodes = new vector<Node*>();
         for (int i = 0 ; i < nodesPerDirection[Two] ; i++) {
             for (int j = 0 ; j < nodesPerDirection[One] ; j++) {
-                bottomNodes->push_back((*_nodesMatrix)(i, j, 0));
-                topNodes->push_back((*_nodesMatrix)(i, j, nodesPerDirection[Three] - 1));
+                bottomNodes->push_back((*_nodesMatrix)(j, i, 0));
+                topNodes->push_back((*_nodesMatrix)(j, i, nodesPerDirection[Three] - 1));
             }
         }
         boundaryNodes->insert(pair<Position, shared_ptr<vector<Node*>>>(Bottom, bottomNodes));

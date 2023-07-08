@@ -30,13 +30,14 @@ namespace NumericalAnalysis {
         
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk");*/
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 11;
-        numberOfNodes[Direction::Two] = 11;
+        numberOfNodes[Direction::One] = 21;
+        numberOfNodes[Direction::Two] = 5;
         numberOfNodes[Direction::Three] = 3;
-        auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 0.25, 0, 0, 0, 0, 0, 0);
+        auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 1, 0, 0, 0, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
-        meshFactory->domainBoundaryFactory->parallelepiped(numberOfNodes, 4, 4, 1);
-        meshFactory->buildMesh(2);
+        auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
+        //meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 4, 4, 1));
+        meshFactory->buildMesh(2, meshBoundaries->annulus_3D_ripGewrgiou(numberOfNodes, 0.1, 1, 0, 180, 3));
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural);
 
         //meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 5, 5);
