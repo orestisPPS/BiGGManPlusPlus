@@ -721,102 +721,164 @@ namespace StructuredMeshGenerator {
 
         map<Direction, unsigned int> nodesPerDirection2D = {{One, nn1}, {Two, nn2}};
         auto specs = make_shared<MeshSpecs>(nodesPerDirection2D, 1, 1, 0, 0, 0);
-        auto meshFactory = new MeshFactory(specs);
-        auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh)->annulus_ripGewrgiou(nodesPerDirection2D, rIn, rOut, thetaStart, thetaEnd);
-        meshFactory->buildMesh(2, meshBoundaries);
-        auto mesh = meshFactory->mesh;
-        meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural);
+        auto meshFactory2D = new MeshFactory(specs);
+        auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory2D->mesh)->annulus_ripGewrgiou(nodesPerDirection2D, rIn, rOut, thetaStart, thetaEnd);
+        //auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory2D->mesh)->parallelogram(nodesPerDirection2D,4,4);
+        meshFactory2D->buildMesh(2, meshBoundaries);
+        auto mesh2D = meshFactory2D->mesh;
+        meshFactory2D->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural);
+        
+        
+        unsigned int ksi, ita, iota;
+
+        for (auto &boundaryPosition : *this->_mesh->boundaryNodes){
+            boundaryConditionsSet->insert(pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(
+                    boundaryPosition.first,map<unsigned, shared_ptr<BoundaryCondition>>()));
+        }
+        
+            
+/*        if (mesh2D->totalNodesVector->size() != this->_mesh->boundaryNodes->at(Bottom)->size())
+            throw runtime_error("The number of nodes in the 2D mesh is not equal to the number of nodes in the bottom boundary of the 3D mesh");
+        if (mesh2D->totalNodesVector->size() != this->_mesh->boundaryNodes->at(Top)->size())
+            throw runtime_error("The number of nodes in the 2D mesh is not equal to the number of nodes in the top boundary of the 3D mesh");
+        
+        for (auto& node2D : *mesh2D->totalNodesVector){
+            auto nodeNaturalCoords2D = node2D->coordinates.positionVector(Natural);
+            auto nodeParametricCoords2D = node2D->coordinates.positionVector(Parametric);
+            ksi = static_cast<unsigned>(nodeParametricCoords2D[0]);
+            ita = static_cast<unsigned>(nodeParametricCoords2D[1]);
+            iota = 0;
+            
+            auto botBCValues = new map<DOFType, double>();
+            botBCValues->insert(pair<DOFType, double>(DOFType::Position1, nodeNaturalCoords2D[0]));
+            botBCValues->insert(pair<DOFType, double>(DOFType::Position2, nodeNaturalCoords2D[1]));
+            botBCValues->insert(pair<DOFType, double>(DOFType::Position3, 0));
+            
+            auto node3dBot = this->_mesh->node(ksi, ita, iota);
+            boundaryConditionsSet->at(Bottom).insert(
+                    pair<unsigned, shared_ptr<BoundaryCondition>>(*node3dBot->id.global, new BoundaryCondition(Dirichlet, botBCValues)));
 
 
+            auto topBCValues = new map<DOFType, double>();
+            topBCValues->insert(pair<DOFType, double>(DOFType::Position1, nodeNaturalCoords2D[0]));
+            topBCValues->insert(pair<DOFType, double>(DOFType::Position2, nodeNaturalCoords2D[1]));
+            topBCValues->insert(pair<DOFType, double>(DOFType::Position3, height));
+            
+            auto node3dTop = this->_mesh->node(ksi, ita, nn3 - 1);
+            boundaryConditionsSet->at(Top).insert(
+                    pair<unsigned, shared_ptr<BoundaryCondition>>(*node3dTop->id.global, new BoundaryCondition(Dirichlet, topBCValues)));
 
-
-        //bottom and top
+        }*/
+        //Bottom and Top
         for (unsigned i = 0; i < nn2; i++) {
             for (unsigned j = 0; j < nn1; j++) {
-                auto nodalCoords = mesh->node(j, i)->coordinates.positionVector(Natural);
-                vector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], 0.0};
+                auto nodalCoords = mesh2D->node(j, i)->coordinates.positionVector(Natural);
+                vector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], 0};
+                auto bottomBCValues = new map<DOFType, double>({
+                        {Position1, new3DCoords[0]},
+                        {Position2, new3DCoords[1]},
+                        {Position3, new3DCoords[2]}
+                });
+                auto bcBottom = new BoundaryCondition(Dirichlet, bottomBCValues);
+                boundaryConditionsSet->at(Bottom).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(j, i, 0)->id.global, bcBottom));
+
                 
-                auto botBCValues = new map<DOFType, double>();
-                botBCValues->insert(pair<DOFType, double>(DOFType::Position1, new3DCoords[0]));
-                botBCValues->insert(pair<DOFType, double>(DOFType::Position2, new3DCoords[1]));
-                botBCValues->insert(pair<DOFType, double>(DOFType::Position3, new3DCoords[2]));
-                auto bcBot = new BoundaryCondition(Dirichlet, botBCValues);
-                boundaryConditionsSet->insert(pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Bottom, map<unsigned, shared_ptr<BoundaryCondition>>()));
-                //boundaryConditionsSet->at(Bottom).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(j, i, 0)->id.global, bcBot));
-                boundaryConditionsSet->at(Bottom).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(j, i, 0)->id.global, bcBot));
-
-                auto topBCValues = new map<DOFType, double>();
-                topBCValues->insert(pair<DOFType, double>(DOFType::Position1, new3DCoords[0]));
-                topBCValues->insert(pair<DOFType, double>(DOFType::Position2, new3DCoords[1]));
-                topBCValues->insert(pair<DOFType, double>(DOFType::Position3, new3DCoords[2] + height));
+                new3DCoords = {nodalCoords[0], nodalCoords[1], height};
+                auto topBCValues = new map<DOFType, double>({
+                        {Position1, new3DCoords[0]},
+                        {Position2, new3DCoords[1]},
+                        {Position3, new3DCoords[2]}
+                });
                 auto bcTop = new BoundaryCondition(Dirichlet, topBCValues);
-                boundaryConditionsSet->insert(pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Top, map<unsigned, shared_ptr<BoundaryCondition>>()));
-                //boundaryConditionsSet->at(Top).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(j, i, nodesPerDirection[Three] - 1)->id.global, bcTop));
-                boundaryConditionsSet->at(Top).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(j, i, nodesPerDirection[Three] - 1)->id.global, bcTop));
-
+                boundaryConditionsSet->at(Top).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node( j, i, nn3 - 1)->id.global, bcTop));
             }
         }
         
         //left and right
-        auto leftNodes = mesh->boundaryNodes->at(Left);
-        auto rightNodes = mesh->boundaryNodes->at(Right);
+        auto leftNodes = mesh2D->boundaryNodes->at(Left);
+        auto rightNodes = mesh2D->boundaryNodes->at(Right);
         for (unsigned i = 0; i < nn3; i++) {
             for (unsigned j = 0; j < nn2; j++) {
-                auto nodalCoords = leftNodes->at(j)->coordinates.positionVector3D(Natural);
+                auto nodalCoords = leftNodes->at(j)->coordinates.positionVector(Natural);
                 vector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
-                auto leftBCValues = new map<DOFType, double>();
-                leftBCValues->insert(pair<DOFType, double>(DOFType::Position1, new3DCoords[0]));
-                leftBCValues->insert(pair<DOFType, double>(DOFType::Position2, new3DCoords[1]));
-                leftBCValues->insert(pair<DOFType, double>(DOFType::Position3, new3DCoords[2]));
+                auto leftBCValues = new map<DOFType, double>({
+                        {Position1, new3DCoords[0]},
+                        {Position2, new3DCoords[1]},
+                        {Position3, new3DCoords[2]}
+                });
                 auto bcLeft = new BoundaryCondition(Dirichlet, leftBCValues);
-                boundaryConditionsSet->insert(pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Left, map<unsigned, shared_ptr<BoundaryCondition>>()));
-                //boundaryConditionsSet->at(Left).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*leftNodes->at(j)->id.global, bcLeft));
                 boundaryConditionsSet->at(Left).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(0, j, i)->id.global, bcLeft));
-
-
-                nodalCoords = rightNodes->at(j)->coordinates.positionVector3D(Natural);
+                
+                nodalCoords = rightNodes->at(j)->coordinates.positionVector(Natural);
                 new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
-                auto rightBCValues = new map<DOFType, double>();
-                rightBCValues->insert(pair<DOFType, double>(DOFType::Position1, new3DCoords[0]));
-                rightBCValues->insert(pair<DOFType, double>(DOFType::Position2, new3DCoords[1]));
-                rightBCValues->insert(pair<DOFType, double>(DOFType::Position3, new3DCoords[2]));
+                auto rightBCValues = new map<DOFType, double>({
+                        {Position1, new3DCoords[0]},
+                        {Position2, new3DCoords[1]},
+                        {Position3, new3DCoords[2]}
+                });
                 auto bcRight = new BoundaryCondition(Dirichlet, rightBCValues);
-                boundaryConditionsSet->insert(pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Right, map<unsigned, shared_ptr<BoundaryCondition>>()));
-                //boundaryConditionsSet->at(Right).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*leftNodes->at(j)->id.global, bcRight));
-                boundaryConditionsSet->at(Right).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(nodesPerDirection[One] - 1, j, i)->id.global, bcRight));
-
+                boundaryConditionsSet->at(Right).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(nn1 - 1, j, i)->id.global, bcRight));
             }
         }
         
         //front and back
-        auto frontNodes = mesh->boundaryNodes->at(Top);
-        auto backNodes = mesh->boundaryNodes->at(Bottom);
+        auto frontNodes = mesh2D->boundaryNodes->at(Top);
+        auto backNodes = mesh2D->boundaryNodes->at(Bottom);
+        
         for (unsigned i = 0; i < nn3; i++) {
             for (unsigned j = 0; j < nn1; j++) {
-                auto nodalCoords = frontNodes->at(j)->coordinates.positionVector3D(Natural);
+                auto nodalCoords = frontNodes->at(j)->coordinates.positionVector(Natural);
                 vector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
                 auto frontBCValues = new map<DOFType, double>();
-                frontBCValues->insert(pair<DOFType, double>(DOFType::Position1, new3DCoords[0]));
-                frontBCValues->insert(pair<DOFType, double>(DOFType::Position2, new3DCoords[1]));
-                frontBCValues->insert(pair<DOFType, double>(DOFType::Position3, new3DCoords[2]));
+                frontBCValues->insert(pair<DOFType, double>(Position1, new3DCoords[0]));
+                frontBCValues->insert(pair<DOFType, double>(Position2, new3DCoords[1]));
+                frontBCValues->insert(pair<DOFType, double>(Position3, new3DCoords[2]));
                 auto bcFront = new BoundaryCondition(Dirichlet, frontBCValues);
-                boundaryConditionsSet->insert(pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Front, map<unsigned, shared_ptr<BoundaryCondition>>()));
-                //boundaryConditionsSet->at(Front).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*frontNodes->at(j)->id.global, bcFront));
-                boundaryConditionsSet->at(Front).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(j, 0, i)->id.global, bcFront));
+                boundaryConditionsSet->at(Front).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(
+                        *this->_mesh->node(j, nn2 - 1, i)->id.global, bcFront));
 
-                nodalCoords = backNodes->at(j)->coordinates.positionVector3D(Natural);
+                nodalCoords = backNodes->at(j)->coordinates.positionVector(Natural);
                 new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
                 auto backBCValues = new map<DOFType, double>();
-                backBCValues->insert(pair<DOFType, double>(DOFType::Position1, new3DCoords[0]));
-                backBCValues->insert(pair<DOFType, double>(DOFType::Position2, new3DCoords[1]));
-                backBCValues->insert(pair<DOFType, double>(DOFType::Position3, new3DCoords[2]));
+                backBCValues->insert(pair<DOFType, double>(Position1, new3DCoords[0]));
+                backBCValues->insert(pair<DOFType, double>(Position2, new3DCoords[1]));
+                backBCValues->insert(pair<DOFType, double>(Position3, new3DCoords[2]));
                 auto bcBack = new BoundaryCondition(Dirichlet, backBCValues);
-                boundaryConditionsSet->insert(pair<Position, map<unsigned, shared_ptr<BoundaryCondition>>>(Back, map<unsigned, shared_ptr<BoundaryCondition>>()));
                 //boundaryConditionsSet->at(Back).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*backNodes->at(j)->id//.global, bcBack));
-                boundaryConditionsSet->at(Back).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(j, nodesPerDirection[Two] - 1, i)->id.global, bcBack));
-
+                boundaryConditionsSet->at(Back).insert(pair<unsigned, shared_ptr<BoundaryCondition>>(
+                        *this->_mesh->node(j, 0, i)->id.global, bcBack));
             }
         }
+        for (auto& boundary : *boundaryConditionsSet)
+            for (auto& bc : boundary.second)
+                cout << "BC: " << bc.first << " " << bc.second->getBoundaryConditionValue(Position1) << " " << bc.second->getBoundaryConditionValue(Position2) << " " << bc.second->getBoundaryConditionValue(Position3) << endl;
+        mesh2D.reset();
+        
+        
         return make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
     }
+
+    BoundaryCondition* DomainBoundaryFactory::_getBoundaryConditionFromBoundaryNodeCoords(const vector<double> &nodeCoordinates) {
+        auto boundaryValues = new map<DOFType, double>();
+        boundaryValues->insert(pair<DOFType, double>(Position1, nodeCoordinates[0]));
+        boundaryValues->insert(pair<DOFType, double>(Position2, nodeCoordinates[1]));
+        boundaryValues->insert(pair<DOFType, double>(Position3, nodeCoordinates[2]));
+        auto boundaryCondition = new BoundaryCondition(Dirichlet, boundaryValues);
+        return boundaryCondition;
+    }
+
+    map<unsigned, shared_ptr<BoundaryCondition>> DomainBoundaryFactory::_createBoundaryConditionForBoundary(unsigned iterator1Max, unsigned iterator2Max,
+                                                                                                            const shared_ptr<vector<Node*>> &nodes) {
+    
+        for (unsigned i = 0; i < iterator1Max; i++) {
+            for (unsigned j = 0; j < iterator2Max; j++) {
+                auto node2D = nodes->at(j);
+                auto naturalCoords = node2D->coordinates.positionVector(Natural);
+                auto parametricCoords = node2D->coordinates.positionVector(Parametric);
+                auto bcValues = {parametricCoords[0], parametricCoords[1], naturalCoords[2]};
+            }
+        }
+
+    }
+
 }// StructuredMeshGenerator

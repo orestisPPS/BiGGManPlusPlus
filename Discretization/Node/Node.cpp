@@ -34,6 +34,7 @@ namespace Discretization {
                 return dof;
             }
         }
+        
         return nullptr;
     }
     
@@ -45,6 +46,7 @@ namespace Discretization {
         }
         return *degreesOfFreedom->at(0);
     }
+        
 }// Discretization
     
 

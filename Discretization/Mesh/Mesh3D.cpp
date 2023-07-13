@@ -100,8 +100,8 @@ namespace Discretization {
         auto backNodes = new vector<Node*>();
         for (int i = 0 ; i < nodesPerDirection[Three] ; i++) {
             for (int j = 0 ; j < nodesPerDirection[One] ; j++) {
-                frontNodes->push_back((*_nodesMatrix)(j, 0, i));
-                backNodes->push_back((*_nodesMatrix)(j, nodesPerDirection[Two] - 1, i));
+                frontNodes->push_back((*_nodesMatrix)(j, nodesPerDirection[Two] - 1, i));
+                backNodes->push_back((*_nodesMatrix)(j, 0, i));
             }
         }
         boundaryNodes->insert(pair<Position, shared_ptr<vector<Node*>>>(Front, frontNodes));

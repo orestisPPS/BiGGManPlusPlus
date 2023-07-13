@@ -8,8 +8,9 @@
 
 namespace NumericalAnalysis {
     
-    AnalysisDegreesOfFreedom::AnalysisDegreesOfFreedom(shared_ptr<Mesh> mesh, shared_ptr<DomainBoundaryConditions>domainBoundaryConditions,
+    AnalysisDegreesOfFreedom::AnalysisDegreesOfFreedom(const shared_ptr<Mesh>& mesh, const shared_ptr<DomainBoundaryConditions>&domainBoundaryConditions,
                                                        Field_DOFType* degreesOfFreedom) {
+
         auto dofInitializer = DOFInitializer(mesh, domainBoundaryConditions, degreesOfFreedom);
         totalDegreesOfFreedom = dofInitializer.totalDegreesOfFreedom;
         freeDegreesOfFreedom = dofInitializer.freeDegreesOfFreedom;
@@ -20,6 +21,7 @@ namespace NumericalAnalysis {
         numberOfFreeDOF = make_shared<unsigned>(freeDegreesOfFreedom->size());
         numberOfFixedDOF = make_shared<unsigned>(fixedDegreesOfFreedom->size());
         numberOfDOF = make_shared<unsigned>(totalDegreesOfFreedom->size());
+
         //printDOFCount();
     }
     

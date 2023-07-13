@@ -30,9 +30,12 @@ namespace NumericalAnalysis {
         
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk");*/
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 21;
+        numberOfNodes[Direction::One] = 11;
         numberOfNodes[Direction::Two] = 5;
         numberOfNodes[Direction::Three] = 3;
+/*        numberOfNodes[Direction::One] = 10;
+        numberOfNodes[Direction::Two] = 10;
+        numberOfNodes[Direction::Three] = 10;*/
         auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 1, 0, 0, 0, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
         auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);

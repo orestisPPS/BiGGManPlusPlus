@@ -12,7 +12,9 @@ namespace NumericalAnalysis {
             const shared_ptr<SteadyStateMathematicalProblem>& mathematicalProblem, const shared_ptr<Mesh>& mesh, const shared_ptr<Solver>& solver,
             const shared_ptr<FDSchemeSpecs>&schemeSpecs, CoordinateType coordinateSystem) :
         FiniteDifferenceAnalysis(mathematicalProblem, mesh, solver, schemeSpecs, coordinateSystem) {
-        auto linearSystemInitializer = make_unique<AnalysisLinearSystemInitializer>(degreesOfFreedom, mesh, mathematicalProblem, schemeSpecs, coordinateSystem);
+        
+        auto linearSystemInitializer =
+                make_unique<AnalysisLinearSystemInitializer>(degreesOfFreedom, mesh, mathematicalProblem, schemeSpecs, coordinateSystem);
         linearSystemInitializer->createLinearSystem();
         this->linearSystem = linearSystemInitializer->linearSystem;
         solver->setLinearSystem(linearSystem);
