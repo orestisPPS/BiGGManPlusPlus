@@ -232,12 +232,12 @@ namespace Discretization {
                         //g_3 = {dx/dζ, dy/dζ, dz/dζ}
                         //auto gi = VectorOperations::dotProduct(covariantWeights, templateCoordsMap[directionJ]);
                         covariantBaseVectorI[j] = VectorOperations::dotProduct(covariantWeights, templateCoords[directionI][j]);
-
                         //Contravariant base vectors (dξ_i/dr_i)
                         //g^1 = {dξ/dx, dξ/dy, dξ/dz}
                         //g^2 = {dη/dx, dη/dy, dη/dz}
                         //g^3 = {dζ/dx, dζ/dy, dζ/dz}
                         contravariantBaseVectorI[j] = VectorOperations::dotProduct(contravariantWeights, parametricCoords[directionI][j]);
+
                     }
                     nodeMetrics->covariantBaseVectors->insert(pair<Direction, vector<double>>(directionI, covariantBaseVectorI));
                     nodeMetrics->contravariantBaseVectors->insert(pair<Direction, vector<double>>(directionI, contravariantBaseVectorI));
@@ -287,14 +287,13 @@ namespace Discretization {
             auto graph = IsoParametricNodeGraph(node, maxNeighbours, parametricCoordsMap, nodesPerDirection, false);
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
             auto nodeMetrics = make_shared<Metrics>(node, dimensions());
-
+            //Loop through all the directions to find g_i = d(x_j)/d(x_i), g^i = d(x_i)/d(x_j)
             for (auto &directionI: directions) {
                 auto directionIndex = spatialDirectionToUnsigned[directionI];
 
                 //Check if the available positions are qualified for the current derivative order
                 auto qualifiedPositions = schemeBuilder.getQualifiedFromAvailable(
-                        availablePositionsAndDepth[directionI],
-                        templatePositionsAndPointsMap[1][directionI]);
+                        availablePositionsAndDepth[directionI], templatePositionsAndPointsMap[1][directionI]);
                 auto scheme = FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
                         qualifiedPositions, directionI, errorOrderDerivative1, 1);
 
@@ -348,15 +347,15 @@ namespace Discretization {
 
                     //Covariant base vectors (dr_i/dξ_i)
                     //g_1 = {dx/dξ, dy/dξ, dz/dξ}
-                    //g_2 = {dx/dη, dy/dη, dz/dη}
+                    //g_2 = {dx/dη, dy/dη, dz/dη} 
                     //g_3 = {dx/dζ, dy/dζ, dz/dζ}
                     //auto gi = VectorOperations::dotProduct(covariantWeights, templateCoordsMap[directionJ]);
-                    covariantBaseVectorI[j] = VectorOperations::dotProduct(covariantWeights,templateCoords[directionI][j]);
+                    covariantBaseVectorI[j] = VectorOperations::dotProduct(covariantWeights,templateCoords[directionJ][i]);
                     //Contravariant base vectors (dξ_i/dr_i)
                     //g^1 = {dξ/dx, dξ/dy, dξ/dz}
                     //g^2 = {dη/dx, dη/dy, dη/dz}
                     //g^3 = {dζ/dx, dζ/dy, dζ/dz}
-                    contravariantBaseVectorI[j] = VectorOperations::dotProduct(contravariantWeights,parametricCoords[directionI][j]);
+                    contravariantBaseVectorI[j] = VectorOperations::dotProduct(contravariantWeights,parametricCoords[directionJ][i]);
                 }
                 nodeMetrics->covariantBaseVectors->insert(
                         pair<Direction, vector<double>>(directionI, covariantBaseVectorI));

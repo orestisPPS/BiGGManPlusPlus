@@ -219,8 +219,11 @@ namespace Discretization {
             
             vector<double> normalUnitVector = VectorOperations::crossProduct(covariantBaseVector1, covariantBaseVector2);
             VectorOperations::normalize(normalUnitVector);
-
-            cout << "Normal unit vector of boundary node: " << *node->id.global<< ": " << normalUnitVector[0] << " " << normalUnitVector[1] << " " << normalUnitVector[2] << endl;
+            
+            cout<<*node->id.global<<endl; 
+            metrics->at(*node->id.global)->contravariantTensor->print();
+            
+            //cout << "Normal unit vector of boundary node: " << *node->id.global<< ": " << normalUnitVector[0] << " " << normalUnitVector[1] << " " << normalUnitVector[2] << endl;
             //cout << "Normal unit vector of boundary node: " << *node->id.global<< ": " << covariantBaseVector1[0] << " " << covariantBaseVector1[1] << " " << covariantBaseVector1[2] << endl;
             //cout << "Normal unit vector of boundary node: " << *node->id.global<< ": " << covariantBaseVector2[0] << " " << covariantBaseVector2[1] << " " << covariantBaseVector2[2] << endl;
 
