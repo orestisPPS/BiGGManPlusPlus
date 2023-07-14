@@ -71,7 +71,10 @@ namespace Discretization {
     }
 
     void Mesh::printMesh() {}
-    
+
+    vector<double> Mesh::getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
+        return {};
+    }
     
     unique_ptr<vector<Node*>> Mesh::getInternalNodesVector() {
         return nullptr;

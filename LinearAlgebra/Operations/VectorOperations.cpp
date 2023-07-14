@@ -77,6 +77,132 @@ namespace LinearAlgebra {
             }
         }
         
+        double VectorOperations::magnitude(const shared_ptr<vector<double>>& vector) {
+            auto result = 0.0;
+            for (double i : *vector)
+                result += i * i;
+            return sqrt(result);
+        }
+        
+        double VectorOperations::magnitude(const vector<double> &vector) {
+            auto result = 0.0;
+            for (double i : vector)
+                result += i * i;
+            return sqrt(result);
+        }
+        
+        double VectorOperations::magnitude(const shared_ptr<vector<int>> & vector) {
+            auto result = 0;
+            for (int i : *vector)
+                result += i * i;
+            return sqrt(result);
+        }
+        
+        double VectorOperations::magnitude(const vector<int> &vector) {
+            auto result = 0;
+            for (int i : vector)
+                result += i * i;
+            return sqrt(result);
+        }
+        
+        void VectorOperations::normalize(shared_ptr<vector<double>>& vector) {
+            auto magnitude = VectorOperations::magnitude(vector);
+            for (auto & i : *vector)
+                i /= magnitude;
+        }
+        
+        void VectorOperations::normalize(vector<double> &vector) {
+            auto magnitude = VectorOperations::magnitude(vector);
+            for (auto & i : vector)
+                i /= magnitude;
+        }
+        
+        void VectorOperations::normalize(shared_ptr<vector<int>> & vector) {
+            double magnitude = VectorOperations::magnitude(vector);
+            for (auto & i : *vector)
+                i /= magnitude;
+        }
+        
+        void VectorOperations::normalize(vector<int> &vector) {
+            auto magnitude = VectorOperations::magnitude(vector);
+            for (auto & i : vector)
+                i /= magnitude;
+        }
+        
+        double VectorOperations::distance(const shared_ptr<vector<double>>& vector1, const shared_ptr<vector<double>>& vector2) {
+            auto result = 0.0;
+            if (vector1->size() != vector2->size())
+                throw std::invalid_argument("Vectors must have the same size");
+            for (auto i = 0; i < vector1->size(); i++)
+                result += pow(vector1->at(i) - vector2->at(i), 2);
+            return sqrt(result);
+        }
+        
+        double VectorOperations::distance(vector<double> &vector1, vector<double> &vector2) {
+            auto result = 0.0;
+            if (vector1.size() != vector2.size())
+                throw std::invalid_argument("Vectors must have the same size");
+            for (auto i = 0; i < vector1.size(); i++)
+                result += pow(vector1.at(i) - vector2.at(i), 2);
+            return sqrt(result);
+        }
+        
+        double VectorOperations::distance(const shared_ptr<vector<int>> & vector1, const shared_ptr<vector<int>> & vector2) {
+            auto result = 0;
+            if (vector1->size() != vector2->size())
+                throw std::invalid_argument("Vectors must have the same size");
+            for (auto i = 0; i < vector1->size(); i++)
+                result += pow(vector1->at(i) - vector2->at(i), 2);
+            return sqrt(result);
+        }
+        
+        double VectorOperations::distance(vector<int> &vector1, vector<int> &vector2) {
+            auto result = 0;
+            if (vector1.size() != vector2.size())
+                throw std::invalid_argument("Vectors must have the same size");
+            for (auto i = 0; i < vector1.size(); i++)
+                result += pow(vector1.at(i) - vector2.at(i), 2);
+            return sqrt(result);
+        }
+        
+        double VectorOperations::angle(const shared_ptr<vector<double>>& vector1, const shared_ptr<vector<double>>& vector2) {
+            if (vector1->size() != vector2->size())
+                throw std::invalid_argument("Vectors must have the same size");
+            auto result = 0.0;
+            for (auto i = 0; i < vector1->size(); i++)
+                result += vector1->at(i) * vector2->at(i);
+            return acos(result / (VectorOperations::magnitude(vector1) * VectorOperations::magnitude(vector2)));
+        }
+        
+        double VectorOperations::angle(vector<double> &vector1, vector<double> &vector2) {
+            if (vector1.size() != vector2.size())
+                throw std::invalid_argument("Vectors must have the same size");
+            auto result = 0.0;
+            for (auto i = 0; i < vector1.size(); i++)
+                result += vector1.at(i) * vector2.at(i);
+            return acos(result / (VectorOperations::magnitude(vector1) * VectorOperations::magnitude(vector2)));
+        }
+        
+        double VectorOperations::angle(const shared_ptr<vector<int>> & vector1, const shared_ptr<vector<int>> & vector2) {
+            if (vector1->size() != vector2->size())
+                throw std::invalid_argument("Vectors must have the same size");
+            auto result = 0.0;
+            for (auto i = 0; i < vector1->size(); i++)
+                result += vector1->at(i) * vector2->at(i);
+            return acos(result / (VectorOperations::magnitude(vector1) * VectorOperations::magnitude(vector2)));
+        }
+        
+        double VectorOperations::angle(vector<int> &vector1, vector<int> &vector2) {
+            if (vector1.size() != vector2.size())
+                throw std::invalid_argument("Vectors must have the same size");
+            auto result = 0.0;
+            for (auto i = 0; i < vector1.size(); i++)
+                result += vector1.at(i) * vector2.at(i);
+            return acos(result / (VectorOperations::magnitude(vector1) * VectorOperations::magnitude(vector2)));
+        }
+        
+        
+        
         bool VectorOperations::areEqualVectors(const shared_ptr<vector<double>>& array1, const shared_ptr<vector<double>>& array2) {
             if (array1->size() != array2->size())
                 return false;

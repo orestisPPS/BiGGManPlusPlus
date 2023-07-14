@@ -75,6 +75,39 @@ namespace LinearAlgebra {
         */
         static vector<double> crossProduct(vector<double>& vector1, vector<double> &vector2);
         
+        static double magnitude(const shared_ptr<vector<double>>& vector);
+        
+        static double magnitude(const vector<double> &vector);
+        
+        static double magnitude(const shared_ptr<vector<int>> & vector);
+        
+        static double magnitude(const vector<int> &vector);
+        
+        static void normalize(shared_ptr<vector<double>>& vector);
+        
+        static void normalize(vector<double> &vector);
+        
+        static void normalize(shared_ptr<vector<int>> & vector);
+        
+        static void normalize(vector<int> &vector);
+        
+        
+        static double distance(const shared_ptr<vector<double>>& vector1, const shared_ptr<vector<double>>& vector2);
+        
+        static double distance(vector<double> &vector1, vector<double> &vector2);
+        
+        static double distance(const shared_ptr<vector<int>> & vector1, const shared_ptr<vector<int>> & vector2);
+        
+        static double distance(vector<int> &vector1, vector<int> &vector2);
+        
+        static double angle(const shared_ptr<vector<double>>& vector1, const shared_ptr<vector<double>>& vector2);
+        
+        static double angle(vector<double> &vector1, vector<double> &vector2);
+        
+        static double angle(const shared_ptr<vector<int>> & vector1, const shared_ptr<vector<int>> & vector2);
+        
+        static double angle(vector<int> &vector1, vector<int> &vector2);
+        
         static bool areEqualVectors(const shared_ptr<vector<double>>& array1, const shared_ptr<vector<double>>& array2);
         
         static bool areEqualVectors(vector<double> &array1, vector<double> &array2);

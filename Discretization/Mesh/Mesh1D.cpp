@@ -79,6 +79,10 @@ namespace Discretization {
             (*_nodesMatrix)(i)->printNode();
         }
     }
+
+    vector<double> Mesh1D::getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
+        throw runtime_error("Not implemented yet!");
+    }
     
     shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh1D::_addDBoundaryNodesToMap() {
         auto boundaries = make_shared<map<Position, shared_ptr<vector<Node*>>>>();
@@ -137,4 +141,6 @@ namespace Discretization {
         }
         return parametricCoordToNodeMap;
     }
+
+
 } // Discretization

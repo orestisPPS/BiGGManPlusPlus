@@ -33,6 +33,8 @@ namespace Discretization {
         shared_ptr<map<vector<double>, Node*>> createParametricCoordToNodesMap() override;
         
         void printMesh() override;
+        
+        vector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) override;
 
         unique_ptr<vector<Node*>> getInternalNodesVector() override;
         

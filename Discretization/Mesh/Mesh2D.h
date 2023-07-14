@@ -36,6 +36,8 @@ namespace Discretization {
         
         void printMesh() override;
         
+        vector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) override;
+        
     protected:
 
         shared_ptr<map<Position, shared_ptr<vector<Node*>>>> _addDBoundaryNodesToMap() override;

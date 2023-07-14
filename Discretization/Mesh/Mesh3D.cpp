@@ -70,6 +70,10 @@ namespace Discretization {
                     (*_nodesMatrix)(i, j, k)->printNode();
                 }   
     }
+    
+    vector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
+
+    }
 
     shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh3D::_addDBoundaryNodesToMap() {
         auto boundaryNodes = make_shared<map<Position, shared_ptr<vector<Node*>>>>();
@@ -195,5 +199,37 @@ namespace Discretization {
         }
         return parametricCoordToNodeMap;
     }
+
+    vector<double> Mesh3D::getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
+        map<Position, vector<Direction>> directionsOfBoundaries = {
+                {Bottom, {One, Two}},
+                {Top, {One, Two}},
+                {Left, {Two, Three}},
+                {Right, {Two, Three}},
+                {Front, {One, Three}},
+                {Back, {One, Three}}
+        };
+        //Check if boundaryPosition exists in map
+        if (directionsOfBoundaries.find(boundaryPosition) != directionsOfBoundaries.end()){
+            Direction direction1 = directionsOfBoundaries[boundaryPosition][0];
+            Direction direction2 = directionsOfBoundaries[boundaryPosition][1];
+
+            vector<double> covariantBaseVector1 = metrics->at(*node->id.global)->covariantBaseVectors->at(direction1);
+            vector<double> covariantBaseVector2 = metrics->at(*node->id.global)->covariantBaseVectors->at(direction2);
+            
+            vector<double> normalUnitVector = VectorOperations::crossProduct(covariantBaseVector1, covariantBaseVector2);
+            VectorOperations::normalize(normalUnitVector);
+
+            cout << "Normal unit vector of boundary node: " << *node->id.global<< ": " << normalUnitVector[0] << " " << normalUnitVector[1] << " " << normalUnitVector[2] << endl;
+            //cout << "Normal unit vector of boundary node: " << *node->id.global<< ": " << covariantBaseVector1[0] << " " << covariantBaseVector1[1] << " " << covariantBaseVector1[2] << endl;
+            //cout << "Normal unit vector of boundary node: " << *node->id.global<< ": " << covariantBaseVector2[0] << " " << covariantBaseVector2[1] << " " << covariantBaseVector2[2] << endl;
+
+            return normalUnitVector;
+        }    
+        else {
+            throw invalid_argument("Boundary position not found");
+        }
+    }
+    
 
 } // Discretization

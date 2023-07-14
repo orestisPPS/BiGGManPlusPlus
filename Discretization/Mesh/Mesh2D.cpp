@@ -74,6 +74,10 @@ namespace Discretization {
 
         }
     }
+    
+    vector<double> Mesh2D::getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
+        throw runtime_error("Not Implemented Yet!");
+    }
 
     shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh2D::_addDBoundaryNodesToMap() {
         auto boundaryNodes = make_shared<map<Position, shared_ptr<vector<Node*>>>>();

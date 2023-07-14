@@ -98,7 +98,8 @@ namespace Discretization {
         virtual shared_ptr<map<vector<double>, Node*>> createParametricCoordToNodesMap();
         
         virtual void printMesh();
-
+        
+        virtual vector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node);
         
         virtual unique_ptr<vector<Node*>> getInternalNodesVector();
         
