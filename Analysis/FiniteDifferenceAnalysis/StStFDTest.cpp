@@ -30,9 +30,9 @@ namespace NumericalAnalysis {
         
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "meshEllipse.vtk");*/
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 11;
+        numberOfNodes[Direction::One] = 10;
         numberOfNodes[Direction::Two] = 5;
-        numberOfNodes[Direction::Three] = 3;
+        numberOfNodes[Direction::Three] = 10;
 /*        numberOfNodes[Direction::One] = 10;
         numberOfNodes[Direction::Two] = 10;
         numberOfNodes[Direction::Three] = 10;*/
@@ -42,7 +42,16 @@ namespace NumericalAnalysis {
         //meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 4, 4, 1));
         meshFactory->buildMesh(2, meshBoundaries->annulus_3D_ripGewrgiou(numberOfNodes, 0.1, 1, 0, 180, 3));
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural);
-
+        
+        auto metrics = meshFactory->mesh->metrics->at(9);
+        auto g1 = metrics->contravariantBaseVectors->at(One);
+        auto g2 = metrics->contravariantBaseVectors->at(Two);
+        auto g3 = metrics->contravariantBaseVectors->at(Three);
+        
+        auto g1Crossg2 = VectorOperations::crossProduct(g1, g2);
+        auto g1Crossg3 = VectorOperations::crossProduct(g1, g3);
+        auto g2Crossg3 = VectorOperations::crossProduct(g2, g3);
+        
         //meshFactory->domainBoundaryFactory->parallelogram(numberOfNodes, 5, 5);
         //meshFactory->domainBoundaryFactory->ellipse(numberOfNodes, 1, 1);
         //meshFactory->domainBoundaryFactory->annulus_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 270);

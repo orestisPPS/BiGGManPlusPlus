@@ -849,12 +849,7 @@ namespace StructuredMeshGenerator {
                         *this->_mesh->node(j, 0, i)->id.global, bcBack));
             }
         }
-        for (auto& boundary : *boundaryConditionsSet)
-            for (auto& bc : boundary.second)
-                cout << "BC: " << bc.first << " " << bc.second->getBoundaryConditionValue(Position1) << " " << bc.second->getBoundaryConditionValue(Position2) << " " << bc.second->getBoundaryConditionValue(Position3) << endl;
         mesh2D.reset();
-        
-        
         return make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
     }
 
