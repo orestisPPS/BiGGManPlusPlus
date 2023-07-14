@@ -232,12 +232,12 @@ namespace Discretization {
                         //g_3 = {dx/dζ, dy/dζ, dz/dζ}
                         //auto gi = VectorOperations::dotProduct(covariantWeights, templateCoordsMap[directionJ]);
                         covariantBaseVectorI[j] = VectorOperations::dotProduct(covariantWeights, templateCoords[directionI][j]);
+
                         //Contravariant base vectors (dξ_i/dr_i)
                         //g^1 = {dξ/dx, dξ/dy, dξ/dz}
                         //g^2 = {dη/dx, dη/dy, dη/dz}
                         //g^3 = {dζ/dx, dζ/dy, dζ/dz}
                         contravariantBaseVectorI[j] = VectorOperations::dotProduct(contravariantWeights, parametricCoords[directionI][j]);
-
                     }
                     nodeMetrics->covariantBaseVectors->insert(pair<Direction, vector<double>>(directionI, covariantBaseVectorI));
                     nodeMetrics->contravariantBaseVectors->insert(pair<Direction, vector<double>>(directionI, contravariantBaseVectorI));
@@ -247,7 +247,6 @@ namespace Discretization {
                 nodeMetrics->calculateContravariantTensor();
                 metrics->insert(pair<unsigned, shared_ptr<Metrics> >(*node->id.global, nodeMetrics));
 
-                //Deallocate memory
             }
             delete ghostMesh;
             delete schemeBuilder;
@@ -289,87 +288,96 @@ namespace Discretization {
             auto nodeMetrics = make_shared<Metrics>(node, dimensions());
             //Loop through all the directions to find g_i = d(x_j)/d(x_i), g^i = d(x_i)/d(x_j)
             for (auto &directionI: directions) {
-                auto directionIndex = spatialDirectionToUnsigned[directionI];
-
-                //Check if the available positions are qualified for the current derivative order
-                auto qualifiedPositions = schemeBuilder.getQualifiedFromAvailable(
-                        availablePositionsAndDepth[directionI], templatePositionsAndPointsMap[1][directionI]);
-                auto scheme = FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
-                        qualifiedPositions, directionI, errorOrderDerivative1, 1);
-
-                auto graphFilter = map<Position, unsigned short>();
-                for (auto &tuple: qualifiedPositions) {
-                    for (auto &point: tuple.first) {
-                        graphFilter.insert(pair<Position, unsigned short>(point, tuple.second));
-                    }
-                }
-                auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
-
-                auto parametricCoords = (graph.*colinearNodes)(Parametric, filteredNodeGraph);
-                auto templateCoords = (graph.*colinearNodes)(coordinateSystem, filteredNodeGraph);
-
                 auto i = spatialDirectionToUnsigned[directionI];
-
                 auto covariantBaseVectorI = vector<double>(directions.size(), 0);
                 auto contravariantBaseVectorI = vector<double>(directions.size(), 0);
-
-                //Get the FD scheme weights for the current direction
-                auto covariantWeights = scheme.weights;
-                auto contravariantWeights = covariantWeights;
-
-                //Check if the number of weights and the number of nodes match
-                if (covariantWeights.size() != parametricCoords[directionI][i].size()) {
-                    throw std::runtime_error(
-                            "Number of weights and number of template nodal coords do not match"
-                            " for node " + to_string(*node->id.global) +
-                            " in direction " + to_string(directionI) +
-                            " Cannot calculate covariant base vectors");
-                }
-
-                if (contravariantWeights.size() != templateCoords[directionI][i].size()) {
-                    throw std::runtime_error(
-                            "Number of weights and number of parametric nodal coords do not match"
-                            " for node " + to_string(*node->id.global) +
-                            " in direction " + to_string(directionI) +
-                            " Cannot calculate contravariant base vectors");
-                }
-
-                auto covariantStep = 1.0;
-                auto contravariantStep = VectorOperations::averageAbsoluteDifference(templateCoords[directionI][i]);
-                contravariantStep = pow(contravariantStep, scheme.power) * scheme.denominatorCoefficient;
-
-                for (int weight = 0; weight < covariantWeights.size(); weight++) {
-                    covariantWeights[weight] /= covariantStep;
-                    contravariantWeights[weight] /= contravariantStep;
-                }
-                for (auto &directionJ: directions) {
+                
+                
+                for (auto &directionJ : directions){
                     auto j = spatialDirectionToUnsigned[directionJ];
+                    
+                    //Check if the available positions are qualified for the current derivative order
+                    auto qualifiedPositions = schemeBuilder.getQualifiedFromAvailable(
+                            availablePositionsAndDepth[directionJ], templatePositionsAndPointsMap[1][directionJ]);
+                    auto scheme = FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
+                            qualifiedPositions, directionJ, errorOrderDerivative1, 1);
 
+                    auto graphFilter = map<Position, unsigned short>();
+                    for (auto &tuple: qualifiedPositions) {
+                        for (auto &point: tuple.first) {
+                            graphFilter.insert(pair<Position, unsigned short>(point, tuple.second));
+                        }
+                    }
+                    auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
+
+                    auto parametricCoords = (graph.*colinearNodes)(Parametric, filteredNodeGraph);
+                    auto templateCoords = (graph.*colinearNodes)(coordinateSystem, filteredNodeGraph);
+
+                    //Get the FD scheme weights for the current direction
+                    auto covariantWeights = scheme.weights;
+                    auto contravariantWeights = covariantWeights;
+
+
+                    
+                    //Check if the number of weights and the number of nodes match
+                    if (covariantWeights.size() != parametricCoords[directionJ][j].size()) {
+                        throw std::runtime_error(
+                                "Number of weights and number of template nodal coords do not match"
+                                " for node " + to_string(*node->id.global) +
+                                " in direction " + to_string(directionI) +
+                                " Cannot calculate covariant base vectors");
+                    }
+
+                    if (contravariantWeights.size() != templateCoords[directionJ][j].size()) {
+                        throw std::runtime_error(
+                                "Number of weights and number of parametric nodal coords do not match"
+                                " for node " + to_string(*node->id.global) +
+                                " in direction " + to_string(directionI) +
+                                " Cannot calculate contravariant base vectors");
+                    }
+
+                    auto covariantStep = 1.0;
+                    auto contravariantStep = VectorOperations::averageAbsoluteDifference(templateCoords[directionJ][j]);
+                    contravariantStep = pow(contravariantStep, scheme.power) * scheme.denominatorCoefficient;
+
+                    for (int weight = 0; weight < covariantWeights.size(); weight++) {
+                        covariantWeights[weight] /= covariantStep;
+                        contravariantWeights[weight] /= contravariantStep;
+                    }
+
+/*                    auto covariantWeights2 = calculateWeightsOfDerivativeOrder(
+                            parametricCoords[directionJ][j], 1, node->coordinates(Parametric, j));
+                    auto contravariantWeights2 = calculateWeightsOfDerivativeOrder(
+                            templateCoords[directionJ][j], 1, node->coordinates(coordinateSystem, j));*/
                     //Covariant base vectors (dr_i/dξ_i)
                     //g_1 = {dx/dξ, dy/dξ, dz/dξ}
                     //g_2 = {dx/dη, dy/dη, dz/dη} 
                     //g_3 = {dx/dζ, dy/dζ, dz/dζ}
                     //auto gi = VectorOperations::dotProduct(covariantWeights, templateCoordsMap[directionJ]);
-                    covariantBaseVectorI[j] = VectorOperations::dotProduct(covariantWeights,templateCoords[directionJ][i]);
+                    //auto testCoords = templateCoords[directionI][i];
+
+                    covariantBaseVectorI[i] = VectorOperations::dotProduct(covariantWeights,templateCoords[directionJ][j]);
                     //Contravariant base vectors (dξ_i/dr_i)
                     //g^1 = {dξ/dx, dξ/dy, dξ/dz}
                     //g^2 = {dη/dx, dη/dy, dη/dz}
                     //g^3 = {dζ/dx, dζ/dy, dζ/dz}
-                    contravariantBaseVectorI[j] = VectorOperations::dotProduct(contravariantWeights,parametricCoords[directionJ][i]);
+                    contravariantBaseVectorI[i] = VectorOperations::dotProduct(contravariantWeights,parametricCoords[directionJ][j]);
                 }
                 nodeMetrics->covariantBaseVectors->insert(
                         pair<Direction, vector<double>>(directionI, covariantBaseVectorI));
                 nodeMetrics->contravariantBaseVectors->insert(
                         pair<Direction, vector<double>>(directionI, contravariantBaseVectorI));
+
+               
             }
             nodeMetrics->calculateCovariantTensor();
             nodeMetrics->calculateContravariantTensor();
             metrics->insert(pair<unsigned, shared_ptr<Metrics> >(*node->id.global, nodeMetrics));
-/*            cout << "Node " << *node->id.global << " calculated" << endl;
-            nodeMetrics->covariantTensor->print();*/
         }
     }
-    
+
+
+   
     
     void Mesh::storeMeshInVTKFile(const std::string& filePath, const std::string& fileName, CoordinateType coordinateType) const {
         ofstream outputFile(filePath + fileName);
