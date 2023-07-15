@@ -429,9 +429,16 @@ namespace Discretization {
         return coordinateToNodeMap;
     }
 
+    unique_ptr<map<Node *, Position>> Mesh::getBoundaryNodeToPositionMap() const {
+        auto boundaryNodeToPositionMap = make_unique<map<Node *, Position>>();
+        for (auto &boundary : *boundaryNodes)
+            for (auto &node : *boundary.second)
+                boundaryNodeToPositionMap->insert(pair<Node *, Position>(node, boundary.first));
+        return boundaryNodeToPositionMap;
+    }
+    
     unsigned Mesh::numberOfInternalNodes() {
         return 0;
     }
-
-
+    
 } // Discretization

@@ -9,15 +9,17 @@ namespace NumericalAnalysis {
 
     DOFInitializer::DOFInitializer(const shared_ptr<Mesh>& mesh, const shared_ptr<DomainBoundaryConditions>& domainBoundaryConditions, Field_DOFType* degreesOfFreedom) {
 
+        _totalDegreesOfFreedomList = make_shared<list<DegreeOfFreedom*>>();
         _freeDegreesOfFreedomList = make_shared<list<DegreeOfFreedom*>>();
         _fixedDegreesOfFreedomList = make_shared<list<DegreeOfFreedom*>>();
-        _totalDegreesOfFreedomList = make_shared<list<DegreeOfFreedom*>>();
-        
-        
+        _internalDegreesOfFreedomList = make_shared<list<DegreeOfFreedom*>>();
+        _fluxDegreesOfFreedomList = make_shared<list<DegreeOfFreedom*>>();
+
+        totalDegreesOfFreedom = make_shared<vector<DegreeOfFreedom*>>();
         freeDegreesOfFreedom = make_shared<vector<DegreeOfFreedom*>>();
         fixedDegreesOfFreedom = make_shared<vector<DegreeOfFreedom*>>();
+        internalDegreesOfFreedom = make_shared<vector<DegreeOfFreedom*>>();
         fluxDegreesOfFreedom = make_shared<map<DegreeOfFreedom*, double>>();
-        totalDegreesOfFreedom = make_shared<vector<DegreeOfFreedom*>>();
 
         totalDegreesOfFreedomMap = make_shared<map<unsigned, DegreeOfFreedom*>>();
         totalDegreesOfFreedomMapInverse = make_shared<map<DegreeOfFreedom*, unsigned>>();
@@ -35,7 +37,7 @@ namespace NumericalAnalysis {
         _listPtrToVectorPtr(_freeDegreesOfFreedomList, freeDegreesOfFreedom);
         _listPtrToVectorPtr(_fixedDegreesOfFreedomList, fixedDegreesOfFreedom);
         _listPtrToVectorPtr(_totalDegreesOfFreedomList, totalDegreesOfFreedom);
-
+        _listPtrToVectorPtr(_internalDegreesOfFreedomList, internalDegreesOfFreedom);
     }
 
     void DOFInitializer::_initiateInternalNodeDOFs(const shared_ptr<Mesh>& mesh, Field_DOFType *degreesOfFreedom){
@@ -45,6 +47,7 @@ namespace NumericalAnalysis {
             for (auto & DOFType : *degreesOfFreedom->DegreesOfFreedom){
                 auto dof = new DegreeOfFreedom(DOFType, *internalNode->id.global, false);
                 internalNode->degreesOfFreedom->push_back(dof);
+                _internalDegreesOfFreedomList->push_back(dof);
                 _freeDegreesOfFreedomList->push_back(dof);
             }
         }
@@ -171,6 +174,9 @@ namespace NumericalAnalysis {
     
 
     void DOFInitializer::_createTotalDOFList(const shared_ptr<Mesh>& mesh) const {
+        _fluxDegreesOfFreedomList->sort([](const pair<DegreeOfFreedom*, double>& a, const pair<DegreeOfFreedom*, double>& b) {
+            return a.first->parentNode() < b.first->parentNode();
+        });
         _freeDegreesOfFreedomList->sort([](const DegreeOfFreedom* a, const DegreeOfFreedom* b) {
             return a->parentNode() < b->parentNode();
         });

@@ -21,6 +21,8 @@ namespace NumericalAnalysis {
 
         shared_ptr<vector<DegreeOfFreedom*>> freeDegreesOfFreedom;
         
+        shared_ptr<vector<DegreeOfFreedom*>> internalDegreesOfFreedom;
+        
         shared_ptr<map<DegreeOfFreedom*, double>> fluxDegreesOfFreedom;
 
         shared_ptr<map<unsigned, DegreeOfFreedom*>> totalDegreesOfFreedomMap;
@@ -39,6 +41,10 @@ namespace NumericalAnalysis {
         shared_ptr<list<DegreeOfFreedom*>> _freeDegreesOfFreedomList;
         
         shared_ptr<list<DegreeOfFreedom*>> _fixedDegreesOfFreedomList;
+        
+        shared_ptr<list<DegreeOfFreedom*>> _internalDegreesOfFreedomList;
+        
+        shared_ptr<list<DegreeOfFreedom*>> _fluxDegreesOfFreedomList;
         
         void _initiateInternalNodeDOFs(const shared_ptr<Mesh>& mesh, Field_DOFType* degreesOfFreedom);
         

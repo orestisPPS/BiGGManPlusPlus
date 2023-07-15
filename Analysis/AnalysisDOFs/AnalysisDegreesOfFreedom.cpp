@@ -15,6 +15,7 @@ namespace NumericalAnalysis {
         totalDegreesOfFreedom = dofInitializer.totalDegreesOfFreedom;
         freeDegreesOfFreedom = dofInitializer.freeDegreesOfFreedom;
         fixedDegreesOfFreedom = dofInitializer.fixedDegreesOfFreedom;
+        internalDegreesOfFreedom = dofInitializer.internalDegreesOfFreedom;
         fluxDegreesOfFreedom = dofInitializer.fluxDegreesOfFreedom;
         totalDegreesOfFreedomMap = dofInitializer.totalDegreesOfFreedomMap;
         totalDegreesOfFreedomMapInverse = dofInitializer.totalDegreesOfFreedomMapInverse;

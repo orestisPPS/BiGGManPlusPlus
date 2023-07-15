@@ -77,6 +77,8 @@ namespace Discretization {
         
         map<vector<double>, Node*> getCoordinateToNodeMap(CoordinateType coordinateType = Natural) const;
         
+        unique_ptr<map<Node*, Position>> getBoundaryNodeToPositionMap() const;
+        
         //-----------------Virtual parent class methods-----------------
         virtual unsigned dimensions();
         
