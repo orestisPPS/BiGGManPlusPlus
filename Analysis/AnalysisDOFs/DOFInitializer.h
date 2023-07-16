@@ -44,8 +44,6 @@ namespace NumericalAnalysis {
         
         shared_ptr<list<DegreeOfFreedom*>> _internalDegreesOfFreedomList;
         
-        shared_ptr<list<DegreeOfFreedom*>> _fluxDegreesOfFreedomList;
-        
         void _initiateInternalNodeDOFs(const shared_ptr<Mesh>& mesh, Field_DOFType* degreesOfFreedom);
         
         void _initiateBoundaryNodeDOFWithHomogenousBC(const shared_ptr<Mesh>& mesh, Field_DOFType *problemDOFTypes,

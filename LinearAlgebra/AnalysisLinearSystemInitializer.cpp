@@ -112,9 +112,10 @@ namespace LinearAlgebra {
                 }
             }
         }
+        addNeumannBoundaryConditions();
+
         this->linearSystem = make_shared<LinearSystem>(std::move(_matrix), std::move(_rhsVector) );
-        //addNeumannBoundaryConditions();
-        //this->linearSystem->matrix->print();
+
         
         auto end = std::chrono::steady_clock::now(); // Stop the timer
         cout << "Linear System Assembled in "
@@ -129,19 +130,17 @@ namespace LinearAlgebra {
         auto parametricCoordsMap = _mesh->createParametricCoordToNodesMap();
 
         auto schemeBuilder = FiniteDifferenceSchemeBuilder(schemeSpecs);
-
-        auto errorOrderDerivative1 = schemeSpecs->getErrorForDerivativeOfArbitraryScheme(1);
-
+        auto errorOrderDerivative1 = 2;
         map<short unsigned, map<Direction, map<vector<Position>, short>>> templatePositionsAndPointsMap = schemeBuilder.initiatePositionsAndPointsMap(maxDerivativeOrder, directions);
         schemeBuilder.templatePositionsAndPoints(1, errorOrderDerivative1, directions, templatePositionsAndPointsMap[1]);
         auto maxNeighbours = schemeBuilder.getMaximumNumberOfPointsForArbitrarySchemeType();
-
+        auto boundaryNodeToPositionMap = _mesh->getBoundaryNodeToPositionMap();
+        
         for (auto &dof : *_analysisDegreesOfFreedom->fluxDegreesOfFreedom) {
             auto node = _mesh->nodeFromID(dof.first->parentNode());
+            auto normalVector = _mesh->getNormalUnitVectorOfBoundaryNode(boundaryNodeToPositionMap->at(node), node);
             auto thisDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof.first);
-
-            auto graph = IsoParametricNodeGraph(node, maxNeighbours, parametricCoordsMap, _mesh->nodesPerDirection,
-                                                false);
+            auto graph = IsoParametricNodeGraph(node, maxNeighbours, parametricCoordsMap, _mesh->nodesPerDirection, false);
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
             auto nodeMetrics = make_shared<Metrics>(node, _mesh->dimensions());
             //Loop through all the directions to find g_i = d(x_j)/d(x_i), g^i = d(x_i)/d(x_j)
@@ -171,14 +170,19 @@ namespace LinearAlgebra {
                     auto neighbourDOF = colinearDOF[iDof];
                     auto weight = schemeWeights[iDof] / denominator;
 
-                    auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOF[iDof]);
-                    _matrix->at(thisDOFPosition, neighbourDOFPosition) =
-                            //_matrix->at(thisDOFPosition, neighbourDOFPosition) + schemeWeights[iDof] * iThDerivativePDECoefficient;
-                            _matrix->at(thisDOFPosition, neighbourDOFPosition) + weight;
-
+                    if (neighbourDOF->constraintType() == Free) {
+                        auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOF[iDof]);
+                        _matrix->at(thisDOFPosition, neighbourDOFPosition) =
+                                //_matrix->at(thisDOFPosition, neighbourDOFPosition) + schemeWeights[iDof] * iThDerivativePDECoefficient;
+                                _matrix->at(thisDOFPosition, neighbourDOFPosition) + weight;
+                    }
+                    else if(neighbourDOF->constraintType() == Fixed){
+                        auto dirichletContribution = neighbourDOF->value() * weight;
+                        _rhsVector->at(thisDOFPosition) -= dirichletContribution;
+                    }
                 }
-
             }
+            _rhsVector->at(thisDOFPosition) += dof.second;
         }
     }
 

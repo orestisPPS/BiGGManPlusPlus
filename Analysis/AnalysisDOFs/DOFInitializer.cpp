@@ -13,7 +13,6 @@ namespace NumericalAnalysis {
         _freeDegreesOfFreedomList = make_shared<list<DegreeOfFreedom*>>();
         _fixedDegreesOfFreedomList = make_shared<list<DegreeOfFreedom*>>();
         _internalDegreesOfFreedomList = make_shared<list<DegreeOfFreedom*>>();
-        _fluxDegreesOfFreedomList = make_shared<list<DegreeOfFreedom*>>();
 
         totalDegreesOfFreedom = make_shared<vector<DegreeOfFreedom*>>();
         freeDegreesOfFreedom = make_shared<vector<DegreeOfFreedom*>>();
@@ -68,6 +67,8 @@ namespace NumericalAnalysis {
                         case Dirichlet:{
                             auto isDuplicate = false;
                             for (auto &dof : *node->degreesOfFreedom){
+                                if (dof->type() == *dofType && dof->constraintType() == Fixed)
+                                    break;
                                 if (dof->type() == *dofType && dof->constraintType() == Fixed){
                                     auto median = (dof->value() + dofValue)/2.0;
                                     dof->setValue(median);
@@ -85,7 +86,9 @@ namespace NumericalAnalysis {
                             auto median = 0.0;
                             auto isDuplicate = false;
                             for (auto &dof : *node->degreesOfFreedom){
-                                if (dof->type() == *dofType && dof->constraintType() == Free){
+                                if (dof->type() == *dofType && dof->constraintType() == Fixed)
+                                    isDuplicate = true;
+                                else if (dof->type() == *dofType && dof->constraintType() == Free){
                                     //Search if fluxDegreesOfFreedom already contains a DOF of the same type
                                     for (auto &fluxDOF : *fluxDegreesOfFreedom){
                                         if (get<0>(fluxDOF)->type() == *dofType && get<0>(fluxDOF)->parentNode()== *node->id.global){
@@ -145,6 +148,8 @@ namespace NumericalAnalysis {
                             auto median = 0.0;
                             auto isDuplicate = false;
                             for (auto &dof : *node->degreesOfFreedom){
+                                if (dof->type() == *dofType && dof->constraintType() == Fixed)
+                                    break;
                                 if (dof->type() == *dofType && dof->constraintType() == Free){
                                     //Search if fluxDegreesOfFreedom already contains a DOF of the same type
                                     for (auto &fluxDOF : *fluxDegreesOfFreedom){
@@ -174,9 +179,16 @@ namespace NumericalAnalysis {
     
 
     void DOFInitializer::_createTotalDOFList(const shared_ptr<Mesh>& mesh) const {
-        _fluxDegreesOfFreedomList->sort([](const pair<DegreeOfFreedom*, double>& a, const pair<DegreeOfFreedom*, double>& b) {
-            return a.first->parentNode() < b.first->parentNode();
+
+        auto fluxDOFList = make_unique<list<DegreeOfFreedom*>>();
+        for (auto & fluxDOF : *fluxDegreesOfFreedom){
+            fluxDOFList->push_back(get<0>(fluxDOF));
+        }
+
+        fluxDOFList->sort([](const DegreeOfFreedom* a, const DegreeOfFreedom* b) {
+            return a->parentNode() < b->parentNode();
         });
+        
         _freeDegreesOfFreedomList->sort([](const DegreeOfFreedom* a, const DegreeOfFreedom* b) {
             return a->parentNode() < b->parentNode();
         });

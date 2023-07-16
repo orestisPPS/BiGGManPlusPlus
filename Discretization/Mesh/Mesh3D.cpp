@@ -206,8 +206,8 @@ namespace Discretization {
                 {Bottom, {Two, One}},
                 {Right, {Two, Three}},
                 {Left, {Three, Two}},
-                {Front, {One, Three}},
-                {Back, {Three, One}}
+                {Back, {One, Three}},
+                {Front, {Three, One}}
         };
         //Check if boundaryPosition exists in map
         if (directionsOfBoundaries.find(boundaryPosition) != directionsOfBoundaries.end()){
@@ -221,7 +221,8 @@ namespace Discretization {
             VectorOperations::normalize(normalUnitVector);
             
             cout<<*node->id.global<<endl;
-            cout<<normalUnitVector[0]<<" "<<normalUnitVector[1]<<" "<<normalUnitVector[2]<<endl;
+            cout<<boundaryPosition<<" "<<normalUnitVector[0]<<" "<<normalUnitVector[1]<<" "<<normalUnitVector[2]<<endl;
+            
             return normalUnitVector;
         }    
         else {
