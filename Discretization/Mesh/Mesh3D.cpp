@@ -206,8 +206,8 @@ namespace Discretization {
                 {Bottom, {Two, One}},
                 {Right, {Two, Three}},
                 {Left, {Three, Two}},
-                {Back, {One, Three}},
-                {Front, {Three, One}}
+                {Back, {Three, One}},
+                {Front, {One, Three}}
         };
         //Check if boundaryPosition exists in map
         if (directionsOfBoundaries.find(boundaryPosition) != directionsOfBoundaries.end()){

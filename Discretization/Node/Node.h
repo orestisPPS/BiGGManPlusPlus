@@ -19,18 +19,20 @@ namespace Discretization
     public:
 
         Node();
-
+        
+        //= operator
+        Node& operator=(const Node& other);
+        
         Discretization::DiscreteEntityId id;
                 
         NodalCoordinates coordinates;
         
-        vector<DegreeOfFreedom*>* degreesOfFreedom;
+        unique_ptr<list<DegreeOfFreedom*>> degreesOfFreedom;
         
         void printNode();
         
         DegreeOfFreedom* getDegreeOfFreedomPtr(DOFType type) const;
         
-        const DegreeOfFreedom& getDegreeOfFreedom(DOFType type) const;
         
     private:
                

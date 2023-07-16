@@ -49,8 +49,8 @@ namespace NumericalAnalysis {
         void _initiateBoundaryNodeDOFWithHomogenousBC(const shared_ptr<Mesh>& mesh, Field_DOFType *problemDOFTypes,
                                                       const shared_ptr<DomainBoundaryConditions>&domainBoundaryConditions) ;
         
-        void _initiateBoundaryNodeDOFWithNonHomogenousBC(const shared_ptr<Mesh>& mesh, Field_DOFType *problemDOFTypes,
-                                                         const shared_ptr<DomainBoundaryConditions>&domainBoundaryConditions) ;
+        void _initiateBoundaryNodeDOF(const shared_ptr<Mesh> &mesh, Field_DOFType *problemDOFTypes,
+                                      const shared_ptr<DomainBoundaryConditions> &domainBoundaryConditions);
         
         void _assignDOFIDs() const;
         

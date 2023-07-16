@@ -12,7 +12,7 @@ namespace Tests {
         numberOfNodes[Direction::Two] = 5;
         numberOfNodes[Direction::Three] = 5;
 
-        auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 1, 0, 0, 0, 0, 0, 0);
+        auto specs = make_shared<MeshSpecs>(numberOfNodes, 0.5, 0.5, 0.5, 0, 0, 0, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
         auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
         meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 4, 4, 4));
@@ -25,17 +25,30 @@ namespace Tests {
 
         
         auto bottomBC = new BoundaryCondition(Neumann, new map<DOFType, double>(
+                {{Temperature, 100}}));//
+        auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 100}}));//
+        auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 500}}));
+        auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 0}}));
+        auto frontBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 50}}));//
+        auto backBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 50}}));//
+          //133.333 @ 2,2,2
+/*        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 100}}));
         auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 100}}));
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 0}}));
         auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 0}}));
+                {{Temperature, 500}}));
         auto frontBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 50}}));
         auto backBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 50}}));
+                {{Temperature, 50}}));*/
 
 /*        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 100}}));
@@ -75,7 +88,7 @@ namespace Tests {
         
         //auto solver = make_shared<SolverLUP>(1E-20, true);
         //auto solver = make_shared<JacobiSolver>(false, VectorNormType::LInf);
-        auto solver = make_shared<GaussSeidelSolver>(true, VectorNormType::LInf, 1E-9);
+        auto solver = make_shared<GaussSeidelSolver>(true, VectorNormType::L1, 1E-9);
         //auto solver = make_shared<SORSolver>(1.8, true, VectorNormType::L2, 1E-10);
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
         

@@ -16,6 +16,7 @@
 #include <memory>
 #include <stdexcept>
 #include <chrono>
+#include <iomanip>
 
 using namespace std;
 
@@ -544,12 +545,12 @@ namespace LinearAlgebra {
             }
         }
 
-        void print() const {
+        void print(int precision = 1) const {
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = 0; j < _numberOfColumns; ++j) {
-                    cout << _array[i * _numberOfColumns + j] << " ";
+                    std::cout << std::scientific << std::setprecision(precision) << _array[i * _numberOfColumns + j] << " ";
                 }
-                cout << endl;
+                std::cout << std::endl;
             }
         }
         
