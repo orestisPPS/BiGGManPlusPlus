@@ -142,5 +142,19 @@ namespace Discretization {
         return parametricCoordToNodeMap;
     }
 
+    void Mesh1D::createElements(ElementType elementType, unsigned int nodesPerEdge) {
+        if (elementType == Line){
+            unsigned numberOfElements = nodesPerDirection[Direction::One] - 1;
+            vector<Element*> elements = vector<Element*>(numberOfElements);
+            for (int i = 0; i < numberOfElements; i++) {
+                vector<Node*> nodes = {node(i), node(i + 1)};
+                elements[i] = new Element(i, nodes, elementType);
+            }
+        }
+        else
+            throw invalid_argument("Mesh1D can only create Line elements!");
+    }
+    
+
 
 } // Discretization

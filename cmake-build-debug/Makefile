@@ -48,10 +48,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /snap/clion/241/bin/cmake/linux/x64/bin/cmake
+CMAKE_COMMAND = /snap/clion/246/bin/cmake/linux/x64/bin/cmake
 
 # The command to remove a file.
-RM = /snap/clion/241/bin/cmake/linux/x64/bin/cmake -E rm -f
+RM = /snap/clion/246/bin/cmake/linux/x64/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = /home/hal9000/code/BiGGMan++/cmake-build-debug
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/snap/clion/241/bin/cmake/linux/x64/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/snap/clion/246/bin/cmake/linux/x64/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -78,7 +78,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/snap/clion/241/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/snap/clion/246/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -344,6 +344,54 @@ DegreesOfFreedom/DegreeOfFreedom.s: DegreesOfFreedom/DegreeOfFreedom.cpp.s
 DegreesOfFreedom/DegreeOfFreedom.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.s
 .PHONY : DegreesOfFreedom/DegreeOfFreedom.cpp.s
+
+Discretization/Elements/Element.o: Discretization/Elements/Element.cpp.o
+.PHONY : Discretization/Elements/Element.o
+
+# target to build an object file
+Discretization/Elements/Element.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Discretization/Elements/Element.cpp.o
+.PHONY : Discretization/Elements/Element.cpp.o
+
+Discretization/Elements/Element.i: Discretization/Elements/Element.cpp.i
+.PHONY : Discretization/Elements/Element.i
+
+# target to preprocess a source file
+Discretization/Elements/Element.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Discretization/Elements/Element.cpp.i
+.PHONY : Discretization/Elements/Element.cpp.i
+
+Discretization/Elements/Element.s: Discretization/Elements/Element.cpp.s
+.PHONY : Discretization/Elements/Element.s
+
+# target to generate assembly for a file
+Discretization/Elements/Element.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Discretization/Elements/Element.cpp.s
+.PHONY : Discretization/Elements/Element.cpp.s
+
+Discretization/Elements/MeshElements.o: Discretization/Elements/MeshElements.cpp.o
+.PHONY : Discretization/Elements/MeshElements.o
+
+# target to build an object file
+Discretization/Elements/MeshElements.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Discretization/Elements/MeshElements.cpp.o
+.PHONY : Discretization/Elements/MeshElements.cpp.o
+
+Discretization/Elements/MeshElements.i: Discretization/Elements/MeshElements.cpp.i
+.PHONY : Discretization/Elements/MeshElements.i
+
+# target to preprocess a source file
+Discretization/Elements/MeshElements.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Discretization/Elements/MeshElements.cpp.i
+.PHONY : Discretization/Elements/MeshElements.cpp.i
+
+Discretization/Elements/MeshElements.s: Discretization/Elements/MeshElements.cpp.s
+.PHONY : Discretization/Elements/MeshElements.s
+
+# target to generate assembly for a file
+Discretization/Elements/MeshElements.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Discretization/Elements/MeshElements.cpp.s
+.PHONY : Discretization/Elements/MeshElements.cpp.s
 
 Discretization/Id/DiscreteEntityId.o: Discretization/Id/DiscreteEntityId.cpp.o
 .PHONY : Discretization/Id/DiscreteEntityId.o
@@ -1485,6 +1533,12 @@ help:
 	@echo "... DegreesOfFreedom/DegreeOfFreedom.o"
 	@echo "... DegreesOfFreedom/DegreeOfFreedom.i"
 	@echo "... DegreesOfFreedom/DegreeOfFreedom.s"
+	@echo "... Discretization/Elements/Element.o"
+	@echo "... Discretization/Elements/Element.i"
+	@echo "... Discretization/Elements/Element.s"
+	@echo "... Discretization/Elements/MeshElements.o"
+	@echo "... Discretization/Elements/MeshElements.i"
+	@echo "... Discretization/Elements/MeshElements.s"
 	@echo "... Discretization/Id/DiscreteEntityId.o"
 	@echo "... Discretization/Id/DiscreteEntityId.i"
 	@echo "... Discretization/Id/DiscreteEntityId.s"

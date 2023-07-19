@@ -38,6 +38,8 @@ namespace Discretization {
 
         unique_ptr<vector<Node*>> getInternalNodesVector() override;
         
+        void createElements(ElementType elementType, unsigned int nodesPerEdge) override;
+        
     protected:
         
         shared_ptr<map<Position, shared_ptr<vector<Node*>>>>_addDBoundaryNodesToMap() override;

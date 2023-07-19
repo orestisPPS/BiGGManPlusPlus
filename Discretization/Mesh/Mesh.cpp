@@ -17,6 +17,7 @@ namespace Discretization {
         boundaryNodes = nullptr;
         totalNodesVector = nullptr;
         _nodesMap = nullptr;
+        elements = nullptr;
 
     }
 
@@ -440,5 +441,9 @@ namespace Discretization {
     unsigned Mesh::numberOfInternalNodes() {
         return 0;
     }
-    
+
+    void Mesh::createElements(ElementType elementType, unsigned int nodesPerEdge) {
+
+    }
+
 } // Discretization

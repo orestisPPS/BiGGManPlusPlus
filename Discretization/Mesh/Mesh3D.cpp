@@ -229,6 +229,78 @@ namespace Discretization {
             throw invalid_argument("Boundary position not found");
         }
     }
-    
+
+    void Mesh3D::createElements(ElementType elementType, unsigned int nodesPerEdge) {
+        auto numberOfElements = (nodesPerDirection[One] - 2) * (nodesPerDirection[Two] - 2) * (nodesPerDirection[Three] - 2);
+        auto elementsVector = make_unique<vector<Element *>>(numberOfElements);
+        auto counter = 0;
+
+        auto hexahedron = [this](unsigned int i, unsigned int j, unsigned k) -> vector<Node*> {
+            vector<Node*> nodes(8);
+            nodes[0] = node(i, j, k);
+            nodes[1] = node(i + 1, j, k);
+            nodes[2] = node(i, j + 1, k);
+            nodes[3] = node(i + 1, j + 1, k);
+            nodes[4] = node(i, j, k + 1);
+            nodes[5] = node(i + 1, j, k + 1);
+            nodes[6] = node(i, j + 1, k + 1);
+            nodes[7] = node(i + 1, j + 1, k + 1);
+            return nodes;
+        };
+        auto wedge = [this](unsigned int i, unsigned int j, unsigned k) -> vector<Node*> {
+            if (i % 2 == 0) {
+                vector<Node*> nodes(6);
+                nodes[0] = node(i, j, k);
+                nodes[1] = node(i + 1, j, k);
+                nodes[2] = node(i, j + 1, k);
+                nodes[3] = node(i + 1, j + 1, k);
+                nodes[4] = node(i, j + 1, k + 1);
+                nodes[5] = node(i + 1, j + 1, k + 1);
+                return nodes;
+
+            } else {
+                vector<Node*> nodes(6);
+                nodes[0] = node(i, j, k);
+                nodes[1] = node(i, j + 1, k);
+                nodes[2] = node(i, j, k + 1);
+                nodes[3] = node(i + 1, j, k + 1);
+                nodes[4] = node(i, j + 1, k + 1);
+                nodes[5] = node(i + 1, j + 1, k + 1);
+                return nodes;
+            }
+        };
+
+        switch (elementType) {
+            case Quadrilateral:
+                for (int j = 0; j < nodesPerDirection[Two] - 1; j++) {
+                    for (int i = 0; i < nodesPerDirection[One] - 1; ++i) {
+                        for (int k = 0; k < nodesPerDirection[Three] - 1; ++k) {
+                            vector<Node *> nodes = hexahedron(i, j, k);
+                            auto element = new Element(counter, nodes, elementType);
+                            elementsVector->at(counter) = element;
+                            counter++;
+                        }
+                    }
+                }
+                break;
+            case Triangle:
+                for (int j = 0; j < nodesPerDirection[Two] - 1; j++) {
+                    for (int i = 0; i < nodesPerDirection[One] - 1; ++i) {
+                        for (int k = 0; k < nodesPerDirection[Three] - 1; ++k) {
+                            vector<Node *> nodes = wedge(i, j, k);
+                            auto element = new Element(counter, nodes, elementType);
+                            elementsVector->at(counter) = element;
+                            counter++;
+                        }
+                    }
+                }
+                break;
+            default:
+                throw runtime_error("2D geometry only supports quadrilateral and triangle elements.");
+        }
+
+        elements = make_unique<MeshElements>(std::move(elementsVector));
+    }
+
 
 } // Discretization

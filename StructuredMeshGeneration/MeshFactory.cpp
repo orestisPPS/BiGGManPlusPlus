@@ -52,7 +52,7 @@ namespace StructuredMeshGenerator{
         auto solver = make_shared<SORSolver>(1.7, true, VectorNormType::LInf, 1E-9);
         
 
-        auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specs, Parametric);
+        auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specs, Template);
         
 
          analysis->solve();

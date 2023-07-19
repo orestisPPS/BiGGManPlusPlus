@@ -12,6 +12,8 @@
 #include "../Node/IsoparametricNodeGraph.h"
 #include "../../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
 #include "../../LinearAlgebra/FiniteDifferences/FDWeightCalculator.h"
+#include "../Elements/Element.h"
+#include "../Elements/MeshElements.h"
 
 
 using namespace Discretization;
@@ -35,6 +37,8 @@ namespace Discretization {
         shared_ptr<map<Position, shared_ptr<vector<Node*>>>> boundaryNodes;
         
         shared_ptr<vector<Node*>> totalNodesVector;
+        
+        unique_ptr<MeshElements> elements;
         
         bool isInitialized;
         
@@ -105,11 +109,14 @@ namespace Discretization {
         
         virtual unique_ptr<vector<Node*>> getInternalNodesVector();
         
+        virtual void createElements(ElementType elementType, unsigned nodesPerEdge);
+        
         protected:
         
         shared_ptr<Array<Node*>>_nodesMatrix;
         
         map<unsigned, Node*>* _nodesMap;
+        
         
         map<unsigned, Node*>* _createNodesMap() const;
         
@@ -133,6 +140,7 @@ namespace Discretization {
         virtual shared_ptr<vector<Node*>> _addTotalNodesToVector();
         
         virtual GhostPseudoMesh* _createGhostPseudoMesh(unsigned ghostLayerDepth);
+        
         
         private:
         void _arbitrarilySpacedMeshMetrics(CoordinateType coordinateSystem);

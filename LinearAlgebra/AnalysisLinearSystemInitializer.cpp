@@ -98,7 +98,7 @@ namespace LinearAlgebra {
                         
 
                         auto weights2 = calculateWeightsOfDerivativeOrder(
-                                colinearCoordinates[direction][i], 2, node->coordinates.positionVector(Template)[i]);
+                                colinearCoordinates[direction][i], 2, node->coordinates.positionVector(_coordinateType)[i]);
                         
                         vector<double> &schemeWeights = scheme.weights;
                         for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
@@ -169,7 +169,7 @@ namespace LinearAlgebra {
                 auto colinearCoordinates = graph.getSameColinearNodalCoordinatesOnBoundary(_coordinateType,filteredNodeGraph);
                 auto colinearDOF = graph.getColinearDOFOnBoundary(dof.first->type(), directionI, filteredNodeGraph);
                 auto weights2 = calculateWeightsOfDerivativeOrder(
-                        colinearCoordinates[directionI][i], 2, node->coordinates.positionVector(Template)[i]);
+                        colinearCoordinates[directionI][i], 2, node->coordinates.positionVector(Natural)[i]);
                 auto step = VectorOperations::averageAbsoluteDifference(colinearCoordinates[directionI][i]);
                 //Calculate the denominator (h^p)
                 double denominator = scheme.denominatorCoefficient * pow(step, scheme.power);
