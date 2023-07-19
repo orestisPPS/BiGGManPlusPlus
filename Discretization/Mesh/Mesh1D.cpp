@@ -154,7 +154,11 @@ namespace Discretization {
         else
             throw invalid_argument("Mesh1D can only create Line elements!");
     }
-    
+
+    void Mesh1D::storeMeshInVTKFile(const string &filePath, const string &fileName, CoordinateType coordinateType,
+                                    bool StoreOnlyNodes) const {
+        throw runtime_error("Not implemented yet!");
+    }
 
 
 } // Discretization

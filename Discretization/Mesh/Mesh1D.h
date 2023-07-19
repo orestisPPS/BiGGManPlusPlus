@@ -40,6 +40,11 @@ namespace Discretization {
         
         void createElements(ElementType elementType, unsigned int nodesPerEdge) override;
         
+        void storeMeshInVTKFile(const string& filePath, const string& fileName,
+                                CoordinateType coordinateType = Natural, bool StoreOnlyNodes = false) const override;
+        
+        
+        
     protected:
         
         shared_ptr<map<Position, shared_ptr<vector<Node*>>>>_addDBoundaryNodesToMap() override;

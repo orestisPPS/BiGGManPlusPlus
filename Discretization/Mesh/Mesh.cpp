@@ -377,22 +377,7 @@ namespace Discretization {
         }
     }
 
-
-   
     
-    void Mesh::storeMeshInVTKFile(const std::string& filePath, const std::string& fileName, CoordinateType coordinateType) const {
-        ofstream outputFile(filePath + fileName);
-        outputFile << "# vtk DataFile Version 3.0 \n";
-        outputFile << "vtk output \n";
-        outputFile << "ASCII \n";
-        outputFile << "DATASET UNSTRUCTURED_GRID \n";
-        outputFile << "POINTS " << totalNodesVector->size() << " double\n";
-        for (auto &node: *totalNodesVector) {
-            auto coordinates = node->coordinates.positionVector3D(coordinateType);
-            outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << "\n";
-        }
-        outputFile.close();
-    }
 
 /*    void Mesh::storeMeshInVTKFile(const std::string& filePath, const std::string& fileName, CoordinateType coordinateType) const {
         ofstream outputFile(filePath + fileName);
@@ -443,6 +428,11 @@ namespace Discretization {
     }
 
     void Mesh::createElements(ElementType elementType, unsigned int nodesPerEdge) {
+
+    }
+
+    void Mesh::storeMeshInVTKFile(const string &filePath, const string &fileName, CoordinateType coordinateType,
+                                  bool StoreOnlyNodes) const {
 
     }
 

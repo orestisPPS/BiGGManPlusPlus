@@ -39,6 +39,9 @@ namespace Discretization {
         vector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) override;
         
         void createElements(ElementType elementType, unsigned int nodesPerEdge) override;
+
+        void storeMeshInVTKFile(const string& filePath, const string& fileName,
+                                CoordinateType coordinateType = Natural, bool StoreOnlyNodes = false) const override;
         
     protected:
         

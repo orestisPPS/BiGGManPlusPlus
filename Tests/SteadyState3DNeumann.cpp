@@ -8,22 +8,18 @@
 namespace Tests {
     SteadyState3DNeumann::SteadyState3DNeumann() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 11;
-        numberOfNodes[Direction::Two] = 11;
+        numberOfNodes[Direction::One] = 21;
+        numberOfNodes[Direction::Two] = 5;
         numberOfNodes[Direction::Three] = 11;
 
-        auto specs = make_shared<MeshSpecs>(numberOfNodes, 0.5, 0.5, 0.5, 0, 0, 0, 0, 0, 0);
+        auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 1, 1, 0, 0, 0, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
         auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
-        meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 4, 4, 4));
-        //meshFactory->buildMesh(2, meshBoundaries->annulus_3D_ripGewrgiou(numberOfNodes, 0.1, 1, 0, 180, 3));
-        meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural);
-/*        for (auto& node : *meshFactory->mesh->boundaryNodes->at(Position::Bottom)) {
-            meshFactory->mesh->getNormalUnitVectorOfBoundaryNode(Position::Bottom, node);
-        }*/
+        //meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 4, 4, 4));
+        meshFactory->buildMesh(2, meshBoundaries->annulus_3D_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 360, 5));
+        meshFactory->mesh->createElements(Hexahedron, 2);
+        meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural, false);
 
-
-        
         auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 100}}));//
         auto topBC = new BoundaryCondition(Neumann, new map<DOFType, double>(

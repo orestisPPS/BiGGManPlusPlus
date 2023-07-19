@@ -77,8 +77,6 @@ namespace Discretization {
         
         void initialize();
         
-        void storeMeshInVTKFile(const string& filePath, const string& fileName, CoordinateType coordinateType = Natural) const;
-        
         map<vector<double>, Node*> getCoordinateToNodeMap(CoordinateType coordinateType = Natural) const;
         
         unique_ptr<map<Node*, Position>> getBoundaryNodeToPositionMap() const;
@@ -110,8 +108,12 @@ namespace Discretization {
         virtual unique_ptr<vector<Node*>> getInternalNodesVector();
         
         virtual void createElements(ElementType elementType, unsigned nodesPerEdge);
-        
-        protected:
+
+        virtual void storeMeshInVTKFile(const string& filePath, const string& fileName,
+                                        CoordinateType coordinateType, bool StoreOnlyNodes) const;
+
+
+    protected:
         
         shared_ptr<Array<Node*>>_nodesMatrix;
         

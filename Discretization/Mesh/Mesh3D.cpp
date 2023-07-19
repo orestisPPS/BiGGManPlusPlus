@@ -5,6 +5,7 @@
 #include "Mesh3D.h"
 
 #include <utility>
+#include <fstream>
 
 namespace Discretization {
     
@@ -231,7 +232,7 @@ namespace Discretization {
     }
 
     void Mesh3D::createElements(ElementType elementType, unsigned int nodesPerEdge) {
-        auto numberOfElements = (nodesPerDirection[One] - 2) * (nodesPerDirection[Two] - 2) * (nodesPerDirection[Three] - 2);
+        auto numberOfElements = (nodesPerDirection[One] - 1) * (nodesPerDirection[Two] - 1) * (nodesPerDirection[Three] - 1);
         auto elementsVector = make_unique<vector<Element *>>(numberOfElements);
         auto counter = 0;
 
@@ -271,10 +272,10 @@ namespace Discretization {
         };
 
         switch (elementType) {
-            case Quadrilateral:
-                for (int j = 0; j < nodesPerDirection[Two] - 1; j++) {
-                    for (int i = 0; i < nodesPerDirection[One] - 1; ++i) {
-                        for (int k = 0; k < nodesPerDirection[Three] - 1; ++k) {
+            case Hexahedron:
+                for (int k = 0; k < nodesPerDirection[Three] - 1; ++k) {
+                    for (int j = 0; j < nodesPerDirection[Two] - 1; ++j) {
+                        for (int i = 0; i < nodesPerDirection[One] - 1; ++i) {
                             vector<Node *> nodes = hexahedron(i, j, k);
                             auto element = new Element(counter, nodes, elementType);
                             elementsVector->at(counter) = element;
@@ -283,10 +284,10 @@ namespace Discretization {
                     }
                 }
                 break;
-            case Triangle:
-                for (int j = 0; j < nodesPerDirection[Two] - 1; j++) {
-                    for (int i = 0; i < nodesPerDirection[One] - 1; ++i) {
-                        for (int k = 0; k < nodesPerDirection[Three] - 1; ++k) {
+            case Wedge:
+                for (int k = 0; k < nodesPerDirection[Three] - 1; ++k) {
+                    for (int j = 0; j < nodesPerDirection[Two] - 1; ++j) {
+                        for (int i = 0; i < nodesPerDirection[One] - 1; ++i) {
                             vector<Node *> nodes = wedge(i, j, k);
                             auto element = new Element(counter, nodes, elementType);
                             elementsVector->at(counter) = element;
@@ -299,8 +300,92 @@ namespace Discretization {
                 throw runtime_error("2D geometry only supports quadrilateral and triangle elements.");
         }
 
-        elements = make_unique<MeshElements>(std::move(elementsVector));
+        elements = make_unique<MeshElements>(std::move(elementsVector), elementType);
     }
+
+/*    void Mesh3D::storeMeshInVTKFile(const string &filePath, const string &fileName, CoordinateType coordinateType,
+                                    bool StoreOnlyNodes) const {
+        ofstream outputFile(filePath + fileName);
+        outputFile << "# vtk DataFile Version 3.0 \n";
+        outputFile << "vtk output \n";
+        outputFile << "ASCII \n";
+        outputFile << "DATASET UNSTRUCTURED_GRID \n";
+        outputFile << "POINTS " << totalNodesVector->size() << " double\n";
+        for (auto &node: *totalNodesVector) {
+            auto coordinates = node->coordinates.positionVector3D(coordinateType);
+            outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << "\n";
+        }
+
+        if (!StoreOnlyNodes) {
+            if (elements == nullptr) {
+                throw runtime_error("Elements not created yet.");
+            }
+            vector<unsigned int> connectivityList;
+            unsigned int nodesPerElement = 0;
+            switch (elements->elementType()) {
+                case Hexahedron:
+                    connectivityList = {0, 1, 2, 3, 5, 4, 7, 6};
+                    nodesPerElement = 8;
+                    break;
+                case Wedge:
+                    // TODO: Define the connectivity list for the Wedge
+                    break;
+                default:
+                    throw runtime_error("3D geometry only supports Hexahedron and Wedge elements.");
+            }
+
+            unsigned int totalIntsForCells = elements->numberOfElements() * (1 + nodesPerElement);
+            outputFile << "CELLS " << elements->numberOfElements() << " " << totalIntsForCells << "\n";
+
+            for (unsigned int i = 0; i < elements->numberOfElements(); ++i) {
+                outputFile << nodesPerElement << " ";
+                for (auto index: connectivityList) {
+                    outputFile << elements->getElement(i)->nodes()->at(index)->id.global << " ";
+                }
+                outputFile << "\n";
+            }
+
+            // Adding CELL_TYPES section
+            outputFile << "CELL_TYPES " << elements->numberOfElements() << "\n";
+            for (unsigned int i = 0; i < elements->numberOfElements(); ++i) {
+                if (elements->elementType() == Hexahedron) {
+                    outputFile << "12\n"; // VTK's ID for hexahedron
+                } else if (elements->elementType() == Wedge) {
+                    outputFile << "13\n"; // VTK's ID for wedge
+                }
+            }
+        }
+
+        outputFile.close();
+    }*/
+
+    void Mesh3D::storeMeshInVTKFile(const string &filePath, const string &fileName, CoordinateType coordinateType,
+                                    bool StoreOnlyNodes) const {
+        ofstream outputFile(filePath + fileName);
+
+        // Header
+        outputFile << "# vtk DataFile Version 3.0 \n";
+        outputFile << "vtk output \n";
+        outputFile << "ASCII \n";
+        outputFile << "DATASET STRUCTURED_GRID \n";
+
+        // Assuming the mesh is nx x ny x nz, specify the dimensions
+        unsigned int nx = nodesPerDirection.at(One);
+        unsigned int ny = nodesPerDirection.at(Two);
+        unsigned int nz = nodesPerDirection.at(Three);
+
+        outputFile << "DIMENSIONS " << nx << " " << ny<< " " << nz<< "\n";
+
+        // Points
+        outputFile << "POINTS " << totalNodesVector->size() << " double\n";
+        for (auto &node: *totalNodesVector) {
+            auto coordinates = node->coordinates.positionVector3D(coordinateType);
+            outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << "\n";
+        }
+
+        outputFile.close();
+    }
+
 
 
 } // Discretization

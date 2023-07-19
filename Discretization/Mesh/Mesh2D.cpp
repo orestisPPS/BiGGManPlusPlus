@@ -182,7 +182,7 @@ namespace Discretization {
     }
 
     void Mesh2D::createElements(ElementType elementType, unsigned int nodesPerEdge) {
-        auto numberOfElements = (nodesPerDirection[One] - 2) * (nodesPerDirection[Two] - 2);
+        auto numberOfElements = (nodesPerDirection[One] - 1) * (nodesPerDirection[Two] - 1);
         auto elementsVector = make_unique<vector<Element *>>(numberOfElements);
         auto counter = 0;
 
@@ -235,7 +235,12 @@ namespace Discretization {
                 throw runtime_error("2D geometry only supports quadrilateral and triangle elements.");
         }
 
-        elements = make_unique<MeshElements>(std::move(elementsVector));
+        elements = make_unique<MeshElements>(std::move(elementsVector), elementType);
+    }
+
+    void Mesh2D::storeMeshInVTKFile(const string &filePath, const string &fileName, CoordinateType coordinateType,
+                                    bool StoreOnlyNodes) const {
+        throw runtime_error("Not implemented yet.");
     }
 
 

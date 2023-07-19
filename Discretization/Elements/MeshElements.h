@@ -12,19 +12,22 @@ namespace Discretization {
 
     class MeshElements {
     public:
-        MeshElements(unique_ptr<vector<Element*>> elements);
+        MeshElements(unique_ptr<vector<Element*>> elements, ElementType type);
         
         //->at() returns a reference to the element
-        Element* operator[](unsigned id);
+        Element* getElement(unsigned id);
         
         unsigned numberOfElements() const;
         
         void deallocate();
         
-        
+        const ElementType &elementType() const;
         
         
     private:
+        
+        ElementType _type;
+        
         unique_ptr<vector<Element*>> _elements;
         
         unique_ptr<map<Direction, vector<Element*>>> _boundaryElements;

@@ -6,12 +6,12 @@
 
 namespace Discretization {
     
-        MeshElements::MeshElements(unique_ptr<vector<Element*>> elements) {
+        MeshElements::MeshElements(unique_ptr<vector<Element*>> elements, ElementType type) {
             _elements = std::move(elements);
+            _type = type;
         }
         
-        //->at() returns a reference to the element
-        Element* MeshElements::operator[](unsigned id) {
+        Element *MeshElements::getElement(unsigned int id) {
             return _elements->at(id);
         }
         
@@ -25,6 +25,10 @@ namespace Discretization {
             }
             _elements->clear();
             _elements.reset();
+        }
+        
+        const ElementType &MeshElements::elementType() const {
+            return _type;
         }
         
 } // Discretization

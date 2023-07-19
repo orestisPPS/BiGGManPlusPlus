@@ -41,7 +41,7 @@ namespace NumericalAnalysis {
         auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
         meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 4, 4, 1));
         //meshFactory->buildMesh(2, meshBoundaries->annulus_3D_ripGewrgiou(numberOfNodes, 0.1, 1, 0, 180, 3));
-        meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural);
+        meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural, false);
         for (auto& node : *meshFactory->mesh->boundaryNodes->at(Position::Bottom)) {
             meshFactory->mesh->getNormalUnitVectorOfBoundaryNode(Position::Bottom, node);
         }
