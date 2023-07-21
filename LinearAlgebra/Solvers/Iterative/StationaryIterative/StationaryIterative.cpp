@@ -5,10 +5,10 @@
 #include "StationaryIterative.h"
 
 namespace LinearAlgebra {
-    StationaryIterative::StationaryIterative(bool vTechKickInYoo, VectorNormType normType, double tolerance, unsigned maxIterations,
+    StationaryIterative::StationaryIterative(ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance, unsigned maxIterations,
                                          bool throwExceptionOnMaxFailure) :
             IterativeSolver(normType, tolerance, maxIterations, throwExceptionOnMaxFailure) {
-        _vTechKickInYoo = vTechKickInYoo;
+        _parallelization = parallelizationMethod;
         _residualNorms = make_shared<list<double>>();
     }
 
@@ -24,7 +24,7 @@ namespace LinearAlgebra {
         }
         //TODO Check if the matrix is diagonally dominant
 
-        if (_vTechKickInYoo) {
+        if (_parallelization == vTechKickInYoo) {
             cout<< " " << endl;
             cout << "----------------------------------------" << endl;
             cout << _solverName << " Solver Multi Thread - VTEC KICKED IN YO!" << endl;
@@ -47,7 +47,7 @@ namespace LinearAlgebra {
                 iteration++;
             }
         }
-        else {
+        else if (_parallelization == Wank) {
             cout<< " " << endl;
             cout << "----------------------------------------" << endl;
             cout << _solverName << " Solver Single Thread" << endl;
@@ -63,11 +63,25 @@ namespace LinearAlgebra {
                 iteration++;
             }
         }
+        else if (_parallelization == turboVTechKickInYoo){
+            double* d_matrix = _linearSystem->matrix->getArrayPointer();
+            auto matrixSize = _linearSystem->matrix->size();
+            cudaMalloc(&d_matrix, matrixSize * sizeof(double));
+            
+            double* d_rhs = _linearSystem->rhs->data();
+            auto rhsSize = _linearSystem->rhs->size();
+            cudaMalloc(&d_rhs, rhsSize * sizeof(double));
+            
+            double* d_solution = _linearSystem->solution->data();
+            auto solutionSize = _linearSystem->solution->size();
+            cudaMalloc(&d_solution, solutionSize * sizeof(double));
+            
+            cout<< " allocated first gpu stuff boi" << endl;
+        }
         // If the maximum number of iterations is reached and the user has set the flag to throw an exception, throw an exception
         if (iteration == _maxIterations && _throwExceptionOnMaxFailure) {
             throw std::runtime_error("Maximum number of iterations reached.");
         }
-        
         auto end = std::chrono::high_resolution_clock::now();
 
         bool isInMicroSeconds = false;

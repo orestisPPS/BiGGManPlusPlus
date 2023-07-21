@@ -221,8 +221,8 @@ namespace Discretization {
             vector<double> normalUnitVector = VectorOperations::crossProduct(covariantBaseVector1, covariantBaseVector2);
             VectorOperations::normalize(normalUnitVector);
             
-            cout<<*node->id.global<<endl;
-            cout<<boundaryPosition<<" "<<normalUnitVector[0]<<" "<<normalUnitVector[1]<<" "<<normalUnitVector[2]<<endl;
+           /* cout<<*node->id.global<<endl;
+            cout<<boundaryPosition<<" "<<normalUnitVector[0]<<" "<<normalUnitVector[1]<<" "<<normalUnitVector[2]<<endl;*/
             
             return normalUnitVector;
         }    

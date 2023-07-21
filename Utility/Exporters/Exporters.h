@@ -29,10 +29,20 @@ namespace Utility {
         static void exportScalarFieldResultInVTK(const std::string& filePath, const std::string& fileName,
                                                  const std::string& fieldName, shared_ptr<Mesh> mesh) {
             ofstream outputFile(filePath + fileName);
+
+            // Header
             outputFile << "# vtk DataFile Version 3.0\n";
             outputFile << "ParaView Output\n";
             outputFile << "ASCII\n";
-            outputFile << "DATASET UNSTRUCTURED_GRID\n";
+            outputFile << "DATASET STRUCTURED_GRID\n";
+
+            // Assuming the mesh is nx x ny x nz, specify the dimensions
+            unsigned int nx = mesh->nodesPerDirection.at(One);
+            unsigned int ny = mesh->nodesPerDirection.at(Two);
+            unsigned int nz = mesh->nodesPerDirection.at(Three);
+            outputFile << "DIMENSIONS " << nx << " " << ny<< " " << nz<< "\n";
+
+            // Points
             outputFile << "POINTS " << mesh->totalNodesVector->size() << " double\n";
             for (auto &node : *mesh->totalNodesVector) {
                 auto coordinates = node->coordinates.positionVector3D(Natural);
@@ -54,7 +64,8 @@ namespace Utility {
             outputFile.close();
         }
 
-        
+
+
         // Creates a .vtk file that can be opened in Paraview to visualize the mesh.
         //static void saveNodesToParaviewFile(shared_ptr<Mesh> mesh, const std::string &filePath, const std::string &fileName);
         

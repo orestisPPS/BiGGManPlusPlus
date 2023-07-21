@@ -8,43 +8,44 @@
 namespace Tests {
     SteadyState3DNeumann::SteadyState3DNeumann() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 21;
+        numberOfNodes[Direction::One] = 5;
         numberOfNodes[Direction::Two] = 5;
-        numberOfNodes[Direction::Three] = 11;
+        numberOfNodes[Direction::Three] = 5;
 
-        auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 1, 1, 0, 0, 0, 0, 0, 0);
+        //auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 1, 1, 0, 0, 0, 0, 0, 0);
+        auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 0.1,1, 0, 0, 0, 0, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
         auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
-        //meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 4, 4, 4));
-        meshFactory->buildMesh(2, meshBoundaries->annulus_3D_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 360, 5));
-        meshFactory->mesh->createElements(Hexahedron, 2);
+        meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 4, 4, 4));
+        //meshFactory->buildMesh(2, meshBoundaries->annulus_3D_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 180, 5));
+        //meshFactory->mesh->createElements(Hexahedron, 2);
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural, false);
 
         auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 100}}));//
-        auto topBC = new BoundaryCondition(Neumann, new map<DOFType, double>(
+                {{Temperature, 1000}}));//
+        auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 0}}));//
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 500}}));
-        auto leftBC = new BoundaryCondition(Neumann, new map<DOFType, double>(
-                {{Temperature, 0}}));
-        auto frontBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 50}}));//
-        auto backBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 50}}));//
+                {{Temperature, 1000}}));
+        auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 1000}}));
+        auto frontBC = new BoundaryCondition(Neumann, new map<DOFType, double>(
+                {{Temperature, 00}}));//
+        auto backBC = new BoundaryCondition(Neumann, new map<DOFType, double>(
+                {{Temperature, 0}}));//
           //133.333 @ 2,2,2
 /*        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 100}}));
-        auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 100}}));
-        auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+                {{Temperature, 1000}}));
+        auto topBC = new BoundaryCondition(Neumann, new map<DOFType, double>(
                 {{Temperature, 0}}));
-        auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 500}}));
-        auto frontBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 50}}));
-        auto backBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 50}}));*/
+        auto rightBC = new BoundaryCondition(Neumann, new map<DOFType, double>(
+                {{Temperature, 0}}));
+        auto leftBC = new BoundaryCondition(Neumann, new map<DOFType, double>(
+                {{Temperature, 0}}));
+        auto frontBC = new BoundaryCondition(Neumann, new map<DOFType, double>(
+                {{Temperature, 0}}));
+        auto backBC = new BoundaryCondition(Neumann, new map<DOFType, double>(
+                {{Temperature, 0}}));*/
 
 /*        auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 100}}));
@@ -62,7 +63,7 @@ namespace Tests {
         shared_ptr<Mesh> mesh = meshFactory->mesh;
 
         auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(3, false, Isotropic);
-        pdeProperties->setIsotropicProperties(1,0,0,0);
+        pdeProperties->setIsotropicProperties(10,0,0,0);
 
         auto heatTransferPDE = make_shared<PartialDifferentialEquation>(pdeProperties, Laplace);
 
@@ -84,7 +85,7 @@ namespace Tests {
         
         //auto solver = make_shared<SolverLUP>(1E-20, true);
         //auto solver = make_shared<JacobiSolver>(false, VectorNormType::LInf);
-        auto solver = make_shared<GaussSeidelSolver>(true, VectorNormType::LInf, 1E-9);
+        auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo, VectorNormType::LInf, 1E-9);
         //auto solver = make_shared<SORSolver>(1.8, true, VectorNormType::L2, 1E-10);
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
         
@@ -96,9 +97,9 @@ namespace Tests {
         //auto targetCoords = vector<double>{1.5, 1.5, 1.5};
         auto targetCoords = vector<double>{2, 2, 2};
         //auto targetCoords = vector<double>{1.5, 1.5, 3};
-        auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-5);
+        //auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-5);
         
-        cout<<"Target Solution: "<< targetSolution[0] << endl;
+        //cout<<"Target Solution: "<< targetSolution[0] << endl;
 
         auto fileName = "temperatureField.vtk";
         auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";

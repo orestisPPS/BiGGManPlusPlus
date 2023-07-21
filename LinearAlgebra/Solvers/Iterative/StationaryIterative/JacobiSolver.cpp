@@ -6,7 +6,7 @@
 
 namespace LinearAlgebra {
 
-    JacobiSolver::JacobiSolver(bool vTechKickInYoo, VectorNormType normType, double tolerance, unsigned maxIterations,
+    JacobiSolver::JacobiSolver(ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance, unsigned maxIterations,
                                bool throwExceptionOnMaxFailure) :
             StationaryIterative(vTechKickInYoo, normType, tolerance, maxIterations, throwExceptionOnMaxFailure) {
         _solverName = "Jacobi";
