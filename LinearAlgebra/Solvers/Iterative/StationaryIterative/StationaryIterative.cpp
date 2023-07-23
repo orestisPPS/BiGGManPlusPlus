@@ -17,7 +17,7 @@ namespace LinearAlgebra {
         unsigned n = _linearSystem->matrix->numberOfRows();
         unsigned short iteration = 0;
         double norm = 1.0;
-        double sum = 0.0;
+        //double sum = 0.0;
         //Check if the initial solution has been set from the user. If not, it is set to 0.0
         if (!_isInitialized) {
             setInitialSolution(0.0);
@@ -64,17 +64,55 @@ namespace LinearAlgebra {
             }
         }
         else if (_parallelization == turboVTechKickInYoo){
+            
+/*
+            for (int i = 0; i < 1; i++) {
+                cudaDeviceProp deviceProps = cudaDeviceProp();
+                cudaGetDeviceProperties(&deviceProps, i);
+
+                std::cout << "Device " << i << ": " << deviceProps.name << std::endl;
+                std::cout << "  Max threads per block: " << deviceProps.maxThreadsPerBlock << std::endl;
+                std::cout << "  Max thread dimensions (x, y, z): ("
+                          << deviceProps.maxThreadsDim[0] << ", "
+                          << deviceProps.maxThreadsDim[1] << ", "
+                          << deviceProps.maxThreadsDim[2] << ")" << std::endl;
+                std::cout << "  Max grid dimensions (x, y, z): ("
+                          << deviceProps.maxGridSize[0] << ", "
+                          << deviceProps.maxGridSize[1] << ", "
+                          << deviceProps.maxGridSize[2] << ")" << std::endl;
+            }*/
+            //cuda file with all gpu utility as extern here 
+            
+            _stationaryIterativeCuda = StationaryIterativeCuda();
+            
+            
             double* d_matrix = _linearSystem->matrix->getArrayPointer();
-            auto matrixSize = _linearSystem->matrix->size();
-            cudaMalloc(&d_matrix, matrixSize * sizeof(double));
-            
             double* d_rhs = _linearSystem->rhs->data();
-            auto rhsSize = _linearSystem->rhs->size();
-            cudaMalloc(&d_rhs, rhsSize * sizeof(double));
+            double* d_xOld = _xOld->data();
+            double* d_xNew = _xNew->data();
+            int matrixSize = static_cast<int>(_linearSystem->matrix->size());
+            int vectorSize = static_cast<int>(_xOld->size());
             
-            double* d_solution = _linearSystem->solution->data();
-            auto solutionSize = _linearSystem->solution->size();
-            cudaMalloc(&d_solution, solutionSize * sizeof(double));
+            StationaryIterativeCuda::allocateDeviceMemoryForArray(d_matrix, matrixSize);
+            StationaryIterativeCuda::allocateDeviceMemoryForArray(d_rhs, vectorSize);
+            StationaryIterativeCuda::allocateDeviceMemoryForArray(d_xOld, vectorSize);
+            StationaryIterativeCuda::allocateDeviceMemoryForArray(d_xNew, vectorSize);
+
+            StationaryIterativeCuda::copyArrayToDevice(d_matrix, d_matrix, matrixSize);
+            StationaryIterativeCuda::copyArrayToDevice(d_rhs, d_rhs, vectorSize);
+
+
+            while (iteration < _maxIterations && norm >= _tolerance) {
+                
+                // Calculate the norm of the _difference
+                norm = VectorNorm(_difference, _normType).value();
+                // Add the norm to the list of norms
+                _residualNorms->push_back(norm);
+                if (iteration % 100 == 0) {
+                    cout << "Iteration: " << iteration << " - Norm: " << norm << endl;
+                }
+                iteration++;
+            }
             
             cout<< " allocated first gpu stuff boi" << endl;
         }

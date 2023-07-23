@@ -31,6 +31,7 @@ namespace LinearAlgebra {
         // ||x||∞ = max(|x₁|, |x₂|, ..., |xₙ|)
         LInf,
         
+        
         // Lp norm
         // The pth root of the sum of the pth powers of the vectors' components.    
         // For a vector x with n components, the Lp norm is denoted as ||x||p and defined as:

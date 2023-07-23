@@ -7,8 +7,8 @@
 
 #include <thread>
 #include <cuda_runtime.h>
-#include <device_launch_parameters.h>
 #include "../IterativeSolver.h"
+#include "StationaryIterrativeCuda/StationaryIterativeCuda.cuh"
 
 namespace LinearAlgebra {
     
@@ -29,6 +29,7 @@ namespace LinearAlgebra {
         void _iterativeSolution() override;
 
         void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows);
+        
 
         virtual void _singleThreadSolution();
         
@@ -36,6 +37,8 @@ namespace LinearAlgebra {
         virtual void _threadJob(unsigned start, unsigned end);
 
         ParallelizationMethod _parallelization;
+        
+        StationaryIterativeCuda _stationaryIterativeCuda;
         
         string _solverName;
         

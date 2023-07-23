@@ -122,9 +122,9 @@ add_executable(untitled main.cpp
         Discretization/Elements/Element.h 
         Discretization/Elements/Element.cpp
         Discretization/Elements/MeshElements.h
-        Discretization/Elements/MeshElements.cpp)
+        Discretization/Elements/MeshElements.cpp LinearAlgebra/Solvers/Iterative/StationaryIterative/Cuda/StationaryIterativeCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/Cuda/StationaryIterativeCuda.cu LinearAlgebra/Solvers/Iterative/StationaryIterative/Cuda/JacobiSolverCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/Cuda/JacobiSolverCuda.cu LinearAlgebra/Norms/VectorNormCuda.cuh LinearAlgebra/Norms/VectorNormCuda.cu)
 
-set_source_files_properties(LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp PROPERTIES LANGUAGE CUDA)
+set_source_files_properties(LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.p PROPERTIES LANGUAGE CUDA)
 target_link_libraries(untitled ${CUDA_LIBRARIES})
         
         

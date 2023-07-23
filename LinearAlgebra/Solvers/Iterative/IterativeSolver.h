@@ -40,6 +40,7 @@ namespace LinearAlgebra {
         
     protected:
         
+        
         virtual void _iterativeSolution();
         
         VectorNormType _normType;
@@ -59,6 +60,7 @@ namespace LinearAlgebra {
         bool _throwExceptionOnMaxFailure;
         
         shared_ptr<list<double>> _residualNorms;
+
         
     };
     
