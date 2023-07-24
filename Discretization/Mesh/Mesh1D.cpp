@@ -79,6 +79,10 @@ namespace Discretization {
             (*_nodesMatrix)(i)->printNode();
         }
     }
+
+    vector<double> Mesh1D::getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
+        throw runtime_error("Not implemented yet!");
+    }
     
     shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh1D::_addDBoundaryNodesToMap() {
         auto boundaries = make_shared<map<Position, shared_ptr<vector<Node*>>>>();
@@ -137,4 +141,24 @@ namespace Discretization {
         }
         return parametricCoordToNodeMap;
     }
+
+    void Mesh1D::createElements(ElementType elementType, unsigned int nodesPerEdge) {
+        if (elementType == Line){
+            unsigned numberOfElements = nodesPerDirection[Direction::One] - 1;
+            vector<Element*> elements = vector<Element*>(numberOfElements);
+            for (int i = 0; i < numberOfElements; i++) {
+                vector<Node*> nodes = {node(i), node(i + 1)};
+                elements[i] = new Element(i, nodes, elementType);
+            }
+        }
+        else
+            throw invalid_argument("Mesh1D can only create Line elements!");
+    }
+
+    void Mesh1D::storeMeshInVTKFile(const string &filePath, const string &fileName, CoordinateType coordinateType,
+                                    bool StoreOnlyNodes) const {
+        throw runtime_error("Not implemented yet!");
+    }
+
+
 } // Discretization

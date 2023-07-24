@@ -6,9 +6,9 @@
 
 namespace LinearAlgebra {
 
-    GaussSeidelSolver::GaussSeidelSolver(bool vTechKickInYoo, VectorNormType normType, double tolerance, unsigned maxIterations,
+    GaussSeidelSolver::GaussSeidelSolver(ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance, unsigned maxIterations,
                                bool throwExceptionOnMaxFailure) :
-            StationaryIterative(vTechKickInYoo, normType, tolerance, maxIterations, throwExceptionOnMaxFailure) {
+            StationaryIterative(parallelizationMethod, normType, tolerance, maxIterations, throwExceptionOnMaxFailure) {
         _residualNorms = make_shared<list<double>>();
         _solverName = "Gauss-Seidel";
     }

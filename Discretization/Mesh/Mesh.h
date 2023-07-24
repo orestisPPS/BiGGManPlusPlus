@@ -12,6 +12,8 @@
 #include "../Node/IsoparametricNodeGraph.h"
 #include "../../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
 #include "../../LinearAlgebra/FiniteDifferences/FDWeightCalculator.h"
+#include "../Elements/Element.h"
+#include "../Elements/MeshElements.h"
 
 
 using namespace Discretization;
@@ -35,6 +37,8 @@ namespace Discretization {
         shared_ptr<map<Position, shared_ptr<vector<Node*>>>> boundaryNodes;
         
         shared_ptr<vector<Node*>> totalNodesVector;
+        
+        unique_ptr<MeshElements> elements;
         
         bool isInitialized;
         
@@ -73,9 +77,9 @@ namespace Discretization {
         
         void initialize();
         
-        void storeMeshInVTKFile(const string& filePath, const string& fileName, CoordinateType coordinateType = Natural) const;
-        
         map<vector<double>, Node*> getCoordinateToNodeMap(CoordinateType coordinateType = Natural) const;
+        
+        unique_ptr<map<Node*, Position>> getBoundaryNodeToPositionMap() const;
         
         //-----------------Virtual parent class methods-----------------
         virtual unsigned dimensions();
@@ -98,15 +102,23 @@ namespace Discretization {
         virtual shared_ptr<map<vector<double>, Node*>> createParametricCoordToNodesMap();
         
         virtual void printMesh();
-
+        
+        virtual vector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node);
         
         virtual unique_ptr<vector<Node*>> getInternalNodesVector();
         
-        protected:
+        virtual void createElements(ElementType elementType, unsigned nodesPerEdge);
+
+        virtual void storeMeshInVTKFile(const string& filePath, const string& fileName,
+                                        CoordinateType coordinateType, bool StoreOnlyNodes) const;
+
+
+    protected:
         
         shared_ptr<Array<Node*>>_nodesMatrix;
         
         map<unsigned, Node*>* _nodesMap;
+        
         
         map<unsigned, Node*>* _createNodesMap() const;
         
@@ -130,6 +142,7 @@ namespace Discretization {
         virtual shared_ptr<vector<Node*>> _addTotalNodesToVector();
         
         virtual GhostPseudoMesh* _createGhostPseudoMesh(unsigned ghostLayerDepth);
+        
         
         private:
         void _arbitrarilySpacedMeshMetrics(CoordinateType coordinateSystem);

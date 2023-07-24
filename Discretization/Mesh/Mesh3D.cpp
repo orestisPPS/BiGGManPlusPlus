@@ -5,6 +5,7 @@
 #include "Mesh3D.h"
 
 #include <utility>
+#include <fstream>
 
 namespace Discretization {
     
@@ -69,6 +70,10 @@ namespace Discretization {
                 for (int i = 0 ; i < nodesPerDirection[One] ; i++) {
                     (*_nodesMatrix)(i, j, k)->printNode();
                 }   
+    }
+    
+    vector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
+
     }
 
     shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh3D::_addDBoundaryNodesToMap() {
@@ -195,5 +200,192 @@ namespace Discretization {
         }
         return parametricCoordToNodeMap;
     }
+
+    vector<double> Mesh3D::getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
+        map<Position, vector<Direction>> directionsOfBoundaries = {
+                {Top, {One, Two}},
+                {Bottom, {Two, One}},
+                {Right, {Two, Three}},
+                {Left, {Three, Two}},
+                {Back, {Three, One}},
+                {Front, {One, Three}}
+        };
+        //Check if boundaryPosition exists in map
+        if (directionsOfBoundaries.find(boundaryPosition) != directionsOfBoundaries.end()){
+            Direction direction1 = directionsOfBoundaries[boundaryPosition][0];
+            Direction direction2 = directionsOfBoundaries[boundaryPosition][1];
+
+            vector<double> covariantBaseVector1 = metrics->at(*node->id.global)->covariantBaseVectors->at(direction1);
+            vector<double> covariantBaseVector2 = metrics->at(*node->id.global)->covariantBaseVectors->at(direction2);
+            
+            vector<double> normalUnitVector = VectorOperations::crossProduct(covariantBaseVector1, covariantBaseVector2);
+            VectorOperations::normalize(normalUnitVector);
+            
+           /* cout<<*node->id.global<<endl;
+            cout<<boundaryPosition<<" "<<normalUnitVector[0]<<" "<<normalUnitVector[1]<<" "<<normalUnitVector[2]<<endl;*/
+            
+            return normalUnitVector;
+        }    
+        else {
+            throw invalid_argument("Boundary position not found");
+        }
+    }
+
+    void Mesh3D::createElements(ElementType elementType, unsigned int nodesPerEdge) {
+        auto numberOfElements = (nodesPerDirection[One] - 1) * (nodesPerDirection[Two] - 1) * (nodesPerDirection[Three] - 1);
+        auto elementsVector = make_unique<vector<Element *>>(numberOfElements);
+        auto counter = 0;
+
+        auto hexahedron = [this](unsigned int i, unsigned int j, unsigned k) -> vector<Node*> {
+            vector<Node*> nodes(8);
+            nodes[0] = node(i, j, k);
+            nodes[1] = node(i + 1, j, k);
+            nodes[2] = node(i, j + 1, k);
+            nodes[3] = node(i + 1, j + 1, k);
+            nodes[4] = node(i, j, k + 1);
+            nodes[5] = node(i + 1, j, k + 1);
+            nodes[6] = node(i, j + 1, k + 1);
+            nodes[7] = node(i + 1, j + 1, k + 1);
+            return nodes;
+        };
+        auto wedge = [this](unsigned int i, unsigned int j, unsigned k) -> vector<Node*> {
+            if (i % 2 == 0) {
+                vector<Node*> nodes(6);
+                nodes[0] = node(i, j, k);
+                nodes[1] = node(i + 1, j, k);
+                nodes[2] = node(i, j + 1, k);
+                nodes[3] = node(i + 1, j + 1, k);
+                nodes[4] = node(i, j + 1, k + 1);
+                nodes[5] = node(i + 1, j + 1, k + 1);
+                return nodes;
+
+            } else {
+                vector<Node*> nodes(6);
+                nodes[0] = node(i, j, k);
+                nodes[1] = node(i, j + 1, k);
+                nodes[2] = node(i, j, k + 1);
+                nodes[3] = node(i + 1, j, k + 1);
+                nodes[4] = node(i, j + 1, k + 1);
+                nodes[5] = node(i + 1, j + 1, k + 1);
+                return nodes;
+            }
+        };
+
+        switch (elementType) {
+            case Hexahedron:
+                for (int k = 0; k < nodesPerDirection[Three] - 1; ++k) {
+                    for (int j = 0; j < nodesPerDirection[Two] - 1; ++j) {
+                        for (int i = 0; i < nodesPerDirection[One] - 1; ++i) {
+                            vector<Node *> nodes = hexahedron(i, j, k);
+                            auto element = new Element(counter, nodes, elementType);
+                            elementsVector->at(counter) = element;
+                            counter++;
+                        }
+                    }
+                }
+                break;
+            case Wedge:
+                for (int k = 0; k < nodesPerDirection[Three] - 1; ++k) {
+                    for (int j = 0; j < nodesPerDirection[Two] - 1; ++j) {
+                        for (int i = 0; i < nodesPerDirection[One] - 1; ++i) {
+                            vector<Node *> nodes = wedge(i, j, k);
+                            auto element = new Element(counter, nodes, elementType);
+                            elementsVector->at(counter) = element;
+                            counter++;
+                        }
+                    }
+                }
+                break;
+            default:
+                throw runtime_error("2D geometry only supports quadrilateral and triangle elements.");
+        }
+
+        elements = make_unique<MeshElements>(std::move(elementsVector), elementType);
+    }
+
+/*    void Mesh3D::storeMeshInVTKFile(const string &filePath, const string &fileName, CoordinateType coordinateType,
+                                    bool StoreOnlyNodes) const {
+        ofstream outputFile(filePath + fileName);
+        outputFile << "# vtk DataFile Version 3.0 \n";
+        outputFile << "vtk output \n";
+        outputFile << "ASCII \n";
+        outputFile << "DATASET UNSTRUCTURED_GRID \n";
+        outputFile << "POINTS " << totalNodesVector->size() << " double\n";
+        for (auto &node: *totalNodesVector) {
+            auto coordinates = node->coordinates.positionVector3D(coordinateType);
+            outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << "\n";
+        }
+
+        if (!StoreOnlyNodes) {
+            if (elements == nullptr) {
+                throw runtime_error("Elements not created yet.");
+            }
+            vector<unsigned int> connectivityList;
+            unsigned int nodesPerElement = 0;
+            switch (elements->elementType()) {
+                case Hexahedron:
+                    connectivityList = {0, 1, 2, 3, 5, 4, 7, 6};
+                    nodesPerElement = 8;
+                    break;
+                case Wedge:
+                    // TODO: Define the connectivity list for the Wedge
+                    break;
+                default:
+                    throw runtime_error("3D geometry only supports Hexahedron and Wedge elements.");
+            }
+
+            unsigned int totalIntsForCells = elements->numberOfElements() * (1 + nodesPerElement);
+            outputFile << "CELLS " << elements->numberOfElements() << " " << totalIntsForCells << "\n";
+
+            for (unsigned int i = 0; i < elements->numberOfElements(); ++i) {
+                outputFile << nodesPerElement << " ";
+                for (auto index: connectivityList) {
+                    outputFile << elements->getElement(i)->nodes()->at(index)->id.global << " ";
+                }
+                outputFile << "\n";
+            }
+
+            // Adding CELL_TYPES section
+            outputFile << "CELL_TYPES " << elements->numberOfElements() << "\n";
+            for (unsigned int i = 0; i < elements->numberOfElements(); ++i) {
+                if (elements->elementType() == Hexahedron) {
+                    outputFile << "12\n"; // VTK's ID for hexahedron
+                } else if (elements->elementType() == Wedge) {
+                    outputFile << "13\n"; // VTK's ID for wedge
+                }
+            }
+        }
+
+        outputFile.close();
+    }*/
+
+    void Mesh3D::storeMeshInVTKFile(const string &filePath, const string &fileName, CoordinateType coordinateType,
+                                    bool StoreOnlyNodes) const {
+        ofstream outputFile(filePath + fileName);
+
+        // Header
+        outputFile << "# vtk DataFile Version 3.0 \n";
+        outputFile << "vtk output \n";
+        outputFile << "ASCII \n";
+        outputFile << "DATASET STRUCTURED_GRID \n";
+
+        // Assuming the mesh is nx x ny x nz, specify the dimensions
+        unsigned int nx = nodesPerDirection.at(One);
+        unsigned int ny = nodesPerDirection.at(Two);
+        unsigned int nz = nodesPerDirection.at(Three);
+
+        outputFile << "DIMENSIONS " << nx << " " << ny<< " " << nz<< "\n";
+
+        // Points
+        outputFile << "POINTS " << totalNodesVector->size() << " double\n";
+        for (auto &node: *totalNodesVector) {
+            auto coordinates = node->coordinates.positionVector3D(coordinateType);
+            outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << "\n";
+        }
+
+        outputFile.close();
+    }
+
+
 
 } // Discretization

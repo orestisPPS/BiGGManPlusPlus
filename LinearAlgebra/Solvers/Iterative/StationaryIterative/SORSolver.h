@@ -10,7 +10,7 @@
 class SORSolver : public StationaryIterative {
     
 public:
-    SORSolver(double relaxationParameter, bool vTechKickInYoo, VectorNormType normType, double tolerance = 1E-9, unsigned maxIterations = 1E4, bool throwExceptionOnMaxFailure = true);
+    SORSolver(double relaxationParameter, ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance = 1E-9, unsigned maxIterations = 1E4, bool throwExceptionOnMaxFailure = true);
 
 protected:
     

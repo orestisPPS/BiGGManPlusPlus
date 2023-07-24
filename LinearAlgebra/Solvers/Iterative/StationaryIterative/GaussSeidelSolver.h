@@ -12,7 +12,7 @@ namespace LinearAlgebra {
     class GaussSeidelSolver : public StationaryIterative{
 
     public:
-        GaussSeidelSolver(bool vTechKickInYoo, VectorNormType normType, double tolerance = 1E-9, unsigned maxIterations = 1E4, bool throwExceptionOnMaxFailure = true);
+        GaussSeidelSolver(ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance = 1E-9, unsigned maxIterations = 1E4, bool throwExceptionOnMaxFailure = true);
 
     protected:
         void _threadJob(unsigned start, unsigned end) override;

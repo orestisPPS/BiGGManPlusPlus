@@ -16,6 +16,7 @@
 #include <memory>
 #include <stdexcept>
 #include <chrono>
+#include <iomanip>
 
 using namespace std;
 
@@ -44,7 +45,7 @@ namespace LinearAlgebra {
         explicit Array(short unsigned numberOfRows, short unsigned numberOfColumns = 1, short unsigned numberOfAisles = 1,
                        T initialValue = 0, bool isPositiveDefinite = false) :
                 _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _numberOfAisles(numberOfAisles),
-                _array(vector<T>(numberOfRows * numberOfColumns * numberOfAisles, initialValue)),
+                _array(make_unique<vector<T>>(numberOfRows * numberOfColumns * numberOfAisles, initialValue)),
                 _isPositiveDefinite(isPositiveDefinite), _isSquare(false),
                 parallelizationThreshold(1E4) {
             if (numberOfRows == numberOfColumns and numberOfColumns == numberOfAisles)
@@ -63,7 +64,7 @@ namespace LinearAlgebra {
                 parallelizationThreshold(array.parallelizationThreshold) {}
                 
         ~Array() {
-            _array.clear();
+            _array->clear();
         }
 
         /**
@@ -83,7 +84,7 @@ namespace LinearAlgebra {
             if (i >= _numberOfRows * _numberOfColumns * _numberOfAisles)
                 throw out_of_range("The index is out of bounds.");
             if (_numberOfAisles == 1 && _numberOfColumns == 1)
-                return _array[i];
+                return _array->at(i);
             else
                 throw invalid_argument("The matrix is not one-dimensional.");
         }
@@ -100,7 +101,7 @@ namespace LinearAlgebra {
             if (i >= _numberOfRows * _numberOfColumns * _numberOfAisles)
                 throw out_of_range("The index is out of bounds.");
             if (_numberOfAisles == 1 and _numberOfColumns == 1)
-                return _array[i];
+                return _array->at(i);
             else
                 throw invalid_argument("The matrix is not one-dimensional.");
         }
@@ -118,7 +119,7 @@ namespace LinearAlgebra {
             if (i >= _numberOfRows or j >= _numberOfColumns)
                 throw out_of_range("The index is out of bounds.");
             if (_numberOfAisles == 1)
-                return _array[i * _numberOfColumns + j];
+                return _array->at(i * _numberOfColumns + j);
             else
                 throw invalid_argument("The matrix is not two-dimensional.");
         }
@@ -136,7 +137,7 @@ namespace LinearAlgebra {
             if (i >= _numberOfRows or j >= _numberOfColumns)
                 throw out_of_range("The index is out of bounds.");
             if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles == 1)
-                return _array[i * _numberOfColumns + j];
+                return _array->at(i * _numberOfColumns + j);
             else
                 throw invalid_argument("The matrix is not two-dimensional.");
         }
@@ -155,7 +156,7 @@ namespace LinearAlgebra {
             if (i >= _numberOfRows or j >= _numberOfColumns or k >= _numberOfAisles)
                 throw out_of_range("The index is out of bounds.");
             if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles > 1)
-                return _array[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k];
+                return _array->at(i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k);
             else
                 throw invalid_argument("The matrix is not three-dimensional.");
         }
@@ -174,7 +175,7 @@ namespace LinearAlgebra {
             if (i >= _numberOfRows or j >= _numberOfColumns or k >= _numberOfAisles)
                 throw out_of_range("The index is out of bounds.");
             if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles > 1)
-                return _array[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k];
+                return _array->at(i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k);
             else
                 throw invalid_argument("The matrix is not three-dimensional.");
         }
@@ -192,7 +193,7 @@ namespace LinearAlgebra {
             if (i >= _numberOfRows * _numberOfColumns * _numberOfAisles)
                 throw out_of_range("The index is out of bounds.");
             if (_numberOfAisles == 1 and _numberOfColumns == 1)
-                return _array[i];
+                return _array->at(i);
             else
                 throw invalid_argument("The matrix is not one-dimensional.");
         }
@@ -210,7 +211,7 @@ namespace LinearAlgebra {
             if (i >= _numberOfRows * _numberOfColumns * _numberOfAisles)
                 throw out_of_range("The index is out of bounds.");
             if (_numberOfAisles == 1 and _numberOfColumns == 1)
-                return _array[i];
+                return _array->at(i);
             else
                 throw invalid_argument("The matrix is not one-dimensional.");
         }
@@ -229,7 +230,7 @@ namespace LinearAlgebra {
             if (i >= _numberOfRows or j >= _numberOfColumns)
                 throw out_of_range("The index is out of bounds.");
             if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles == 1)
-                return _array[i * _numberOfColumns + j];
+                return _array->at(i * _numberOfColumns + j);
             else
                 throw invalid_argument("The matrix is not two-dimensional.");
         }
@@ -248,7 +249,7 @@ namespace LinearAlgebra {
             if (i >= _numberOfRows or j >= _numberOfColumns)
                 throw out_of_range("The index is out of bounds.");
             if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles == 1)
-                return _array[i * _numberOfColumns + j];
+                return _array->at(i * _numberOfColumns + j);
             else
                 throw invalid_argument("The matrix is not two-dimensional.");
         }
@@ -268,7 +269,7 @@ namespace LinearAlgebra {
             if (i >= _numberOfRows or j >= _numberOfColumns or k >= _numberOfAisles)
                 throw out_of_range("The index is out of bounds.");
             if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles > 1)
-                return _array[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k];
+                return _array->at(i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k);
             else
                 throw invalid_argument("The matrix is not three-dimensional.");
         }
@@ -288,7 +289,7 @@ namespace LinearAlgebra {
             if (i >= _numberOfRows or j >= _numberOfColumns or k >= _numberOfAisles)
                 throw out_of_range("The index is out of bounds.");
             if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles > 1)
-                return _array[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k];
+                return _array->at(i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k);
             else
                 throw invalid_argument("The matrix is not three-dimensional.");
         }
@@ -305,7 +306,7 @@ namespace LinearAlgebra {
                 throw invalid_argument("The dimensions of the arrays are not the same.");
             _isSquare = array._isSquare;
             _isPositiveDefinite = array._isPositiveDefinite;
-            for (int i = 0; i < array._array.size(); ++i) {
+            for (int i = 0; i < array._array->size(); ++i) {
                 _array[i] = array._array[i];
             }
             return *this;
@@ -321,7 +322,7 @@ namespace LinearAlgebra {
             if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
                 _numberOfAisles != array._numberOfAisles)
                 return false;
-            for (int i = 0; i < array._array.size(); ++i) {
+            for (int i = 0; i < array._array->size(); ++i) {
                 if (_array[i] != array._array[i])
                     return false;
             }
@@ -343,7 +344,7 @@ namespace LinearAlgebra {
                 _numberOfAisles != array._numberOfAisles)
                 throw invalid_argument("The dimensions of the arrays are not the same.");
             Array<T> result(_numberOfRows, _numberOfColumns, _numberOfAisles);
-            for (int i = 0; i < _array.size(); ++i) {
+            for (int i = 0; i < _array->size(); ++i) {
                 result._array[i] = _array[i] + array._array[i];
             }
             return result;
@@ -353,7 +354,7 @@ namespace LinearAlgebra {
             if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
                 _numberOfAisles != array._numberOfAisles)
                 throw invalid_argument("The dimensions of the arrays are not the same.");
-            for (int i = 0; i < _array.size(); ++i) {
+            for (int i = 0; i < _array->size(); ++i) {
                 _array[i] += array._array[i];
             }
         }
@@ -363,7 +364,7 @@ namespace LinearAlgebra {
                 _numberOfAisles != array._numberOfAisles)
                 throw invalid_argument("The dimensions of the arrays are not the same.");
             Array<T> result(_numberOfRows, _numberOfColumns, _numberOfAisles);
-            for (int i = 0; i < _array.size(); ++i) {
+            for (int i = 0; i < _array->size(); ++i) {
                 result._array[i] = _array[i] - array._array[i];
             }
             return result;
@@ -373,7 +374,7 @@ namespace LinearAlgebra {
             if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
                 _numberOfAisles != array._numberOfAisles)
                 throw invalid_argument("The dimensions of the arrays are not the same.");
-            for (int i = 0; i < _array.size(); ++i) {
+            for (int i = 0; i < _array->size(); ++i) {
                 _array[i] -= array._array[i];
             }
         }
@@ -413,7 +414,7 @@ namespace LinearAlgebra {
         }
 
         void transposeIntoThis() {
-            auto temp_vector = vector<T>(_array.size());
+            auto temp_vector = vector<T>(_array->size());
             auto temp_rows = _numberOfRows;
             auto temp_columns = _numberOfColumns;
 
@@ -493,7 +494,7 @@ namespace LinearAlgebra {
         }
 
         unsigned int size() {
-            return _array.size();
+            return _array->size();
         }
 
         vector<T> getRow(unsigned row){
@@ -544,12 +545,12 @@ namespace LinearAlgebra {
             }
         }
 
-        void print() const {
+        void print(int precision = 1) const {
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = 0; j < _numberOfColumns; ++j) {
-                    cout << _array[i * _numberOfColumns + j] << " ";
+                    std::cout << std::scientific << std::setprecision(precision) << _array[i * _numberOfColumns + j] << " ";
                 }
-                cout << endl;
+                std::cout << std::endl;
             }
         }
         
@@ -575,10 +576,14 @@ namespace LinearAlgebra {
             }
             return true;
         }
+        
+        double * getArrayPointer() const {
+            return _array->data();
+        }
 
     private:
         // The 1D array that stores the matrix. The elements are stored in row-major order.
-        vector<T> _array;
+        unique_ptr<vector<T>> _array;
         //Number of Rows. Array size : Height
         unsigned _numberOfRows;
         //Number of Columns.Array size : Width

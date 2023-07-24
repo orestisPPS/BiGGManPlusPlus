@@ -13,7 +13,7 @@ namespace LinearAlgebra {
     class JacobiSolver : public StationaryIterative{
         
     public:
-        JacobiSolver(bool vTechKickInYoo, VectorNormType normType, double tolerance = 1E-9, unsigned maxIterations = 1E4, bool throwExceptionOnMaxFailure = true);
+        JacobiSolver(ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance = 1E-9, unsigned maxIterations = 1E4, bool throwExceptionOnMaxFailure = true);
     
     protected:
         void _threadJob(unsigned start, unsigned end) override;

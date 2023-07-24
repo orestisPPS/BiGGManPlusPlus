@@ -176,7 +176,7 @@ namespace StructuredMeshGenerator {
                     for (auto &node: *boundary.second) {
                         auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
                         coordinateVector[0] = nodalParametricCoords[0] * stepX;
-                        coordinateVector[1] = 0.0;
+                        coordinateVector[1] = lengthY;
                         coordinateVector[2] = nodalParametricCoords[2] * stepZ;
                         
                         auto dofBC = new map<DOFType, double>();
@@ -191,7 +191,7 @@ namespace StructuredMeshGenerator {
                     for (auto &node: *boundary.second) {
                         auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
                         coordinateVector[0] = nodalParametricCoords[0] * stepX;
-                        coordinateVector[1] = lengthY;
+                        coordinateVector[1] = 0;
                         coordinateVector[2] = nodalParametricCoords[2] * stepZ;
                         
                         auto dofBC = new map<DOFType, double>();
@@ -726,7 +726,6 @@ namespace StructuredMeshGenerator {
         //auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory2D->mesh)->parallelogram(nodesPerDirection2D,4,4);
         meshFactory2D->buildMesh(2, meshBoundaries);
         auto mesh2D = meshFactory2D->mesh;
-        meshFactory2D->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural);
         
         
         unsigned int ksi, ita, iota;

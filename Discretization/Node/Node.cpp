@@ -6,7 +6,7 @@
 
 namespace Discretization {
     Node::Node() : id(DiscreteEntityId()), coordinates() {
-        degreesOfFreedom = new vector<DegreeOfFreedom*>();
+        degreesOfFreedom = make_unique<list<DegreeOfFreedom*>>();
     }
     
     void Node::printNode() {
@@ -34,19 +34,19 @@ namespace Discretization {
                 return dof;
             }
         }
-        
         return nullptr;
     }
-    
-    const DegreeOfFreedom& Node::getDegreeOfFreedom(DOFType type) const {
-        for (auto &dof : *degreesOfFreedom) {
-            if (dof->type() == type) {
-                return *dof;
-            }
+
+    Node &Node::operator=(const Node &other) {
+        if (this != &other) {
+            id = other.id;
+            coordinates = other.coordinates;
+            *degreesOfFreedom = *other.degreesOfFreedom;
         }
-        return *degreesOfFreedom->at(0);
+        return *this;
     }
-        
+
+
 }// Discretization
     
 

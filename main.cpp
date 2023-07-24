@@ -3,6 +3,7 @@
 #include "DegreesOfFreedom/DegreeOfFreedom.h"
 using namespace DegreesOfFreedom;
 #include "PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
+#include "Tests/SteadyState3DNeumann.h"
 using namespace PartialDifferentialEquations;
 using namespace LinearAlgebra;
 #include "StructuredMeshGeneration/MeshTest2D.h"
@@ -16,7 +17,8 @@ using namespace LinearAlgebra;
 
 int main() {
 
-    auto analysisTest = new NumericalAnalysis::StStFDTest();
+    //auto analysisTest = new NumericalAnalysis::StStFDTest();
+    auto neumannTest = new Tests::SteadyState3DNeumann();
     
     cout << "y000000o" << endl;
     

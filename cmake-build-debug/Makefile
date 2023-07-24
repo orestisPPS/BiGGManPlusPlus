@@ -345,6 +345,54 @@ DegreesOfFreedom/DegreeOfFreedom.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/DegreesOfFreedom/DegreeOfFreedom.cpp.s
 .PHONY : DegreesOfFreedom/DegreeOfFreedom.cpp.s
 
+Discretization/Elements/Element.o: Discretization/Elements/Element.cpp.o
+.PHONY : Discretization/Elements/Element.o
+
+# target to build an object file
+Discretization/Elements/Element.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Discretization/Elements/Element.cpp.o
+.PHONY : Discretization/Elements/Element.cpp.o
+
+Discretization/Elements/Element.i: Discretization/Elements/Element.cpp.i
+.PHONY : Discretization/Elements/Element.i
+
+# target to preprocess a source file
+Discretization/Elements/Element.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Discretization/Elements/Element.cpp.i
+.PHONY : Discretization/Elements/Element.cpp.i
+
+Discretization/Elements/Element.s: Discretization/Elements/Element.cpp.s
+.PHONY : Discretization/Elements/Element.s
+
+# target to generate assembly for a file
+Discretization/Elements/Element.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Discretization/Elements/Element.cpp.s
+.PHONY : Discretization/Elements/Element.cpp.s
+
+Discretization/Elements/MeshElements.o: Discretization/Elements/MeshElements.cpp.o
+.PHONY : Discretization/Elements/MeshElements.o
+
+# target to build an object file
+Discretization/Elements/MeshElements.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Discretization/Elements/MeshElements.cpp.o
+.PHONY : Discretization/Elements/MeshElements.cpp.o
+
+Discretization/Elements/MeshElements.i: Discretization/Elements/MeshElements.cpp.i
+.PHONY : Discretization/Elements/MeshElements.i
+
+# target to preprocess a source file
+Discretization/Elements/MeshElements.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Discretization/Elements/MeshElements.cpp.i
+.PHONY : Discretization/Elements/MeshElements.cpp.i
+
+Discretization/Elements/MeshElements.s: Discretization/Elements/MeshElements.cpp.s
+.PHONY : Discretization/Elements/MeshElements.s
+
+# target to generate assembly for a file
+Discretization/Elements/MeshElements.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Discretization/Elements/MeshElements.cpp.s
+.PHONY : Discretization/Elements/MeshElements.cpp.s
+
 Discretization/Id/DiscreteEntityId.o: Discretization/Id/DiscreteEntityId.cpp.o
 .PHONY : Discretization/Id/DiscreteEntityId.o
 
@@ -825,6 +873,30 @@ LinearAlgebra/Norms/VectorNorm.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Norms/VectorNorm.cpp.s
 .PHONY : LinearAlgebra/Norms/VectorNorm.cpp.s
 
+LinearAlgebra/Norms/VectorNormCuda.o: LinearAlgebra/Norms/VectorNormCuda.cu.o
+.PHONY : LinearAlgebra/Norms/VectorNormCuda.o
+
+# target to build an object file
+LinearAlgebra/Norms/VectorNormCuda.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Norms/VectorNormCuda.cu.o
+.PHONY : LinearAlgebra/Norms/VectorNormCuda.cu.o
+
+LinearAlgebra/Norms/VectorNormCuda.i: LinearAlgebra/Norms/VectorNormCuda.cu.i
+.PHONY : LinearAlgebra/Norms/VectorNormCuda.i
+
+# target to preprocess a source file
+LinearAlgebra/Norms/VectorNormCuda.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Norms/VectorNormCuda.cu.i
+.PHONY : LinearAlgebra/Norms/VectorNormCuda.cu.i
+
+LinearAlgebra/Norms/VectorNormCuda.s: LinearAlgebra/Norms/VectorNormCuda.cu.s
+.PHONY : LinearAlgebra/Norms/VectorNormCuda.s
+
+# target to generate assembly for a file
+LinearAlgebra/Norms/VectorNormCuda.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Norms/VectorNormCuda.cu.s
+.PHONY : LinearAlgebra/Norms/VectorNormCuda.cu.s
+
 LinearAlgebra/Operations/NumberOperations.o: LinearAlgebra/Operations/NumberOperations.cpp.o
 .PHONY : LinearAlgebra/Operations/NumberOperations.o
 
@@ -1088,6 +1160,54 @@ LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.s: Linea
 LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.s
 .PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.s
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.o: LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu.o
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.o
+
+# target to build an object file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu.o
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu.o
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.i: LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu.i
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.i
+
+# target to preprocess a source file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu.i
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu.i
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.s: LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu.s
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.s
+
+# target to generate assembly for a file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu.s
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu.s
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.o: LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu.o
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.o
+
+# target to build an object file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu.o
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu.o
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.i: LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu.i
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.i
+
+# target to preprocess a source file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu.i
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu.i
+
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.s: LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu.s
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.s
+
+# target to generate assembly for a file
+LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu.s
+.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu.s
 
 LinearAlgebra/Solvers/Solver.o: LinearAlgebra/Solvers/Solver.cpp.o
 .PHONY : LinearAlgebra/Solvers/Solver.o
@@ -1377,6 +1497,30 @@ StructuredMeshGeneration/NodeFactory.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/StructuredMeshGeneration/NodeFactory.cpp.s
 .PHONY : StructuredMeshGeneration/NodeFactory.cpp.s
 
+Tests/SteadyState3DNeumann.o: Tests/SteadyState3DNeumann.cpp.o
+.PHONY : Tests/SteadyState3DNeumann.o
+
+# target to build an object file
+Tests/SteadyState3DNeumann.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyState3DNeumann.cpp.o
+.PHONY : Tests/SteadyState3DNeumann.cpp.o
+
+Tests/SteadyState3DNeumann.i: Tests/SteadyState3DNeumann.cpp.i
+.PHONY : Tests/SteadyState3DNeumann.i
+
+# target to preprocess a source file
+Tests/SteadyState3DNeumann.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyState3DNeumann.cpp.i
+.PHONY : Tests/SteadyState3DNeumann.cpp.i
+
+Tests/SteadyState3DNeumann.s: Tests/SteadyState3DNeumann.cpp.s
+.PHONY : Tests/SteadyState3DNeumann.s
+
+# target to generate assembly for a file
+Tests/SteadyState3DNeumann.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyState3DNeumann.cpp.s
+.PHONY : Tests/SteadyState3DNeumann.cpp.s
+
 Utility/Exporters/Exporters.o: Utility/Exporters/Exporters.cpp.o
 .PHONY : Utility/Exporters/Exporters.o
 
@@ -1461,6 +1605,12 @@ help:
 	@echo "... DegreesOfFreedom/DegreeOfFreedom.o"
 	@echo "... DegreesOfFreedom/DegreeOfFreedom.i"
 	@echo "... DegreesOfFreedom/DegreeOfFreedom.s"
+	@echo "... Discretization/Elements/Element.o"
+	@echo "... Discretization/Elements/Element.i"
+	@echo "... Discretization/Elements/Element.s"
+	@echo "... Discretization/Elements/MeshElements.o"
+	@echo "... Discretization/Elements/MeshElements.i"
+	@echo "... Discretization/Elements/MeshElements.s"
 	@echo "... Discretization/Id/DiscreteEntityId.o"
 	@echo "... Discretization/Id/DiscreteEntityId.i"
 	@echo "... Discretization/Id/DiscreteEntityId.s"
@@ -1521,6 +1671,9 @@ help:
 	@echo "... LinearAlgebra/Norms/VectorNorm.o"
 	@echo "... LinearAlgebra/Norms/VectorNorm.i"
 	@echo "... LinearAlgebra/Norms/VectorNorm.s"
+	@echo "... LinearAlgebra/Norms/VectorNormCuda.o"
+	@echo "... LinearAlgebra/Norms/VectorNormCuda.i"
+	@echo "... LinearAlgebra/Norms/VectorNormCuda.s"
 	@echo "... LinearAlgebra/Operations/NumberOperations.o"
 	@echo "... LinearAlgebra/Operations/NumberOperations.i"
 	@echo "... LinearAlgebra/Operations/NumberOperations.s"
@@ -1554,6 +1707,12 @@ help:
 	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.o"
 	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.i"
 	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.s"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.o"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.i"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.s"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.o"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.i"
+	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.s"
 	@echo "... LinearAlgebra/Solvers/Solver.o"
 	@echo "... LinearAlgebra/Solvers/Solver.i"
 	@echo "... LinearAlgebra/Solvers/Solver.s"
@@ -1590,6 +1749,9 @@ help:
 	@echo "... StructuredMeshGeneration/NodeFactory.o"
 	@echo "... StructuredMeshGeneration/NodeFactory.i"
 	@echo "... StructuredMeshGeneration/NodeFactory.s"
+	@echo "... Tests/SteadyState3DNeumann.o"
+	@echo "... Tests/SteadyState3DNeumann.i"
+	@echo "... Tests/SteadyState3DNeumann.s"
 	@echo "... Utility/Exporters/Exporters.o"
 	@echo "... Utility/Exporters/Exporters.i"
 	@echo "... Utility/Exporters/Exporters.s"

@@ -36,6 +36,13 @@ namespace Discretization {
         
         void printMesh() override;
         
+        vector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) override;
+        
+        void createElements(ElementType elementType, unsigned int nodesPerEdge) override;
+
+        void storeMeshInVTKFile(const string& filePath, const string& fileName,
+                                CoordinateType coordinateType, bool StoreOnlyNodes) const override;
+        
     protected:
 
         shared_ptr<map<Position, shared_ptr<vector<Node*>>>> _addDBoundaryNodesToMap() override;

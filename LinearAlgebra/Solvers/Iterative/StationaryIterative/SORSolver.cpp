@@ -3,7 +3,7 @@
 //
 
 #include "SORSolver.h"
-SORSolver::SORSolver(double relaxationParameter, bool vTechKickInYoo, VectorNormType normType, double tolerance, unsigned maxIterations,
+SORSolver::SORSolver(double relaxationParameter, ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance, unsigned maxIterations,
                                      bool throwExceptionOnMaxFailure) :
         StationaryIterative(vTechKickInYoo, normType, tolerance, maxIterations, throwExceptionOnMaxFailure) {
     _relaxationParameter = relaxationParameter;

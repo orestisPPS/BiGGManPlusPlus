@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.23)
-project(untitled)
-
+project(untitled LANGUAGES CXX CUDA)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS -fopenmp)
+
+
+enable_language(CUDA)
+
 
 add_executable(untitled main.cpp
         DegreesOfFreedom/DegreeOfFreedom.cpp 
@@ -96,6 +99,33 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Direct/Cholesky.cpp
         LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.h
         LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.cpp
-        LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp LinearAlgebra/Operations/NumberOperations.h LinearAlgebra/Operations/NumberOperations.cpp LinearAlgebra/FiniteDifferences/FDWeightCalculator.h PartialDifferentialEquations/SpaceFieldProperties.h StructuredMeshGeneration/DomainBoundaryFactory.h StructuredMeshGeneration/DomainBoundaryFactory.cpp LinearAlgebra/AnalysisLinearSystemInitializer2.h LinearAlgebra/AnalysisLinearSystemInitializer2.cpp LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.h LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.h LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.h LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp)
-        
-        
+        LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp
+        LinearAlgebra/Operations/NumberOperations.h
+        LinearAlgebra/Operations/NumberOperations.cpp 
+        LinearAlgebra/FiniteDifferences/FDWeightCalculator.h 
+        PartialDifferentialEquations/SpaceFieldProperties.h 
+        StructuredMeshGeneration/DomainBoundaryFactory.h
+        StructuredMeshGeneration/DomainBoundaryFactory.cpp
+        LinearAlgebra/AnalysisLinearSystemInitializer2.h 
+        LinearAlgebra/AnalysisLinearSystemInitializer2.cpp
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.h 
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.cpp 
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.h
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.cpp
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.h 
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp 
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h 
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp 
+        Tests/SteadyState3DNeumann.h Tests/SteadyState3DNeumann.cpp 
+        Discretization/Elements/Element.h 
+        Discretization/Elements/Element.cpp
+        Discretization/Elements/MeshElements.h
+        Discretization/Elements/MeshElements.cpp
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cuh
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu
+        LinearAlgebra/Norms/VectorNormCuda.cuh
+        LinearAlgebra/Norms/VectorNormCuda.cu LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu)
+
+
+target_link_libraries(untitled cudart)
+

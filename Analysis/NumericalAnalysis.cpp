@@ -54,10 +54,10 @@ namespace NumericalAnalysis {
                 abs(iNodeCoords[1] - nodeCoordinates[1]) < tolerance &&
                 abs(iNodeCoords[2] - nodeCoordinates[2]) < tolerance) {
                 auto node = coord.second;
-                auto nodeDOFs = node->degreesOfFreedom;
-                vector<double> nodeSolution(nodeDOFs->size());
-                for (auto i = 0; i < nodeDOFs->size(); i++) {
-                    nodeSolution[i] = nodeDOFs->at(i)->value();
+                auto nodeDOFs = *node->degreesOfFreedom;
+                vector<double> nodeSolution = vector<double>();
+                for (auto &dof : nodeDOFs) {
+                    nodeSolution.push_back(dof->value());
                 }
                 cout<<"Node Coordinates: "<<iNodeCoords[0]<<", "<<iNodeCoords[1]<<", "<<iNodeCoords[2]<<endl;
                 return nodeSolution;

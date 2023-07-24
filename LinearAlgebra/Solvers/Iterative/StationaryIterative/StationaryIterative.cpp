@@ -5,10 +5,10 @@
 #include "StationaryIterative.h"
 
 namespace LinearAlgebra {
-    StationaryIterative::StationaryIterative(bool vTechKickInYoo, VectorNormType normType, double tolerance, unsigned maxIterations,
+    StationaryIterative::StationaryIterative(ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance, unsigned maxIterations,
                                          bool throwExceptionOnMaxFailure) :
             IterativeSolver(normType, tolerance, maxIterations, throwExceptionOnMaxFailure) {
-        _vTechKickInYoo = vTechKickInYoo;
+        _parallelization = parallelizationMethod;
         _residualNorms = make_shared<list<double>>();
     }
 
@@ -17,14 +17,14 @@ namespace LinearAlgebra {
         unsigned n = _linearSystem->matrix->numberOfRows();
         unsigned short iteration = 0;
         double norm = 1.0;
-        double sum = 0.0;
+        //double sum = 0.0;
         //Check if the initial solution has been set from the user. If not, it is set to 0.0
         if (!_isInitialized) {
             setInitialSolution(0.0);
         }
         //TODO Check if the matrix is diagonally dominant
 
-        if (_vTechKickInYoo) {
+        if (_parallelization == vTechKickInYoo) {
             cout<< " " << endl;
             cout << "----------------------------------------" << endl;
             cout << _solverName << " Solver Multi Thread - VTEC KICKED IN YO!" << endl;
@@ -47,7 +47,7 @@ namespace LinearAlgebra {
                 iteration++;
             }
         }
-        else {
+        else if (_parallelization == Wank) {
             cout<< " " << endl;
             cout << "----------------------------------------" << endl;
             cout << _solverName << " Solver Single Thread" << endl;
@@ -63,11 +63,66 @@ namespace LinearAlgebra {
                 iteration++;
             }
         }
+        else if (_parallelization == turboVTechKickInYoo){
+            
+/*
+            for (int i = 0; i < 1; i++) {
+                cudaDeviceProp deviceProps = cudaDeviceProp();
+                cudaGetDeviceProperties(&deviceProps, i);
+
+                std::cout << "Device " << i << ": " << deviceProps.name << std::endl;
+                std::cout << "  Max threads per block: " << deviceProps.maxThreadsPerBlock << std::endl;
+                std::cout << "  Max thread dimensions (x, y, z): ("
+                          << deviceProps.maxThreadsDim[0] << ", "
+                          << deviceProps.maxThreadsDim[1] << ", "
+                          << deviceProps.maxThreadsDim[2] << ")" << std::endl;
+                std::cout << "  Max grid dimensions (x, y, z): ("
+                          << deviceProps.maxGridSize[0] << ", "
+                          << deviceProps.maxGridSize[1] << ", "
+                          << deviceProps.maxGridSize[2] << ")" << std::endl;
+            }*/
+            //cuda file with all gpu utility as extern here 
+
+            double* d_matrix = _linearSystem->matrix->getArrayPointer();
+            double* d_rhs = _linearSystem->rhs->data();
+            double* d_xOld = _xOld->data();
+            double* d_xNew = _xNew->data();
+            double* d_difference = _difference->data();
+            int vectorSize = static_cast<int>(_linearSystem->rhs->size());
+
+            _stationaryIterativeCuda = make_unique<StationaryIterativeCuda>(
+                    d_matrix, d_rhs, d_xOld, d_xNew, d_difference, vectorSize, 32);
+            
+            while (iteration < _maxIterations && norm >= _tolerance) {
+
+                _stationaryIterativeCuda->performGaussSeidelIteration();
+                _stationaryIterativeCuda->getDifferenceVector(_difference->data());
+                norm = VectorNorm(_difference, _normType).value();
+                //norm = _stationaryIterativeCuda->getNorm();
+                // Add the norm to the list of norms
+                _residualNorms->push_back(norm);
+
+                if (iteration % 100 == 0) {
+                    cout << "Iteration: " << iteration << " - Norm: " << norm << endl;
+                }
+
+                iteration++;
+            }
+
+            if (norm < _tolerance) {
+                cout << "Solver converged after " << iteration << " iterations." << endl;
+            } else {
+                cout << "Solver reached maximum iterations without converging." << endl;
+            }
+
+            _stationaryIterativeCuda->getSolutionVector(_xNew->data());
+            _stationaryIterativeCuda.reset();
+
+        }
         // If the maximum number of iterations is reached and the user has set the flag to throw an exception, throw an exception
         if (iteration == _maxIterations && _throwExceptionOnMaxFailure) {
             throw std::runtime_error("Maximum number of iterations reached.");
         }
-        
         auto end = std::chrono::high_resolution_clock::now();
 
         bool isInMicroSeconds = false;

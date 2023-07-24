@@ -6,26 +6,39 @@
 #define UNTITLED_STATIONARYITERATIVE_H
 
 #include <thread>
+#include <cuda_runtime.h>
 #include "../IterativeSolver.h"
+#include "StationaryIterrativeCuda/StationaryIterativeCuda.cuh"
 
 namespace LinearAlgebra {
     
+    enum ParallelizationMethod{
+        //Multi-thread solution
+        vTechKickInYoo,
+        //INSSSSSSSSSSSSANE GPU GAINS
+        turboVTechKickInYoo,
+        //:( Single thread 
+        Wank
+    };
     class StationaryIterative : public IterativeSolver {
 
     public:
-        StationaryIterative(bool vTechKickInYoo, VectorNormType normType, double tolerance = 1E-9, unsigned maxIterations = 1E4, bool throwExceptionOnMaxFailure = true);
-
+        StationaryIterative(ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance = 1E-9, unsigned maxIterations = 1E4, bool throwExceptionOnMaxFailure = true);
+        
     protected:
         void _iterativeSolution() override;
 
         void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows);
+        
 
         virtual void _singleThreadSolution();
         
         //Thread job. Parallel for each row. Changes for each solver.
         virtual void _threadJob(unsigned start, unsigned end);
 
-        bool _vTechKickInYoo;
+        ParallelizationMethod _parallelization;
+        
+        unique_ptr<StationaryIterativeCuda> _stationaryIterativeCuda;
         
         string _solverName;
         

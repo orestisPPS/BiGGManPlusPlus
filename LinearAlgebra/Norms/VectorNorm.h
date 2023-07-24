@@ -7,7 +7,6 @@
 
 #include <map>
 #include <cmath>
-#include <functional>
 #include "../Array/Array.h"
 
 namespace LinearAlgebra {
@@ -30,6 +29,7 @@ namespace LinearAlgebra {
         // For a vector x with n components, the L∞ norm is denoted as ||x||∞ and defined as:
         // ||x||∞ = max(|x₁|, |x₂|, ..., |xₙ|)
         LInf,
+        
         
         // Lp norm
         // The pth root of the sum of the pth powers of the vectors' components.    

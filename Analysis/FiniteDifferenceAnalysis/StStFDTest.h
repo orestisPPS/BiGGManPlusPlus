@@ -18,10 +18,7 @@ namespace NumericalAnalysis {
     class StStFDTest {
 public:
         StStFDTest();
-
-        static shared_ptr<DomainBoundaryConditions> createBC(shared_ptr<Mesh> mesh);
-        static Field_DOFType* createDOF();
-        static shared_ptr<FDSchemeSpecs> createSchemeSpecs();
+        
         
     };
 
