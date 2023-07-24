@@ -8,15 +8,15 @@
 namespace Tests {
     SteadyState3DNeumann::SteadyState3DNeumann() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 11;
-        numberOfNodes[Direction::Two] = 11;
-        numberOfNodes[Direction::Three] = 11;
+        numberOfNodes[Direction::One] = 21;
+        numberOfNodes[Direction::Two] = 21;
+        numberOfNodes[Direction::Three] = 21;
 
         //auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 1, 1, 0, 0, 0, 0, 0, 0);
-        auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 0.1,1, 0, 0, 0, 0, 0, 0, 0);
+        auto specs = make_shared<MeshSpecs>(numberOfNodes, 0.5, 0.5,0.5, 0, 0, 0, 0, 0, 0, 0);
         auto meshFactory = new MeshFactory(specs);
         auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
-        meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 4, 4, 4));
+        meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 10, 10, 10));
         //meshFactory->buildMesh(2, meshBoundaries->annulus_3D_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 180, 5));
         //meshFactory->mesh->createElements(Hexahedron, 2);
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural, false);
@@ -86,13 +86,18 @@ namespace Tests {
         //auto solver = make_shared<SolverLUP>(1E-20, true);
         //auto solver = make_shared<JacobiSolver>(false, VectorNormType::LInf);
         //auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo, VectorNormType::LInf, 1E-9);
-        auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo, VectorNormType::L2, 1E-9);
+        auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo , VectorNormType::L2, 1E-9);
         //auto solver = make_shared<SORSolver>(1.8, true, VectorNormType::L2, 1E-10);
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
         
         analysis->solve();
         
         analysis->applySolutionToDegreesOfFreedom();
+
+        auto fileName = "temperatureField.vtk";
+        auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
+        auto fieldType = "Temperature";
+        Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
         
         //auto targetCoords = vector<double>{0.5, 0.5};
         //auto targetCoords = vector<double>{1.5, 1.5, 1.5};
@@ -101,10 +106,7 @@ namespace Tests {
         auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-5);
         cout<<"Target Solution: "<< targetSolution[0] << endl;
 
-        auto fileName = "temperatureField.vtk";
-        auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
-        auto fieldType = "Temperature";
-        Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
+
         
         auto filenameParaview = "firstMesh.vtk";
     }

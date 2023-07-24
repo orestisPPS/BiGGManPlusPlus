@@ -124,7 +124,7 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cuh
         LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu
         LinearAlgebra/Norms/VectorNormCuda.cuh
-        LinearAlgebra/Norms/VectorNormCuda.cu)
+        LinearAlgebra/Norms/VectorNormCuda.cu LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu)
 
 
 target_link_libraries(untitled cudart)

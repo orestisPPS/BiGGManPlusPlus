@@ -90,7 +90,8 @@ namespace LinearAlgebra {
             double* d_difference = _difference->data();
             int vectorSize = static_cast<int>(_linearSystem->rhs->size());
 
-            _stationaryIterativeCuda = make_unique<StationaryIterativeCuda>(d_matrix, d_rhs, d_xOld, d_xNew, d_difference, vectorSize, 1024);
+            _stationaryIterativeCuda = make_unique<StationaryIterativeCuda>(
+                    d_matrix, d_rhs, d_xOld, d_xNew, d_difference, vectorSize, 32);
             
             while (iteration < _maxIterations && norm >= _tolerance) {
 

@@ -27,9 +27,8 @@ namespace LinearAlgebra {
 
         printf("Stationary Iterative Solver with CUDA is initialized.\n");
         printf("Number of Free DOF: %d\n", this->_numRows);
-        printf("Number of Threads per Block: %d\n", getBlockSize());
+        printf("Block Size (Threads/Block): %d\n", getBlockSize());
         printf("Number of Blocks: %d\n", getNumBlocks());
-        printf("Total Number of Threads: %d\n", getBlockSize() * getNumBlocks());
     }
 
     StationaryIterativeCuda::~StationaryIterativeCuda() {
@@ -79,23 +78,23 @@ namespace LinearAlgebra {
         auto blockId = blockIdx.x;  // Assuming 1D grid of blocks
 
         // Calculate the start and end rows for this block
-        int startRow = blockId * blockSize;
-        int endRow = startRow + blockSize;
+        unsigned startRow = blockId * blockSize;
+        unsigned endRow = startRow + blockSize;
         if (endRow > numRows) {
             endRow = numRows;
         }
 
         // Process rows sequentially within this block
-        for (int row = startRow; row < endRow; ++row) {
+        for (unsigned row = startRow; row < endRow; ++row) {
             double sum = 0.0;
 
             // Before diagonal
-            for (int j = startRow; j < row; j++) {
+            for (unsigned j = 0; j < row; j++) {
                 sum += matrix[row * numRows + j] * xNew[j];
             }
 
             // After diagonal
-            for (int j = row + 1; j < endRow; j++) {
+            for (unsigned j = row + 1; j < numRows; j++) {
                 sum += matrix[row * numRows + j] * xOld[j];
             }
 
@@ -106,7 +105,8 @@ namespace LinearAlgebra {
     }
 
 
-/*    __global__ void kernelComputeNorm(const double* diff, double* d_norm, int numRows) {
+
+    /*    __global__ void kernelComputeNorm(const double* diff, double* d_norm, int numRows) {
         extern __shared__ double sdata[];
         int tid = threadIdx.x;
         int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -124,9 +124,9 @@ namespace LinearAlgebra {
         if (tid == 0) atomicAdd(d_norm, sdata[0]);
     }*/
     void StationaryIterativeCuda::performGaussSeidelIteration() {
-        int numBlocks = (_numRows + _blockSize - 1) / _blockSize;
 
-        kernelJobBlockGaussSeidel<<<numBlocks, 1>>>(_d_matrix, _d_rhs, _d_xOld, _d_xNew, _d_diff, _numRows, _blockSize);
+        //Launch kernel with 1 
+        kernelJobBlockGaussSeidel<<<getNumBlocks(), 1>>>(_d_matrix, _d_rhs, _d_xOld, _d_xNew, _d_diff, _numRows, _blockSize);
         cudaDeviceSynchronize();
     }
 
