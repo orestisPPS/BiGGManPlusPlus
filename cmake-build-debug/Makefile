@@ -1161,30 +1161,6 @@ LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.s
 .PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp.s
 
-LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.o: LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.cu.o
-.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.o
-
-# target to build an object file
-LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.cu.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.cu.o
-.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.cu.o
-
-LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.i: LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.cu.i
-.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.i
-
-# target to preprocess a source file
-LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.cu.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.cu.i
-.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.cu.i
-
-LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.s: LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.cu.s
-.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.s
-
-# target to generate assembly for a file
-LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.cu.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.cu.s
-.PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.cu.s
-
 LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.o: LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu.o
 .PHONY : LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.o
 
@@ -1707,9 +1683,6 @@ help:
 	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.o"
 	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.i"
 	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.s"
-	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.o"
-	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.i"
-	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiSolverCuda.s"
 	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.o"
 	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.i"
 	@echo "... LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.s"

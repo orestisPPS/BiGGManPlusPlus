@@ -38,7 +38,7 @@ namespace LinearAlgebra {
 
         ParallelizationMethod _parallelization;
         
-        StationaryIterativeCuda _stationaryIterativeCuda;
+        unique_ptr<StationaryIterativeCuda> _stationaryIterativeCuda;
         
         string _solverName;
         

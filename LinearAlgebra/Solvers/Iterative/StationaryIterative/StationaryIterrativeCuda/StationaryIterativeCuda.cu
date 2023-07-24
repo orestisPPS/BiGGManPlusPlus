@@ -11,7 +11,7 @@ namespace LinearAlgebra {
         this->_numRows = numRows;
         this->_blockSize = blockSize;
         _numBlocks = getNumBlocks();
-        
+        _norm = 0;
 
         allocateDeviceMemoryForArray(&_d_matrix, this->_numRows * this->_numRows);
         allocateDeviceMemoryForArray(&_d_rhs, this->_numRows);
@@ -24,6 +24,12 @@ namespace LinearAlgebra {
         copyArrayToDevice(_d_xOld, xOld, this->_numRows);
         copyArrayToDevice(_d_xNew, xNew, this->_numRows);
         copyArrayToDevice(_d_diff, diff, this->_numRows);
+
+        printf("Stationary Iterative Solver with CUDA is initialized.\n");
+        printf("Number of Free DOF: %d\n", this->_numRows);
+        printf("Number of Threads per Block: %d\n", getBlockSize());
+        printf("Number of Blocks: %d\n", getNumBlocks());
+        printf("Total Number of Threads: %d\n", getBlockSize() * getNumBlocks());
     }
 
     StationaryIterativeCuda::~StationaryIterativeCuda() {
@@ -43,10 +49,10 @@ namespace LinearAlgebra {
     }
 
     void StationaryIterativeCuda::copyArrayToDevice(double* d_array, double* h_array, int size) {
-        cudaError_t err = cudaMemcpy(d_array, h_array, size * sizeof(double), cudaMemcpyHostToDevice);
+        cudaError_t err;
+        err = cudaMemcpy(d_array, h_array, size * sizeof(double), cudaMemcpyHostToDevice);
         if (err != cudaSuccess) {
-            // Handle error
-            printf("Error copying to device: %s\n", cudaGetErrorString(err));
+            printf("Error copying to device at line %d: %s\n", __LINE__, cudaGetErrorString(err));
         }
     }
 
@@ -67,6 +73,75 @@ namespace LinearAlgebra {
         return (_numRows + getBlockSize() - 1) / getBlockSize();
         // The formula ensures that we cover all rows, especially when _numRows isn't a multiple of the block size.
         // For instance, if _numRows = 1000 and block size = 128, this formula yields 8 blocks.
+    }
+
+    __global__ void kernelJobBlockGaussSeidel(const double* matrix, const double* vector, double* xOld, double* xNew, double* diff, int numRows, int blockSize) {
+        auto blockId = blockIdx.x;  // Assuming 1D grid of blocks
+
+        // Calculate the start and end rows for this block
+        int startRow = blockId * blockSize;
+        int endRow = startRow + blockSize;
+        if (endRow > numRows) {
+            endRow = numRows;
+        }
+
+        // Process rows sequentially within this block
+        for (int row = startRow; row < endRow; ++row) {
+            double sum = 0.0;
+
+            // Before diagonal
+            for (int j = startRow; j < row; j++) {
+                sum += matrix[row * numRows + j] * xNew[j];
+            }
+
+            // After diagonal
+            for (int j = row + 1; j < endRow; j++) {
+                sum += matrix[row * numRows + j] * xOld[j];
+            }
+
+            xNew[row] = (vector[row] - sum) / matrix[row * numRows + row];
+            diff[row] = xNew[row] - xOld[row];
+            xOld[row] = xNew[row];
+        }
+    }
+
+
+/*    __global__ void kernelComputeNorm(const double* diff, double* d_norm, int numRows) {
+        extern __shared__ double sdata[];
+        int tid = threadIdx.x;
+        int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+        sdata[tid] = (i < numRows) ? diff[i] * diff[i] : 0; // Initialize with square of difference
+        __syncthreads();
+
+        for (unsigned int s = blockDim.x / 2; s > 0; s >>= 1) {
+            if (tid < s) {
+                sdata[tid] += sdata[tid + s];
+            }
+            __syncthreads();
+        }
+
+        if (tid == 0) atomicAdd(d_norm, sdata[0]);
+    }*/
+    void StationaryIterativeCuda::performGaussSeidelIteration() {
+        int numBlocks = (_numRows + _blockSize - 1) / _blockSize;
+
+        kernelJobBlockGaussSeidel<<<numBlocks, 1>>>(_d_matrix, _d_rhs, _d_xOld, _d_xNew, _d_diff, _numRows, _blockSize);
+        cudaDeviceSynchronize();
+    }
+
+
+
+    void StationaryIterativeCuda::getDifferenceVector(double* diff) {
+        copyArrayToHost(diff, _d_diff, _numRows);
+    }
+    
+    void StationaryIterativeCuda::getSolutionVector(double* xNew) {
+        copyArrayToHost(xNew, _d_xNew, _numRows);
+    }
+
+    double StationaryIterativeCuda::getNorm() const {
+        return _norm;
     }
 
 

@@ -8,9 +8,9 @@
 namespace Tests {
     SteadyState3DNeumann::SteadyState3DNeumann() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 5;
-        numberOfNodes[Direction::Two] = 5;
-        numberOfNodes[Direction::Three] = 5;
+        numberOfNodes[Direction::One] = 11;
+        numberOfNodes[Direction::Two] = 11;
+        numberOfNodes[Direction::Three] = 11;
 
         //auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 1, 1, 0, 0, 0, 0, 0, 0);
         auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 0.1,1, 0, 0, 0, 0, 0, 0, 0);
@@ -85,7 +85,8 @@ namespace Tests {
         
         //auto solver = make_shared<SolverLUP>(1E-20, true);
         //auto solver = make_shared<JacobiSolver>(false, VectorNormType::LInf);
-        auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo, VectorNormType::LInf, 1E-9);
+        //auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo, VectorNormType::LInf, 1E-9);
+        auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo, VectorNormType::L2, 1E-9);
         //auto solver = make_shared<SORSolver>(1.8, true, VectorNormType::L2, 1E-10);
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
         
@@ -97,9 +98,8 @@ namespace Tests {
         //auto targetCoords = vector<double>{1.5, 1.5, 1.5};
         auto targetCoords = vector<double>{2, 2, 2};
         //auto targetCoords = vector<double>{1.5, 1.5, 3};
-        //auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-5);
-        
-        //cout<<"Target Solution: "<< targetSolution[0] << endl;
+        auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-5);
+        cout<<"Target Solution: "<< targetSolution[0] << endl;
 
         auto fileName = "temperatureField.vtk";
         auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";

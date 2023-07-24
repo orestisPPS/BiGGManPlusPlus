@@ -82,39 +82,41 @@ namespace LinearAlgebra {
                           << deviceProps.maxGridSize[2] << ")" << std::endl;
             }*/
             //cuda file with all gpu utility as extern here 
-            
-            _stationaryIterativeCuda = StationaryIterativeCuda();
-            
-            
+
             double* d_matrix = _linearSystem->matrix->getArrayPointer();
             double* d_rhs = _linearSystem->rhs->data();
             double* d_xOld = _xOld->data();
             double* d_xNew = _xNew->data();
-            int matrixSize = static_cast<int>(_linearSystem->matrix->size());
-            int vectorSize = static_cast<int>(_xOld->size());
+            double* d_difference = _difference->data();
+            int vectorSize = static_cast<int>(_linearSystem->rhs->size());
+
+            _stationaryIterativeCuda = make_unique<StationaryIterativeCuda>(d_matrix, d_rhs, d_xOld, d_xNew, d_difference, vectorSize, 1024);
             
-            StationaryIterativeCuda::allocateDeviceMemoryForArray(d_matrix, matrixSize);
-            StationaryIterativeCuda::allocateDeviceMemoryForArray(d_rhs, vectorSize);
-            StationaryIterativeCuda::allocateDeviceMemoryForArray(d_xOld, vectorSize);
-            StationaryIterativeCuda::allocateDeviceMemoryForArray(d_xNew, vectorSize);
-
-            StationaryIterativeCuda::copyArrayToDevice(d_matrix, d_matrix, matrixSize);
-            StationaryIterativeCuda::copyArrayToDevice(d_rhs, d_rhs, vectorSize);
-
-
             while (iteration < _maxIterations && norm >= _tolerance) {
-                
-                // Calculate the norm of the _difference
+
+                _stationaryIterativeCuda->performGaussSeidelIteration();
+                _stationaryIterativeCuda->getDifferenceVector(_difference->data());
                 norm = VectorNorm(_difference, _normType).value();
+                //norm = _stationaryIterativeCuda->getNorm();
                 // Add the norm to the list of norms
                 _residualNorms->push_back(norm);
+
                 if (iteration % 100 == 0) {
                     cout << "Iteration: " << iteration << " - Norm: " << norm << endl;
                 }
+
                 iteration++;
             }
-            
-            cout<< " allocated first gpu stuff boi" << endl;
+
+            if (norm < _tolerance) {
+                cout << "Solver converged after " << iteration << " iterations." << endl;
+            } else {
+                cout << "Solver reached maximum iterations without converging." << endl;
+            }
+
+            _stationaryIterativeCuda->getSolutionVector(_xNew->data());
+            _stationaryIterativeCuda.reset();
+
         }
         // If the maximum number of iterations is reached and the user has set the flag to throw an exception, throw an exception
         if (iteration == _maxIterations && _throwExceptionOnMaxFailure) {

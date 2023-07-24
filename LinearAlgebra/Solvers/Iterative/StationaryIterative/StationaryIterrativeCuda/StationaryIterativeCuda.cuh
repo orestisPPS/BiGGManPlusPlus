@@ -10,6 +10,7 @@
 
 #include <cuda_runtime.h>
 #include <stdexcept>
+#include "../../../../Norms/VectorNormCuda.cuh"
 
 namespace LinearAlgebra {
 
@@ -46,7 +47,7 @@ namespace LinearAlgebra {
  * \param[in] numRows The number of rows in the matrix.
  * \param[in] numColumns The number of columns in the matrix.
  */
-    __global__ void kernelJobGaussSeidel(double* matrix, double* vector, double* result, int numRows, int numColumns);
+    __global__ void kernelJobBlockGaussSeidel(const double* matrix, const double* vector, double* xOld, double* xNew, double* diff, int numRows, int blockSize);
 
 /**
  * \brief CUDA kernel for implementing the Successive Over-Relaxation (SOR) iterative method.
@@ -149,6 +150,15 @@ namespace LinearAlgebra {
          * \return The number of blocks needed to cover all rows of the matrix.
          */
         int getNumBlocks() const;
+        
+        double getNorm() const;
+
+        void performGaussSeidelIteration();
+        
+        void getDifferenceVector(double *diff);
+
+        void getSolutionVector(double *xNew);
+
 
     private:
         double* _d_matrix;      ///< Represents the linear system's matrix in the device memory.
@@ -156,9 +166,11 @@ namespace LinearAlgebra {
         double* _d_xOld;        ///< Represents the previous iteration's solution in the device memory.
         double* _d_xNew;        ///< Represents the current iteration's solution in the device memory.
         double* _d_diff;        ///< Represents the difference between the current and previous iterations' solutions in the device memory.
+        double _norm;        ///< Represents the norm of the difference vector in the device memory.
         int _numRows;           ///< Denotes the dimensionality of the square linear system.
         int _blockSize;         ///< Denotes the number of threads in a block.
         int _numBlocks;         ///< Denotes the number of blocks needed to cover all rows of the matrix.
+        
     };
 
 } // end of namespace LinearAlgebra

@@ -1,12 +1,10 @@
 cmake_minimum_required(VERSION 3.23)
-project(untitled)
-
+project(untitled LANGUAGES CXX CUDA)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS -fopenmp)
 
 
 enable_language(CUDA)
-find_package(CUDA REQUIRED)
 
 
 add_executable(untitled main.cpp
@@ -122,9 +120,12 @@ add_executable(untitled main.cpp
         Discretization/Elements/Element.h 
         Discretization/Elements/Element.cpp
         Discretization/Elements/MeshElements.h
-        Discretization/Elements/MeshElements.cpp LinearAlgebra/Solvers/Iterative/StationaryIterative/Cuda/StationaryIterativeCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/Cuda/StationaryIterativeCuda.cu LinearAlgebra/Solvers/Iterative/StationaryIterative/Cuda/JacobiSolverCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/Cuda/JacobiSolverCuda.cu LinearAlgebra/Norms/VectorNormCuda.cuh LinearAlgebra/Norms/VectorNormCuda.cu)
+        Discretization/Elements/MeshElements.cpp
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cuh
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu
+        LinearAlgebra/Norms/VectorNormCuda.cuh
+        LinearAlgebra/Norms/VectorNormCuda.cu)
 
-set_source_files_properties(LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.p PROPERTIES LANGUAGE CUDA)
-target_link_libraries(untitled ${CUDA_LIBRARIES})
-        
-        
+
+target_link_libraries(untitled cudart)
+
