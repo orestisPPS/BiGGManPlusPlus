@@ -897,30 +897,6 @@ LinearAlgebra/Norms/VectorNormCuda.cu.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Norms/VectorNormCuda.cu.s
 .PHONY : LinearAlgebra/Norms/VectorNormCuda.cu.s
 
-LinearAlgebra/Operations/NumberOperations.o: LinearAlgebra/Operations/NumberOperations.cpp.o
-.PHONY : LinearAlgebra/Operations/NumberOperations.o
-
-# target to build an object file
-LinearAlgebra/Operations/NumberOperations.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/NumberOperations.cpp.o
-.PHONY : LinearAlgebra/Operations/NumberOperations.cpp.o
-
-LinearAlgebra/Operations/NumberOperations.i: LinearAlgebra/Operations/NumberOperations.cpp.i
-.PHONY : LinearAlgebra/Operations/NumberOperations.i
-
-# target to preprocess a source file
-LinearAlgebra/Operations/NumberOperations.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/NumberOperations.cpp.i
-.PHONY : LinearAlgebra/Operations/NumberOperations.cpp.i
-
-LinearAlgebra/Operations/NumberOperations.s: LinearAlgebra/Operations/NumberOperations.cpp.s
-.PHONY : LinearAlgebra/Operations/NumberOperations.s
-
-# target to generate assembly for a file
-LinearAlgebra/Operations/NumberOperations.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/NumberOperations.cpp.s
-.PHONY : LinearAlgebra/Operations/NumberOperations.cpp.s
-
 LinearAlgebra/Operations/Transformations.o: LinearAlgebra/Operations/Transformations.cpp.o
 .PHONY : LinearAlgebra/Operations/Transformations.o
 
@@ -1233,6 +1209,54 @@ LinearAlgebra/Solvers/Solver.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Solver.cpp.s
 .PHONY : LinearAlgebra/Solvers/Solver.cpp.s
 
+LinearAlgebraCUDA/MemoryManagementCUDA.o: LinearAlgebraCUDA/MemoryManagementCUDA.cu.o
+.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.o
+
+# target to build an object file
+LinearAlgebraCUDA/MemoryManagementCUDA.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/MemoryManagementCUDA.cu.o
+.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.cu.o
+
+LinearAlgebraCUDA/MemoryManagementCUDA.i: LinearAlgebraCUDA/MemoryManagementCUDA.cu.i
+.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.i
+
+# target to preprocess a source file
+LinearAlgebraCUDA/MemoryManagementCUDA.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/MemoryManagementCUDA.cu.i
+.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.cu.i
+
+LinearAlgebraCUDA/MemoryManagementCUDA.s: LinearAlgebraCUDA/MemoryManagementCUDA.cu.s
+.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.s
+
+# target to generate assembly for a file
+LinearAlgebraCUDA/MemoryManagementCUDA.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/MemoryManagementCUDA.cu.s
+.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.cu.s
+
+LinearAlgebraCUDA/NumericalOperationsCUDA.o: LinearAlgebraCUDA/NumericalOperationsCUDA.cu.o
+.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.o
+
+# target to build an object file
+LinearAlgebraCUDA/NumericalOperationsCUDA.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/NumericalOperationsCUDA.cu.o
+.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.cu.o
+
+LinearAlgebraCUDA/NumericalOperationsCUDA.i: LinearAlgebraCUDA/NumericalOperationsCUDA.cu.i
+.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.i
+
+# target to preprocess a source file
+LinearAlgebraCUDA/NumericalOperationsCUDA.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/NumericalOperationsCUDA.cu.i
+.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.cu.i
+
+LinearAlgebraCUDA/NumericalOperationsCUDA.s: LinearAlgebraCUDA/NumericalOperationsCUDA.cu.s
+.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.s
+
+# target to generate assembly for a file
+LinearAlgebraCUDA/NumericalOperationsCUDA.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/NumericalOperationsCUDA.cu.s
+.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.cu.s
+
 MathematicalProblem/MathematicalProblem.o: MathematicalProblem/MathematicalProblem.cpp.o
 .PHONY : MathematicalProblem/MathematicalProblem.o
 
@@ -1497,6 +1521,30 @@ StructuredMeshGeneration/NodeFactory.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/StructuredMeshGeneration/NodeFactory.cpp.s
 .PHONY : StructuredMeshGeneration/NodeFactory.cpp.s
 
+Tests/OperationsCUDA.o: Tests/OperationsCUDA.cpp.o
+.PHONY : Tests/OperationsCUDA.o
+
+# target to build an object file
+Tests/OperationsCUDA.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/OperationsCUDA.cpp.o
+.PHONY : Tests/OperationsCUDA.cpp.o
+
+Tests/OperationsCUDA.i: Tests/OperationsCUDA.cpp.i
+.PHONY : Tests/OperationsCUDA.i
+
+# target to preprocess a source file
+Tests/OperationsCUDA.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/OperationsCUDA.cpp.i
+.PHONY : Tests/OperationsCUDA.cpp.i
+
+Tests/OperationsCUDA.s: Tests/OperationsCUDA.cpp.s
+.PHONY : Tests/OperationsCUDA.s
+
+# target to generate assembly for a file
+Tests/OperationsCUDA.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/OperationsCUDA.cpp.s
+.PHONY : Tests/OperationsCUDA.cpp.s
+
 Tests/SteadyState3DNeumann.o: Tests/SteadyState3DNeumann.cpp.o
 .PHONY : Tests/SteadyState3DNeumann.o
 
@@ -1674,9 +1722,6 @@ help:
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.o"
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.i"
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.s"
-	@echo "... LinearAlgebra/Operations/NumberOperations.o"
-	@echo "... LinearAlgebra/Operations/NumberOperations.i"
-	@echo "... LinearAlgebra/Operations/NumberOperations.s"
 	@echo "... LinearAlgebra/Operations/Transformations.o"
 	@echo "... LinearAlgebra/Operations/Transformations.i"
 	@echo "... LinearAlgebra/Operations/Transformations.s"
@@ -1716,6 +1761,12 @@ help:
 	@echo "... LinearAlgebra/Solvers/Solver.o"
 	@echo "... LinearAlgebra/Solvers/Solver.i"
 	@echo "... LinearAlgebra/Solvers/Solver.s"
+	@echo "... LinearAlgebraCUDA/MemoryManagementCUDA.o"
+	@echo "... LinearAlgebraCUDA/MemoryManagementCUDA.i"
+	@echo "... LinearAlgebraCUDA/MemoryManagementCUDA.s"
+	@echo "... LinearAlgebraCUDA/NumericalOperationsCUDA.o"
+	@echo "... LinearAlgebraCUDA/NumericalOperationsCUDA.i"
+	@echo "... LinearAlgebraCUDA/NumericalOperationsCUDA.s"
 	@echo "... MathematicalProblem/MathematicalProblem.o"
 	@echo "... MathematicalProblem/MathematicalProblem.i"
 	@echo "... MathematicalProblem/MathematicalProblem.s"
@@ -1749,6 +1800,9 @@ help:
 	@echo "... StructuredMeshGeneration/NodeFactory.o"
 	@echo "... StructuredMeshGeneration/NodeFactory.i"
 	@echo "... StructuredMeshGeneration/NodeFactory.s"
+	@echo "... Tests/OperationsCUDA.o"
+	@echo "... Tests/OperationsCUDA.i"
+	@echo "... Tests/OperationsCUDA.s"
 	@echo "... Tests/SteadyState3DNeumann.o"
 	@echo "... Tests/SteadyState3DNeumann.i"
 	@echo "... Tests/SteadyState3DNeumann.s"

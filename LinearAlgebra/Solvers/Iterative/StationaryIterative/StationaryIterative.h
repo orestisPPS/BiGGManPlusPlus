@@ -42,6 +42,15 @@ namespace LinearAlgebra {
         
         string _solverName;
         
+    private:
+        void _printSingleThreadInitializationText();
+        void _printMultiThreadInitializationText(unsigned short numberOfThreads);
+        void _printCUDAInitializationText();
+        static void _printIterationAndNorm(unsigned iteration, double norm);
+        double _calculateNorm();
+        void printAnalysisOutcome(unsigned totalIterations, double exitNorm, std::chrono::high_resolution_clock::time_point startTime,
+                                  std::chrono::high_resolution_clock::time_point finishTime);
+        
     };
 
 

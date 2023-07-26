@@ -100,8 +100,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.h
         LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.cpp
         LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp
-        LinearAlgebra/Operations/NumberOperations.h
-        LinearAlgebra/Operations/NumberOperations.cpp 
         LinearAlgebra/FiniteDifferences/FDWeightCalculator.h 
         PartialDifferentialEquations/SpaceFieldProperties.h 
         StructuredMeshGeneration/DomainBoundaryFactory.h
@@ -124,7 +122,7 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cuh
         LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu
         LinearAlgebra/Norms/VectorNormCuda.cuh
-        LinearAlgebra/Norms/VectorNormCuda.cu LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu)
+        LinearAlgebra/Norms/VectorNormCuda.cu LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu LinearAlgebraCUDA/NumericalOperationsCUDA.cuh LinearAlgebraCUDA/NumericalOperationsCUDA.cu LinearAlgebraCUDA/MemoryManagementCUDA.cuh LinearAlgebraCUDA/MemoryManagementCUDA.cu Tests/OperationsCUDA.h Tests/OperationsCUDA.cpp)
 
 
 target_link_libraries(untitled cudart)

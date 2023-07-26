@@ -104,9 +104,71 @@ namespace LinearAlgebra {
         }
     }
 
+    __global__ void kernelJobBlockGaussSeidelMatrixVector(const double* matrix, const double* vector, double* xOld, double* xNew, double* diff, int numRows, int blockSize) {
+        auto blockId = blockIdx.x;  // Assuming 1D grid of blocks
+
+        // Calculate the start and end rows for this block
+        unsigned startRow = blockId * blockSize;
+        unsigned endRow = startRow + blockSize;
+        if (endRow > numRows) {
+            endRow = numRows;
+        }
+
+        // Process rows sequentially within this block
+        for (unsigned row = startRow; row < endRow; ++row) {
+            double sum = 0.0;
+
+            // Before diagonal
+            for (unsigned j = 0; j < row; j++) {
+                sum += matrix[row * numRows + j] * xNew[j];
+            }
+
+            // After diagonal
+            for (unsigned j = row + 1; j < numRows; j++) {
+                sum += matrix[row * numRows + j] * xOld[j];
+            }
+
+            xNew[row] = (vector[row] - sum) / matrix[row * numRows + row];
+            diff[row] = xNew[row] - xOld[row];
+            xOld[row] = xNew[row];
+        }
+    }
+
+    __global__ void kernelJobJacobi(const double* matrix, const double* vector, double* xOld, double* xNew, double* diff, int numRows, int blockSize) {
+        auto blockId = blockIdx.x;  // Assuming 1D grid of blocks
+
+        // Calculate the start and end rows for this block
+        unsigned startRow = blockId * blockSize;
+        unsigned endRow = startRow + blockSize;
+        if (endRow > numRows) {
+            endRow = numRows;
+        }
+
+        // Process rows sequentially within this block
+        for (unsigned row = startRow; row < endRow; ++row) {
+            double sum = 0.0;
+
+            // Before diagonal
+            for (unsigned j = 0; j < row; j++) {
+                sum += matrix[row * numRows + j] * xNew[j];
+            }
+
+            // After diagonal
+            for (unsigned j = row + 1; j < numRows; j++) {
+                sum += matrix[row * numRows + j] * xOld[j];
+            }
+
+            xNew[row] = (vector[row] - sum) / matrix[row * numRows + row];
+            diff[row] = xNew[row] - xOld[row];
+            xOld[row] = xNew[row];
+        }
+    }
+    
+    
 
 
-    /*    __global__ void kernelComputeNorm(const double* diff, double* d_norm, int numRows) {
+/*
+        __global__ void kernelComputeNorm(const double* diff, double* d_norm, int numRows) {
         extern __shared__ double sdata[];
         int tid = threadIdx.x;
         int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -123,6 +185,8 @@ namespace LinearAlgebra {
 
         if (tid == 0) atomicAdd(d_norm, sdata[0]);
     }*/
+    
+    
     void StationaryIterativeCuda::performGaussSeidelIteration() {
 
         //Launch kernel with 1 
@@ -142,6 +206,24 @@ namespace LinearAlgebra {
 
     double StationaryIterativeCuda::getNorm() const {
         return _norm;
+    }
+
+    void StationaryIterativeCuda::printDeviceSpecs() {
+        for (int i = 0; i < 1; i++) {
+            cudaDeviceProp deviceProps = cudaDeviceProp();
+            cudaGetDeviceProperties(&deviceProps, i);
+
+            std::cout << "Device " << i << ": " << deviceProps.name << std::endl;
+            std::cout << "  Max threads per block: " << deviceProps.maxThreadsPerBlock << std::endl;
+            std::cout << "  Max thread dimensions (x, y, z): ("
+                      << deviceProps.maxThreadsDim[0] << ", "
+                      << deviceProps.maxThreadsDim[1] << ", "
+                      << deviceProps.maxThreadsDim[2] << ")" << std::endl;
+            std::cout << "  Max grid dimensions (x, y, z): ("
+                      << deviceProps.maxGridSize[0] << ", "
+                      << deviceProps.maxGridSize[1] << ", "
+                      << deviceProps.maxGridSize[2] << ")" << std::endl;
+        }
     }
 
 

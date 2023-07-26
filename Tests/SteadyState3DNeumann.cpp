@@ -23,12 +23,12 @@ namespace Tests {
 
         auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
                 {{Temperature, 1000}}));//
-        auto topBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
+        auto topBC = new BoundaryCondition(Neumann, new map<DOFType, double>(
                 {{Temperature, 0}}));//
         auto rightBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 1000}}));
-        auto leftBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
-                {{Temperature, 1000}}));
+                {{Temperature, -200}}));
+        auto leftBC = new BoundaryCondition(Neumann, new map<DOFType, double>(
+                {{Temperature, 0}}));
         auto frontBC = new BoundaryCondition(Neumann, new map<DOFType, double>(
                 {{Temperature, 00}}));//
         auto backBC = new BoundaryCondition(Neumann, new map<DOFType, double>(

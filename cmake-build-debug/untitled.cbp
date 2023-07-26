@@ -289,12 +289,6 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Norms/VectorNormCuda.cuh">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/NumberOperations.cpp">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/NumberOperations.h">
-			<Option target="untitled"/>
-		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/TransformationTensors.h">
 			<Option target="untitled"/>
 		</Unit>
@@ -376,6 +370,18 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Solver.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebraCUDA/MemoryManagementCUDA.cu">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebraCUDA/MemoryManagementCUDA.cuh">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebraCUDA/NumericalOperationsCUDA.cu">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebraCUDA/NumericalOperationsCUDA.cuh">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalProblem/MathematicalProblem.cpp">
 			<Option target="untitled"/>
 		</Unit>
@@ -446,6 +452,12 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/StructuredMeshGeneration/NodeFactory.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/OperationsCUDA.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/OperationsCUDA.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyState3DNeumann.cpp">

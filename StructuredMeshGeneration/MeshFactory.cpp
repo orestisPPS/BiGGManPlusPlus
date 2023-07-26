@@ -50,6 +50,7 @@ namespace StructuredMeshGenerator{
         //auto solver  = new JacobiSolver(true, VectorNormType::L1, 1E-8, 1E4, true);
         //auto solver  = new GaussSeidelSolver(true, VectorNormType::LInf, 1E-9);
         //auto solver = make_shared<SORSolver>(1.7, vTechKickInYoo, VectorNormType::LInf, 1E-9);
+        //auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo , VectorNormType::L2, 1E-9);
         auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo , VectorNormType::L2, 1E-9);
 
 
