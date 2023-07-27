@@ -729,6 +729,30 @@ LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp.s
 .PHONY : LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp.s
 
+LinearAlgebra/Array/NumericalArray.o: LinearAlgebra/Array/NumericalArray.cpp.o
+.PHONY : LinearAlgebra/Array/NumericalArray.o
+
+# target to build an object file
+LinearAlgebra/Array/NumericalArray.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Array/NumericalArray.cpp.o
+.PHONY : LinearAlgebra/Array/NumericalArray.cpp.o
+
+LinearAlgebra/Array/NumericalArray.i: LinearAlgebra/Array/NumericalArray.cpp.i
+.PHONY : LinearAlgebra/Array/NumericalArray.i
+
+# target to preprocess a source file
+LinearAlgebra/Array/NumericalArray.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Array/NumericalArray.cpp.i
+.PHONY : LinearAlgebra/Array/NumericalArray.cpp.i
+
+LinearAlgebra/Array/NumericalArray.s: LinearAlgebra/Array/NumericalArray.cpp.s
+.PHONY : LinearAlgebra/Array/NumericalArray.s
+
+# target to generate assembly for a file
+LinearAlgebra/Array/NumericalArray.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Array/NumericalArray.cpp.s
+.PHONY : LinearAlgebra/Array/NumericalArray.cpp.s
+
 LinearAlgebra/FiniteDifferences/FDSchemeSpecs.o: LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp.o
 .PHONY : LinearAlgebra/FiniteDifferences/FDSchemeSpecs.o
 
@@ -1016,6 +1040,30 @@ LinearAlgebra/Solvers/Direct/SolverLUP.s: LinearAlgebra/Solvers/Direct/SolverLUP
 LinearAlgebra/Solvers/Direct/SolverLUP.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Direct/SolverLUP.cpp.s
 .PHONY : LinearAlgebra/Solvers/Direct/SolverLUP.cpp.s
+
+LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.o: LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.o
+.PHONY : LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.o
+
+# target to build an object file
+LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.o
+.PHONY : LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.o
+
+LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.i: LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.i
+.PHONY : LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.i
+
+# target to preprocess a source file
+LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.i
+.PHONY : LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.i
+
+LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.s: LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.s
+.PHONY : LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.s
+
+# target to generate assembly for a file
+LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.s
+.PHONY : LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.s
 
 LinearAlgebra/Solvers/Iterative/IterativeSolver.o: LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp.o
 .PHONY : LinearAlgebra/Solvers/Iterative/IterativeSolver.o
@@ -1701,6 +1749,9 @@ help:
 	@echo "... LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.o"
 	@echo "... LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.i"
 	@echo "... LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.s"
+	@echo "... LinearAlgebra/Array/NumericalArray.o"
+	@echo "... LinearAlgebra/Array/NumericalArray.i"
+	@echo "... LinearAlgebra/Array/NumericalArray.s"
 	@echo "... LinearAlgebra/FiniteDifferences/FDSchemeSpecs.o"
 	@echo "... LinearAlgebra/FiniteDifferences/FDSchemeSpecs.i"
 	@echo "... LinearAlgebra/FiniteDifferences/FDSchemeSpecs.s"
@@ -1737,6 +1788,9 @@ help:
 	@echo "... LinearAlgebra/Solvers/Direct/SolverLUP.o"
 	@echo "... LinearAlgebra/Solvers/Direct/SolverLUP.i"
 	@echo "... LinearAlgebra/Solvers/Direct/SolverLUP.s"
+	@echo "... LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.o"
+	@echo "... LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.i"
+	@echo "... LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.s"
 	@echo "... LinearAlgebra/Solvers/Iterative/IterativeSolver.o"
 	@echo "... LinearAlgebra/Solvers/Iterative/IterativeSolver.i"
 	@echo "... LinearAlgebra/Solvers/Iterative/IterativeSolver.s"

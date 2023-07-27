@@ -12,9 +12,19 @@
 
 namespace LinearAlgebra {
 
+    enum ParallelizationMethod{
+        //Multi-thread solution
+        vTechKickInYoo,
+        //INSSSSSSSSSSSSANE GPU GAINS
+        turboVTechKickInYoo,
+        //:( Single thread 
+        Wank
+    };
+    
     class IterativeSolver : public Solver {
     public:
-        explicit IterativeSolver(VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4, bool throwExceptionOnMaxFailure = true);
+        explicit IterativeSolver(VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4, 
+                                 bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = Wank);
         
         ~IterativeSolver();
 
@@ -40,9 +50,6 @@ namespace LinearAlgebra {
         
     protected:
         
-        
-        virtual void _iterativeSolution();
-        
         VectorNormType _normType;
         
         double _tolerance;
@@ -61,6 +68,31 @@ namespace LinearAlgebra {
         
         shared_ptr<list<double>> _residualNorms;
 
+        string _solverName;
+
+        ParallelizationMethod _parallelization;
+        
+        virtual void _iterativeSolution();
+        
+        virtual void _singleThreadSolution();
+
+        virtual void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows);
+
+        virtual void _cudaSolution();
+        
+        void _printSingleThreadInitializationText();
+        
+        void _printMultiThreadInitializationText(unsigned short numberOfThreads);
+        
+        void _printCUDAInitializationText();
+        
+        static void _printIterationAndNorm(unsigned iteration, double norm);
+        
+        double _calculateNorm();
+        
+        void printAnalysisOutcome(unsigned totalIterations, double exitNorm, std::chrono::high_resolution_clock::time_point startTime,
+                                  std::chrono::high_resolution_clock::time_point finishTime);
+        
         
     };
     

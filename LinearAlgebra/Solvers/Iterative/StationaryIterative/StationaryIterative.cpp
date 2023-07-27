@@ -5,12 +5,8 @@
 #include "StationaryIterative.h"
 
 namespace LinearAlgebra {
-    StationaryIterative::StationaryIterative(ParallelizationMethod parallelizationMethod, VectorNormType normType,
-                                             double tolerance, unsigned maxIterations,
-                                             bool throwExceptionOnMaxFailure) :
-            IterativeSolver(normType, tolerance, maxIterations, throwExceptionOnMaxFailure) {
-        _parallelization = parallelizationMethod;
-        _residualNorms = make_shared<list<double>>();
+    StationaryIterative::StationaryIterative(VectorNormType normType, double tolerance, unsigned maxIterations, bool throwExceptionOnMaxFailure, ParallelizationMethod parallelizationMethod) :
+            IterativeSolver(normType, tolerance, maxIterations, throwExceptionOnMaxFailure, parallelizationMethod) {
     }
 
     void StationaryIterative::_iterativeSolution() {
@@ -33,9 +29,7 @@ namespace LinearAlgebra {
             }
         }
         if (_parallelization == vTechKickInYoo) {
-
-            //Define the available threads (2 less than the number of threads available for parallel execution)
-            unsigned numberOfThreads = std::thread::hardware_concurrency();
+            auto numberOfThreads = std::thread::hardware_concurrency();
             _printMultiThreadInitializationText(numberOfThreads);
             while (iteration < _maxIterations && norm >= _tolerance) {
                 _multiThreadSolution(numberOfThreads, n);
@@ -43,15 +37,11 @@ namespace LinearAlgebra {
                 _printIterationAndNorm(iteration, norm);
                 iteration++;
             }
+
         }
 
         else if (_parallelization == turboVTechKickInYoo) {
-
-/*
-
-            }*/
-            //cuda file with all gpu utility as extern here 
-
+            
             double *d_matrix = _linearSystem->matrix->getArrayPointer();
             double *d_rhs = _linearSystem->rhs->data();
             double *d_xOld = _xOld->data();
@@ -77,9 +67,6 @@ namespace LinearAlgebra {
 
                 iteration++;
             }
-
-
-
             _stationaryIterativeCuda->getSolutionVector(_xNew->data());
             _stationaryIterativeCuda.reset();
 
@@ -120,72 +107,18 @@ namespace LinearAlgebra {
         }
 
     }
+    
+    void StationaryIterative::_threadJob(unsigned start, unsigned end) {
+
+    }
+
+    void StationaryIterative::_cudaSolution() {
+    }
 
     void StationaryIterative::_singleThreadSolution() {
         _threadJob(0, _linearSystem->matrix->numberOfRows());
     }
 
-    void StationaryIterative::_threadJob(unsigned start, unsigned end) {
 
-    }
-
-    void StationaryIterative::_printSingleThreadInitializationText() {
-        cout << " " << endl;
-        cout << "----------------------------------------" << endl;
-        cout << _solverName << " Solver Single Thread - no vtec yo :(" << endl;
-    }
-
-    void StationaryIterative::_printMultiThreadInitializationText(unsigned short numberOfThreads) {
-        cout << " " << endl;
-        cout << "----------------------------------------" << endl;
-        cout << _solverName << " Solver Multi Thread - VTEC KICKED IN YO!" << endl;
-        //Find the number of threads available for parallel execution
-        cout << "Total Number of threads available for parallel execution: " << numberOfThreads << endl;
-        cout << "Number of threads involved in parallel solution: " << numberOfThreads << endl;
-    }
-
-    void StationaryIterative::_printCUDAInitializationText() {
-
-    }
-
-    void StationaryIterative::_printIterationAndNorm(unsigned int iteration, double norm) {
-        if (iteration % 100 == 0)
-            cout << "Iteration: " << iteration << " - Norm: " << norm << endl;
-
-    }
-
-    double StationaryIterative::_calculateNorm() {
-        double norm = VectorNorm(_difference, _normType).value();
-        _residualNorms->push_back(norm);
-        return norm;
-    }
-
-    void StationaryIterative::printAnalysisOutcome(unsigned totalIterations, double exitNorm,  std::chrono::high_resolution_clock::time_point startTime,
-                                                   std::chrono::high_resolution_clock::time_point finishTime){
-        bool isInMicroSeconds = false;
-        auto _elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(finishTime - startTime).count();
-        if (_elapsedTime == 0) {
-            _elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(finishTime - startTime).count();
-            isInMicroSeconds = true;
-        }
-        if (isInMicroSeconds) {
-            if (exitNorm <= _tolerance)
-                cout << "Convergence Achieved!" << endl;
-            else
-                cout << "Convergence Failed!" << endl;
-
-            cout << "Elapsed time: " << _elapsedTime << " μs" << " Iterations : " << totalIterations << " Exit norm : " << exitNorm << endl;
-            cout << "----------------------------------------" << endl;
-        } else {
-            
-            if (exitNorm <= _tolerance)
-                cout << "Convergence Achieved!" << endl;
-            else
-                cout << "Convergence Failed!" << endl;
-            
-            cout << "Elapsed time: " << _elapsedTime << " ms" << " Iterations : " << totalIterations << " Exit norm : " << exitNorm << endl;
-            cout << "----------------------------------------" << endl;
-        }
-    }
 }
 // LinearAlgebra
