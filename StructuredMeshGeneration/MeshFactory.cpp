@@ -51,7 +51,7 @@ namespace StructuredMeshGenerator{
         //auto solver  = new GaussSeidelSolver(true, VectorNormType::LInf, 1E-9);
         //auto solver = make_shared<SORSolver>(1.7, vTechKickInYoo, VectorNormType::LInf, 1E-9);
         //auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo , VectorNormType::L2, 1E-9);
-        auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo , VectorNormType::L2, 1E-9);
+        auto solver = make_shared<GaussSeidelSolver>(VectorNormType::L2, 1E-9, turboVTechKickInYoo);
 
 
         auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specs, Template);

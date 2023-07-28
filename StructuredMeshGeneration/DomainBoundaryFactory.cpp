@@ -704,7 +704,7 @@ namespace StructuredMeshGenerator {
     shared_ptr<DomainBoundaryConditions> DomainBoundaryFactory::gasTankVertical(map<Direction, unsigned int> &nodesPerDirection, double lenghtX,
                                                 double lengthY) {
     
-
+        return nullptr;
     }
 
     shared_ptr<DomainBoundaryConditions> DomainBoundaryFactory::annulus_3D_ripGewrgiou(map<Direction, unsigned int> &nodesPerDirection, double rIn,
@@ -850,29 +850,6 @@ namespace StructuredMeshGenerator {
         }
         mesh2D.reset();
         return make_shared<DomainBoundaryConditions>(boundaryConditionsSet);
-    }
-
-    BoundaryCondition* DomainBoundaryFactory::_getBoundaryConditionFromBoundaryNodeCoords(const vector<double> &nodeCoordinates) {
-        auto boundaryValues = new map<DOFType, double>();
-        boundaryValues->insert(pair<DOFType, double>(Position1, nodeCoordinates[0]));
-        boundaryValues->insert(pair<DOFType, double>(Position2, nodeCoordinates[1]));
-        boundaryValues->insert(pair<DOFType, double>(Position3, nodeCoordinates[2]));
-        auto boundaryCondition = new BoundaryCondition(Dirichlet, boundaryValues);
-        return boundaryCondition;
-    }
-
-    map<unsigned, shared_ptr<BoundaryCondition>> DomainBoundaryFactory::_createBoundaryConditionForBoundary(unsigned iterator1Max, unsigned iterator2Max,
-                                                                                                            const shared_ptr<vector<Node*>> &nodes) {
-    
-        for (unsigned i = 0; i < iterator1Max; i++) {
-            for (unsigned j = 0; j < iterator2Max; j++) {
-                auto node2D = nodes->at(j);
-                auto naturalCoords = node2D->coordinates.positionVector(Natural);
-                auto parametricCoords = node2D->coordinates.positionVector(Parametric);
-                auto bcValues = {parametricCoords[0], parametricCoords[1], naturalCoords[2]};
-            }
-        }
-
     }
 
 }// StructuredMeshGenerator

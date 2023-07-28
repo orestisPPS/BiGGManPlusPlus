@@ -17,6 +17,7 @@
 #include <stdexcept>
 #include <chrono>
 #include <iomanip>
+#include "../Operations/VectorOperations.h"
 
 using namespace std;
 

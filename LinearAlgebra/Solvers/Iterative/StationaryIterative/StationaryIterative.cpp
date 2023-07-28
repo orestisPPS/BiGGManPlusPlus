@@ -79,44 +79,12 @@ namespace LinearAlgebra {
 
     void StationaryIterative::_multiThreadSolution(const unsigned short &availableThreads,
                                                    const unsigned short &numberOfRows) {
-
-        //Initiate the thread pool map
-        map<unsigned, thread> threadPool = map<unsigned, thread>();
-        for (unsigned int i = 0; i < availableThreads; ++i) {
-            threadPool.insert(pair<unsigned, thread>(i, thread()));
-        }
-
-        // Calculate the number of rows to assign to each thread
-        unsigned rowsPerThread = numberOfRows / availableThreads;
-        unsigned lastRows = numberOfRows % availableThreads;
-
-        // Launch the threads and assign the work
-        unsigned startRow = 0;
-        unsigned endRow = 0;
-        for (unsigned i = 0; i < availableThreads; ++i) {
-            endRow = startRow + rowsPerThread;
-            if (i == availableThreads - 1) {
-                endRow = endRow + lastRows;
-            }
-            threadPool[i] = thread(&StationaryIterative::_threadJob, this, startRow, endRow);
-            startRow = endRow;
-        }
-        // Wait for all the threads to finish
-        for (auto &thread: threadPool) {
-            thread.second.join();
-        }
-
-    }
-    
-    void StationaryIterative::_threadJob(unsigned start, unsigned end) {
-
     }
 
     void StationaryIterative::_cudaSolution() {
     }
 
     void StationaryIterative::_singleThreadSolution() {
-        _threadJob(0, _linearSystem->matrix->numberOfRows());
     }
 
 

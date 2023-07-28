@@ -6,16 +6,22 @@
 #define UNTITLED_GAUSSSEIDELSOLVER_H
 
 #include "StationaryIterative.h"
-
 namespace LinearAlgebra {
 
     class GaussSeidelSolver : public StationaryIterative{
 
     public:
-        GaussSeidelSolver(ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance = 1E-9, unsigned maxIterations = 1E4, bool throwExceptionOnMaxFailure = true);
+        explicit GaussSeidelSolver(VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4,
+                          bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = Wank);
 
     protected:
-        void _threadJob(unsigned start, unsigned end) override;
+        
+        void _singleThreadSolution() override;
+        
+        void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows) override;
+
+    private:
+        void _threadJobGaussSeidel(unsigned start, unsigned end);
     };  
 } // LinearAlgebra
 

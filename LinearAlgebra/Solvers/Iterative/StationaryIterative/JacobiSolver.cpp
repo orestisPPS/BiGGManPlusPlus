@@ -6,16 +6,48 @@
 
 namespace LinearAlgebra {
 
-    JacobiSolver::JacobiSolver(ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance, unsigned maxIterations,
-                               bool throwExceptionOnMaxFailure) :
-            StationaryIterative(vTechKickInYoo, normType, tolerance, maxIterations, throwExceptionOnMaxFailure) {
+    JacobiSolver::JacobiSolver(VectorNormType normType, double tolerance, unsigned maxIterations,
+                               bool throwExceptionOnMaxFailure, ParallelizationMethod parallelizationMethod) :
+            StationaryIterative(normType, tolerance, maxIterations, throwExceptionOnMaxFailure, parallelizationMethod) {
         _solverName = "Jacobi";
         _residualNorms = make_shared<list<double>>();
     }
+    
+    void JacobiSolver::_singleThreadSolution(){
+        _threadJobJacobi(0, _linearSystem->matrix->numberOfRows());
+    }
 
+    void JacobiSolver::_multiThreadSolution(const unsigned short &availableThreads,
+                                         const unsigned short &numberOfRows) {
 
+        //Initiate the thread pool map
+        map<unsigned, thread> threadPool = map<unsigned, thread>();
+        for (unsigned int i = 0; i < availableThreads; ++i) {
+            threadPool.insert(pair<unsigned, thread>(i, thread()));
+        }
 
-    void JacobiSolver::_threadJob(unsigned start, unsigned end) {
+        // Calculate the number of rows to assign to each thread
+        unsigned rowsPerThread = numberOfRows / availableThreads;
+        unsigned lastRows = numberOfRows % availableThreads;
+
+        // Launch the threads and assign the work
+        unsigned startRow = 0;
+        unsigned endRow = 0;
+        for (unsigned i = 0; i < availableThreads; ++i) {
+            endRow = startRow + rowsPerThread;
+            if (i == availableThreads - 1) {
+                endRow = endRow + lastRows;
+            }
+            threadPool[i] = thread(&JacobiSolver::_threadJobJacobi, this, startRow, endRow);
+            startRow = endRow;
+        }
+        // Wait for all the threads to finish
+        for (auto &thread: threadPool) {
+            thread.second.join();
+        }
+    }
+    
+    void JacobiSolver::_threadJobJacobi(unsigned start, unsigned end) {
         unsigned n = _linearSystem->matrix->numberOfRows();
         for (unsigned row = start; row < end; ++row) {
             double sum = 0.0;
@@ -33,5 +65,8 @@ namespace LinearAlgebra {
             _xOld->at(row) = _xNew->at(row);
         }
     }
+    
+    
+
 
 } // LinearAlgebra

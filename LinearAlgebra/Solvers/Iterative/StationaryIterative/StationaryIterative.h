@@ -27,8 +27,6 @@ namespace LinearAlgebra {
         
         void _cudaSolution() override;
         
-        void _threadJob(unsigned start, unsigned end);
-
     private:
         unique_ptr<StationaryIterativeCuda> _stationaryIterativeCuda;
         

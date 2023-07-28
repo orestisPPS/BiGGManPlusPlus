@@ -2,6 +2,8 @@
 #define UNTITLED_NODALCOORDINATES_H
 
 #include <map>
+#include <stdexcept>
+#include <memory>
 #include "../../PositioningInSpace/DirectionsPositions.h"
 
 namespace Discretization {

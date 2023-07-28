@@ -84,7 +84,6 @@ add_executable(untitled main.cpp
         Discretization/Mesh/Metrics/Metrics.h
         Discretization/Mesh/Metrics/Metrics.cpp
         LinearAlgebra/Operations/VectorOperations.h
-        LinearAlgebra/Operations/VectorOperations.cpp
         LinearAlgebra/Solvers/Solver.h LinearAlgebra/Solvers/Solver.cpp 
         LinearAlgebra/Norms/VectorNorm.h LinearAlgebra/Norms/VectorNorm.cpp
         LinearAlgebra/Solvers/Iterative/IterativeSolver.h 

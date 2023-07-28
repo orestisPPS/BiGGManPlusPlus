@@ -77,7 +77,7 @@ namespace LinearAlgebra {
         virtual void _singleThreadSolution();
 
         virtual void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows);
-
+        
         virtual void _cudaSolution();
         
         void _printSingleThreadInitializationText();

@@ -6,6 +6,7 @@
 #define UNTITLED_BOUNDARYCONDITION_H
 
 #include <vector>
+#include <memory>
 #include <map>
 #include <functional>
 #include "../PositioningInSpace/DirectionsPositions.h"

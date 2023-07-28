@@ -122,10 +122,6 @@ namespace LinearAlgebra {
         
     }
 
-    void IterativeSolver::_threadJob(unsigned int start, unsigned int end) {
-
-    }
-
     void IterativeSolver::_printSingleThreadInitializationText() {
         cout << " " << endl;
         cout << "----------------------------------------" << endl;

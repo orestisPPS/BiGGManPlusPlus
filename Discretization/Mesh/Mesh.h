@@ -10,6 +10,7 @@
 #include "GhostPseudoMesh/GhostPseudoMesh.h"
 #include "../../LinearAlgebra/Operations/Transformations.h"
 #include "../Node/IsoparametricNodeGraph.h"
+#include "../../LinearAlgebra/Operations/VectorOperations.h"
 #include "../../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
 #include "../../LinearAlgebra/FiniteDifferences/FDWeightCalculator.h"
 #include "../Elements/Element.h"
