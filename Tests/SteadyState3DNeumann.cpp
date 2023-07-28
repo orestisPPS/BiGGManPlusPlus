@@ -8,9 +8,9 @@
 namespace Tests {
     SteadyState3DNeumann::SteadyState3DNeumann() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 21;
-        numberOfNodes[Direction::Two] = 21;
-        numberOfNodes[Direction::Three] = 21;
+        numberOfNodes[Direction::One] = 11;
+        numberOfNodes[Direction::Two] = 11;
+        numberOfNodes[Direction::Three] = 11;
 
         //auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 1, 1, 0, 0, 0, 0, 0, 0);
         auto specs = make_shared<MeshSpecs>(numberOfNodes, 0.5, 0.5,0.5, 0, 0, 0, 0, 0, 0, 0);
@@ -86,7 +86,7 @@ namespace Tests {
         //auto solver = make_shared<SolverLUP>(1E-20, true);
         //auto solver = make_shared<JacobiSolver>(false, VectorNormType::LInf);
         //auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo, VectorNormType::LInf, 1E-9);
-        auto solver = make_shared<GaussSeidelSolver>(VectorNormType::L2, 1E-9, turboVTechKickInYoo);
+        auto solver = make_shared<GaussSeidelSolver>(VectorNormType::L2, 1E-9, 1E4, turboVTechKickInYoo);
         //auto solver = make_shared<SORSolver>(1.8, true, VectorNormType::L2, 1E-10);
         auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
         

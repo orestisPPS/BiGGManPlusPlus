@@ -921,6 +921,30 @@ LinearAlgebra/Norms/VectorNormCuda.cu.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Norms/VectorNormCuda.cu.s
 .PHONY : LinearAlgebra/Norms/VectorNormCuda.cu.s
 
+LinearAlgebra/Operations/MultithreadVectorOperations.o: LinearAlgebra/Operations/MultithreadVectorOperations.cpp.o
+.PHONY : LinearAlgebra/Operations/MultithreadVectorOperations.o
+
+# target to build an object file
+LinearAlgebra/Operations/MultithreadVectorOperations.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/MultithreadVectorOperations.cpp.o
+.PHONY : LinearAlgebra/Operations/MultithreadVectorOperations.cpp.o
+
+LinearAlgebra/Operations/MultithreadVectorOperations.i: LinearAlgebra/Operations/MultithreadVectorOperations.cpp.i
+.PHONY : LinearAlgebra/Operations/MultithreadVectorOperations.i
+
+# target to preprocess a source file
+LinearAlgebra/Operations/MultithreadVectorOperations.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/MultithreadVectorOperations.cpp.i
+.PHONY : LinearAlgebra/Operations/MultithreadVectorOperations.cpp.i
+
+LinearAlgebra/Operations/MultithreadVectorOperations.s: LinearAlgebra/Operations/MultithreadVectorOperations.cpp.s
+.PHONY : LinearAlgebra/Operations/MultithreadVectorOperations.s
+
+# target to generate assembly for a file
+LinearAlgebra/Operations/MultithreadVectorOperations.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/MultithreadVectorOperations.cpp.s
+.PHONY : LinearAlgebra/Operations/MultithreadVectorOperations.cpp.s
+
 LinearAlgebra/Operations/Transformations.o: LinearAlgebra/Operations/Transformations.cpp.o
 .PHONY : LinearAlgebra/Operations/Transformations.o
 
@@ -1749,6 +1773,9 @@ help:
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.o"
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.i"
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.s"
+	@echo "... LinearAlgebra/Operations/MultithreadVectorOperations.o"
+	@echo "... LinearAlgebra/Operations/MultithreadVectorOperations.i"
+	@echo "... LinearAlgebra/Operations/MultithreadVectorOperations.s"
 	@echo "... LinearAlgebra/Operations/Transformations.o"
 	@echo "... LinearAlgebra/Operations/Transformations.i"
 	@echo "... LinearAlgebra/Operations/Transformations.s"

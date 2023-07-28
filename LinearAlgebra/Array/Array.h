@@ -399,7 +399,7 @@ namespace LinearAlgebra {
             }
             return result;
         }
-
+        
 
         Array<T> transpose() const{
             if (_numberOfRows != _numberOfColumns)

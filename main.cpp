@@ -19,8 +19,8 @@ using namespace LinearAlgebra;
 int main() {
 
     //auto analysisTest = new NumericalAnalysis::StStFDTest();
-    //auto neumannTest = new Tests::SteadyState3DNeumann();
-    auto cudaOperations = new Tests::OperationsCUDA();
+    auto neumannTest = new Tests::SteadyState3DNeumann();
+    //auto cudaOperations = new Tests::OperationsCUDA();
     
     cout << "y000000o" << endl;
     

@@ -28,6 +28,7 @@ namespace LinearAlgebra {
         unique_ptr<double> _alpha;
         
         unique_ptr<double> _beta;
+        
     };
 } // LinearAlgebra
 

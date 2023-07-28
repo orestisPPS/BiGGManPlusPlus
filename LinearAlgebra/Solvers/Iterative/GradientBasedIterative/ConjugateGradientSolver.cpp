@@ -70,6 +70,27 @@ namespace LinearAlgebra {
     }
 
     void ConjugateGradientSolver::_singleThreadSolution() {
+        _printSingleThreadInitializationText();
+        auto start = std::chrono::high_resolution_clock::now();
+        unsigned n = _linearSystem->matrix->numberOfRows();
+        unsigned short iteration = 0;
+        double norm = 1.0;
+        
+        //Calculate the initial residual
+        _r = VectorOperations::subtract(_linearSystem->rhs, _linearSystem->matrix->multiplyWithVector(*_xOld));
+        
+        
+        while (iteration < _maxIterations && norm >= _tolerance) {
+            _singleThreadSolution();
+            
+            
+            
+            norm = _calculateNorm();
+            _printIterationAndNorm(iteration, norm);
+            iteration++;
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        printAnalysisOutcome(iteration, norm, start, end);
         
     }
 
