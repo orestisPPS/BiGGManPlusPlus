@@ -36,7 +36,7 @@ namespace BoundaryConditions {
          *
          * @param nodalBcAtPosition Pointer to a map of positions and their corresponding nodal boundary conditions.
          */
-        explicit DomainBoundaryConditions(shared_ptr<map <Position, map<unsigned, shared_ptr<BoundaryCondition>>>> nodalBcAtPosition);
+        explicit DomainBoundaryConditions(shared_ptr<map <Position, shared_ptr<map<unsigned int, shared_ptr<BoundaryCondition>>>>> nodalBcAtPosition);
 
         /**
          * @brief Gets the boundary condition at a specified position and nodeID.
@@ -57,7 +57,7 @@ namespace BoundaryConditions {
 
 
     private:
-        shared_ptr<map<Position, map<unsigned int, shared_ptr<BoundaryCondition>>>> _nodalBcAtPosition;  ///< Holds the boundary conditions for each position and node ID.
+        shared_ptr<map<Position, shared_ptr<map<unsigned int, shared_ptr<BoundaryCondition>>>>> _nodalBcAtPosition;  ///< Holds the boundary conditions for each position and node ID.
         shared_ptr<map<Position, shared_ptr<BoundaryCondition>>> _bcAtPosition;  ///< Holds the boundary conditions for each position.
     };
 

@@ -921,29 +921,29 @@ LinearAlgebra/Norms/VectorNormCuda.cu.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Norms/VectorNormCuda.cu.s
 .PHONY : LinearAlgebra/Norms/VectorNormCuda.cu.s
 
-LinearAlgebra/Operations/MultithreadVectorOperations.o: LinearAlgebra/Operations/MultithreadVectorOperations.cpp.o
-.PHONY : LinearAlgebra/Operations/MultithreadVectorOperations.o
+LinearAlgebra/Operations/MultiThreadVectorOperations.o: LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.o
+.PHONY : LinearAlgebra/Operations/MultiThreadVectorOperations.o
 
 # target to build an object file
-LinearAlgebra/Operations/MultithreadVectorOperations.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/MultithreadVectorOperations.cpp.o
-.PHONY : LinearAlgebra/Operations/MultithreadVectorOperations.cpp.o
+LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.o
+.PHONY : LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.o
 
-LinearAlgebra/Operations/MultithreadVectorOperations.i: LinearAlgebra/Operations/MultithreadVectorOperations.cpp.i
-.PHONY : LinearAlgebra/Operations/MultithreadVectorOperations.i
+LinearAlgebra/Operations/MultiThreadVectorOperations.i: LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.i
+.PHONY : LinearAlgebra/Operations/MultiThreadVectorOperations.i
 
 # target to preprocess a source file
-LinearAlgebra/Operations/MultithreadVectorOperations.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/MultithreadVectorOperations.cpp.i
-.PHONY : LinearAlgebra/Operations/MultithreadVectorOperations.cpp.i
+LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.i
+.PHONY : LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.i
 
-LinearAlgebra/Operations/MultithreadVectorOperations.s: LinearAlgebra/Operations/MultithreadVectorOperations.cpp.s
-.PHONY : LinearAlgebra/Operations/MultithreadVectorOperations.s
+LinearAlgebra/Operations/MultiThreadVectorOperations.s: LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.s
+.PHONY : LinearAlgebra/Operations/MultiThreadVectorOperations.s
 
 # target to generate assembly for a file
-LinearAlgebra/Operations/MultithreadVectorOperations.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/MultithreadVectorOperations.cpp.s
-.PHONY : LinearAlgebra/Operations/MultithreadVectorOperations.cpp.s
+LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.s
+.PHONY : LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.s
 
 LinearAlgebra/Operations/Transformations.o: LinearAlgebra/Operations/Transformations.cpp.o
 .PHONY : LinearAlgebra/Operations/Transformations.o
@@ -1569,6 +1569,30 @@ StructuredMeshGeneration/NodeFactory.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/StructuredMeshGeneration/NodeFactory.cpp.s
 .PHONY : StructuredMeshGeneration/NodeFactory.cpp.s
 
+Tests/Mesh3dTest.o: Tests/Mesh3dTest.cpp.o
+.PHONY : Tests/Mesh3dTest.o
+
+# target to build an object file
+Tests/Mesh3dTest.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/Mesh3dTest.cpp.o
+.PHONY : Tests/Mesh3dTest.cpp.o
+
+Tests/Mesh3dTest.i: Tests/Mesh3dTest.cpp.i
+.PHONY : Tests/Mesh3dTest.i
+
+# target to preprocess a source file
+Tests/Mesh3dTest.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/Mesh3dTest.cpp.i
+.PHONY : Tests/Mesh3dTest.cpp.i
+
+Tests/Mesh3dTest.s: Tests/Mesh3dTest.cpp.s
+.PHONY : Tests/Mesh3dTest.s
+
+# target to generate assembly for a file
+Tests/Mesh3dTest.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/Mesh3dTest.cpp.s
+.PHONY : Tests/Mesh3dTest.cpp.s
+
 Tests/OperationsCUDA.o: Tests/OperationsCUDA.cpp.o
 .PHONY : Tests/OperationsCUDA.o
 
@@ -1616,6 +1640,54 @@ Tests/SteadyState3DNeumann.s: Tests/SteadyState3DNeumann.cpp.s
 Tests/SteadyState3DNeumann.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyState3DNeumann.cpp.s
 .PHONY : Tests/SteadyState3DNeumann.cpp.s
+
+Tests/SteadyStateDirichlet3D.o: Tests/SteadyStateDirichlet3D.cpp.o
+.PHONY : Tests/SteadyStateDirichlet3D.o
+
+# target to build an object file
+Tests/SteadyStateDirichlet3D.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyStateDirichlet3D.cpp.o
+.PHONY : Tests/SteadyStateDirichlet3D.cpp.o
+
+Tests/SteadyStateDirichlet3D.i: Tests/SteadyStateDirichlet3D.cpp.i
+.PHONY : Tests/SteadyStateDirichlet3D.i
+
+# target to preprocess a source file
+Tests/SteadyStateDirichlet3D.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyStateDirichlet3D.cpp.i
+.PHONY : Tests/SteadyStateDirichlet3D.cpp.i
+
+Tests/SteadyStateDirichlet3D.s: Tests/SteadyStateDirichlet3D.cpp.s
+.PHONY : Tests/SteadyStateDirichlet3D.s
+
+# target to generate assembly for a file
+Tests/SteadyStateDirichlet3D.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyStateDirichlet3D.cpp.s
+.PHONY : Tests/SteadyStateDirichlet3D.cpp.s
+
+Tests/VectorOperationsTest.o: Tests/VectorOperationsTest.cpp.o
+.PHONY : Tests/VectorOperationsTest.o
+
+# target to build an object file
+Tests/VectorOperationsTest.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/VectorOperationsTest.cpp.o
+.PHONY : Tests/VectorOperationsTest.cpp.o
+
+Tests/VectorOperationsTest.i: Tests/VectorOperationsTest.cpp.i
+.PHONY : Tests/VectorOperationsTest.i
+
+# target to preprocess a source file
+Tests/VectorOperationsTest.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/VectorOperationsTest.cpp.i
+.PHONY : Tests/VectorOperationsTest.cpp.i
+
+Tests/VectorOperationsTest.s: Tests/VectorOperationsTest.cpp.s
+.PHONY : Tests/VectorOperationsTest.s
+
+# target to generate assembly for a file
+Tests/VectorOperationsTest.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/VectorOperationsTest.cpp.s
+.PHONY : Tests/VectorOperationsTest.cpp.s
 
 Utility/Exporters/Exporters.o: Utility/Exporters/Exporters.cpp.o
 .PHONY : Utility/Exporters/Exporters.o
@@ -1773,9 +1845,9 @@ help:
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.o"
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.i"
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.s"
-	@echo "... LinearAlgebra/Operations/MultithreadVectorOperations.o"
-	@echo "... LinearAlgebra/Operations/MultithreadVectorOperations.i"
-	@echo "... LinearAlgebra/Operations/MultithreadVectorOperations.s"
+	@echo "... LinearAlgebra/Operations/MultiThreadVectorOperations.o"
+	@echo "... LinearAlgebra/Operations/MultiThreadVectorOperations.i"
+	@echo "... LinearAlgebra/Operations/MultiThreadVectorOperations.s"
 	@echo "... LinearAlgebra/Operations/Transformations.o"
 	@echo "... LinearAlgebra/Operations/Transformations.i"
 	@echo "... LinearAlgebra/Operations/Transformations.s"
@@ -1854,12 +1926,21 @@ help:
 	@echo "... StructuredMeshGeneration/NodeFactory.o"
 	@echo "... StructuredMeshGeneration/NodeFactory.i"
 	@echo "... StructuredMeshGeneration/NodeFactory.s"
+	@echo "... Tests/Mesh3dTest.o"
+	@echo "... Tests/Mesh3dTest.i"
+	@echo "... Tests/Mesh3dTest.s"
 	@echo "... Tests/OperationsCUDA.o"
 	@echo "... Tests/OperationsCUDA.i"
 	@echo "... Tests/OperationsCUDA.s"
 	@echo "... Tests/SteadyState3DNeumann.o"
 	@echo "... Tests/SteadyState3DNeumann.i"
 	@echo "... Tests/SteadyState3DNeumann.s"
+	@echo "... Tests/SteadyStateDirichlet3D.o"
+	@echo "... Tests/SteadyStateDirichlet3D.i"
+	@echo "... Tests/SteadyStateDirichlet3D.s"
+	@echo "... Tests/VectorOperationsTest.o"
+	@echo "... Tests/VectorOperationsTest.i"
+	@echo "... Tests/VectorOperationsTest.s"
 	@echo "... Utility/Exporters/Exporters.o"
 	@echo "... Utility/Exporters/Exporters.i"
 	@echo "... Utility/Exporters/Exporters.s"

@@ -13,8 +13,8 @@ namespace BoundaryConditions {
                 shared_ptr<map<Position, shared_ptr<BoundaryCondition>>> bcAtPosition) :
                 _bcAtPosition(std::move(bcAtPosition)), _nodalBcAtPosition(nullptr) { }
         
-        DomainBoundaryConditions::DomainBoundaryConditions(shared_ptr<map <Position, map<unsigned, shared_ptr<BoundaryCondition>>>> nodalBcAtPosition) :
-                _nodalBcAtPosition(std::move(nodalBcAtPosition)), _bcAtPosition(nullptr) { }
+        DomainBoundaryConditions::DomainBoundaryConditions(shared_ptr<map <Position, shared_ptr<map<unsigned int, shared_ptr<BoundaryCondition>>>>> nodalBcAtPosition) :
+                _bcAtPosition(nullptr), _nodalBcAtPosition(std::move(nodalBcAtPosition)) { }
                 
         
         shared_ptr<BoundaryCondition> DomainBoundaryConditions::getBoundaryConditionAtPosition(Position boundaryPosition, unsigned nodeID) {
@@ -26,7 +26,7 @@ namespace BoundaryConditions {
                 }
             } else if (_nodalBcAtPosition != nullptr) {
                 try {
-                    return _nodalBcAtPosition->at(boundaryPosition).at(nodeID);
+                    return _nodalBcAtPosition->at(boundaryPosition)->at(nodeID);
                 } catch (out_of_range &e) {
                     throw out_of_range("Boundary condition not found at position " + to_string(boundaryPosition) + " and node ID " + to_string(nodeID));
                 }

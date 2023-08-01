@@ -17,7 +17,6 @@
 #include <stdexcept>
 #include <chrono>
 #include <iomanip>
-#include "../Operations/VectorOperations.h"
 
 using namespace std;
 
@@ -230,8 +229,9 @@ namespace LinearAlgebra {
         T& at(unsigned i, unsigned j) {
             if (i >= _numberOfRows or j >= _numberOfColumns)
                 throw out_of_range("The index is out of bounds.");
+            
             if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles == 1)
-                return _array->at(i * _numberOfColumns + j);
+                return (*_array)[i * _numberOfColumns + j];
             else
                 throw invalid_argument("The matrix is not two-dimensional.");
         }
@@ -250,7 +250,7 @@ namespace LinearAlgebra {
             if (i >= _numberOfRows or j >= _numberOfColumns)
                 throw out_of_range("The index is out of bounds.");
             if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles == 1)
-                return _array->at(i * _numberOfColumns + j);
+                return (*_array)[i * _numberOfColumns + j];
             else
                 throw invalid_argument("The matrix is not two-dimensional.");
         }
@@ -434,16 +434,20 @@ namespace LinearAlgebra {
             return _isSquare;
         }
 
-        bool isSymmetric() const {
+        bool isSymmetric(double tolerance = 1E-11) const {
             if (_numberOfRows != _numberOfColumns)
                 throw invalid_argument("The matrix is not square.");
+            auto result = true;
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = i + 1; j < _numberOfColumns; ++j) {
-                    if (_array[i * _numberOfColumns + j] != _array[j * _numberOfColumns + i])
-                        return false;
+                    
+                    if (abs(_array->at(i * _numberOfColumns + j) - _array->at(j * _numberOfColumns + i)) < tolerance && abs(_array->at(i * _numberOfColumns + j) - _array->at(j * _numberOfColumns + i)) > 0) {
+                        cout << "i: " << i << " j: " << j <<" "<<  _array->at(i * _numberOfColumns + j) - _array->at(j * _numberOfColumns + i) << endl;
+                        result = false;
+                    }
                 }
             }
-            return true;
+            return result;
         }
 
         bool isPositiveDefinite() const {
@@ -549,7 +553,7 @@ namespace LinearAlgebra {
         void print(int precision = 1) const {
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = 0; j < _numberOfColumns; ++j) {
-                    std::cout << std::scientific << std::setprecision(precision) << _array[i * _numberOfColumns + j] << " ";
+                    std::cout << std::scientific << std::setprecision(precision) << _array->at(i * _numberOfColumns + j) << " ";
                 }
                 std::cout << std::endl;
             }
@@ -601,78 +605,3 @@ namespace LinearAlgebra {
 } // Numerics
 
 #endif //UNTITLED_ARRAY_H
-
-
-/*
-
-
-
-
-        //Performs the cholesky decomposition (A=LL^T) and returns L and L^T.
-        //Applies only to symmetric positive definite matrices
-        tuple<shared_ptr<Array<double>>, shared_ptr<Array<double>>> CholeskyDecomposition(){
-            if (!_isPositiveDefinite){
-                throw invalid_argument("The matrix is not square");
-            }
-
-            auto n = _numberOfRows;
-            auto l = new Array<double>(_numberOfRows, _numberOfColumns);
-            auto lT = new Array<double>(_numberOfRows, _numberOfColumns);
-            for (int i = 0; i < n; i++) {
-                double sum = 0.0;
-                for (int k = 0; k < i; k++) {
-                    sum += l->at(i, k) * l->at(i, k);
-                }
-                l->at(i, i) = sqrt(_array[i * n + i] - sum);
-
-                for (int j = i + 1; j < n; j++) {
-                    sum = 0.0;
-                    for (int k = 0; k < i; k++) {
-                        sum += l->at(j, k) * l->at(i, k);
-                    }
-                    l->at(j, i) = (_array[j * n + i] - sum) / l->at(i, i);
-                }
-            }
-            //Compute LT
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    lT->at(i, j) = l->at(j, i);
-                }
-            }
-            //Return the Cholesky Decomposition of the matrix (A=LL^T)
-            auto LLT = tuple<shared_ptr<Array<double>>, shared_ptr<Array<double>>>(l, lT);
-            return LLT;
-        }
-
-        void CholeskyDecompositionOnMatrix(){
-            if (!_isPositiveDefinite){
-                throw std::invalid_argument("The matrix is not square");
-            }
-            auto n = _numberOfRows;
-
-            // March through rows of A and L
-            for (int i = 0; i < n; ++i) {
-                // Compute diagonal element
-                auto sum = 0.0;
-                for (int k = 0; k < i; ++k) {
-                    sum += _array[i * n + k] * _array[i * n + k];
-                }
-                _array[i * n + i] = sqrt(_array[i * n + i] - sum);
-
-                // Compute sub-diagonal elements
-                for (int j = i + 1; j < n ; ++j) {
-                    sum = 0.0;
-                    for (int k = 0; k < i; ++k) {
-                        sum += _array[j * n + k] * _array[i * n + k];
-                    }
-                    _array[j * n + i] = (_array[j * n + i] - sum) / _array[i * n + i];
-                }
-            }
-
-            // Store L and LT in the original object
-            for (int i = 0; i < n; ++i) {
-                for (int j = 0; j <= i; ++j) {
-                    _array[i * n + j] = _array[j * n + i];
-                }
-            }
-        }*/

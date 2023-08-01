@@ -123,7 +123,13 @@ add_executable(untitled main.cpp
         LinearAlgebra/Norms/VectorNormCuda.cuh
         LinearAlgebra/Norms/VectorNormCuda.cu LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu LinearAlgebraCUDA/NumericalOperationsCUDA.cuh LinearAlgebraCUDA/NumericalOperationsCUDA.cu LinearAlgebraCUDA/MemoryManagementCUDA.cuh LinearAlgebraCUDA/MemoryManagementCUDA.cu Tests/OperationsCUDA.h Tests/OperationsCUDA.cpp LinearAlgebra/Array/NumericalArray.h LinearAlgebra/Array/NumericalArray.cpp LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp
         LinearAlgebra/Operations/MultiThreadVectorOperations.h
-        LinearAlgebra/Operations/MultiThreadVectorOperations.cpp)
+        LinearAlgebra/Operations/MultiThreadVectorOperations.cpp
+        Tests/VectorOperationsTest.h
+        Tests/VectorOperationsTest.cpp
+        Tests/SteadyStateDirichlet3D.h
+        Tests/SteadyStateDirichlet3D.cpp
+        Tests/Mesh3dTest.h
+        Tests/Mesh3dTest.cpp)
 
 
 target_link_libraries(untitled cudart)

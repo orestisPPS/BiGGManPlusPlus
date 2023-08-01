@@ -19,8 +19,6 @@ namespace LinearAlgebra {
         SolverLUP(double pivotTolerance, bool storeDecompositionOnMatrix, bool throwExceptionOnSingularMatrix);
         
         ~SolverLUP();
-
-        void setLinearSystem(shared_ptr<LinearSystem> linearSystem) override;
         
         shared_ptr<MatrixDecomposition> getDecomposition() override;
         

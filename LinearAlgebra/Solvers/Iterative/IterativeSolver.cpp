@@ -15,15 +15,36 @@ namespace LinearAlgebra {
     IterativeSolver::IterativeSolver(VectorNormType normType, double tolerance, unsigned maxIterations,
                                      bool throwExceptionOnMaxFailure, ParallelizationMethod parallelizationMethod) :
             Solver(), _normType(normType), _tolerance(tolerance), _maxIterations(maxIterations),
-            _throwExceptionOnMaxFailure(throwExceptionOnMaxFailure), _isInitialized(false), _xNew(nullptr),
+            _throwExceptionOnMaxFailure(throwExceptionOnMaxFailure), _xNew(nullptr),
             _xOld(nullptr),
             _residualNorms(make_shared<list<double>>()) {
+        _linearSystemInitialized = false;
+        _vectorsInitialized = false;
         _parallelization = parallelizationMethod;
+        _iteration = 0;
     }
 
     IterativeSolver::~IterativeSolver() {
         _xNew.reset();
         _xOld.reset();
+    }
+    
+    void IterativeSolver::setInitialSolution(shared_ptr<vector<double>> initialSolution) {
+        if (!_vectorsInitialized)
+            throw runtime_error("Vectors must be initialized before setting initial solution.");
+        if (initialSolution->size() != _linearSystem->solution->size())
+            throw std::invalid_argument("Initial solution vector must have the same size as the solution vector.");
+        _xOld = std::move(initialSolution);
+        _solutionSet = true;
+    }
+    
+    void IterativeSolver::setInitialSolution(double initialSolution) {
+        if (!_vectorsInitialized)
+            throw runtime_error("Vectors must be initialized before setting initial solution.");
+        for (auto &value : *_xOld) {
+            value = initialSolution;
+        }
+        _solutionSet = true;
     }
 
     void IterativeSolver::setTolerance(double tolerance) {
@@ -51,64 +72,16 @@ namespace LinearAlgebra {
         return _normType;
     }
 
-    void IterativeSolver::setLinearSystem(shared_ptr<LinearSystem> linearSystem) {
-        _linearSystem = linearSystem;
-        _isLinearSystemSet = true;
-    }
-
-    void IterativeSolver::setInitialSolution(shared_ptr<vector<double>> initialValue) {
-        if (!_isLinearSystemSet)
-            throw std::invalid_argument("Linear system must be set before setting the initial solution.");
-        if (initialValue->size() != _linearSystem->rhs->size()) {
-            throw std::invalid_argument("Initial solution vector must have the same size as the rhs vector.");
-        }
-        _xOld = std::move(initialValue);
-        _xNew = make_unique<vector<double>>(_xOld->size(), 0.0);
-        _difference = make_shared<vector<double>>(_xOld->size(), 0.0);
-        _isInitialized = true;
-    }
-
-    void IterativeSolver::setInitialSolution(double initialValue) {
-        if (!_isLinearSystemSet)
-            throw std::invalid_argument("Linear system must be set before setting the initial solution.");
-        _xOld = make_unique<vector<double>>(_linearSystem->rhs->size(), initialValue);
-        _xNew = make_unique<vector<double>>(_xOld->size(), 0.0);
-        _difference = make_shared<vector<double>>(_xOld->size(), 0.0);
-        _isInitialized = true;
-    }
-
     void IterativeSolver::solve() {
         if (!_isLinearSystemSet)
             throw std::invalid_argument("Linear system must be set before solving.");
         _iterativeSolution();
         _linearSystem->solution = std::move(_xNew);
     }
-
-    void IterativeSolver::_iterativeSolution() {
-
-        auto start = std::chrono::high_resolution_clock::now();
-        unsigned n = _linearSystem->matrix->numberOfRows();
-        unsigned short iteration = 0;
-        double norm = 1.0;
-
-        if (!_isInitialized)
-            throw std::invalid_argument("Initial solution must be set before solving.");
-        switch (_parallelization) {
-            case Wank :
-
-                break;
-            case vTechKickInYoo : {
-
-                break;
-            }
-            case turboVTechKickInYoo:
-                auto lol = 1;
-                _cudaSolution();
-                break;
-        }
-    }
-       
     
+    void IterativeSolver::_iterativeSolution() {
+        
+    }
     
     void IterativeSolver::_singleThreadSolution() {
         
@@ -141,12 +114,12 @@ namespace LinearAlgebra {
 
     }
 
-    void IterativeSolver::_printIterationAndNorm(unsigned int iteration, double norm) {
-        if (iteration % 100 == 0)
-            cout << "Iteration: " << iteration << " - Norm: " << norm << endl;
+    void IterativeSolver::_printIterationAndNorm(unsigned displayFrequency) const {
+        if (_iteration % displayFrequency == 0)
+            cout << "Iteration: " << _iteration << " - Norm: " << _exitNorm << endl;
 
     }
-
+    
     double IterativeSolver::_calculateNorm() {
         double norm = VectorNorm(_difference, _normType).value();
         _residualNorms->push_back(norm);
@@ -154,7 +127,7 @@ namespace LinearAlgebra {
     }
 
     void IterativeSolver::printAnalysisOutcome(unsigned totalIterations, double exitNorm,  std::chrono::high_resolution_clock::time_point startTime,
-                                                   std::chrono::high_resolution_clock::time_point finishTime){
+                                                   std::chrono::high_resolution_clock::time_point finishTime) const{
         bool isInMicroSeconds = false;
         auto _elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(finishTime - startTime).count();
         if (_elapsedTime == 0) {

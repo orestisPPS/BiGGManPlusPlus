@@ -6,6 +6,7 @@
 
 #include <utility>
 #include "../LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h"
+#include "../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
 
 
 namespace StructuredMeshGenerator{
@@ -47,18 +48,16 @@ namespace StructuredMeshGenerator{
         auto problem = make_shared<SteadyStateMathematicalProblem>(pde, boundaryConditions, dofTypes);
 
         //auto solver = make_shared<SolverLUP>(1E-20, true);
-        //auto solver  = new JacobiSolver(true, VectorNormType::L1, 1E-8, 1E4, true);
+        auto solver  = make_shared<JacobiSolver>(VectorNormType::L2, 1E-9, 1E4, true, vTechKickInYoo);
         //auto solver  = new GaussSeidelSolver(true, VectorNormType::LInf, 1E-9);
         //auto solver = make_shared<SORSolver>(1.7, vTechKickInYoo, VectorNormType::LInf, 1E-9);
         //auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo , VectorNormType::L2, 1E-9);
-        auto solver = make_shared<GaussSeidelSolver>(VectorNormType::L2, 1E-9, 1E4, turboVTechKickInYoo);
-
-
+        //auto solver = make_shared<GaussSeidelSolver>(VectorNormType::L2, 1E-9, 1E4, true, Wank);
+        //auto solver = make_shared<ConjugateGradientSolver>(VectorNormType::L2, 1E-10, 1E4, true);
+        
         auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specs, Template);
-        
-        
-        
-         analysis->solve();
+
+        analysis->solve();
         
         analysis->applySolutionToDegreesOfFreedom();
         

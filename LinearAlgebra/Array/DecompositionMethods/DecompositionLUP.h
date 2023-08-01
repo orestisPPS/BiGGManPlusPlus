@@ -32,7 +32,7 @@ namespace LinearAlgebra {
          * @param throwExceptionOnSingularMatrix (can be excluded) If true, throws an exception when a singular matrix is detected.
          *                                      If false, prints a warning message and continues.
          */
-        explicit DecompositionLUP(shared_ptr<Array<double>> matrix, double pivotTolerance = 1e-10, bool throwExceptionOnSingularMatrix = true);
+        explicit DecompositionLUP(const shared_ptr<Array<double>>& matrix, double pivotTolerance = 1e-10, bool throwExceptionOnSingularMatrix = true);
         
 
         /**
@@ -75,7 +75,7 @@ namespace LinearAlgebra {
          *
          * @return A vector with the solution of the linear system
          */
-         shared_ptr<vector<double>> solve(shared_ptr<vector<double>> rhs) override;
+        shared_ptr<vector<double>> solve(shared_ptr<vector<double>> rhs, shared_ptr<vector<double>> solution) override;
 
     private:
         /**

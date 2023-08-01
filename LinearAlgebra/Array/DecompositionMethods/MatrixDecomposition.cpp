@@ -68,8 +68,7 @@ namespace LinearAlgebra {
         return 0;
     }
     
-    shared_ptr<vector<double>> MatrixDecomposition::solve(shared_ptr<vector<double>> b) {
-        return nullptr;
+    shared_ptr<vector<double>> MatrixDecomposition::solve(shared_ptr<vector<double>> rhs, shared_ptr<vector<double>> solution) {
     }
 
 } // LinearAlgebra

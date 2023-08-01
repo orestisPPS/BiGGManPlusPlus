@@ -9,6 +9,7 @@
 #include <vector>
 #include <stdexcept>
 #include <valarray>
+#include "../Array/Array.h"
 using namespace std;
 
 namespace LinearAlgebra {
@@ -59,7 +60,7 @@ namespace LinearAlgebra {
             if (vector1.size() != vector2.size())
                 throw invalid_argument("Vectors must have the same size");
             for (auto i = 0; i < vector1.size(); i++)
-                result += vector1.at(i) * vector2.at(i);
+                result += vector1[i] * vector2[i];
             return result;
         }
 
@@ -69,7 +70,7 @@ namespace LinearAlgebra {
                 throw invalid_argument("Vector must not be empty");
             auto result = 0.0;
             for (auto i = 0; i < vector1->size(); i++)
-                result += vector1->at(i) * vector1->at(i);
+                result += (*vector1)[i] * (*vector1)[i];
             return result;
         }
 
@@ -79,8 +80,143 @@ namespace LinearAlgebra {
                 throw invalid_argument("Vector must not be empty");
             auto result = 0.0;
             for (auto i = 0; i < vector1.size(); i++)
-                result += vector1.at(i) * vector1.at(i);
+                result += vector1[i] * vector1[i];
             return result;
+        }
+
+        
+        template<typename T>
+        static void matrixVectorMultiplication(const shared_ptr<Array<T>>& matrix, const shared_ptr<std::vector<T>>& vector,
+                                               shared_ptr<std::vector<T>>& result) {
+            if (matrix->numberOfColumns() != vector->size() || matrix->numberOfRows() != result->size())
+                throw invalid_argument("Matrix and vector must have compatible sizes");
+            for (auto i = 0; i < matrix->numberOfRows(); i++) {
+                auto sum = 0.0;
+                for (auto j = 0; j < matrix->numberOfColumns(); j++)
+                    sum += matrix->at(i,j) * (*vector)[j];
+                (*result)[i] = sum;
+            }
+        }
+
+        template<typename T>
+        static shared_ptr<vector<T>> addScaledVector(const shared_ptr<vector<T>>& vector1, const shared_ptr<vector<T>>& scaledVector,
+                                                     shared_ptr<vector<T>>& result, double scaleFactor) {
+            if (vector1->size() != scaledVector->size() || vector1->size() != result->size())
+                throw invalid_argument("Vectors must have the same size");
+            for (auto i = 0; i < vector1->size(); i++)
+                (*result)[i] = (*vector1)[i] + scaleFactor * (*scaledVector)[i];
+            return result;
+        }
+
+
+        template<typename T>
+        static shared_ptr<vector<T>> subtractScaledVector(const shared_ptr<vector<T>>& vector1, const shared_ptr<vector<T>>& vector2,
+                                                          shared_ptr<vector<T>>& result, double scaleFactor) {
+            if (vector1->size() != vector2->size() || vector1->size() != result->size())
+                throw invalid_argument("Vectors must have the same size");
+            for (auto i = 0; i < vector1->size(); i++)
+                (*result)[i] = (*vector1)[i] - scaleFactor * (*vector2)[i];
+            return result;
+        }
+
+        /**
+        * Scales each component of a vector by a scalar value.
+        * @param vector Constant reference to a shared pointer to the input vector.
+        * @param scalar The scaling factor to apply to each component of the vector.
+        * 
+        * Given a vector v = [v1, v2, ..., vn] and scalar s, the vector after scaling is:
+        * scaled(v) = [s*v1, s*v2, ..., s*vn]
+        */
+        template<typename T, typename S>
+        static void scale(const shared_ptr<vector<T>>& vector, S scalar){
+            for (auto & i : *vector)
+                i *= scalar;
+        }
+
+        /**
+        * Overloaded method to scale each component of a vector by a scalar value.
+        * @param vector Constant reference to the input vector.
+        * @param scalar The scaling factor to apply to each component of the vector.
+        * 
+        * Given a vector v = [v1, v2, ..., vn] and scalar s, the vector after scaling is:
+        * scaled(v) = [s*v1, s*v2, ..., s*vn]
+        */
+        template<typename T, typename S>
+        static void scale(vector<T>& vector, S scalar){
+            for (auto & i : vector)
+                i *= scalar;
+        }
+
+        /**
+        * Adds two vectors component-wise.
+        * @param vector1 Constant reference to a shared pointer to the first vector.
+        * @param vector2 Constant reference to a shared pointer to the second vector.
+        * @return A vector that is the component-wise addition of the input vectors.
+        * @throws invalid_argument If the input vectors are of different sizes.
+        * 
+        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], their addition is:
+        * add(v, w) = [v1+w1, v2+w2, ..., vn+wn]
+        */
+        template<typename T>
+        static void add(const shared_ptr<vector<T>>& vector1, const shared_ptr<vector<T>>& vector2, shared_ptr<vector<T>>& result){
+            if (vector1->size() != vector2->size())
+                throw invalid_argument("Vectors must have the same size");
+            for (auto i = 0; i < vector1->size(); i++)
+                (*result)[i] = (*vector1)[i] + (*vector2)[i];
+        }
+
+        /**
+        * Overloaded method to add two vectors component-wise.
+        * @param vector1 Constant reference to the first vector.
+        * @param vector2 Constant reference to the second vector.
+        * @return A vector that is the component-wise addition of the input vectors.
+        * @throws invalid_argument If the input vectors are of different sizes.
+        * 
+        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], their addition is:
+        * add(v, w) = [v1+w1, v2+w2, ..., vn+wn]
+        */
+        template<typename T>
+        static void add(const vector<T>& vector1, const vector<T>& vector2, vector<T>& result){
+            if (vector1.size() != vector2.size())
+                throw invalid_argument("Vectors must have the same size");
+            for (auto i = 0; i < vector1.size(); i++)
+                result[i] = vector1[i] + vector2[i];
+        }
+        
+        /**
+        * Subtracts the second vector from the first vector component-wise.
+        * @param vector1 Constant reference to a shared pointer to the first vector.
+        * @param vector2 Constant reference to a shared pointer to the second vector.
+        * @return A vector that is the component-wise subtraction of the second vector from the first vector.
+        * @throws invalid_argument If the input vectors are of different sizes.
+        * 
+        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], their subtraction is:
+        * subtract(v, w) = [v1-w1, v2-w2, ..., vn-wn]
+        */
+        template<typename T>
+        static void subtract(const shared_ptr<vector<T>>& vector1, const shared_ptr<vector<T>>& vector2, shared_ptr<vector<T>>& result){
+            if (vector1->size() != vector2->size() && vector1->size() != result->size())
+                throw invalid_argument("Vectors must have the same size");
+            for (auto i = 0; i < vector1->size(); i++)
+                (*result)[i] = (*vector1)[i] - (*vector2)[i];
+        }
+
+        /**
+        * Overloaded method to subtract the second vector from the first vector component-wise.
+        * @param vector1 Constant reference to the first vector.
+        * @param vector2 Constant reference to the second vector.
+        * @return A vector that is the component-wise subtraction of the second vector from the first vector.
+        * @throws invalid_argument If the input vectors are of different sizes.
+        * 
+        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], their subtraction is:
+        * subtract(v, w) = [v1-w1, v2-w2, ..., vn-wn]
+        */
+        template<typename T>
+        static vector<T> subtract(const vector<T>& vector1, const vector<T>& vector2,vector<T>& result){
+            if (vector1.size() != vector2.size())
+                throw invalid_argument("Vectors must have the same size");
+            for (auto i = 0; i < vector1.size(); i++)
+                result[i] = vector1[i] - vector2[i];
         }
 
         /**
@@ -143,108 +279,6 @@ namespace LinearAlgebra {
         }
 
         /**
-        * Scales each component of a vector by a scalar value.
-        * @param vector Constant reference to a shared pointer to the input vector.
-        * @param scalar The scaling factor to apply to each component of the vector.
-        * 
-        * Given a vector v = [v1, v2, ..., vn] and scalar s, the vector after scaling is:
-        * scaled(v) = [s*v1, s*v2, ..., s*vn]
-        */
-        template<typename T, typename S>
-        static void scale(const shared_ptr<vector<T>>& vector, S scalar){
-            for (auto & i : *vector)
-                i *= scalar;
-        }
-
-        /**
-        * Overloaded method to scale each component of a vector by a scalar value.
-        * @param vector Constant reference to the input vector.
-        * @param scalar The scaling factor to apply to each component of the vector.
-        * 
-        * Given a vector v = [v1, v2, ..., vn] and scalar s, the vector after scaling is:
-        * scaled(v) = [s*v1, s*v2, ..., s*vn]
-        */
-        template<typename T, typename S>
-        static void scale(vector<T>& vector, S scalar){
-            for (auto & i : vector)
-                i *= scalar;
-        }
-
-        /**
-        * Adds two vectors component-wise.
-        * @param vector1 Constant reference to a shared pointer to the first vector.
-        * @param vector2 Constant reference to a shared pointer to the second vector.
-        * @return A vector that is the component-wise addition of the input vectors.
-        * @throws invalid_argument If the input vectors are of different sizes.
-        * 
-        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], their addition is:
-        * add(v, w) = [v1+w1, v2+w2, ..., vn+wn]
-        */
-        template<typename T>
-        static vector<T> add(const shared_ptr<vector<T>>& vector1, const shared_ptr<vector<T>>& vector2){
-            if (vector1->size() != vector2->size())
-                throw invalid_argument("Vectors must have the same size");
-            for (auto i = 0; i < vector1->size(); i++)
-                vector1->at(i) += vector2->at(i);
-        }
-
-        /**
-        * Overloaded method to add two vectors component-wise.
-        * @param vector1 Constant reference to the first vector.
-        * @param vector2 Constant reference to the second vector.
-        * @return A vector that is the component-wise addition of the input vectors.
-        * @throws invalid_argument If the input vectors are of different sizes.
-        * 
-        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], their addition is:
-        * add(v, w) = [v1+w1, v2+w2, ..., vn+wn]
-        */
-        template<typename T>
-        static vector<T> add(const vector<T>& vector1, const vector<T>& vector2){
-            if (vector1.size() != vector2.size())
-                throw invalid_argument("Vectors must have the same size");
-            for (auto i = 0; i < vector1.size(); i++)
-                vector1.at(i) += vector2.at(i);
-        }
-
-        /**
-        * Subtracts the second vector from the first vector component-wise.
-        * @param vector1 Constant reference to a shared pointer to the first vector.
-        * @param vector2 Constant reference to a shared pointer to the second vector.
-        * @return A vector that is the component-wise subtraction of the second vector from the first vector.
-        * @throws invalid_argument If the input vectors are of different sizes.
-        * 
-        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], their subtraction is:
-        * subtract(v, w) = [v1-w1, v2-w2, ..., vn-wn]
-        */
-        template<typename T>
-        static vector<T> subtract(const shared_ptr<vector<T>>& vector1, const shared_ptr<vector<T>>& vector2){
-            if (vector1->size() != vector2->size())
-                throw invalid_argument("Vectors must have the same size");
-            for (auto i = 0; i < vector1->size(); i++)
-                vector1->at(i) -= vector2->at(i);
-        }
-
-        /**
-        * Overloaded method to subtract the second vector from the first vector component-wise.
-        * @param vector1 Constant reference to the first vector.
-        * @param vector2 Constant reference to the second vector.
-        * @return A vector that is the component-wise subtraction of the second vector from the first vector.
-        * @throws invalid_argument If the input vectors are of different sizes.
-        * 
-        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], their subtraction is:
-        * subtract(v, w) = [v1-w1, v2-w2, ..., vn-wn]
-        */
-        template<typename T>
-        static vector<T> subtract(const vector<T>& vector1, const vector<T>& vector2){
-            if (vector1.size() != vector2.size())
-                throw invalid_argument("Vectors must have the same size");
-            for (auto i = 0; i < vector1.size(); i++)
-                vector1.at(i) -= vector2.at(i);
-        }
-
-        
-
-        /**
         * Calculates the magnitude (or length) of a vector.
         * @param vector Constant reference to a shared pointer to the vector.
         * @return The magnitude of the vector.
@@ -254,10 +288,10 @@ namespace LinearAlgebra {
         * Geometrically, the magnitude represents the distance of the vector from the origin in n-dimensional space.
         */
         template<typename T>
-        static double magnitude(const shared_ptr<vector<T>>& vector){
+        static double magnitude(const  shared_ptr<vector<T>>& vector){
             auto result = 0.0;
             for (auto i = 0; i < vector->size(); i++)
-                result += vector->at(i) * vector->at(i);
+                result += (*vector)[i] * (*vector)[i];
             return sqrt(result);
         }
 
@@ -274,7 +308,7 @@ namespace LinearAlgebra {
         static double magnitude(const vector<T>& vector){
             auto result = 0.0;
             for (auto i = 0; i < vector.size(); i++)
-                result += vector.at(i) * vector.at(i);
+                result += vector[i] * vector[i];
             return sqrt(result);
         }
 
@@ -286,7 +320,7 @@ namespace LinearAlgebra {
         * After normalization, the magnitude of the vector will be 1.
         */
         template<typename T>
-        static void normalize(const shared_ptr<vector<T>>& vector){
+        static void normalize(shared_ptr<vector<T>>& vector){
             auto magnitude = VectorOperations::magnitude(vector);
             for (auto & i : *vector)
                 i /= magnitude;
@@ -345,7 +379,25 @@ namespace LinearAlgebra {
                 result += pow(vector1.at(i) - vector2.at(i), 2);
             return sqrt(result);
         }
-
+        
+        /**
+        * \brief Deep copy the source vector into the destination vector.
+        * \param sourceVector The source vector.
+        * \param destinationVector The destination vector.
+        */
+        static void deepCopy(const shared_ptr<vector<double>>& sourceVector,
+                             shared_ptr<vector<double>>& destinationVector) {
+            // Resize destination vector to match source vector size
+            if (destinationVector->size() != sourceVector->size()) {
+                destinationVector->resize(sourceVector->size());
+            }
+        
+            // Copy each element
+            for (size_t i = 0; i < sourceVector->size(); ++i) {
+                destinationVector->at(i) = sourceVector->at(i);
+            }
+        }
+        
 
         /**
         * Calculates the angle between two vectors.

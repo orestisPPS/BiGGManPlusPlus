@@ -2,7 +2,7 @@
 
 namespace LinearAlgebra {
 
-    VectorNorm::VectorNorm(std::shared_ptr<std::vector<double>> vector, VectorNormType normType, unsigned short lP_Order)
+    VectorNorm::VectorNorm(const shared_ptr<vector<double>>& vector, VectorNormType normType, unsigned short lP_Order)
             : _normType(normType) {
         switch (_normType) {
             case L1:

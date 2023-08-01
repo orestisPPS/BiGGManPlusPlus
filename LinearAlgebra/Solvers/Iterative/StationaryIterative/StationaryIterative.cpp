@@ -7,35 +7,43 @@
 namespace LinearAlgebra {
     StationaryIterative::StationaryIterative(VectorNormType normType, double tolerance, unsigned maxIterations, bool throwExceptionOnMaxFailure, ParallelizationMethod parallelizationMethod) :
             IterativeSolver(normType, tolerance, maxIterations, throwExceptionOnMaxFailure, parallelizationMethod) {
+        _difference = nullptr;
     }
 
+
+    
+    void StationaryIterative::_initializeVectors() {
+        _xNew = make_shared<vector<double>>(_linearSystem->rhs->size());
+        _xOld = make_shared<vector<double>>(_linearSystem->rhs->size());
+        _difference = make_shared<vector<double>>(_linearSystem->rhs->size());
+        _vectorsInitialized = true;    
+    }
+    
+    
+    
     void StationaryIterative::_iterativeSolution() {
         auto start = std::chrono::high_resolution_clock::now();
         unsigned n = _linearSystem->matrix->numberOfRows();
-        unsigned short iteration = 0;
-        double norm = 1.0;
-        
-        //Check if the initial solution has been set from the user. If not, it is initialized to 0.0
-        if (!_isInitialized)
-            setInitialSolution(0.0);
+        _exitNorm = 1.0;
+        _difference = make_shared<vector<double>>(n);
         
         if (_parallelization == Wank) {
             _printSingleThreadInitializationText();
-            while (iteration < _maxIterations && norm >= _tolerance) {
+            while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
                 _singleThreadSolution();
-                norm = _calculateNorm();
-                _printIterationAndNorm(iteration, norm);
-                iteration++;
+                _exitNorm = _calculateNorm();
+                _printIterationAndNorm();
+                _iteration++;
             }
         }
         if (_parallelization == vTechKickInYoo) {
             auto numberOfThreads = std::thread::hardware_concurrency();
             _printMultiThreadInitializationText(numberOfThreads);
-            while (iteration < _maxIterations && norm >= _tolerance) {
+            while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
                 _multiThreadSolution(numberOfThreads, n);
-                norm = _calculateNorm();
-                _printIterationAndNorm(iteration, norm);
-                iteration++;
+                _exitNorm = _calculateNorm();
+                _printIterationAndNorm();
+                _iteration++;
             }
 
         }
@@ -52,20 +60,20 @@ namespace LinearAlgebra {
             _stationaryIterativeCuda = make_unique<StationaryIterativeCuda>(
                     d_matrix, d_rhs, d_xOld, d_xNew, d_difference, vectorSize, 256);
 
-            while (iteration < _maxIterations && norm >= _tolerance) {
+            while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
 
                 _stationaryIterativeCuda->performGaussSeidelIteration();
                 _stationaryIterativeCuda->getDifferenceVector(_difference->data());
-                norm = VectorNorm(_difference, _normType).value();
+                _exitNorm = VectorNorm(_difference, _normType).value();
                 //norm = _stationaryIterativeCuda->getNorm();
                 // Add the norm to the list of norms
-                _residualNorms->push_back(norm);
+                _residualNorms->push_back(_exitNorm);
 
-                if (iteration % 100 == 0) {
-                    cout << "Iteration: " << iteration << " - Norm: " << norm << endl;
+                if (_iteration % 100 == 0) {
+                    cout << "Iteration: " << _iteration << " - Norm: " << _exitNorm << endl;
                 }
 
-                iteration++;
+                _iteration++;
             }
             _stationaryIterativeCuda->getSolutionVector(_xNew->data());
             _stationaryIterativeCuda.reset();
@@ -73,7 +81,7 @@ namespace LinearAlgebra {
         }
 
         auto end = std::chrono::high_resolution_clock::now();
-        printAnalysisOutcome(iteration, norm, start, end);
+        printAnalysisOutcome(_iteration, _exitNorm, start, end);
         
     }
 
@@ -86,7 +94,9 @@ namespace LinearAlgebra {
 
     void StationaryIterative::_singleThreadSolution() {
     }
+    
 
 
 }
 // LinearAlgebra
+

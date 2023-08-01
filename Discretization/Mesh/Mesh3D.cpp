@@ -73,7 +73,7 @@ namespace Discretization {
     }
     
     vector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
-
+        return {};
     }
 
     shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh3D::_addDBoundaryNodesToMap() {

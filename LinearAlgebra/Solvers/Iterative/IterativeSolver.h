@@ -40,12 +40,6 @@ namespace LinearAlgebra {
         
         const VectorNormType& getNormType() const;
         
-        void setLinearSystem(shared_ptr<LinearSystem> linearSystem) override;
-        
-        void setInitialSolution(shared_ptr<vector<double>> initialValue);
-        
-        void setInitialSolution(double initialValue);
-        
         void solve() override;
         
     protected:
@@ -54,15 +48,17 @@ namespace LinearAlgebra {
         
         double _tolerance;
         
+        unsigned _iteration;
+        
         unsigned _maxIterations;
+        
+        double _exitNorm;
         
         shared_ptr<vector<double>> _xNew;
         
         shared_ptr<vector<double>> _xOld;
-        
+
         shared_ptr<vector<double>> _difference;
-        
-        bool _isInitialized;
         
         bool _throwExceptionOnMaxFailure;
         
@@ -71,6 +67,11 @@ namespace LinearAlgebra {
         string _solverName;
 
         ParallelizationMethod _parallelization;
+
+        
+        void setInitialSolution(shared_ptr<vector<double>> initialSolution) override;
+
+        void setInitialSolution(double initialValue) override;
         
         virtual void _iterativeSolution();
         
@@ -86,12 +87,12 @@ namespace LinearAlgebra {
         
         void _printCUDAInitializationText();
         
-        static void _printIterationAndNorm(unsigned iteration, double norm);
+        void _printIterationAndNorm(unsigned displayFrequency = 100) const;
         
         double _calculateNorm();
         
         void printAnalysisOutcome(unsigned totalIterations, double exitNorm, std::chrono::high_resolution_clock::time_point startTime,
-                                  std::chrono::high_resolution_clock::time_point finishTime);
+                                  std::chrono::high_resolution_clock::time_point finishTime) const;
         
         
     };

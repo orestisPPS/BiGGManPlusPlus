@@ -18,6 +18,8 @@ namespace LinearAlgebra {
     public:
         explicit StationaryIterative(VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4,
                                      bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = Wank);
+
+        void _initializeVectors() override;
         
         void _iterativeSolution() override;
         
@@ -27,6 +29,10 @@ namespace LinearAlgebra {
         
         void _cudaSolution() override;
         
+        
+        
+    protected:
+
     private:
         unique_ptr<StationaryIterativeCuda> _stationaryIterativeCuda;
         

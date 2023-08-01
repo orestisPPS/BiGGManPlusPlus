@@ -6,7 +6,7 @@
 
 namespace LinearAlgebra {
     
-    DecompositionLUP::DecompositionLUP(shared_ptr<Array<double>> matrix, double pivotTolerance, bool throwExceptionOnSingularMatrix) :
+    DecompositionLUP::DecompositionLUP(const shared_ptr<Array<double>>& matrix, double pivotTolerance, bool throwExceptionOnSingularMatrix) :
             MatrixDecomposition(matrix),
             _p(nullptr),
             _pivotTolerance(pivotTolerance),
@@ -184,9 +184,8 @@ namespace LinearAlgebra {
         return (_p->at(n) - n) % 2 == 0 ? det : -det;
     }
 
-    shared_ptr<vector<double>> DecompositionLUP::solve(shared_ptr<vector<double>> rhs) {
+    shared_ptr<vector<double>> DecompositionLUP::solve(shared_ptr<vector<double>> rhs, shared_ptr<vector<double>> solution) {
         unsigned n = _matrix->numberOfRows();
-        auto x = make_shared<vector<double>>(n);
         auto y = make_shared<vector<double>>(n);
 
         cout<<"FORWARD SUBSTITUTION"<<endl;
@@ -204,11 +203,11 @@ namespace LinearAlgebra {
             
             // Solve Ux = y using backward substitution
             for (int i = static_cast<int>(n) - 1; i >= 0; i--) {
-                x->at(i) = y->at(i);
+                solution->at(i) = y->at(i);
                 for (unsigned j = i + 1; j < n; j++) {
-                    x->at(i) -= _matrix->at(i, j) * (*x)[j];
+                    solution->at(i) -= _matrix->at(i, j) * (*solution)[j];
                 }
-                x->at(i) /= _matrix->at(i, i);
+                solution->at(i) /= _matrix->at(i, i);
             }
         }
         else{
@@ -222,11 +221,11 @@ namespace LinearAlgebra {
 
             // Solve Ux = y using backward substitution
             for (int i = static_cast<int>(n) - 1; i >= 0; i--) {
-                x->at(i) = y->at(i);
+                solution->at(i) = y->at(i);
                 for (unsigned j = i + 1; j < n; j++) {
-                    x->at(i) -= _u->at(i, j) * (*x)[j];
+                    solution->at(i) -= _u->at(i, j) * (*solution)[j];
                 }
-                x->at(i) /= _u->at(i, i);
+                solution->at(i) /= _u->at(i, i);
             }
         }
 

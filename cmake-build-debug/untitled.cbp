@@ -295,10 +295,10 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Norms/VectorNormCuda.cuh">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/MultithreadVectorOperations.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/MultiThreadVectorOperations.cpp">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/MultithreadVectorOperations.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/MultiThreadVectorOperations.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/TransformationTensors.h">
@@ -469,6 +469,12 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/StructuredMeshGeneration/NodeFactory.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/Mesh3dTest.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/Mesh3dTest.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/OperationsCUDA.cpp">
 			<Option target="untitled"/>
 		</Unit>
@@ -479,6 +485,18 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyState3DNeumann.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyStateDirichlet3D.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyStateDirichlet3D.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/VectorOperationsTest.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/VectorOperationsTest.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Utility/Calculators.h">

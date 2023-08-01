@@ -64,7 +64,7 @@ namespace LinearAlgebra {
         *
         * @return A vector with the solution of the linear system
         */
-        virtual shared_ptr<vector<double>> solve(shared_ptr<vector<double>> rhs);
+        virtual shared_ptr<vector<double>> solve(shared_ptr<vector<double>> rhs, shared_ptr<vector<double>> solution);
 
 
     protected:

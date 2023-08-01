@@ -49,7 +49,7 @@ namespace LinearAlgebra {
         
     public:
         
-        VectorNorm(shared_ptr<vector<double>> vector, VectorNormType normType, unsigned short lP_Order = 2);
+        VectorNorm(const shared_ptr<vector<double>>& vector, VectorNormType normType, unsigned short lP_Order = 2);
         
         VectorNormType & type();
         
