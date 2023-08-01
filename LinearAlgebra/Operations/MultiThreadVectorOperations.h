@@ -38,6 +38,16 @@ namespace LinearAlgebra {
         * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
         */
         template<typename ThreadJob>
+/**
+        * \brief Execute tasks in parallel.
+        *
+        * Distributes the given task across multiple threads for parallel execution.
+        *
+        * \tparam ThreadJob Type of the callable task.
+        * \param size The size of the data to be processed.
+        * \param task The actual task to be executed in parallel.
+        * \param cacheLineSize Size of the cache line (default is 64 bytes).
+        */
         static void executeInParallel(size_t size, ThreadJob task, unsigned cacheLineSize = 64) {
             unsigned doublesPerCacheLine = cacheLineSize / sizeof(double);
             unsigned int numThreads = thread::hardware_concurrency();
@@ -74,6 +84,16 @@ namespace LinearAlgebra {
         * 
         * \return The combined result after the reduction step.
         */
+/**
+        * \brief Execute tasks in parallel with reduction.
+        *
+        * Distributes the given task across multiple threads for parallel execution and then combines the results.
+        *
+        * \tparam T Data type for reduction.
+        * \param size The size of the data to be processed.
+        * \param task The actual task to be executed in parallel.
+        * \param cacheLineSize Size of the cache line (default is 64 bytes).
+        */
         template<typename T, typename ThreadJob>
         static T executeInParallelWithReduction(size_t size, ThreadJob task, unsigned cacheLineSize = 64) {
             unsigned doublesPerCacheLine = cacheLineSize / sizeof(double);
@@ -108,17 +128,17 @@ namespace LinearAlgebra {
     public:
 
         /**
-        * \brief Adds two vectors in parallel.
+     
+        * \brief   * Performs element-wise addition of two vectors using multiple threads.
         * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], their addition is:
         * add(v, w) = [v1+w1, v2+w2, ..., vn+wn]. The addition is performed in parallel across multiple threads.
         *
-        * \tparam T The data type of the vectors (e.g., double, float).
-        * 
-        * \param a Pointer to the first input vector.
-        * \param b Pointer to the second input vector.
-        * \param result Pointer to the output vector where the result will be stored.
-        * \param size The number of elements in the vectors.
-        * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
+        * \tparam T Data type of the vectors.
+        * \param a Pointer to the first vector.
+        * \param b Pointer to the second vector.
+        * \param result Pointer to the result vector.
+        * \param size Size of the vectors.
+        * \param cacheLineSize Size of the cache line (default is 64 bytes).
         */
         template<typename T>
         static void add(const T* a, const T* b, T* result, size_t size, double cacheLineSize = 64){
@@ -130,32 +150,64 @@ namespace LinearAlgebra {
             executeInParallel(size, additionThreadJob, cacheLineSize);
         }
 
+        template<typename T, typename S>
+        static void addScaledVector(const T* a, const T* b, T* result, S scale, size_t size, double cacheLineSize = 64){
+            auto addScaledVectorThreadJob = [&](unsigned start, unsigned end) {
+                for (unsigned i = start; i < end && i < size; ++i) {
+                    result[i] = a[i] + scale * b[i];
+                }
+            };
+            executeInParallel(size, addScaledVectorThreadJob, cacheLineSize);
+        }
 
         /**
-        * \brief Subtracts two vectors in parallel.
+        * \brief Performs element-wise subtraction of two vectors using multiple threads.
         * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], their subtraction is:
         * subtract(v, w) = [v1-w1, v2-w2, ..., vn-wn]. The subtraction is performed in parallel across multiple threads.
         *
         * \tparam T The data type of the vectors (e.g., double, float).
-        * 
+        *
         * \param a Pointer to the first input vector.
         * \param b Pointer to the second input vector.
-        * \param result Pointer to the output vector where the result will be stored.
-        * \param size The number of elements in the vectors.
-        * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
+        * \param result Pointer to the result vector.
+        * \param size Size of the vectors.
+        * \param cacheLineSize Size of the cache line (default is 64 bytes).
         */
         template<typename T>
         static void subtract(const T* a, const T* b, T* result, size_t size, double cacheLineSize = 64){
-            auto additionThreadJob = [&](unsigned start, unsigned end) {
+            auto subtractionThreadJob = [&](unsigned start, unsigned end) {
                 for (unsigned i = start; i < end && i < size; ++i) {
                     result[i] = a[i] - b[i];
                 }
             };
-            executeInParallel(size, additionThreadJob, cacheLineSize);
+            executeInParallel(size, subtractionThreadJob, cacheLineSize);
         }
 
         /**
-        * \brief Calculates the dot product of 2 vectors in parallel.
+        * \brief Performs element-wise subtraction of a scaled vector from another vector using multiple threads.
+        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], and a scalar factor a, their subtraction is:
+        * subtract(v, w) = [v1-a*w1, v2-a*w2, ..., vn-*wn]. The subtraction is performed in parallel across multiple threads.
+        *
+        * \tparam T The data type of the vectors (e.g., double, float).
+        *
+        * \param a Pointer to the first input vector.
+        * \param b Pointer to the second input vector.
+        * \param result Pointer to the result vector.
+        * \param size Size of the vectors.
+        * \param cacheLineSize Size of the cache line (default is 64 bytes).
+        */
+        template<typename T, typename S>
+        static void subtractScaledVector(const T* a, const T* b, T* result, S scale, size_t size, double cacheLineSize = 64){
+            auto subtractScaledVectorThreadJob = [&](unsigned start, unsigned end) {
+                for (unsigned i = start; i < end && i < size; ++i) {
+                    result[i] = a[i] - scale * b[i];
+                }
+            };
+            executeInParallel(size, subtractScaledVectorThreadJob, cacheLineSize);
+        }
+
+        /**
+        * \brief Calculates the dot product of 2 vectors using multiple threads.
         * The dot product of two vectors is defined as the sum of the products of their corresponding components.
         * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], their dot product is calculated as:
         * dot(v, w) = v1w1 + v2w2 + ... + vn*wn
@@ -184,30 +236,57 @@ namespace LinearAlgebra {
         }
 
         /**
-        * \brief Sums all the elements of a vector in parallel.
-        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], their subtraction is:
-        * subtract(v, w) = [v1-w1, v2-w2, ..., vn-wn]. The subtraction is performed in parallel across multiple threads.
+        * \brief Deep copy the source vector into the destination vector using multiple threads.
+        *
+        * This function ensures that each thread copies a distinct segment of the source vector to the destination vector. 
+        * The copying operation is performed in parallel across multiple threads.
         *
         * \tparam T The data type of the vectors (e.g., double, float).
         * 
-        * \param a Pointer to the first input vector.
-        * \param b Pointer to the second input vector.
-        * \param result Pointer to the output vector where the result will be stored.
+        * \param source Pointer to the source vector.
+        * \param destination Pointer to the destination vector.
         * \param size The number of elements in the vectors.
         * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
         */
         template<typename T>
-        static void sum(const T* a, T& result, size_t size, double cacheLineSize = 64) {
-            auto sumThreadJob = [&](unsigned start, unsigned end) -> T {
-                T localSum = 0.0;
+        static void deepCopy(const T* source, T* destination, size_t size, unsigned cacheLineSize = 64) {
+            auto deepCopyThreadJob = [&](unsigned start, unsigned end) {
                 for (unsigned i = start; i < end && i < size; ++i) {
-                    localSum += a[i];
+                    destination[i] = source[i];
                 }
-                return localSum;
             };
-            result = executeInParallelWithReduction<T>(size, sumThreadJob, cacheLineSize);
+            executeInParallel(size, deepCopyThreadJob, cacheLineSize);
         }
 
+
+        /**
+        * \brief Multi-threaded matrix-vector multiplication.
+        *
+        * This function computes the product of a matrix and a vector using multiple threads. Given a matrix A of 
+        * dimensions m x n and a vector x of dimensions n, the result of the multiplication Ax is a vector b of 
+        * dimensions m.
+        *
+        * \tparam T The data type of the matrix and vectors (e.g., double, float).
+        * 
+        * \param A Pointer to the input matrix with dimensions m x n.
+        * \param x Pointer to the input vector with dimensions n.
+        * \param b Pointer to the output vector where the result will be stored. It should have dimensions m.
+        * \param m The number of rows in the matrix.
+        * \param n The number of columns in the matrix (also the size of vector x).
+        * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
+        */
+        template<typename T>
+        static void matrixVectorMultiplication(const T* A, const T* x, T* b, size_t m, size_t n, unsigned cacheLineSize = 64) {
+            auto matrixVectorProductThreadJob = [&](unsigned start, unsigned end) {
+                for (unsigned i = start; i < end && i < m; ++i) {
+                    b[i] = 0.0;
+                    for (unsigned j = 0; j < n; ++j) {
+                        b[i] += A[i * n + j] * x[j];
+                    }
+                }
+            };
+            executeInParallel(m, matrixVectorProductThreadJob, cacheLineSize);
+        }
     };
 } // LinearAlgebra
 

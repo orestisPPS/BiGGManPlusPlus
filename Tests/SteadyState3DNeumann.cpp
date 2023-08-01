@@ -9,15 +9,15 @@
 namespace Tests {
     SteadyState3DNeumann::SteadyState3DNeumann() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 5;
-        numberOfNodes[Direction::Two] = 5;
-        numberOfNodes[Direction::Three] = 5;
+        numberOfNodes[Direction::One] = 21;
+        numberOfNodes[Direction::Two] = 21;
+        numberOfNodes[Direction::Three] = 21;
 
         //auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 1, 1, 0, 0, 0, 0, 0, 0);
         auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0);
         auto meshFactory = make_shared<MeshFactory>(specs);
         auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
-        meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 4, 4, 4));
+        meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 8, 8, 8));
         //meshFactory->buildMesh(2, meshBoundaries->annulus_3D_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 180, 5));
         //meshFactory->mesh->createElements(Hexahedron, 2);
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural, false);
@@ -63,7 +63,7 @@ namespace Tests {
         //auto solver = make_shared<JacobiSolver>(VectorNormType::L2, 1E-10, 1E4, true, vTechKickInYoo);
         //auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo, VectorNormType::LInf, 1E-9);
         //auto solver = make_shared<GaussSeidelSolver>(VectorNormType::L2, 1E-9, 1E4, false, turboVTechKickInYoo);
-        auto solver = make_shared<ConjugateGradientSolver>(VectorNormType::L2, 1E-12, 1E4, true);
+        auto solver = make_shared<ConjugateGradientSolver>(VectorNormType::L2, 1E-12, 1E4, true, vTechKickInYoo);
         //auto solver = make_shared<SORSolver>(1.8, VectorNormType::L2, 1E-5);
         auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specsFD);
         

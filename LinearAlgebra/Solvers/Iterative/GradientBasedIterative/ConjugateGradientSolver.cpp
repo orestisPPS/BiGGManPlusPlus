@@ -34,16 +34,8 @@ namespace LinearAlgebra {
         }
         if (_parallelization == vTechKickInYoo) {
             auto numberOfThreads = std::thread::hardware_concurrency();
-            _printMultiThreadInitializationText(numberOfThreads);
-            while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
-                _multiThreadSolution(numberOfThreads, n);
-                _exitNorm = _calculateNorm();
-                _printIterationAndNorm();
-                _iteration++;
-            }
-
+            _multiThreadSolution(numberOfThreads, n);
         }
-
         else if (_parallelization == turboVTechKickInYoo) {
 
             double *d_matrix = _linearSystem->matrix->getArrayPointer();
@@ -51,18 +43,10 @@ namespace LinearAlgebra {
             double *d_xOld = _xOld->data();
             double *d_xNew = _xNew->data();
             int vectorSize = static_cast<int>(_linearSystem->rhs->size());
-
-    
-
         }
 
         auto end = std::chrono::high_resolution_clock::now();
         printAnalysisOutcome(_iteration, _exitNorm, start, end);
-    }
-
-    void ConjugateGradientSolver::_multiThreadSolution(const unsigned short &availableThreads,
-                                                       const unsigned short &numberOfRows) {
-        
     }
 
     void ConjugateGradientSolver::_cudaSolution() {
@@ -76,9 +60,6 @@ namespace LinearAlgebra {
         double beta = 0.0;
         _exitNorm = 1.0;
         //Calculate the initial residual
-
-        auto lol = _linearSystem->matrix->isSymmetric();
-        ////_linearSystem->matrix->print(10);
         //setInitialSolution(0);
         //A * x_old
         VectorOperations::matrixVectorMultiplication(_linearSystem->matrix, _xOld, _matrixVectorMultiplication);
@@ -132,5 +113,68 @@ namespace LinearAlgebra {
         auto end = std::chrono::high_resolution_clock::now();
     };
 
+    void ConjugateGradientSolver::_multiThreadSolution(const unsigned short &availableThreads,
+                                                       const unsigned short &numberOfRows) {
+        auto start = std::chrono::high_resolution_clock::now();
+        size_t n = _linearSystem->matrix->numberOfRows();
+        double alpha = 0.0;
+        double beta = 0.0;
+        _exitNorm = 1.0;
+        //Calculate the initial residual
+        ////_linearSystem->matrix->print(10);
+        //setInitialSolution(0);
+        //A * x_old
+        MultiThreadVectorOperations::matrixVectorMultiplication(_linearSystem->matrix->getArrayPointer(), _xOld->data(),
+                                                                _matrixVectorMultiplication->data(), n, n);
+        //r_old = b - A * x_old
+        MultiThreadVectorOperations::subtract(_linearSystem->rhs->data(), _matrixVectorMultiplication->data(), _residualOld->data(), n);
+        double normInitial = VectorNorm(_residualOld, _normType).value();
+        _residualNorms->push_back(normInitial);
+        //d_old = r_old
+        MultiThreadVectorOperations::deepCopy(_residualOld->data(), _directionVectorOld->data(), n);
 
+        while (_iteration < _maxIterations) {
+            auto matrixTimesDirection = make_shared<vector<double>>(_linearSystem->matrix->numberOfRows(), 0);
+            MultiThreadVectorOperations::matrixVectorMultiplication(_linearSystem->matrix->getArrayPointer(),
+                                                                    _directionVectorOld->data(), matrixTimesDirection->data(), n, n);
+            //Calculate the step size
+            //alpha = (r_old, r_old)/(difference, A * difference)
+            double r_oldT_r_old = MultiThreadVectorOperations::dotProduct(_residualOld->data(), _residualOld->data(), n);
+            double direction_oldT_A_direction_old = MultiThreadVectorOperations::dotProduct(_directionVectorOld->data(), matrixTimesDirection->data(), n);
+            alpha = r_oldT_r_old / direction_oldT_A_direction_old;
+
+            //x_new = x_old + alpha * difference
+            MultiThreadVectorOperations::addScaledVector(_xOld->data(), _directionVectorOld->data(), _xNew->data(), alpha, n);
+            //r_new = r_old - alpha * A * difference
+            MultiThreadVectorOperations::subtractScaledVector(_residualOld->data(), matrixTimesDirection->data(), _residualNew->data(), alpha, n);
+
+            //MultiThreadVectorOperations::subtract(_xNew, _xOld, _difference);
+
+            //Calculate the norm of the residual
+            _exitNorm = VectorNorm(_residualNew, _normType).value() / normInitial;
+            //_exitNorm = VectorNorm(_residualNew, _normType).value();
+            _residualNorms->push_back(_exitNorm);
+            if (_exitNorm > _tolerance){
+                //Calculate the new direction
+                double r_newT_r_new = MultiThreadVectorOperations::dotProduct(_residualNew->data(), _residualNew->data(), n);
+                beta = r_newT_r_new / r_oldT_r_old;
+                //newDirection = r_new + beta * difference
+                MultiThreadVectorOperations::addScaledVector(_residualNew->data(), _directionVectorOld->data(),
+                                                             _directionVectorNew->data(), beta, n);
+
+                MultiThreadVectorOperations::deepCopy(_residualNew->data(), _residualOld->data(), n);
+                MultiThreadVectorOperations::deepCopy(_directionVectorNew->data(), _directionVectorOld->data(), n);
+                MultiThreadVectorOperations::deepCopy(_xNew->data(), _xOld->data(), n);
+            }
+            else {
+                MultiThreadVectorOperations::deepCopy(_xNew->data(), _xOld->data(), n);
+                break;
+            }
+
+            //Update the old residual and the old difference
+            _printIterationAndNorm(10) ;
+            _iteration++;
+        }
+    };
+    
 } // LinearAlgebra

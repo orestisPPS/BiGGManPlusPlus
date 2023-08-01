@@ -9,6 +9,7 @@
 #include "../Solver.h"
 #include "../../AnalysisLinearSystemInitializer.h"
 #include "../../Norms/VectorNorm.h"
+#include "../../Operations/MultiThreadVectorOperations.h"   
 
 namespace LinearAlgebra {
 

@@ -30,7 +30,7 @@ namespace Tests {
                     new map<DOFType, double>({{Temperature, 100}})));
             auto leftBC = make_shared<BoundaryCondition>(Dirichlet, shared_ptr<map<DOFType, double>>(
                     new map<DOFType, double>({{Temperature, 20}})));
-            auto rightBC = make_shared<BoundaryCondition>(Dirichlet, shared_ptr<map<DOFType, double>>(
+            auto rightBC = make_shared<BoundaryCondition>(Neumann, shared_ptr<map<DOFType, double>>(
                     new map<DOFType, double>({{Temperature, 0}})));
             auto frontBC = make_shared<BoundaryCondition>(Dirichlet, shared_ptr<map<DOFType, double>>(
                     new map<DOFType, double>({{Temperature, 0}})));
