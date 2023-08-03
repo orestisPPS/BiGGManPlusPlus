@@ -129,7 +129,11 @@ add_executable(untitled main.cpp
         Tests/SteadyStateDirichlet3D.h
         Tests/SteadyStateDirichlet3D.cpp
         Tests/Mesh3dTest.h
-        Tests/Mesh3dTest.cpp)
+        Tests/Mesh3dTest.cpp
+        LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.h
+        LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp
+        Tests/LanczosEigenDecompositionTest.h
+        Tests/LanczosEigenDecompositionTest.cpp)
 
 
 target_link_libraries(untitled cudart)

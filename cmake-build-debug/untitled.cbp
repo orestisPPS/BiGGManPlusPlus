@@ -247,6 +247,12 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/NumericalArray.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp">
 			<Option target="untitled"/>
 		</Unit>
@@ -467,6 +473,12 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/StructuredMeshGeneration/NodeFactory.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/LanczosEigenDecompositionTest.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/LanczosEigenDecompositionTest.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/Mesh3dTest.cpp">

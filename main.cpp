@@ -3,6 +3,7 @@
 #include "PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
 #include "Tests/SteadyState3DNeumann.h"
 #include "Tests/SteadyStateDirichlet3D.h"
+#include "Tests/LanczosEigenDecompositionTest.h"
 #include "Tests/OperationsCUDA.h"
 #include "Tests/VectorOperationsTest.h"
 #include "StructuredMeshGeneration/MeshTest2D.h"
@@ -23,8 +24,11 @@ using namespace DegreesOfFreedom;
 int main() {
 
     //auto analysisTest = new NumericalAnalysis::StStFDTest();
-    auto neumannTest = new Tests::SteadyState3DNeumann();
-    delete neumannTest;
+    //auto neumannTest = new Tests::SteadyState3DNeumann();
+    //delete neumannTest;
+
+    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();
+    delete lanczosTest;
     
     //auto dirichletTest = new Tests::SteadyStateDirichlet3D();
     //auto cudaOperations = new Tests::OperationsCUDA();

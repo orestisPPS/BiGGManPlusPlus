@@ -80,9 +80,9 @@ namespace LinearAlgebra {
             alpha = r_oldT_r_old / direction_oldT_A_direction_old;
             
             //x_new = x_old + alpha * difference
-            VectorOperations::addScaledVector(_xOld, _directionVectorOld, _xNew, alpha);
+            VectorOperations::add(_xOld, _directionVectorOld, _xNew, alpha);
             //r_new = r_old - alpha * A * difference
-            VectorOperations::subtractScaledVector(_residualOld, matrixTimesDirection, _residualNew, alpha);
+            VectorOperations::subtract(_residualOld, matrixTimesDirection, _residualNew, alpha);
             
             //VectorOperations::subtract(_xNew, _xOld, _difference);
             
@@ -95,7 +95,7 @@ namespace LinearAlgebra {
                 double r_newT_r_new = VectorOperations::dotProductWithTranspose(_residualNew);
                 beta = r_newT_r_new / r_oldT_r_old;
                 //newDirection = r_new + beta * difference
-                VectorOperations::addScaledVector(_residualNew, _directionVectorOld, _directionVectorNew, beta);
+                VectorOperations::add(_residualNew, _directionVectorOld, _directionVectorNew, beta);
                 
                 VectorOperations::deepCopy(_residualNew, _residualOld);
                 VectorOperations::deepCopy(_directionVectorNew, _directionVectorOld);
@@ -116,6 +116,7 @@ namespace LinearAlgebra {
     void ConjugateGradientSolver::_multiThreadSolution(const unsigned short &availableThreads,
                                                        const unsigned short &numberOfRows) {
         auto start = std::chrono::high_resolution_clock::now();
+        _printMultiThreadInitializationText(availableThreads);
         size_t n = _linearSystem->matrix->numberOfRows();
         double alpha = 0.0;
         double beta = 0.0;

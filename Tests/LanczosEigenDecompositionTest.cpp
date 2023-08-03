@@ -1,14 +1,16 @@
 //
-// Created by hal9000 on 7/15/23.
+// Created by hal9000 on 8/3/23.
 //
-#include "SteadyState3DNeumann.h"
+
+#include "LanczosEigenDecompositionTest.h"
 
 namespace Tests {
-    SteadyState3DNeumann::SteadyState3DNeumann() {
+    LanczosEigenDecompositionTest::LanczosEigenDecompositionTest() {
+        
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 21;
-        numberOfNodes[Direction::Two] = 21;
-        numberOfNodes[Direction::Three] = 21;
+        numberOfNodes[Direction::One] = 5;
+        numberOfNodes[Direction::Two] = 5;
+        numberOfNodes[Direction::Three] = 5;
 
         //auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 1, 1, 0, 0, 0, 0, 0, 0);
         auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0);
@@ -49,30 +51,35 @@ namespace Tests {
         dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Bottom, bottom));
         dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Front, front));
         dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Back, back));
-        
+
         auto boundaryConditions = make_shared<DomainBoundaryConditions>(dummyBCMap);
-        
+
         auto temperatureDOF = new TemperatureScalar_DOFType();
-        
+
         auto problem = make_shared<SteadyStateMathematicalProblem>(heatTransferPDE, boundaryConditions, temperatureDOF);
-        
-       // auto solver = make_shared<SolverLUP>(1E-20, true);
+
+        // auto solver = make_shared<SolverLUP>(1E-20, true);
         //auto solver = make_shared<JacobiSolver>(VectorNormType::L2, 1E-10, 1E4, true, vTechKickInYoo);
         //auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo, VectorNormType::LInf, 1E-9);
         //auto solver = make_shared<GaussSeidelSolver>(VectorNormType::L2, 1E-9, 1E4, false, turboVTechKickInYoo);
         auto solver = make_shared<ConjugateGradientSolver>(VectorNormType::L2, 1E-12, 1E4, true, vTechKickInYoo);
         //auto solver = make_shared<SORSolver>(1.8, VectorNormType::L2, 1E-5);
         auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specsFD);
-        
+
+        auto matrixToDecompose = analysis->linearSystem->matrix;
+        auto eigenDecomposition = make_shared<LanczosEigenDecomposition>(3);
+        eigenDecomposition->setMatrix(matrixToDecompose);
+        eigenDecomposition->calculateEigenvalues();
         analysis->solve();
         
+
         analysis->applySolutionToDegreesOfFreedom();
 
         auto fileName = "temperatureField.vtk";
         auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
         auto fieldType = "Temperature";
         Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
-        
+
         //auto targetCoords = vector<double>{0.5, 0.5};
         //auto targetCoords = vector<double>{1.5, 1.5, 1.5};
         auto targetCoords = vector<double>{2, 2, 2};
@@ -82,7 +89,7 @@ namespace Tests {
         cout<<"Target Solution: "<< targetSolution[0] << endl;
 
 
-        
+
         auto filenameParaview = "firstMesh.vtk";
     }
 } // Tests
