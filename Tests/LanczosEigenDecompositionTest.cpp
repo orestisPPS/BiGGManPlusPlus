@@ -67,9 +67,12 @@ namespace Tests {
         auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specsFD);
 
         auto matrixToDecompose = analysis->linearSystem->matrix;
-        auto eigenDecomposition = make_shared<LanczosEigenDecomposition>(3);
+        auto eigenDecomposition = make_shared<LanczosEigenDecomposition>(10, 10);
         eigenDecomposition->setMatrix(matrixToDecompose);
         eigenDecomposition->calculateEigenvalues();
+        
+        Utility::Exporters::exportLinearSystemToMatlabFile(analysis->linearSystem->matrix, analysis->linearSystem->rhs,"/home/hal9000/code/BiGGMan++/Testing/", "linearSystemEigen.m", false);
+        
         analysis->solve();
         
 

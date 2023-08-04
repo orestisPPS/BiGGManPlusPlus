@@ -8,12 +8,11 @@ using namespace LinearAlgebra;
 
 namespace LinearAlgebra {
     
-    LanczosEigenDecomposition::LanczosEigenDecomposition(unsigned short numberOfEigenvalues, VectorNormType normType,
-                                                         unsigned short maxIterations, double tolerance,
-                                                         ParallelizationMethod parallelizationMethod) {
+    LanczosEigenDecomposition::LanczosEigenDecomposition(unsigned short numberOfEigenvalues, unsigned lanczosIterations, VectorNormType normType,
+                                                         double tolerance , ParallelizationMethod parallelizationMethod) {
         _numberOfEigenvalues = numberOfEigenvalues;
         _normType = normType;
-        _maxIterations = maxIterations;
+        _maxIterations = lanczosIterations;
         _tolerance = tolerance;
         _parallelizationMethod = parallelizationMethod;
         _iteration = 0;
@@ -44,40 +43,52 @@ namespace LinearAlgebra {
         _printSingleThreadInitializationText();
         _alpha = 0.0;
         _beta = 0.0;
-        
-        
-        while (_iteration < 100){
+
+
+        while (_iteration < 1000){
             auto workingVector = make_shared<vector<double>>(_matrix->numberOfRows());
+
             VectorOperations::matrixVectorMultiplication(_matrix, _lanczosVectorOld, workingVector);
             //Calculate α
             _alpha = VectorOperations::dotProduct(_lanczosVectorOld, workingVector);
             //Orthogonalize
             _singleThreadOrthogonalization(workingVector);
-            
+            //_singleThreadCompleteOrthogonalization(workingVector);
+
             _beta = VectorNorm(workingVector, L2).value();
             VectorOperations::scale(workingVector, 1.0 / _beta);
             VectorOperations::deepCopy(workingVector, _lanczosVectorNew, 1 / _beta);
             _lanczosVectors->insert(pair<unsigned, shared_ptr<vector<double>>>(_iteration, std::move(workingVector)));
 
             (*_T_diagonal)[_iteration] = _alpha;
-            if (_iteration > 0) 
+            if (_iteration > 0)
                 (*_T_subDiagonal)[_iteration - 1] = _beta;
-            
-            VectorOperations::deepCopy(_lanczosVectorNew, _lanczosVectorOld);
+
             auto dot = VectorOperations::dotProduct(_lanczosVectorNew, _lanczosVectorOld);
-            
+
+            VectorOperations::deepCopy(_lanczosVectorNew, _lanczosVectorOld);
+            cout<<dot<<endl;
+
             _iteration++;
         }
         cout<<"mitsotakis"<<endl;
 
     }
-    
-    void LanczosEigenDecomposition::_singleThreadOrthogonalization(const shared_ptr<vector<double>> &vectorToOrthogonalize) {
+
+    void LanczosEigenDecomposition::_singleThreadOrthogonalization(shared_ptr<vector<double>> &vectorToOrthogonalize) {
         for (unsigned i = 0; i < _matrix->numberOfRows(); i++) {
             (*vectorToOrthogonalize)[i] -= _beta * (*_lanczosVectorOld)[i] + _alpha * (*_lanczosVectorNew)[i];
         }
     }
-            
+
+    void LanczosEigenDecomposition::_singleThreadCompleteOrthogonalization(shared_ptr<vector<double>> vectorToOrthogonalize) {
+
+        for (auto i = 0; i < _iteration; i++) {
+            auto dot = VectorOperations::dotProduct(_lanczosVectors->at(i), vectorToOrthogonalize);
+            VectorOperations::subtract(vectorToOrthogonalize, _lanczosVectors->at(i), vectorToOrthogonalize, 1, dot);
+        }
+    }
+    
     
     void LanczosEigenDecomposition::setMatrix(const shared_ptr<Array<double>>& matrix) {
         _matrix = matrix;
@@ -88,14 +99,17 @@ namespace LinearAlgebra {
         if (_matrixSet) {
             auto n = _matrix->numberOfRows();
             _lanczosVectors = make_shared<map<unsigned, shared_ptr<vector<double>>>>();            
-            _lanczosVectorOld= make_shared<vector<double>>(n);
+            _lanczosVectorOld= make_shared<vector<double>>(n,  1.0);
+            _lanczosVectorNew= make_shared<vector<double>>(n, 0);
+
             // Random number generation setup using C++'s <random> library
             // Mersenne Twister generator
             std::mt19937 generator; 
             // Seed with a device-dependent random number
             generator.seed(std::random_device()()); 
             // Uniform distribution between -1 and 1
-            std::uniform_real_distribution<double> distribution(-1.0, 1.0); 
+            //std::uniform_real_distribution<double> distribution(-1.0, 1.0); 
+            std::uniform_real_distribution<double> distribution(-0.1, 0.1); 
 
             //Fill _lanczosVectorNew with random numbers and normalize it
             for (auto &component : *_lanczosVectorOld) {
@@ -104,10 +118,11 @@ namespace LinearAlgebra {
             // Normalize the vector
             VectorOperations::normalize(_lanczosVectorOld);
             
-            _lanczosVectorNew= make_shared<vector<double>>(n, 0);
             
             _T_diagonal = make_shared<vector<double>>(_maxIterations, 0);
             _T_subDiagonal = make_shared<vector<double>>(_maxIterations - 1, 0);
+            
+            _T_matrix = make_shared<Array<double>>(_maxIterations, _maxIterations);
             
             _vectorsInitialized = true;
             
@@ -140,12 +155,7 @@ namespace LinearAlgebra {
             cout << "Iteration: " << _iteration << " - Norm: " << _exitNorm << endl;
 
     }
-
-    double LanczosEigenDecomposition::_calculateNorm() {
-/*        double norm = VectorNorm(_difference, _normType).value();
-        _residualNorms->push_back(norm);
-        return norm;*/
-    }
+    
 
     void LanczosEigenDecomposition::printAnalysisOutcome(unsigned totalIterations, double exitNorm,  std::chrono::high_resolution_clock::time_point startTime,
                                                std::chrono::high_resolution_clock::time_point finishTime) const{

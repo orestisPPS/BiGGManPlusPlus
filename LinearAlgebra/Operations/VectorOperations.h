@@ -218,7 +218,7 @@ namespace LinearAlgebra {
         * subtract(v, w) = [a * v1 - b * w1, a * v2 - b * w2, ..., a * vn - b * wn]
         */
         template<typename T>
-        static vector<T> subtract(const vector<T>& vector1, const vector<T>& vector2,vector<T>& result, double scaleFactor1 = 1.0, double scaleFactor2 = 1.0){
+        static void subtract(const vector<T>& vector1, const vector<T>& vector2,vector<T>& result, double scaleFactor1 = 1.0, double scaleFactor2 = 1.0){
             if (vector1.size() != vector2.size())
                 throw invalid_argument("Vectors must have the same size");
             if (scaleFactor1 == 1 && scaleFactor2 == 1)
@@ -248,7 +248,7 @@ namespace LinearAlgebra {
         * scaled(v) = [s*v1, s*v2, ..., s*vn]
         */
         template<typename T>
-        static void scale(const shared_ptr<vector<T>>& vector, double scalar){
+        static void scale(shared_ptr<vector<T>>& vector, double scalar){
             for (auto & i : *vector)
                 i *= scalar;
         }

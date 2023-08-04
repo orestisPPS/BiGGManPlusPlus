@@ -8,6 +8,7 @@
 #include "../Array/Array.h"
 #include "../Norms/VectorNorm.h"
 #include "../Operations/MultiThreadVectorOperations.h"
+#include "../../Utility/Exporters/Exporters.h"
 #include "../Operations/VectorOperations.h"
 namespace LinearAlgebra {
 
@@ -25,7 +26,7 @@ namespace LinearAlgebra {
             Wank
         };
 
-        LanczosEigenDecomposition(unsigned short numberOfEigenvalues, VectorNormType normType = L2, unsigned short maxIterations = 1000,
+        LanczosEigenDecomposition(unsigned short numberOfEigenvalues, unsigned lanczosIterations, VectorNormType normType = L2,
                                   double tolerance = 1E-5, ParallelizationMethod parallelizationMethod = Wank );
         
         void calculateEigenvalues();
@@ -36,7 +37,9 @@ namespace LinearAlgebra {
         
         void _singleThreadSolution();
         
-        void _singleThreadOrthogonalization(const shared_ptr<vector<double>> &vectorToOrthogonalize);
+        void _singleThreadOrthogonalization(shared_ptr<vector<double>> &vectorToOrthogonalize);\
+        
+        void _singleThreadCompleteOrthogonalization(shared_ptr<vector<double>> vectorToOrthogonalize);
         
         void _multiThreadSolution();
         
@@ -55,6 +58,8 @@ namespace LinearAlgebra {
         shared_ptr<vector<double>> _T_diagonal;
         
         shared_ptr<vector<double>> _T_subDiagonal;
+        
+        shared_ptr<Array<double>> _T_matrix;
         
         double _alpha, _beta;
 
