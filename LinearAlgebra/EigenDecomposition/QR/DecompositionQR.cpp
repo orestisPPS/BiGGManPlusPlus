@@ -19,7 +19,7 @@ namespace LinearAlgebra {
         switch (_parallelizationMethod){
             case Wank:{
                 auto iter = 0;
-                while (iter < 2) {
+                while (iter < 10) {
                     _singleThreadDecomposition();
                     //matrix matrix multiplication
                     for (int i = 0; i < _matrix->numberOfRows(); i++) {

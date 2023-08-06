@@ -37,9 +37,8 @@ namespace LinearAlgebra {
             }
             //Normalize column i of A
             norm = VectorNorm(iColumnOfA, L2).value();
-            //VectorOperations::scale(iColumnOfA, 1.0 / norm);
-            VectorOperations::normalize(iColumnOfA);
             _R->at(i, i) = norm;
+            VectorOperations::normalize(iColumnOfA);
             _Q->setColumn(i, iColumnOfA);
         }
         
