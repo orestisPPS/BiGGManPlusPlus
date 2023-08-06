@@ -133,7 +133,18 @@ add_executable(untitled main.cpp
         LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.h
         LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp
         Tests/LanczosEigenDecompositionTest.h
-        Tests/LanczosEigenDecompositionTest.cpp)
+        Tests/LanczosEigenDecompositionTest.cpp
+        LinearAlgebra/EigenDecomposition/PowerMethod.h
+        LinearAlgebra/EigenDecomposition/PowerMethod.cpp
+        LinearAlgebra/EigenDecomposition/QR/DecompositionQR.h
+        LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.h
+        LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp
+        LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.h
+        LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp
+        LinearAlgebra/ParallelizationMethods.h
+        LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp
+        Tests/QRTest.h
+        Tests/QRTest.cpp)
 
 
 target_link_libraries(untitled cudart)

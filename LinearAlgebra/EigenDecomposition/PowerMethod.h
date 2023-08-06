@@ -1,9 +1,10 @@
 //
-// Created by hal9000 on 8/3/23.
+// Created by hal9000 on 8/4/23.
 //
 
-#ifndef UNTITLED_LANCZOSEIGENDECOMPOSITION_H
-#define UNTITLED_LANCZOSEIGENDECOMPOSITION_H
+#ifndef UNTITLED_POWERMETHOD_H
+#define UNTITLED_POWERMETHOD_H
+
 #include <random>
 #include "../Array/Array.h"
 #include "../Norms/VectorNorm.h"
@@ -13,8 +14,8 @@
 namespace LinearAlgebra {
 
 
-    
-    class LanczosEigenDecomposition {
+
+    class PowerMethod {
     public:
 
         enum ParallelizationMethod{
@@ -26,42 +27,36 @@ namespace LinearAlgebra {
             Wank
         };
 
-        LanczosEigenDecomposition(unsigned short numberOfEigenvalues, unsigned lanczosIterations, VectorNormType normType = L2,
+        PowerMethod(unsigned short numberOfEigenvalues, unsigned maxIterations, VectorNormType normType = L2,
                                   double tolerance = 1E-5, ParallelizationMethod parallelizationMethod = Wank );
-        
-        void calculateEigenvalues();
+
+        void calculateDominantEigenValue();
         
         void setMatrix(const shared_ptr<Array<double>>& matrix);
-        
-    private:
-        
-        void _singleThreadSolution();
-        
-        void _singleThreadOrthogonalization(shared_ptr<vector<double>> &vectorToOrthogonalize);\
-        
-        void _singleThreadCompleteOrthogonalization(shared_ptr<vector<double>> vectorToOrthogonalize);
-        
-        void _multiThreadSolution();
-        
-        void _cudaSolution();
-        
-        unsigned int _numberOfEigenvalues;
-        
-        shared_ptr<Array<double>> _matrix;
-        
-        shared_ptr<map<unsigned, shared_ptr<vector<double>>>> _lanczosVectors;
-        
-        shared_ptr<vector<double>> _lanczosVectorNew;
 
-        shared_ptr<vector<double>> _lanczosVectorOld;
+    private:
+
+        void _singleThreadSolution();
+
+        void _singleThreadOrthogonalization(shared_ptr<vector<double>> &vectorToOrthogonalize);\
+
+        void _singleThreadCompleteOrthogonalization(shared_ptr<vector<double>> vectorToOrthogonalize);
+
+        void _multiThreadSolution();
+
+        void _cudaSolution();
+
+        unsigned int _numberOfEigenvalues;
+
+        shared_ptr<Array<double>> _matrix;
+
+        shared_ptr<map<unsigned, shared_ptr<vector<double>>>> _lanczosVectors;
+
+        shared_ptr<vector<double>> _vectorNew;
+
+        shared_ptr<vector<double>> _vectorOld;
         
-        shared_ptr<vector<double>> _T_diagonal;
-        
-        shared_ptr<vector<double>> _T_subDiagonal;
-        
-        shared_ptr<Array<double>> _T_matrix;
-        
-        double _alpha, _beta;
+        shared_ptr<vector<double>> _difference;
 
         VectorNormType _normType;
 
@@ -72,15 +67,15 @@ namespace LinearAlgebra {
         unsigned _maxIterations;
 
         double _exitNorm;
-        
+
         ParallelizationMethod _parallelizationMethod;
-        
+
         bool _vectorsInitialized;
-        
+
         bool _matrixSet;
 
         void _initializeVectors();
-        
+
         static void _printSingleThreadInitializationText();
 
         static void _printMultiThreadInitializationText(unsigned short numberOfThreads);
@@ -97,4 +92,4 @@ namespace LinearAlgebra {
 
 } // LinearAlgebra
 
-#endif //UNTITLED_LANCZOSEIGENDECOMPOSITION_H
+#endif //UNTITLED_POWERMETHOD_H

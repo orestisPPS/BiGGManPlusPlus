@@ -86,7 +86,7 @@ namespace LinearAlgebra {
 
         
         template<typename T>
-        static void matrixVectorMultiplication(const shared_ptr<Array<T>>& matrix, const shared_ptr<std::vector<T>>& vector,
+        static void matrixVectorMultiplication(shared_ptr<Array<T>>& matrix, shared_ptr<std::vector<T>>& vector,
                                                shared_ptr<std::vector<T>>& result) {
             if (matrix->numberOfColumns() != vector->size() || matrix->numberOfRows() != result->size())
                 throw invalid_argument("Matrix and vector must have compatible sizes");
@@ -112,7 +112,7 @@ namespace LinearAlgebra {
         * add(v, w) = [a * v1 + b * w1, a * v2 + b * w2, ..., a * vn + b * wn]
         */
         template<typename T>
-        static void add(const shared_ptr<vector<T>>& vector1, const shared_ptr<vector<T>>& vector2,
+        static void add(shared_ptr<vector<T>>& vector1, shared_ptr<vector<T>>& vector2,
                         shared_ptr<vector<T>>& result, double scaleFactor1 = 1.0, double scaleFactor2 = 1.0){
             if (vector1->size() != vector2->size())
                 throw invalid_argument("Vectors must have the same size");
@@ -134,20 +134,20 @@ namespace LinearAlgebra {
         }
 
         /**
-        * Overloaded method to add two vectors component-wise.
-        * @param vector1 Constant reference to the first vector.
-        * @param vector2 Constant reference to the second vector.
+        * Adds two vectors component-wise.
+        * @param vector1 Reference to the first vector where the result is stored.
+        * @param vector2 Constant reference to a shared pointer to the second vector.
         * @param scaleFactor1 Scale factor for the first vector. (Default value = 1.0)
-         * @param scaleFactor2 Scale factor for the second vector. (Default value = 1.0)
+        * @param scaleFactor2 Scale factor for the second vector. (Default value = 1.0)
         * @return A vector that is the component-wise addition of the first vector times scale factor 1
-         * plus the second vector times scale factor 2.
+        * plus the second vector times scale factor 2.
         * @throws invalid_argument If the input vectors are of different sizes.
         * 
         * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn] and two scalars a, b their subtraction is:
         * add(v, w) = [a * v1 + b * w1, a * v2 + b * w2, ..., a * vn + b * wn]
         */
         template<typename T>
-        static void add(const vector<T>& vector1, const vector<T>& vector2, vector<T>& result, double scaleFactor1 = 1.0, double scaleFactor2 = 1.0){
+        static void add(vector<T>& vector1, vector<T>& vector2, vector<T>& result, double scaleFactor1 = 1.0, double scaleFactor2 = 1.0){
             if (vector1.size() != vector2.size())
                 throw invalid_argument("Vectors must have the same size");
             if (scaleFactor1 == 1 && scaleFactor2 == 1)
@@ -168,6 +168,77 @@ namespace LinearAlgebra {
         }
 
         /**
+        * Adds two vectors component-wise and stores the result in the first vector.
+        * @param vector1 Reference to a shared pointer to the first vector where the result is stored.
+        * @param vector2 Reference to a shared pointer to the second vector.
+        * @param scaleFactor1 Scale factor for the first vector. (Default value = 1.0)
+        * @param scaleFactor2 Scale factor for the second vector. (Default value = 1.0)
+        * @return A vector that is the component-wise addition of the first vector times scale factor 1
+        * plus the second vector times scale factor 2.
+        * @throws invalid_argument If the input vectors are of different sizes.
+        * 
+        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn] and two scalars a, b their addition is:
+        * add(v, w) = [a * v1 + b * w1, a * v2 + b * w2, ..., a * vn + b * wn]
+        */
+        template<typename T>
+        static void addIntoThis(shared_ptr<vector<T>>& vector1, shared_ptr<vector<T>>& vector2,
+                                double scaleFactor1 = 1.0, double scaleFactor2 = 1.0){
+            if (vector1->size() != vector2->size())
+                throw invalid_argument("Vectors must have the same size");
+            
+            if (scaleFactor1 == 1 && scaleFactor2 == 1)
+                for (auto i = 0; i < vector1->size(); i++)
+                    (*vector1)[i] += (*vector2)[i];
+
+            else if (scaleFactor1 == 1)
+                for (auto i = 0; i < vector1->size(); i++)
+                    (*vector1)[i] += scaleFactor2 * (*vector2)[i];
+
+            else if (scaleFactor2 == 1)
+                for (auto i = 0; i < vector1->size(); i++)
+                    (*vector1)[i] = scaleFactor1 * (*vector1)[i] + (*vector2)[i];
+
+            else
+                for (auto i = 0; i < vector1->size(); i++)
+                    (*vector1)[i] = scaleFactor1 * (*vector1)[i] + scaleFactor2 * (*vector2)[i];
+        }
+        
+        /**
+         * Adds two vectors component-wise and stores the result in the first vector.
+         * @param vector2 Constant reference to the second vector.
+         * @param scaleFactor1 Scale factor for the first vector. (Default value = 1.0)
+         * @param scaleFactor2 Scale factor for the second vector. (Default value = 1.0)
+         * @return A vector that is the component-wise addition of the first vector times scale factor 1
+         * plus the second vector times scale factor 2.
+         * @throws invalid_argument If the input vectors are of different sizes.
+         *  
+         *  Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn] and two scalars a, b their subtraction is:
+         *  add(v, w) = [a * v1 + b * w1, a * v2 + b * w2, ..., a * vn + b * wn]
+         */
+        template<typename T>
+        static void addIntoThis(vector<T>& vector1, vector<T>& vector2,
+                                double scaleFactor1 = 1.0, double scaleFactor2 = 1.0){
+            if (vector1.size() != vector2.size())
+                throw invalid_argument("Vectors must have the same size");
+            
+            if (scaleFactor1 == 1 && scaleFactor2 == 1)
+                for (auto i = 0; i < vector1.size(); i++)
+                    vector1[i] += vector2[i];
+
+            else if (scaleFactor1 == 1)
+                for (auto i = 0; i < vector1.size(); i++)
+                    vector1[i] += scaleFactor2 * vector2[i];
+
+            else if (scaleFactor2 == 1)
+                for (auto i = 0; i < vector1.size(); i++)
+                    vector1[i] = scaleFactor1 * vector1[i] + vector2[i];
+
+            else
+                for (auto i = 0; i < vector1.size(); i++)
+                    vector1[i] = scaleFactor1 * vector1[i] + scaleFactor2 * vector2[i];
+        }
+
+        /**
         * Subtracts the second vector from the first vector component-wise.
         * @param vector1 Constant reference to a shared pointer to the first vector.
         * @param vector2 Constant reference to a shared pointer to the second vector.
@@ -181,7 +252,7 @@ namespace LinearAlgebra {
         * subtract(v, w) = [a * v1 - b * w1, a * v2 - b * w2, ..., a * vn - b * wn]
         */
         template<typename T>
-        static void subtract(const shared_ptr<vector<T>>& vector1, const shared_ptr<vector<T>>& vector2,
+        static void subtract(shared_ptr<vector<T>>& vector1, shared_ptr<vector<T>>& vector2,
                              shared_ptr<vector<T>>& result, double scaleFactor1 = 1.0, double scaleFactor2 = 1.0){
             if (vector1->size() != vector2->size())
                 throw invalid_argument("Vectors must have the same size");
@@ -218,7 +289,7 @@ namespace LinearAlgebra {
         * subtract(v, w) = [a * v1 - b * w1, a * v2 - b * w2, ..., a * vn - b * wn]
         */
         template<typename T>
-        static void subtract(const vector<T>& vector1, const vector<T>& vector2,vector<T>& result, double scaleFactor1 = 1.0, double scaleFactor2 = 1.0){
+        static void subtract(vector<T>& vector1, vector<T>& vector2,vector<T>& result, double scaleFactor1 = 1.0, double scaleFactor2 = 1.0){
             if (vector1.size() != vector2.size())
                 throw invalid_argument("Vectors must have the same size");
             if (scaleFactor1 == 1 && scaleFactor2 == 1)
@@ -237,19 +308,91 @@ namespace LinearAlgebra {
                 for (auto i = 0; i < vector1.size(); i++)
                     result[i] = scaleFactor1 * vector1[i] - scaleFactor2 * vector2[i];
         }
+
+        /**
+        * Subtracts the second vector from the first vector component-wise and stored the result in the first vector.
+        * @param vector1 Reference to a shared pointer to the first vector where the result will be stored.
+        * @param vector2 Constant reference to a shared pointer to the second vector.
+        * @param scaleFactor1 Scale factor for the first vector. (Default value = 1.0)
+         * @param scaleFactor2 Scale factor for the second vector. (Default value = 1.0)
+        * @return A vector that is the component-wise subtraction of the first vector times scale factor 1
+         * minus the second vector times scale factor 2.
+        * @throws invalid_argument If the input vectors are of different sizes.
+        * 
+        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn] and two scalars a, b their subtraction is:
+        * subtract(v, w) = [a * v1 - b * w1, a * v2 - b * w2, ..., a * vn - b * wn]
+        */
+        template<typename T>
+        static void subtractIntoThis(shared_ptr<vector<T>>& vector1, shared_ptr<vector<T>>& vector2,
+                                     double scaleFactor1 = 1.0, double scaleFactor2 = 1.0){
+            if (vector1->size() != vector2->size())
+                throw invalid_argument("Vectors must have the same size");
+            if (scaleFactor1 == 1 && scaleFactor2 == 1)
+                for (auto i = 0; i < vector1->size(); i++)
+                    (*vector1)[i] -= (*vector2)[i];
+
+            else if (scaleFactor1 == 1)
+                for (auto i = 0; i < vector1->size(); i++)
+                    (*vector1)[i] -= scaleFactor2 * (*vector2)[i];
+
+            else if (scaleFactor2 == 1)
+                for (auto i = 0; i < vector1->size(); i++)
+                    (*vector1)[i] = scaleFactor1 * (*vector1)[i] - (*vector2)[i];
+
+            else
+                for (auto i = 0; i < vector1->size(); i++)
+                    (*vector1)[i] = scaleFactor1 * (*vector1)[i] - scaleFactor2 * (*vector2)[i];
+        }
+
+
+        /**
+        * Method to subtract the second vector from the first vector component-wise and stored the result in the first vector.
+        * @param vector1 Constant reference to the first vector.
+        * @param vector2 Constant reference to the second vector.
+         * @param result Reference to the vector that will store the result.
+         * @param scaleFactor1 Scale factor for the first vector. (Default value = 1.0)
+         * @param scaleFactor2 Scale factor for the second vector. (Default value = 1.0)
+        * @return A vector that is the component-wise subtraction of the first vector times scale factor 1
+         * minus the second vector times scale factor 2.
+        * @throws invalid_argument If the input vectors are of different sizes.
+        * 
+        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn] and two scalars a, b their subtraction is:
+        * subtract(v, w) = [a * v1 - b * w1, a * v2 - b * w2, ..., a * vn - b * wn]
+        */
+        template<typename T>
+        static void subtractIntoThis(vector<T>& vector1, vector<T>& vector2, 
+                                     double scaleFactor1 = 1.0, double scaleFactor2 = 1.0){
+            if (vector1.size() != vector2.size())
+                throw invalid_argument("Vectors must have the same size");
+            if (scaleFactor1 == 1 && scaleFactor2 == 1)
+                for (auto i = 0; i < vector1.size(); i++)
+                    vector1[i] -= vector2[i];
+
+            else if (scaleFactor1 == 1)
+                for (auto i = 0; i < vector1.size(); i++)
+                    vector1[i] -= scaleFactor2 * vector2[i];
+
+            else if (scaleFactor2 == 1)
+                for (auto i = 0; i < vector1.size(); i++)
+                    vector1[i] = scaleFactor1 * vector1[i] - vector2[i];
+
+            else
+                for (auto i = 0; i < vector1.size(); i++)
+                    vector1[i] = scaleFactor1 * vector1[i] - scaleFactor2 * vector2[i];
+        }
         
 
         /**
         * Scales each component of a vector by a scalar value.
-        * @param vector Constant reference to a shared pointer to the input vector.
+        * @param 1 Constant reference to a shared pointer to the input vector.
         * @param scalar The scaling factor to apply to each component of the vector.
         * 
         * Given a vector v = [v1, v2, ..., vn] and scalar s, the vector after scaling is:
         * scaled(v) = [s*v1, s*v2, ..., s*vn]
         */
         template<typename T>
-        static void scale(shared_ptr<vector<T>>& vector, double scalar){
-            for (auto & i : *vector)
+        static void scale(shared_ptr<vector<T>>& vector1, double scalar){
+            for (auto & i : *vector1)
                 i *= scalar;
         }
 

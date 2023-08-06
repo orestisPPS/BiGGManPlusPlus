@@ -7,6 +7,7 @@
 #include <utility>
 #include "../LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h"
 #include "../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
+#include "../LinearAlgebra/ParallelizationMethods.h"
 
 
 namespace StructuredMeshGenerator{
@@ -54,7 +55,7 @@ namespace StructuredMeshGenerator{
         //auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo , VectorNormType::L2, 1E-9);
         //auto solver = make_shared<GaussSeidelSolver>(VectorNormType::L2, 1E-9, 1E4, true, Wank);
         //auto solver = make_shared<ConjugateGradientSolver>(VectorNormType::L2, 1E-10, 1E4, true);
-        auto solver = make_shared<ConjugateGradientSolver>(VectorNormType::L2, 1E-12, 1E4, true, vTechKickInYoo);
+        auto solver = make_shared<ConjugateGradientSolver>(VectorNormType::L2, 1E-12, 1E4, true, vTechKickedInYo);
 
 
         auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specs, Template);

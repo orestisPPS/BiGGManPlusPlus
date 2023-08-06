@@ -32,11 +32,11 @@ namespace LinearAlgebra {
         if (_parallelization == Wank) {
             _singleThreadSolution();
         }
-        if (_parallelization == vTechKickInYoo) {
+        if (_parallelization == vTechKickedInYo) {
             auto numberOfThreads = std::thread::hardware_concurrency();
             _multiThreadSolution(numberOfThreads, n);
         }
-        else if (_parallelization == turboVTechKickInYoo) {
+        else if (_parallelization == turboVTechKickedInYo) {
 
             double *d_matrix = _linearSystem->matrix->getArrayPointer();
             double *d_rhs = _linearSystem->rhs->data();

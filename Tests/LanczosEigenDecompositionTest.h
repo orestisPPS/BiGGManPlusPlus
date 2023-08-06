@@ -13,6 +13,7 @@
 #include "../LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h"
 #include "../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
 #include "../LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.h"
+#include "../LinearAlgebra/EigenDecomposition/PowerMethod.h"
 
 namespace Tests {
 

@@ -777,6 +777,102 @@ LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.s
 .PHONY : LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.s
 
+LinearAlgebra/EigenDecomposition/PowerMethod.o: LinearAlgebra/EigenDecomposition/PowerMethod.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/PowerMethod.o
+
+# target to build an object file
+LinearAlgebra/EigenDecomposition/PowerMethod.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/PowerMethod.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/PowerMethod.cpp.o
+
+LinearAlgebra/EigenDecomposition/PowerMethod.i: LinearAlgebra/EigenDecomposition/PowerMethod.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/PowerMethod.i
+
+# target to preprocess a source file
+LinearAlgebra/EigenDecomposition/PowerMethod.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/PowerMethod.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/PowerMethod.cpp.i
+
+LinearAlgebra/EigenDecomposition/PowerMethod.s: LinearAlgebra/EigenDecomposition/PowerMethod.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/PowerMethod.s
+
+# target to generate assembly for a file
+LinearAlgebra/EigenDecomposition/PowerMethod.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/PowerMethod.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/PowerMethod.cpp.s
+
+LinearAlgebra/EigenDecomposition/QR/DecompositionQR.o: LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/DecompositionQR.o
+
+# target to build an object file
+LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.o
+
+LinearAlgebra/EigenDecomposition/QR/DecompositionQR.i: LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/DecompositionQR.i
+
+# target to preprocess a source file
+LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.i
+
+LinearAlgebra/EigenDecomposition/QR/DecompositionQR.s: LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/DecompositionQR.s
+
+# target to generate assembly for a file
+LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.s
+
+LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.o: LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.o
+
+# target to build an object file
+LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.o
+
+LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.i: LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.i
+
+# target to preprocess a source file
+LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.i
+
+LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.s: LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.s
+
+# target to generate assembly for a file
+LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.s
+
+LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.o: LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.o
+
+# target to build an object file
+LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp.o
+
+LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.i: LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.i
+
+# target to preprocess a source file
+LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp.i
+
+LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.s: LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.s
+
+# target to generate assembly for a file
+LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp.s
+
 LinearAlgebra/FiniteDifferences/FDSchemeSpecs.o: LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp.o
 .PHONY : LinearAlgebra/FiniteDifferences/FDSchemeSpecs.o
 
@@ -1665,6 +1761,30 @@ Tests/OperationsCUDA.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/OperationsCUDA.cpp.s
 .PHONY : Tests/OperationsCUDA.cpp.s
 
+Tests/QRTest.o: Tests/QRTest.cpp.o
+.PHONY : Tests/QRTest.o
+
+# target to build an object file
+Tests/QRTest.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/QRTest.cpp.o
+.PHONY : Tests/QRTest.cpp.o
+
+Tests/QRTest.i: Tests/QRTest.cpp.i
+.PHONY : Tests/QRTest.i
+
+# target to preprocess a source file
+Tests/QRTest.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/QRTest.cpp.i
+.PHONY : Tests/QRTest.cpp.i
+
+Tests/QRTest.s: Tests/QRTest.cpp.s
+.PHONY : Tests/QRTest.s
+
+# target to generate assembly for a file
+Tests/QRTest.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/QRTest.cpp.s
+.PHONY : Tests/QRTest.cpp.s
+
 Tests/SteadyState3DNeumann.o: Tests/SteadyState3DNeumann.cpp.o
 .PHONY : Tests/SteadyState3DNeumann.o
 
@@ -1875,6 +1995,18 @@ help:
 	@echo "... LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.o"
 	@echo "... LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.i"
 	@echo "... LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.s"
+	@echo "... LinearAlgebra/EigenDecomposition/PowerMethod.o"
+	@echo "... LinearAlgebra/EigenDecomposition/PowerMethod.i"
+	@echo "... LinearAlgebra/EigenDecomposition/PowerMethod.s"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/DecompositionQR.o"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/DecompositionQR.i"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/DecompositionQR.s"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.o"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.i"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.s"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.o"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.i"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.s"
 	@echo "... LinearAlgebra/FiniteDifferences/FDSchemeSpecs.o"
 	@echo "... LinearAlgebra/FiniteDifferences/FDSchemeSpecs.i"
 	@echo "... LinearAlgebra/FiniteDifferences/FDSchemeSpecs.s"
@@ -1986,6 +2118,9 @@ help:
 	@echo "... Tests/OperationsCUDA.o"
 	@echo "... Tests/OperationsCUDA.i"
 	@echo "... Tests/OperationsCUDA.s"
+	@echo "... Tests/QRTest.o"
+	@echo "... Tests/QRTest.i"
+	@echo "... Tests/QRTest.s"
 	@echo "... Tests/SteadyState3DNeumann.o"
 	@echo "... Tests/SteadyState3DNeumann.i"
 	@echo "... Tests/SteadyState3DNeumann.s"

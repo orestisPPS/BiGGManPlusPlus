@@ -4,6 +4,7 @@
 #include "Tests/SteadyState3DNeumann.h"
 #include "Tests/SteadyStateDirichlet3D.h"
 #include "Tests/LanczosEigenDecompositionTest.h"
+#include "Tests/QRTest.h"
 #include "Tests/OperationsCUDA.h"
 #include "Tests/VectorOperationsTest.h"
 #include "StructuredMeshGeneration/MeshTest2D.h"
@@ -27,8 +28,10 @@ int main() {
     //auto neumannTest = new Tests::SteadyState3DNeumann();
     //delete neumannTest;
 
-    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();
-    delete lanczosTest;
+/*    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();
+    delete lanczosTest;*/
+
+    auto qrTest = new Tests::QRTest();
     
     //auto dirichletTest = new Tests::SteadyStateDirichlet3D();
     //auto cudaOperations = new Tests::OperationsCUDA();

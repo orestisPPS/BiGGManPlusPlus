@@ -36,7 +36,7 @@ namespace LinearAlgebra {
                 _iteration++;
             }
         }
-        if (_parallelization == vTechKickInYoo) {
+        if (_parallelization == vTechKickedInYo) {
             auto numberOfThreads = std::thread::hardware_concurrency();
             _printMultiThreadInitializationText(numberOfThreads);
             while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
@@ -48,7 +48,7 @@ namespace LinearAlgebra {
 
         }
 
-        else if (_parallelization == turboVTechKickInYoo) {
+        else if (_parallelization == turboVTechKickedInYo) {
             
             double *d_matrix = _linearSystem->matrix->getArrayPointer();
             double *d_rhs = _linearSystem->rhs->data();

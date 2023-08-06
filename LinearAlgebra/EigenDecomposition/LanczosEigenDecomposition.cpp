@@ -1,7 +1,6 @@
 //
 // Created by hal9000 on 8/3/23.
 //
-#include <random>
 #include "LanczosEigenDecomposition.h"
 
 using namespace LinearAlgebra;
@@ -45,7 +44,7 @@ namespace LinearAlgebra {
         _beta = 0.0;
 
 
-        while (_iteration < 1000){
+        while (_iteration < _maxIterations){
             auto workingVector = make_shared<vector<double>>(_matrix->numberOfRows());
 
             VectorOperations::matrixVectorMultiplication(_matrix, _lanczosVectorOld, workingVector);
@@ -59,25 +58,30 @@ namespace LinearAlgebra {
             VectorOperations::scale(workingVector, 1.0 / _beta);
             VectorOperations::deepCopy(workingVector, _lanczosVectorNew, 1 / _beta);
             _lanczosVectors->insert(pair<unsigned, shared_ptr<vector<double>>>(_iteration, std::move(workingVector)));
-
-            (*_T_diagonal)[_iteration] = _alpha;
-            if (_iteration > 0)
-                (*_T_subDiagonal)[_iteration - 1] = _beta;
+            
+            _T_matrix->at(_iteration, _iteration) = _alpha;
+            if (_iteration > 0) {
+                _T_matrix->at(_iteration, _iteration - 1) = _beta;      // sub-diagonal
+                _T_matrix->at(_iteration - 1, _iteration) = _beta;      // super-diagonal (due to symmetry)
+            }
+                
 
             auto dot = VectorOperations::dotProduct(_lanczosVectorNew, _lanczosVectorOld);
+            cout<<dot<<endl;
 
             VectorOperations::deepCopy(_lanczosVectorNew, _lanczosVectorOld);
-            cout<<dot<<endl;
 
             _iteration++;
         }
+        Utility::Exporters::exportMatrixToMatlabFile(_T_matrix, "/home/hal9000/code/BiGGMan++/Testing/", "t_matrix.m", false);
+        //_T_matrix->print();
         cout<<"mitsotakis"<<endl;
 
     }
 
     void LanczosEigenDecomposition::_singleThreadOrthogonalization(shared_ptr<vector<double>> &vectorToOrthogonalize) {
         for (unsigned i = 0; i < _matrix->numberOfRows(); i++) {
-            (*vectorToOrthogonalize)[i] -= _beta * (*_lanczosVectorOld)[i] + _alpha * (*_lanczosVectorNew)[i];
+            (*vectorToOrthogonalize)[i] = (*vectorToOrthogonalize)[i] - _alpha * (*_lanczosVectorNew)[i] - _beta * (*_lanczosVectorOld)[i];
         }
     }
 
@@ -85,7 +89,8 @@ namespace LinearAlgebra {
 
         for (auto i = 0; i < _iteration; i++) {
             auto dot = VectorOperations::dotProduct(_lanczosVectors->at(i), vectorToOrthogonalize);
-            VectorOperations::subtract(vectorToOrthogonalize, _lanczosVectors->at(i), vectorToOrthogonalize, 1, dot);
+            for (auto j = 0; j < _matrix->numberOfRows(); j++)
+                    (*vectorToOrthogonalize)[j] -= dot * (*_lanczosVectors->at(i))[j];
         }
     }
     
@@ -99,7 +104,7 @@ namespace LinearAlgebra {
         if (_matrixSet) {
             auto n = _matrix->numberOfRows();
             _lanczosVectors = make_shared<map<unsigned, shared_ptr<vector<double>>>>();            
-            _lanczosVectorOld= make_shared<vector<double>>(n,  1.0);
+            _lanczosVectorOld= make_shared<vector<double>>(n,  0);
             _lanczosVectorNew= make_shared<vector<double>>(n, 0);
 
             // Random number generation setup using C++'s <random> library
@@ -109,7 +114,7 @@ namespace LinearAlgebra {
             generator.seed(std::random_device()()); 
             // Uniform distribution between -1 and 1
             //std::uniform_real_distribution<double> distribution(-1.0, 1.0); 
-            std::uniform_real_distribution<double> distribution(-0.1, 0.1); 
+            std::uniform_real_distribution<double> distribution(-1, 1); 
 
             //Fill _lanczosVectorNew with random numbers and normalize it
             for (auto &component : *_lanczosVectorOld) {

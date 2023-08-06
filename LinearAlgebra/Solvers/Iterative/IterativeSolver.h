@@ -10,17 +10,10 @@
 #include "../../AnalysisLinearSystemInitializer.h"
 #include "../../Norms/VectorNorm.h"
 #include "../../Operations/MultiThreadVectorOperations.h"   
+#include "../../ParallelizationMethods.h"
+using LinearAlgebra::ParallelizationMethod;
 
 namespace LinearAlgebra {
-
-    enum ParallelizationMethod{
-        //Multi-thread solution
-        vTechKickInYoo,
-        //INSSSSSSSSSSSSANE GPU GAINS
-        turboVTechKickInYoo,
-        //:( Single thread 
-        Wank
-    };
     
     class IterativeSolver : public Solver {
     public:

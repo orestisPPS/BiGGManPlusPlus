@@ -502,30 +502,53 @@ namespace LinearAlgebra {
             return _array->size();
         }
 
-        vector<T> getRow(unsigned row){
-            vector<T> rowVector;
+        
+        shared_ptr<vector<T>> getRow(unsigned row){
+            auto rowVector = make_shared<vector<T>>(_numberOfColumns);
             for (int i = 0; i < _numberOfColumns; ++i) {
-                rowVector.push_back(_array[row * _numberOfColumns + i]);
+                (*rowVector)[i] = (*_array)[row * _numberOfColumns + i];
             }
             return rowVector;
         }
+        
+        void setRow(unsigned row, shared_ptr<vector<T>> rowVector){
+            for (int i = 0; i < _numberOfColumns; ++i) {
+                (*_array)[row * _numberOfColumns + i] = (*rowVector)[i];
+            }
+        }
+        
 
-        vector<T> getColumn(unsigned column){
-            vector<T> columnVector;
+        shared_ptr<vector<T>> getColumn(unsigned column){
+            auto columnVector = make_shared<vector<T>>(_numberOfRows);
             for (int i = 0; i < _numberOfRows; ++i) {
-                columnVector.push_back(_array[i * _numberOfColumns + column]);
+                (*columnVector)[i] = (*_array)[i * _numberOfColumns + column];
             }
             return columnVector;
         }
-
-        vector<T> getAisle(unsigned aisle){
-            vector<T> aisleVector;
+        
+        void setColumn(unsigned column, shared_ptr<vector<T>> columnVector){
+            for (int i = 0; i < _numberOfRows; ++i) {
+                (*_array)[i * _numberOfColumns + column] = (*columnVector)[i];
+            }
+        }
+        
+        
+        shared_ptr<vector<T>> getAisle(unsigned aisle){
+            auto aisleVector = make_shared<vector<T>>(_numberOfRows * _numberOfColumns);
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = 0; j < _numberOfColumns; ++j) {
-                    aisleVector.push_back(_array[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + aisle]);
+                    (*aisleVector)[i * _numberOfColumns + j] = (*_array)[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + aisle];
                 }
             }
             return aisleVector;
+        }
+        
+        void getAisle(unsigned aisle, Array<T> & aisleArray){
+            for (int i = 0; i < _numberOfRows; ++i) {
+                for (int j = 0; j < _numberOfColumns; ++j) {
+                    aisleArray(i, j) = (*_array)[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + aisle];
+                }
+            }
         }
 
         // Swap the elements of the i-th and j-th rows of the matrix

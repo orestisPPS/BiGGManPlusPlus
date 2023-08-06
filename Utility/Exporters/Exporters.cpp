@@ -31,7 +31,6 @@ namespace Utility {
 
         // Write the command to solve the system
         outputFile << "x = A \\ b;" << endl;
-        
         outputFile <<"eig(A)" << endl;
         
         
