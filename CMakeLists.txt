@@ -123,7 +123,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/Norms/VectorNormCuda.cuh
         LinearAlgebra/Norms/VectorNormCuda.cu LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu LinearAlgebraCUDA/NumericalOperationsCUDA.cuh LinearAlgebraCUDA/NumericalOperationsCUDA.cu LinearAlgebraCUDA/MemoryManagementCUDA.cuh LinearAlgebraCUDA/MemoryManagementCUDA.cu Tests/OperationsCUDA.h Tests/OperationsCUDA.cpp LinearAlgebra/Array/NumericalArray.h LinearAlgebra/Array/NumericalArray.cpp LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp
         LinearAlgebra/Operations/MultiThreadVectorOperations.h
-        LinearAlgebra/Operations/MultiThreadVectorOperations.cpp
         Tests/VectorOperationsTest.h
         Tests/VectorOperationsTest.cpp
         Tests/SteadyStateDirichlet3D.h
@@ -144,7 +143,9 @@ add_executable(untitled main.cpp
         LinearAlgebra/ParallelizationMethods.h
         LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp
         Tests/QRTest.h
-        Tests/QRTest.cpp)
+        Tests/QRTest.cpp
+        LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.h
+        LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp)
 
 
 target_link_libraries(untitled cudart)

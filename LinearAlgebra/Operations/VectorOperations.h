@@ -470,6 +470,49 @@ namespace LinearAlgebra {
         }
 
         /**
+        * @brief Calculates the tensor product of two vectors.
+        *
+        * @param vector1 Constant pointer to the first vector.
+        * @param vector2 Constant pointer to the second vector.
+        * @return A shared pointer to a 2D array representing the outer product of the two vectors.
+        *
+        * The tensor product, also known as the outer product or Kronecker product, between two vectors is a matrix.
+        * The matrix is obtained by multiplying each element of the first vector by each element of the second vector.
+        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wm], their outer product is a matrix M of size n x m where:
+        * M[i][j] = v[i] * w[j]
+        */
+        template<typename T>
+        static shared_ptr<Array<T>> tensorProduct(const shared_ptr<vector<T>>& vector1, const shared_ptr<vector<T>>& vector2) {
+            auto result = make_shared<Array<T>>(vector1->size(), vector2->size());
+            for (auto i = 0; i < vector1->size(); i++)
+                for (auto j = 0; j < vector2->size(); j++)
+                    result->at(i, j) = vector1->at(i) * vector2->at(j);
+            return result;
+        }
+        
+        /**
+        * @brief Calculates the tensor product of two vectors.
+        *
+        * @param vector1 Constant reference to the first vector.
+        * @param vector2 Reference to the second vector.
+        * @return A 2D array representing the outer product of the two vectors.
+        *
+        * The tensor product, also known as the outer product or Kronecker product, between two vectors is a matrix.
+        * The matrix is obtained by multiplying each element of the first vector by each element of the second vector.
+        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wm], their outer product is a matrix M of size n x m where:
+        * M[i][j] = v[i] * w[j]
+        */
+        template<typename T>
+        static Array<T> tensorProduct(const vector<T>& vector1, vector<T>& vector2) {
+            Array<T> result(vector1.size(), vector2.size());
+            for (auto i = 0; i < vector1.size(); i++)
+                for (auto j = 0; j < vector2.size(); j++)
+                    result[i][j] = vector1[i] * vector2[j];
+            return result;
+        }
+
+
+        /**
         * Calculates the magnitude (or length) of a vector.
         * @param vector Constant reference to a shared pointer to the vector.
         * @return The magnitude of the vector.

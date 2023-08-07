@@ -849,6 +849,30 @@ LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.s
 .PHONY : LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.s
 
+LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.o: LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.o
+
+# target to build an object file
+LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.o
+
+LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.i: LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.i
+
+# target to preprocess a source file
+LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.i
+
+LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.s: LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.s
+
+# target to generate assembly for a file
+LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.s
+
 LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.o: LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp.o
 .PHONY : LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.o
 
@@ -1040,30 +1064,6 @@ LinearAlgebra/Norms/VectorNormCuda.s: LinearAlgebra/Norms/VectorNormCuda.cu.s
 LinearAlgebra/Norms/VectorNormCuda.cu.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Norms/VectorNormCuda.cu.s
 .PHONY : LinearAlgebra/Norms/VectorNormCuda.cu.s
-
-LinearAlgebra/Operations/MultiThreadVectorOperations.o: LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.o
-.PHONY : LinearAlgebra/Operations/MultiThreadVectorOperations.o
-
-# target to build an object file
-LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.o
-.PHONY : LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.o
-
-LinearAlgebra/Operations/MultiThreadVectorOperations.i: LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.i
-.PHONY : LinearAlgebra/Operations/MultiThreadVectorOperations.i
-
-# target to preprocess a source file
-LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.i
-.PHONY : LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.i
-
-LinearAlgebra/Operations/MultiThreadVectorOperations.s: LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.s
-.PHONY : LinearAlgebra/Operations/MultiThreadVectorOperations.s
-
-# target to generate assembly for a file
-LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.s
-.PHONY : LinearAlgebra/Operations/MultiThreadVectorOperations.cpp.s
 
 LinearAlgebra/Operations/Transformations.o: LinearAlgebra/Operations/Transformations.cpp.o
 .PHONY : LinearAlgebra/Operations/Transformations.o
@@ -2004,6 +2004,9 @@ help:
 	@echo "... LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.o"
 	@echo "... LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.i"
 	@echo "... LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.s"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.o"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.i"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.s"
 	@echo "... LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.o"
 	@echo "... LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.i"
 	@echo "... LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.s"
@@ -2028,9 +2031,6 @@ help:
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.o"
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.i"
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.s"
-	@echo "... LinearAlgebra/Operations/MultiThreadVectorOperations.o"
-	@echo "... LinearAlgebra/Operations/MultiThreadVectorOperations.i"
-	@echo "... LinearAlgebra/Operations/MultiThreadVectorOperations.s"
 	@echo "... LinearAlgebra/Operations/Transformations.o"
 	@echo "... LinearAlgebra/Operations/Transformations.i"
 	@echo "... LinearAlgebra/Operations/Transformations.s"

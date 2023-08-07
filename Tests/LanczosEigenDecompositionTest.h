@@ -14,6 +14,7 @@
 #include "../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
 #include "../LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.h"
 #include "../LinearAlgebra/EigenDecomposition/PowerMethod.h"
+#include "../LinearAlgebra/EigenDecomposition/QR/DecompositionQR.h"
 
 namespace Tests {
 

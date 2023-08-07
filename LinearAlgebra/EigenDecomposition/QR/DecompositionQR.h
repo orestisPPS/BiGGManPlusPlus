@@ -8,6 +8,7 @@
 #include "../../Array/Array.h"
 #include "../../ParallelizationMethods.h"
 #include "../../Operations/VectorOperations.h"
+#include "../../Norms/VectorNorm.h"
 #include "../../Operations/MultiThreadVectorOperations.h"
 
 namespace LinearAlgebra {

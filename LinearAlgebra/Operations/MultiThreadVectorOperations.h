@@ -49,10 +49,22 @@ namespace LinearAlgebra {
         * \param cacheLineSize Size of the cache line (default is 64 bytes).
         */
         static void executeInParallel(size_t size, ThreadJob task, unsigned cacheLineSize = 64) {
+            
+            // Determine the number of doubles that fit in a cache line.
+            // A cache line is the smallest amount of cache that can be loaded and stored from memory.
+            // By calculating doublesPerCacheLine, we're determining how many double values we can efficiently
+            // load/store at once
+            // This is used to ensure that each thread operates on a distinct cache line.
             unsigned doublesPerCacheLine = cacheLineSize / sizeof(double);
             unsigned int numThreads = thread::hardware_concurrency();
-
+            
+            // The size + numThreads - 1 expression is used to round up the division result to ensure that all data is
+            // covered even when size is not a multiple of numThreads
             unsigned blockSize = (size + numThreads - 1) / numThreads;
+            
+            //This is done to ensure that each block of data processed by a thread aligns with the cache lines
+            // This is done to avoid false sharing, which is when two threads are accessing the same cache line
+            // False sharing can cause performance issues because the cache line has to be reloaded/stored
             blockSize = (blockSize + doublesPerCacheLine - 1) / doublesPerCacheLine * doublesPerCacheLine;
 
             vector<thread> threads;

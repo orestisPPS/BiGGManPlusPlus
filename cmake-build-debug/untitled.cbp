@@ -271,6 +271,12 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp">
 			<Option target="untitled"/>
 		</Unit>
@@ -323,9 +329,6 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Norms/VectorNormCuda.cuh">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/MultiThreadVectorOperations.cpp">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/MultiThreadVectorOperations.h">

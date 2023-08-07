@@ -9,17 +9,14 @@ namespace LinearAlgebra {
     DecompositionQR::DecompositionQR(shared_ptr<Array<double>> &matrix, ParallelizationMethod parallelizationMethod, bool storeOnMatrix) :
             _matrix(matrix), _parallelizationMethod(parallelizationMethod), _storeOnMatrix(storeOnMatrix) {
         auto n = _matrix->numberOfRows();
-        if (!_storeOnMatrix) {
-            _Q = make_shared<Array<double>>(n, n);
-            _R = make_shared<Array<double>>(n, n);
-        }
+        _Q = nullptr;
     }
 
     void DecompositionQR::decompose() {
         switch (_parallelizationMethod){
             case Wank:{
                 auto iter = 0;
-                while (iter < 10) {
+                while (iter < 2) {
                     _singleThreadDecomposition();
                     //matrix matrix multiplication
                     for (int i = 0; i < _matrix->numberOfRows(); i++) {
@@ -32,6 +29,9 @@ namespace LinearAlgebra {
                         }
                     }
                     iter++;
+                }
+                for (int i = 0; i < _matrix->numberOfRows(); ++i) {
+                    //cout << _R->at(i,i)<< endl;
                 }
                 _matrix->print();
                 break;

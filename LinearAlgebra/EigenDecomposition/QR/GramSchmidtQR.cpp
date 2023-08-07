@@ -3,18 +3,22 @@
 //
 
 #include "GramSchmidtQR.h"
-#include "../../Norms/VectorNorm.h"
 
 namespace LinearAlgebra {
     
     GramSchmidtQR::GramSchmidtQR(shared_ptr<Array<double>> &matrix, ParallelizationMethod parallelizationMethod,
                                  bool storeOnMatrix) : DecompositionQR(matrix, parallelizationMethod, storeOnMatrix){
         _decompositionType = GramSchmidt;
+        if (!_storeOnMatrix){
+            unsigned n = _matrix->numberOfColumns();
+            _Q = make_shared<Array<double>>(n,n);
+            _R = make_shared<Array<double>>(n,n);
+        }
     }
 
     void GramSchmidtQR::_singleThreadDecomposition() {
         unsigned n = _matrix->numberOfRows();
-        //Initialize a vector to store each column
+        
         auto iColumnOfA = make_shared<vector<double>>(n);
         auto jColumnOfQ = make_shared<vector<double>>(n);
         double norm = 0.0;
@@ -42,10 +46,10 @@ namespace LinearAlgebra {
             _Q->setColumn(i, iColumnOfA);
         }
         
-        _Q->print(4);
+/*        _Q->print(4);
         cout<< endl;
         _R->print(4);
-        cout << endl;
+        cout << endl;*/
 
     }
 
