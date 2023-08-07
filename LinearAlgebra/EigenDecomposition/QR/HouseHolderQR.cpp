@@ -60,9 +60,9 @@ namespace LinearAlgebra {
 /*            auto subMatrixQ = _Q->getSubMatrixPtr(i, m - 1, i, m - 1);*/
 
             auto H = VectorOperations::tensorProduct(v, v);
-            //H->scale(-2.0);
+            H->scale(-2.0);
             for (unsigned j = 0; j < H->numberOfRows(); j++){
-                //H->at(j,j) += 1.0;
+                H->at(j,j) += 1.0;
             }
             H->print();
 
