@@ -29,8 +29,8 @@ namespace Tests {
         matrix1->at(3,3) = 5;
         
         //auto qr = make_shared<LinearAlgebra::GramSchmidtQR>(matrix1);
-        /*auto qr = make_shared<LinearAlgebra::HouseHolderQR>(matrix1);
-        qr->decompose();*/
+        auto qr = make_shared<LinearAlgebra::HouseHolderQR>(matrix1);
+        qr->decompose();
         
         auto matrix2 = make_shared<LinearAlgebra::Array<double>>(4, 3);
         matrix2->at(0,0) = 1;
@@ -49,8 +49,8 @@ namespace Tests {
         matrix2->at(3,1) = -1;
         matrix2->at(3,2) = 0;
 
-        auto qr = make_shared<LinearAlgebra::HouseHolderQR>(matrix2);
-        qr->decompose();
+        //auto qr = make_shared<LinearAlgebra::HouseHolderQR>(matrix2);
+        //qr->decompose();
 
     }
 } // Tests

@@ -16,10 +16,10 @@ namespace LinearAlgebra {
         switch (_parallelizationMethod){
             case Wank:{
                 auto iter = 0;
-                while (iter < 2) {
+                while (iter < 10) {
                     _singleThreadDecomposition();
                     //matrix matrix multiplication
-                    for (int i = 0; i < _matrix->numberOfRows(); i++) {
+/*                    for (int i = 0; i < _matrix->numberOfRows(); i++) {
                         for (int j = 0; j < _matrix->numberOfRows(); j++) {
                             double sum = 0;
                             for (int k = 0; k < _matrix->numberOfColumns(); k++) {
@@ -27,11 +27,11 @@ namespace LinearAlgebra {
                             }
                             _matrix->at(i, j) = sum;
                         }
-                    }
+                    }*/
                     iter++;
                 }
                 for (int i = 0; i < _matrix->numberOfRows(); ++i) {
-                    //cout << _R->at(i,i)<< endl;
+                    cout << _R->at(i,i)<< endl;
                 }
                 _matrix->print();
                 break;

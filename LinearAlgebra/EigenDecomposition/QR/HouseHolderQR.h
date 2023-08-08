@@ -19,6 +19,7 @@ namespace LinearAlgebra {
         */
         explicit HouseHolderQR(shared_ptr<Array<double>>& matrix, ParallelizationMethod parallelizationMethod = Wank, bool storeOnMatrix = false);
         
+    protected:
         /**
         * @brief Performs QR decomposition using the Gram-Schmidt process in a single-threaded manner.
         */
@@ -32,9 +33,29 @@ namespace LinearAlgebra {
         /**
         * @brief Performs QR decomposition using the Gram-Schmidt process using CUDA.
         */
-        void _CUDADecomposition() override; 
+        void _CUDADecomposition() override;
+        
+        shared_ptr<Array<double>> getQ();
+        
+        shared_ptr<Array<double>> getR();
+        
+        shared_ptr<Array<double>> getMatrix();
+        
+        shared_ptr<vector<double>> getEigenvalues();
+        
+        shared_ptr<vector<double>> getSortedEigenvalues(bool ascending = false);
         
     private:
+        
+        static shared_ptr<vector<double>> _calculateHouseholdVector(const shared_ptr<vector<double>>& targetVector);
+        
+        shared_ptr<Array<double>> _matrixCopy;
+        
+        shared_ptr<vector<shared_ptr<vector<double>>>> _householderVectors;
+        
+        void _deepCopyMatrix();
+        
+        void _initializeArrays();
         
         static int sign(double x);
     };
