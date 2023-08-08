@@ -6,8 +6,8 @@
 
 namespace LinearAlgebra {
     
-    GramSchmidtQR::GramSchmidtQR(shared_ptr<Array<double>> &matrix, ParallelizationMethod parallelizationMethod,
-                                 bool storeOnMatrix) : DecompositionQR(matrix, parallelizationMethod, storeOnMatrix){
+    GramSchmidtQR::GramSchmidtQR(bool returnQ, ParallelizationMethod parallelizationMethod,
+                                 bool storeOnMatrix) : DecompositionQR(returnQ, parallelizationMethod, storeOnMatrix){
         _decompositionType = GramSchmidt;
         if (!_storeOnMatrix){
             unsigned n = _matrix->numberOfColumns();

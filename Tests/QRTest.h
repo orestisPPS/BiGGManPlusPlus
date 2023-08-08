@@ -5,7 +5,7 @@
 #ifndef UNTITLED_QRTEST_H
 #define UNTITLED_QRTEST_H
 
-#include "../LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.h"
+#include "../LinearAlgebra/EigenDecomposition/QR/IterationQR.h"
 namespace Tests {
 
     class QRTest {

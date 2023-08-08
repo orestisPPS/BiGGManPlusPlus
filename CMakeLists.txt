@@ -136,8 +136,8 @@ add_executable(untitled main.cpp
         LinearAlgebra/EigenDecomposition/PowerMethod.h
         LinearAlgebra/EigenDecomposition/PowerMethod.cpp
         LinearAlgebra/EigenDecomposition/QR/DecompositionQR.h
-        LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.h
-        LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp
+        LinearAlgebra/EigenDecomposition/QR/IterationQR.h
+        LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp
         LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.h
         LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp
         LinearAlgebra/ParallelizationMethods.h

@@ -6,9 +6,8 @@
 
 namespace LinearAlgebra {
 
-    DecompositionQR::DecompositionQR(shared_ptr<Array<double>> &matrix, ParallelizationMethod parallelizationMethod, bool storeOnMatrix) :
-            _matrix(matrix), _parallelizationMethod(parallelizationMethod), _storeOnMatrix(storeOnMatrix) {
-        auto n = _matrix->numberOfRows();
+    DecompositionQR::DecompositionQR(bool returnQ, ParallelizationMethod parallelizationMethod, bool storeOnMatrix) :
+            _returnQ(returnQ), _parallelizationMethod(parallelizationMethod), _storeOnMatrix(storeOnMatrix) {
         _Q = nullptr;
     }
 
@@ -44,6 +43,20 @@ namespace LinearAlgebra {
                 break;
         }
         
+    }
+    
+    void DecompositionQR::setMatrix(shared_ptr<Array<double>> &matrix) {
+        _matrix = matrix;
+        _matrixSet = true;
+    }
+    
+    shared_ptr<Array<double>> DecompositionQR::getQ() {
+    }
+    
+    shared_ptr<Array<double>> DecompositionQR::getR() {
+    }
+    
+    shared_ptr<Array<double>> DecompositionQR::getMatrix() {
     }
 
     void DecompositionQR::_singleThreadDecomposition() {

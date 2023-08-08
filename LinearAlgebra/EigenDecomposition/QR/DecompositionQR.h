@@ -21,7 +21,16 @@ namespace LinearAlgebra {
     class DecompositionQR {
 
     public:
-        explicit DecompositionQR(shared_ptr<Array<double>>& matrix, ParallelizationMethod = Wank, bool storeOnMatrix = false);
+        explicit DecompositionQR(bool returnQ = true, ParallelizationMethod parallelizationMethod = Wank, bool storeOnMatrix = false);
+        
+        void setMatrix(shared_ptr<Array<double>>&);
+
+        virtual shared_ptr<Array<double>> getQ();
+
+        virtual shared_ptr<Array<double>> getR();
+
+        virtual shared_ptr<Array<double>> getMatrix();
+        
         
         void decompose();
         
@@ -34,9 +43,14 @@ namespace LinearAlgebra {
         
         DecompositionType _decompositionType;
         
+        bool _returnQ;
+        
+        bool _matrixSet;
+        
         ParallelizationMethod _parallelizationMethod;
         
         bool _storeOnMatrix;
+        
 
         virtual void _singleThreadDecomposition();
         

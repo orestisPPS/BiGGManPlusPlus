@@ -5,12 +5,10 @@
 #include "HouseHolderQR.h"
 
 namespace LinearAlgebra {
-    HouseHolderQR::HouseHolderQR(shared_ptr<Array<double>> &matrix, ParallelizationMethod parallelizationMethod,
-                                 bool storeOnMatrix) : DecompositionQR(matrix, parallelizationMethod, storeOnMatrix){
-        _decompositionType = GramSchmidt;
-        if (!_storeOnMatrix){
-            _deepCopyMatrix();
-        }
+    HouseHolderQR::HouseHolderQR(bool returnQ, ParallelizationMethod parallelizationMethod, bool storeOnMatrix) :
+                    DecompositionQR(returnQ, parallelizationMethod, storeOnMatrix){
+        _decompositionType = Householder;
+        _householderVectors = make_shared<vector<shared_ptr<vector<double>>>>();
     }
 
     void HouseHolderQR::_singleThreadDecomposition() {
@@ -31,7 +29,7 @@ namespace LinearAlgebra {
 
             
 
-            // Apply the Householder transformation directly to the matrix 
+            // Apply the Householder transformation directly to the matrix to get R
             for (unsigned col = i; col < m; col++) {
                 double proj = 0.0;
 
@@ -99,13 +97,6 @@ namespace LinearAlgebra {
         }
         else {
             return _matrixCopy;
-        }
-    }
-    
-    shared_ptr<vector<double>> HouseHolderQR::getEigenvalues() {
-        auto eigenValues = make_shared<vector<double>>(_matrix->numberOfRows());
-        for (unsigned i = 0; i < _matrix->numberOfRows(); i++) {
-            eigenValues->at(i) = _matrix->at(i, i);
         }
     }
     

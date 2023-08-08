@@ -17,7 +17,17 @@ namespace LinearAlgebra {
         * @param parallelizationMethod Enum indicating the method of parallelization to use.
         * @param storeOnMatrix Boolean indicating whether to store the results on the original matrix.
         */
-        explicit HouseHolderQR(shared_ptr<Array<double>>& matrix, ParallelizationMethod parallelizationMethod = Wank, bool storeOnMatrix = false);
+        explicit HouseHolderQR(bool returnQ, ParallelizationMethod parallelizationMethod = Wank, bool storeOnMatrix = false);
+
+        shared_ptr<Array<double>> getQ() override;
+
+        shared_ptr<Array<double>> getR() override;
+
+        shared_ptr<Array<double>> getMatrix() override;
+
+        shared_ptr<vector<double>> getEigenvalues();
+
+        shared_ptr<vector<double>> getSortedEigenvalues(bool ascending = false);
         
     protected:
         /**
@@ -35,15 +45,6 @@ namespace LinearAlgebra {
         */
         void _CUDADecomposition() override;
         
-        shared_ptr<Array<double>> getQ();
-        
-        shared_ptr<Array<double>> getR();
-        
-        shared_ptr<Array<double>> getMatrix();
-        
-        shared_ptr<vector<double>> getEigenvalues();
-        
-        shared_ptr<vector<double>> getSortedEigenvalues(bool ascending = false);
         
     private:
         
