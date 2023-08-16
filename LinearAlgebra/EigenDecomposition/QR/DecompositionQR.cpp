@@ -12,29 +12,10 @@ namespace LinearAlgebra {
     }
 
     void DecompositionQR::decompose() {
-        switch (_parallelizationMethod){
-            case Wank:{
-                auto iter = 0;
-                while (iter < 10) {
-                    _singleThreadDecomposition();
-                    //matrix matrix multiplication
-/*                    for (int i = 0; i < _matrix->numberOfRows(); i++) {
-                        for (int j = 0; j < _matrix->numberOfRows(); j++) {
-                            double sum = 0;
-                            for (int k = 0; k < _matrix->numberOfColumns(); k++) {
-                                sum += _R->at(i, k) * _Q->at(k, j);
-                            }
-                            _matrix->at(i, j) = sum;
-                        }
-                    }*/
-                    iter++;
-                }
-                for (int i = 0; i < _matrix->numberOfRows(); ++i) {
-                    cout << _R->at(i,i)<< endl;
-                }
-                _matrix->print();
+        switch (_parallelizationMethod) {
+            case Wank:
+                _singleThreadDecomposition();
                 break;
-            }
             case vTechKickedInYo:
                 _multiThreadDecomposition();
                 break;
@@ -42,23 +23,41 @@ namespace LinearAlgebra {
                 _CUDADecomposition();
                 break;
         }
-        
     }
     
     void DecompositionQR::setMatrix(shared_ptr<Array<double>> &matrix) {
-        _matrix = matrix;
-        _matrixSet = true;
-    }
-    
-    shared_ptr<Array<double>> DecompositionQR::getQ() {
-    }
-    
-    shared_ptr<Array<double>> DecompositionQR::getR() {
-    }
-    
-    shared_ptr<Array<double>> DecompositionQR::getMatrix() {
+        if (_storeOnMatrix) {
+            _matrix = matrix;
+        }
+        else {
+            _matrix = matrix;
+            
+            if (_R == nullptr){
+                _R = make_shared<Array<double>>(matrix->numberOfRows(), matrix->numberOfColumns());
+            }
+            _deepCopyMatrixIntoR();
+        }
+        if (_returnQ) {
+            if (_Q == nullptr) {
+                _Q = make_shared<Array<double>>(matrix->numberOfRows(), matrix->numberOfRows());
+            }
+            for (unsigned i = 0; i < matrix->numberOfRows(); i++) {
+                for (unsigned j = 0; j < matrix->numberOfColumns(); j++){
+                    _Q ->at(i, j) = 0;
+                }
+            }
+            for (unsigned i = 0; i < matrix->numberOfRows(); i++) {
+                _Q ->at(i, i) = 1;
+            }
+        }
     }
 
+    const shared_ptr<Array<double>> &  DecompositionQR::getQ() {
+    }
+
+    const shared_ptr<Array<double>> &  DecompositionQR::getR() {
+    }
+    
     void DecompositionQR::_singleThreadDecomposition() {
 
     }
@@ -70,4 +69,56 @@ namespace LinearAlgebra {
     void DecompositionQR::_CUDADecomposition() {
 
     }
+
+    void DecompositionQR::_deepCopyMatrixIntoR() {
+        //R = A TODO : fix this with copy constructor
+        double* dataA = _matrix->getArrayPointer();
+        double* dataACopy = _R->getArrayPointer();
+        for (unsigned i = 0; i < _matrix->size(); i++){
+            dataACopy[i] = dataA[i];
+        }
+    }
+
+    void DecompositionQR::getRQ(shared_ptr<Array<double>>& result) {
+        switch (_parallelizationMethod) {
+            case Wank:
+                _getRQSingleThread(result);
+                break;
+            case vTechKickedInYo:
+                _getRQMultithread(result);
+                break;
+            case turboVTechKickedInYo:
+                _getRQCuda(result);
+        }
+    }
+
+    void DecompositionQR::_getRQSingleThread(shared_ptr<Array<double>>& result) {
+        // Initialize result to zeros
+        for (int i = 0; i < _Q->numberOfRows(); i++) {
+            for (int j = 0; j < _R->numberOfColumns(); j++) {
+                result->at(i, j) = 0.0;
+            }
+        }
+
+        // Multiply Q and R
+        for (int i = 0; i < _Q->numberOfRows(); i++) {
+            for (int j = 0; j < _R->numberOfColumns(); j++) {
+                // Leverage the fact that R is upper triangular
+                for (int k = 0; k < _Q->numberOfColumns(); k++) { // Start from `j` instead of `0`
+                    result->at(i, j) += _R->at(i, k) * _Q->at(k, j);
+                }
+            }
+        }
+    }
+
+
+
+    void DecompositionQR::_getRQMultithread(shared_ptr<Array<double>>& result) {
+        throw runtime_error("Not implemented");
+    }
+
+    void DecompositionQR::_getRQCuda(shared_ptr<Array<double>>& result) {
+        throw runtime_error("Not implemented");
+    }
+
 }

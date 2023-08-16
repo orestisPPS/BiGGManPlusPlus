@@ -8,48 +8,35 @@ namespace LinearAlgebra {
     HouseHolderQR::HouseHolderQR(bool returnQ, ParallelizationMethod parallelizationMethod, bool storeOnMatrix) :
                     DecompositionQR(returnQ, parallelizationMethod, storeOnMatrix){
         _decompositionType = Householder;
-        _householderVectors = make_shared<vector<shared_ptr<vector<double>>>>();
     }
 
     void HouseHolderQR::_singleThreadDecomposition() {
+        shared_ptr<Array<double>> matrix;
+        if (_storeOnMatrix) {
+            matrix = _matrix;
+        }
+        else {
+            matrix = _R;
+        }
+        
         unsigned n = _matrix->numberOfRows();
         unsigned m = _matrix->numberOfColumns();
 
-        double norm = 0.0;
-        auto alpha = 0.0;
-        
         for (unsigned i = 0; i < m - 1; i++) {
             // Extract the i-th column of A starting at row i to n-1;
-            auto iColumnOfR = _matrix->getColumnPartial(i, i, n - 1);
+            auto iColumnOfR = matrix->getColumnPartial(i, i, n - 1);
 
             auto v = _calculateHouseholdVector(iColumnOfR);
 
             // Normalize the Householder vector
             VectorOperations::normalize(v);
 
+            // Apply the Householder transformation directly to the matrix to get R and Q
+            _applyHouseholderProjectionOnMatrixFromLeft(i, v, matrix);
+            if(_returnQ)
+                _applyHouseholderProjectionOnMatrixFromRight(i, v, _Q);
             
-
-            // Apply the Householder transformation directly to the matrix to get R
-            for (unsigned col = i; col < m; col++) {
-                double proj = 0.0;
-
-                // Compute the projection
-                for (unsigned row = i; row < n; row++) {
-                    proj += v->at(row - i) * _matrix->at(row, col);
-                }
-
-                proj *= 2;  // Multiply by 2 as per the Householder formula
-
-                // Subtract the projection from the matrix
-                for (unsigned row = i; row < n; row++) {
-                    _matrix->at(row, col) -= proj * v->at(row - i);
-                }
-            }
         }
-        
-
-                _matrix->print(6);
-
     }
     
     shared_ptr<vector<double>> HouseHolderQR::_calculateHouseholdVector(const shared_ptr<vector<double>> &targetVector) {
@@ -67,7 +54,54 @@ namespace LinearAlgebra {
             VectorOperations::normalize(householdVector);
             return householdVector;
     }
+    
+    void HouseHolderQR::_applyHouseholderProjectionOnMatrixFromLeft(unsigned column, const shared_ptr<vector<double>> &householderVector,
+                                                                    shared_ptr<Array<double>> &matrix) {
+        
+        auto n = matrix->numberOfRows();
+        auto m = matrix->numberOfColumns();
+        // Apply the Householder transformation directly to the matrix to get R
+        for (unsigned col = column; col < m; col++) {
+            double proj = 0.0;
 
+            // Compute the projection
+            for (unsigned row = column; row < n; row++) {
+                proj += householderVector->at(row - column) * matrix->at(row, col);
+            }
+
+            proj *= 2;  // Multiply by 2 as per the Householder formula
+
+            // Subtract the projection from the matrix
+            for (unsigned row = column; row < n; row++) {
+                matrix->at(row, col) -= proj * householderVector->at(row - column);
+            }
+        }
+    }
+
+    void HouseHolderQR::_applyHouseholderProjectionOnMatrixFromRight(unsigned column, const shared_ptr<vector<double>> &householderVector,
+                                                                     shared_ptr<Array<double>> &matrix) {
+
+        auto n = matrix->numberOfRows();
+        auto m = matrix->numberOfColumns();
+        // Apply the Householder transformation directly to the matrix to get Q
+
+        for (unsigned row = 0; row < n; row++) {
+            double proj = 0.0;
+
+            // Compute the projection
+            for (unsigned col = column; col < m; col++) {
+                proj += matrix->at(row, col) * householderVector->at(col - column);
+            }
+
+            proj *= 2;  // Multiply by 2 as per the Householder formula
+
+            for (unsigned col = column; col < m; col++) {
+                matrix->at(row, col) -= proj * householderVector->at(col - column);
+            }
+        }
+    }
+
+    
     void HouseHolderQR::_multiThreadDecomposition() {
     }
 
@@ -83,42 +117,23 @@ namespace LinearAlgebra {
         }
     }
 
-    shared_ptr<Array<double>> HouseHolderQR::getQ() {
-        //Implement this
+    const shared_ptr<Array<double>> &  HouseHolderQR::getQ() {
+        if (_returnQ){
+            return _Q;
+        }
+        else{
+            throw runtime_error("returnQ is set to false. Q is not being stored.");
+        }
     }
 
-    shared_ptr<Array<double>> HouseHolderQR::getR() {
-        return _matrix;
-    }
-    
-    shared_ptr<Array<double>> HouseHolderQR::getMatrix() {
-        if (!_storeOnMatrix) {
+    const shared_ptr<Array<double>> &  HouseHolderQR::getR() {
+        if (_storeOnMatrix){
             return _matrix;
         }
-        else {
-            return _matrixCopy;
+        else{
+            return _R;
         }
     }
-    
-    shared_ptr<vector<double>> HouseHolderQR::getSortedEigenvalues(bool ascending) {
-        auto eigenValues = getEigenvalues();
-        sort(eigenValues->begin(), eigenValues->end());
-        if (!ascending) {
-            reverse(eigenValues->begin(), eigenValues->end());
-        }
-        return eigenValues;
-    }
-    
-    void HouseHolderQR::_deepCopyMatrix() {
-        //R = A TODO : fix this with copy constructor
-        _matrixCopy = make_shared<Array<double>>(_matrix->numberOfRows(), _matrix->numberOfColumns());
-        double* dataA = _matrix->getArrayPointer();
-        double* dataACopy = _matrixCopy->getArrayPointer();
-        for (unsigned i = 0; i < _matrix->size(); i++){
-            dataACopy[i] = dataA[i];
-        }
-    }
-    
 
 
 } // LinearAlgebra

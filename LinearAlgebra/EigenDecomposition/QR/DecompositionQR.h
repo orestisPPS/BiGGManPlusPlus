@@ -24,17 +24,23 @@ namespace LinearAlgebra {
         explicit DecompositionQR(bool returnQ = true, ParallelizationMethod parallelizationMethod = Wank, bool storeOnMatrix = false);
         
         void setMatrix(shared_ptr<Array<double>>&);
-
-        virtual shared_ptr<Array<double>> getQ();
-
-        virtual shared_ptr<Array<double>> getR();
-
-        virtual shared_ptr<Array<double>> getMatrix();
         
+        virtual const shared_ptr<Array<double>> & getQ();
+
+        virtual const shared_ptr<Array<double>> &  getR();
+        
+        void getRQ(shared_ptr<Array<double>>& result);
         
         void decompose();
         
     protected:
+
+        void _getRQSingleThread(shared_ptr<Array<double>>& result);
+
+        void _getRQMultithread(shared_ptr<Array<double>>& result);
+
+        void _getRQCuda(shared_ptr<Array<double>>& result);
+        
         shared_ptr<Array<double>> _matrix;
         
         shared_ptr<Array<double>> _Q;
@@ -45,18 +51,24 @@ namespace LinearAlgebra {
         
         bool _returnQ;
         
-        bool _matrixSet;
-        
         ParallelizationMethod _parallelizationMethod;
         
         bool _storeOnMatrix;
         
+        bool _matrixSet;
 
+
+        void _deepCopyMatrixIntoR();
+
+        void _initializeArrays();
+        
         virtual void _singleThreadDecomposition();
         
         virtual void _multiThreadDecomposition();
         
         virtual void _CUDADecomposition();
+
+
     };
 
 } // LinearAlgebra

@@ -28,10 +28,10 @@ int main() {
     //auto neumannTest = new Tests::SteadyState3DNeumann();
     //delete neumannTest;
 
-/*    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();
-    delete lanczosTest;*/
+    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();
+    delete lanczosTest;
 
-    auto qrTest = new Tests::QRTest();
+    //auto qrTest = new Tests::QRTest();
     
     //auto dirichletTest = new Tests::SteadyStateDirichlet3D();
     //auto cudaOperations = new Tests::OperationsCUDA();

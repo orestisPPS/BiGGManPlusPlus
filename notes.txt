@@ -7,3 +7,5 @@ matrix operation ->user interface calling the following
 1)single thread vector operations
 2)multi thread vector operations
 3)cuda vector operations
+
+matrix operations :  add, sub, mul, transpose, deepCopy;

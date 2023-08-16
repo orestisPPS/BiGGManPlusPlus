@@ -277,10 +277,10 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/QREigenDecomposition.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/IterationQR.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp">
@@ -329,6 +329,12 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Norms/VectorNormCuda.cuh">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/MatrixOperations/MatrixOperations.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/MatrixOperations/SingleThreadMatrixOperations.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/MultiThreadVectorOperations.h">

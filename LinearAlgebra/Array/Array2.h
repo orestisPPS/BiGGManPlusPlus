@@ -30,11 +30,11 @@ namespace LinearAlgebra {
  * @tparam T The type of the elements stored in the matrix.
  */
     template<typename T>
-    class Array {
+    class Array2 {
 
     public:
         /**
-         * Constructor for creating a new `Array` object.
+         * Constructor for creating a new `Array2` object.
          * 
          * @param numberOfRows The number of rows in the matrix.
          * @param numberOfColumns The number of columns in the matrix. Defaults to 1.
@@ -42,7 +42,7 @@ namespace LinearAlgebra {
          * @param initialValue The initial value of all the matrix elements. Defaults to 0.
          * @param isPositiveDefinite Boolean indicating whether the matrix is symmetric and has positive eigenvalues. Defaults to false.
          */
-        explicit Array(short unsigned numberOfRows, short unsigned numberOfColumns = 1, short unsigned numberOfAisles = 1,
+        explicit Array2(short unsigned numberOfRows, short unsigned numberOfColumns = 1, short unsigned numberOfAisles = 1,
                        T initialValue = 0, bool isPositiveDefinite = false) :
                 _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _numberOfAisles(numberOfAisles),
                 //_array(make_shared<vector<T>>(numberOfRows * numberOfColumns * numberOfAisles, initialValue)),
@@ -52,19 +52,19 @@ namespace LinearAlgebra {
             if (numberOfRows == numberOfColumns and numberOfColumns == numberOfAisles)
                 _isSquare = true;
         }
-        
+
         /**
-         * Copy constructor for creating a new `Array` object.
+         * Copy constructor for creating a new `Array2` object.
          * 
-         * @param array The `Array` object to be copied.
+         * @param array The `Array2` object to be copied.
          */
-        Array(const Array<T> &array) :
+        Array2(const Array2<T> &array) :
                 _numberOfRows(array._numberOfRows), _numberOfColumns(array._numberOfColumns),
                 _numberOfAisles(array._numberOfAisles),
                 _array(array._array), _isPositiveDefinite(array._isPositiveDefinite), _isSquare(array._isSquare),
                 parallelizationThreshold(array.parallelizationThreshold) {}
-                
-        ~Array() {
+
+        ~Array2() {
             _array->clear();
             delete _array;
             _array = nullptr;
@@ -232,7 +232,7 @@ namespace LinearAlgebra {
         T& at(unsigned i, unsigned j) {
             if (i >= _numberOfRows or j >= _numberOfColumns)
                 throw out_of_range("The index is out of bounds.");
-            
+
             if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles == 1)
                 return (*_array)[i * _numberOfColumns + j];
         }
@@ -302,7 +302,7 @@ namespace LinearAlgebra {
         * @param array The array to copy.
         * @return A reference to the current array.
         */
-        Array<T>& operator=(const Array<T>& array) {
+        Array2<T>& operator=(const Array2<T>& array) {
             if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
                 _numberOfAisles != array._numberOfAisles)
                 throw invalid_argument("The dimensions of the arrays are not the same.");
@@ -320,7 +320,7 @@ namespace LinearAlgebra {
         * @param array The array to compare with.
         * @return `true` if the arrays are equal, `false` otherwise.
         */
-        bool operator==(const Array<T>& array) const {
+        bool operator==(const Array2<T>& array) const {
             if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
                 _numberOfAisles != array._numberOfAisles)
                 return false;
@@ -337,22 +337,22 @@ namespace LinearAlgebra {
         * @param array The array to compare with.
         * @return `true` if the arrays are not equal, `false` otherwise.
         */
-        bool operator!=(const Array<T>& array) const {
+        bool operator!=(const Array2<T>& array) const {
             return !(*this == array);
         }
 
-        Array<T> add(const Array<T>& array) const{
+        Array2<T> add(const Array2<T>& array) const{
             if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
                 _numberOfAisles != array._numberOfAisles)
                 throw invalid_argument("The dimensions of the arrays are not the same.");
-            Array<T> result(_numberOfRows, _numberOfColumns, _numberOfAisles);
+            Array2<T> result(_numberOfRows, _numberOfColumns, _numberOfAisles);
             for (int i = 0; i < _array->size(); ++i) {
                 result._array[i] = _array[i] + array._array[i];
             }
             return result;
         }
 
-        void addIntoThis(const Array<T>& array){
+        void addIntoThis(const Array2<T>& array){
             if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
                 _numberOfAisles != array._numberOfAisles)
                 throw invalid_argument("The dimensions of the arrays are not the same.");
@@ -361,18 +361,18 @@ namespace LinearAlgebra {
             }
         }
 
-        Array<T> subtract(const Array<T>& array) const{
+        Array2<T> subtract(const Array2<T>& array) const{
             if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
                 _numberOfAisles != array._numberOfAisles)
                 throw invalid_argument("The dimensions of the arrays are not the same.");
-            Array<T> result(_numberOfRows, _numberOfColumns, _numberOfAisles);
+            Array2<T> result(_numberOfRows, _numberOfColumns, _numberOfAisles);
             for (int i = 0; i < _array->size(); ++i) {
                 result._array[i] = _array[i] - array._array[i];
             }
             return result;
         }
 
-        void subtractIntoThis(const Array<T>& array){
+        void subtractIntoThis(const Array2<T>& array){
             if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
                 _numberOfAisles != array._numberOfAisles)
                 throw invalid_argument("The dimensions of the arrays are not the same.");
@@ -381,9 +381,9 @@ namespace LinearAlgebra {
             }
         }
 
-        Array<T> multiply(const Array<T>& array, unsigned minRow, unsigned maxRow, unsigned minCol, unsigned maxCol) const;
+        Array2<T> multiply(const Array2<T>& array, unsigned minRow, unsigned maxRow, unsigned minCol, unsigned maxCol) const;
 
-        Array<T> multiply(const Array<T>& array) const{
+        Array2<T> multiply(const Array2<T>& array) const{
             return multiply(array, 0, _numberOfRows - 1, 0, _numberOfColumns - 1);
         }
 
@@ -400,20 +400,20 @@ namespace LinearAlgebra {
             }
             return result;
         }
-        
+
         void scale(T scalar){
             for (auto& element : *_array) {
                 element *= scalar;
             }
         }
-        
 
-        Array<T> transpose() const{
+
+        Array2<T> transpose() const{
             if (_numberOfRows != _numberOfColumns)
                 throw invalid_argument("The matrix is not square.");
-            
-            Array<T> transpose(_numberOfColumns, _numberOfRows);
-            
+
+            Array2<T> transpose(_numberOfColumns, _numberOfRows);
+
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = i + 1; j < _numberOfColumns; ++j) {
                     transpose._array[i * _numberOfColumns + j] = _array[j * _numberOfColumns + i];
@@ -447,7 +447,7 @@ namespace LinearAlgebra {
             auto result = true;
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = i + 1; j < _numberOfColumns; ++j) {
-                    
+
                     if (abs(_array->at(i * _numberOfColumns + j) - _array->at(j * _numberOfColumns + i)) < tolerance && abs(_array->at(i * _numberOfColumns + j) - _array->at(j * _numberOfColumns + i)) > 0) {
                         cout << "i: " << i << " j: " << j <<" "<<  _array->at(i * _numberOfColumns + j) - _array->at(j * _numberOfColumns + i) << endl;
                         result = false;
@@ -509,7 +509,7 @@ namespace LinearAlgebra {
             return _array->size();
         }
 
-        
+
         shared_ptr<vector<T>> getRow(unsigned row){
             auto rowVector = make_shared<vector<T>>(_numberOfColumns);
             for (int i = 0; i < _numberOfColumns; ++i) {
@@ -586,7 +586,7 @@ namespace LinearAlgebra {
                 _array->at(row * _numberOfColumns + i) = rowVector->at(i - minCol);
             }
         }
-        
+
 
         shared_ptr<vector<T>> getColumn(unsigned column){
             auto columnVector = make_shared<vector<T>>(_numberOfRows);
@@ -625,7 +625,7 @@ namespace LinearAlgebra {
             }
             return columnVector;
         }
-        
+
         void setColumn(unsigned column, shared_ptr<vector<T>> columnVector){
             for (int i = 0; i < _numberOfRows; ++i) {
                 (*_array)[i * _numberOfColumns + column] = (*columnVector)[i];
@@ -663,8 +663,8 @@ namespace LinearAlgebra {
                 _array->at(i * _numberOfColumns + column) = columnVector->at(i - minRow);
             }
         }
-        
-        
+
+
         shared_ptr<vector<T>> getAisle(unsigned aisle){
             auto aisleVector = make_shared<vector<T>>(_numberOfRows * _numberOfColumns);
             for (int i = 0; i < _numberOfRows; ++i) {
@@ -674,11 +674,11 @@ namespace LinearAlgebra {
             }
             return aisleVector;
         }
-        
-        void getAisle(unsigned aisle, Array<T> & aisleArray){
+
+        void getAisle(unsigned aisle, Array2<T> & aisleArray2){
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = 0; j < _numberOfColumns; ++j) {
-                    aisleArray(i, j) = (*_array)[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + aisle];
+                    aisleArray2(i, j) = (*_array)[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + aisle];
                 }
             }
         }
@@ -705,14 +705,14 @@ namespace LinearAlgebra {
             }
         }
 
-        shared_ptr<Array<T>> getSubMatrixPtr(unsigned minRow, unsigned maxRow, unsigned minColumn, unsigned maxColumn) {
+        shared_ptr<Array2<T>> getSubMatrixPtr(unsigned minRow, unsigned maxRow, unsigned minColumn, unsigned maxColumn) {
             // Boundary checks for matrix dimensions.
             if (minRow >= _numberOfRows || maxRow >= _numberOfRows || minColumn >= _numberOfColumns || maxColumn >= _numberOfColumns) {
                 throw out_of_range("Invalid row or column indices");
             }
 
             // Construct a vector with the correct size.
-            auto subMatrix = make_shared<Array<T>>((maxRow - minRow + 1), (maxColumn - minColumn + 1));
+            auto subMatrix = make_shared<Array2<T>>((maxRow - minRow + 1), (maxColumn - minColumn + 1));
 
             // Extract the values from the matrix.
             for (unsigned i = minRow; i <= maxRow; ++i) {
@@ -723,13 +723,13 @@ namespace LinearAlgebra {
             return subMatrix;
         }
 
-        
-        Array<T> getSubMatrix(unsigned minRow, unsigned maxRow, unsigned minColumn, unsigned maxColumn) {
+
+        Array2<T> getSubMatrix(unsigned minRow, unsigned maxRow, unsigned minColumn, unsigned maxColumn) {
             // Boundary checks for matrix dimensions.
             if (minRow >= _numberOfRows || maxRow >= _numberOfRows || minColumn >= _numberOfColumns || maxColumn >= _numberOfColumns) {
                 throw out_of_range("Invalid row or column indices");
             }
-            auto subMatrix = Array<T>(maxRow - minRow + 1, maxColumn - minColumn + 1);
+            auto subMatrix = Array2<T>(maxRow - minRow + 1, maxColumn - minColumn + 1);
             // Extract the values from the matrix.
             for (unsigned i = minRow; i <= maxRow; ++i) {
                 for (unsigned j = minColumn; j <= maxColumn; ++j) {
@@ -738,8 +738,8 @@ namespace LinearAlgebra {
             }
             return subMatrix;
         }
-        
-        void setSubMatrix(unsigned minRow, unsigned maxRow, unsigned minColumn, unsigned maxColumn, Array<T> & subMatrix) {
+
+        void setSubMatrix(unsigned minRow, unsigned maxRow, unsigned minColumn, unsigned maxColumn, Array2<T> & subMatrix) {
             // Boundary checks for matrix dimensions.
             if (minRow >= _numberOfRows || maxRow >= _numberOfRows || minColumn >= _numberOfColumns || maxColumn >= _numberOfColumns) {
                 throw out_of_range("Invalid row or column indices");
@@ -755,8 +755,8 @@ namespace LinearAlgebra {
                 }
             }
         }
-        
-        void setSubMatrix(unsigned minRow, unsigned maxRow, unsigned minColumn, unsigned maxColumn, shared_ptr<Array<T>> subMatrix) {
+
+        void setSubMatrix(unsigned minRow, unsigned maxRow, unsigned minColumn, unsigned maxColumn, shared_ptr<Array2<T>> subMatrix) {
             // Boundary checks for matrix dimensions.
             if (minRow >= _numberOfRows || maxRow >= _numberOfRows || minColumn >= _numberOfColumns || maxColumn >= _numberOfColumns) {
                 throw out_of_range("Invalid row or column indices");
@@ -772,7 +772,7 @@ namespace LinearAlgebra {
                 }
             }
         }
-        
+
 
         void print(int precision = 1) const {
             for (int i = 0; i < _numberOfRows; ++i) {
@@ -782,21 +782,21 @@ namespace LinearAlgebra {
                 std::cout << std::endl;
             }
         }
-        
+
         void printRow(unsigned row) const {
             for (int i = 0; i < _numberOfColumns; ++i) {
                 cout << _array[row * _numberOfColumns + i] << " ";
             }
             cout << endl;
         }
-        
+
         void printColumn(unsigned column) const {
             for (int i = 0; i < _numberOfRows; ++i) {
                 cout << _array[i * _numberOfColumns + column] << " ";
             }
             cout << endl;
         }
-        
+
         bool hasZeroInDiagonal(double tolerance = 1E-20){
             auto size = _numberOfRows * _numberOfColumns;
             for (int i = 0; i < size; i = i + _numberOfColumns + 1) {
@@ -805,8 +805,8 @@ namespace LinearAlgebra {
             }
             return true;
         }
-        
-        double * getArrayPointer() const {
+
+        double * getArray2Pointer() const {
             return _array->data();
         }
 
@@ -814,11 +814,11 @@ namespace LinearAlgebra {
         // The 1D array that stores the matrix. The elements are stored in row-major order.
         //shared_ptr<vector<T>> _array;
         vector<T>* _array;
-        //Number of Rows. Array size : Height
+        //Number of Rows. Array2 size : Height
         unsigned _numberOfRows;
-        //Number of Columns.Array size : Width
+        //Number of Columns.Array2 size : Width
         unsigned _numberOfColumns;
-        //Number of Aisles. Array size : Depth
+        //Number of Aisles. Array2 size : Depth
         unsigned _numberOfAisles;
         //Boolean that stores if the matrix is symmetric and has positive eigenvalues
         bool _isPositiveDefinite;

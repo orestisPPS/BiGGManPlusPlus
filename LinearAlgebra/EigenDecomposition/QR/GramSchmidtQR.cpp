@@ -12,7 +12,7 @@ namespace LinearAlgebra {
         if (!_storeOnMatrix){
             unsigned n = _matrix->numberOfColumns();
             _Q = make_shared<Array<double>>(n,n);
-            _R = make_shared<Array<double>>(n,n);
+            //_R = make_shared<Array<double>>(n,n);
         }
     }
 
@@ -25,7 +25,7 @@ namespace LinearAlgebra {
         double QjDotAi = 0.0;
         
         //March through each column of A to find the projection of A onto Q
-        for (unsigned i = 0; i < n; i++){
+/*        for (unsigned i = 0; i < n; i++){
             //Store column i in iColumn
             iColumnOfA = _matrix->getColumn(i);
 
@@ -44,7 +44,7 @@ namespace LinearAlgebra {
             _R->at(i, i) = norm;
             VectorOperations::normalize(iColumnOfA);
             _Q->setColumn(i, iColumnOfA);
-        }
+        }*/
         
 /*        _Q->print(4);
         cout<< endl;

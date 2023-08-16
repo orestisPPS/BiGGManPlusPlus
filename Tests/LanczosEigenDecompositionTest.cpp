@@ -4,6 +4,7 @@
 
 #include "LanczosEigenDecompositionTest.h"
 #include "../LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.h"
+#include "../LinearAlgebra/EigenDecomposition/QR/IterationQR.h"
 
 namespace Tests {
     LanczosEigenDecompositionTest::LanczosEigenDecompositionTest() {
@@ -72,10 +73,14 @@ namespace Tests {
         //auto eigenDecomposition = make_shared<PowerMethod>(10, 100);
         //eigenDecomposition->setMatrix(analysis->linearSystem->matrix);
         //auto eigenDecomposition = make_shared<DecompositionQR>(analysis->linearSystem->matrix);
-        auto qr = make_shared<LinearAlgebra::GramSchmidtQR>(analysis->linearSystem->matrix);
-        qr->decompose();
+        //auto qr = make_shared<LinearAlgebra::GramSchmidtQR>(analysis->linearSystem->matrix);
+        //qr->decompose();
         //eigenDecomposition->calculateEigenvalues();
         //eigenDecomposition->calculateDominantEigenValue();
+
+        auto qr = make_shared<IterationQR>(10, 1E-4, Householder, Wank, true);
+        qr->setMatrix(analysis->linearSystem->matrix);
+        qr->calculateEigenvalues();
         Utility::Exporters::exportLinearSystemToMatlabFile(analysis->linearSystem->matrix, analysis->linearSystem->rhs,"/home/hal9000/code/BiGGMan++/Testing/", "linearSystemEigen2.m", false);
         
         analysis->solve();

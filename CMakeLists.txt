@@ -145,7 +145,9 @@ add_executable(untitled main.cpp
         Tests/QRTest.h
         Tests/QRTest.cpp
         LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.h
-        LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp)
+        LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp
+        LinearAlgebra/Operations/MatrixOperations/MatrixOperations.h
+        LinearAlgebra/Operations/MatrixOperations/SingleThreadMatrixOperations.h)
 
 
 target_link_libraries(untitled cudart)

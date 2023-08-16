@@ -11,24 +11,21 @@
 namespace LinearAlgebra {
 
     class IterationQR {
-    private:
-        IterationQR(unsigned maxIterations = 20, double exitError = 1E-4, DecompositionType decompositionType = Householder, ParallelizationMethod parallelizationMethod = Wank, bool storeOnMatrix = false);
+    public:
+        explicit IterationQR(unsigned maxIterations = 20, double exitError = 1E-4, DecompositionType decompositionType = Householder,
+                             ParallelizationMethod parallelizationMethod = Wank, bool storeOnMatrix = true);
         
-        void calculateEigenValues();
+        void calculateEigenvalues();
 
         shared_ptr<vector<double>> getEigenvalues();
+        
+        shared_ptr<vector<double>> getSortedEigenvalues(bool ascending = false);
 
         void setMatrix(shared_ptr<Array<double>>&);
         
-        shared_ptr<Array<double>> getMatrix();
-
     private:
 
         shared_ptr<Array<double>> _matrix;
-        
-        shared_ptr<Array<double>> _Q;
-        
-        shared_ptr<Array<double>> _R;
         
         unsigned _maxIterations;
         
@@ -42,14 +39,13 @@ namespace LinearAlgebra {
         
         shared_ptr<Array<double>> _matrixCopy;
         
-        
-        void _deepCopyMatrix();
-        
         bool _matrixSet;
         
         bool _storeOnMatrix;
         
         shared_ptr<DecompositionQR> _matrixQRDecomposition;
+        
+        void _deepCopyMatrix();
     };
 
 } // LinearAlgebra
