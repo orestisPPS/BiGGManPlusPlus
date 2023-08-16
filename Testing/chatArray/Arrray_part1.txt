@@ -1,0 +1,298 @@
+ 
+
+//
+// Created by hal9000 on 1/2/23.
+//
+
+
+#ifndef UNTITLED_ARRAY_H
+#define UNTITLED_ARRAY_H
+
+#include <iostream>
+#include <tuple>
+#include <vector>
+#include <cmath>
+#include <limits>
+#include <omp.h>
+#include <memory>
+#include <stdexcept>
+#include <chrono>
+#include <iomanip>
+
+using namespace std;
+
+namespace LinearAlgebra {
+
+
+/**
+ * A custom matrix class that stores the matrix elements in a one-dimensional heap-allocated array. The elements
+ * are stored in row-major order.
+ * 
+ * @tparam T The type of the elements stored in the matrix.
+ */
+    template<typename T>
+    class Array {
+
+    public:
+        /**
+         * Constructor for creating a new `Array` object.
+         * 
+         * @param numberOfRows The number of rows in the matrix.
+         * @param numberOfColumns The number of columns in the matrix. Defaults to 1.
+         * @param numberOfAisles The number of aisles in the matrix. Defaults to 1.
+         * @param initialValue The initial value of all the matrix elements. Defaults to 0.
+         * @param isPositiveDefinite Boolean indicating whether the matrix is symmetric and has positive eigenvalues. Defaults to false.
+         */
+        explicit Array(short unsigned numberOfRows, short unsigned numberOfColumns = 1, short unsigned numberOfAisles = 1,
+                       T initialValue = 0, bool isPositiveDefinite = false) :
+                _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _numberOfAisles(numberOfAisles),
+                //_array(make_shared<vector<T>>(numberOfRows * numberOfColumns * numberOfAisles, initialValue)),
+                _array(new vector<T>(numberOfRows * numberOfColumns * numberOfAisles, initialValue)),
+                _isPositiveDefinite(isPositiveDefinite), _isSquare(false),
+                parallelizationThreshold(1E4) {
+            if (numberOfRows == numberOfColumns and numberOfColumns == numberOfAisles)
+                _isSquare = true;
+        }
+        
+        /**
+         * Copy constructor for creating a new `Array` object.
+         * 
+         * @param array The `Array` object to be copied.
+         */
+        Array(const Array<T> &array) :
+                _numberOfRows(array._numberOfRows), _numberOfColumns(array._numberOfColumns),
+                _numberOfAisles(array._numberOfAisles),
+                _array(array._array), _isPositiveDefinite(array._isPositiveDefinite), _isSquare(array._isSquare),
+                parallelizationThreshold(array.parallelizationThreshold) {}
+                
+        ~Array() {
+            _array->clear();
+            delete _array;
+            _array = nullptr;
+        }
+
+        /**
+         * The threshold number of elements after which operations on the matrix will be parallelized.
+         */
+        unsigned parallelizationThreshold;
+
+        /**
+        * () operator overloading. Allows to set the elements of the matrix and returns a constant reference to the element at position (i).
+        *
+        * @param i The row index of the element.
+        * @return A reference to the element at position (i).
+        * @throws std::out_of_range if the index is out of bounds.
+        *@throws std::invalid_argument if the matrix is not 1D.
+        */
+        T& operator()(unsigned i) {
+            if (i >= _numberOfRows * _numberOfColumns * _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfAisles == 1 && _numberOfColumns == 1)
+                return _array->at(i);
+            else
+                throw invalid_argument("The matrix is not one-dimensional.");
+        }
+
+        /**
+        * () operator overloading. Allows to set the elements of the matrix and returns a reference to the element at position (i).
+        *
+        * @param i The row index of the element.
+        * @return A reference to the element at position (i).
+        * @throws std::out_of_range if the index is out of bounds.
+        *@throws std::invalid_argument if the matrix is not 1D.
+        */
+        const T& operator()(unsigned i) const {
+            if (i >= _numberOfRows * _numberOfColumns * _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfAisles == 1 and _numberOfColumns == 1)
+                return _array->at(i);
+            else
+                throw invalid_argument("The matrix is not one-dimensional.");
+        }
+
+        /**
+        * () operator overloading. Allows to read the elements of the matrix and returns a constant reference to the element at position (i, j).
+        *
+        * @param i The row index of the element to access.
+        * @param j The column index of the element to access.
+        * @return A constant reference to the element at position (i, j).
+        * @throws std::out_of_range if the index is out of bounds.
+        *@throws std::invalid_argument if the matrix is not 2D.
+        */
+        T& operator()(unsigned i, unsigned j) {
+            if (i >= _numberOfRows or j >= _numberOfColumns)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfAisles == 1)
+                return _array->at(i * _numberOfColumns + j);
+            else
+                throw invalid_argument("The matrix is not two-dimensional.");
+        }
+
+        /**
+        * () operator overloading. Allows to set the elements of the matrix and returns a reference to the element at position (i, j, k).
+        *
+        * @param i The row index of the element to access.
+        * @param j The column index of the element to access.
+        * @return A constant reference to the element at position (i, j).
+        * @throws std::out_of_range if the index is out of bounds.
+        *@throws std::invalid_argument if the matrix is not 2D.
+        */
+        const T& operator()(unsigned i, unsigned j) const {
+            if (i >= _numberOfRows or j >= _numberOfColumns)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles == 1)
+                return _array->at(i * _numberOfColumns + j);
+            else
+                throw invalid_argument("The matrix is not two-dimensional.");
+        }
+
+        /**
+        * () operator overloading. Allows to read the elements of the matrix and returns a constant reference to the element at position (i, j, k).
+        *
+        * @param i The row index of the element to access.
+        * @param j The column index of the element to access.
+        * @param k The aisle index of the element to access.
+        * @return A constant reference to the element at position (i, j, k).
+        * @throws std::out_of_range if the index is out of bounds.
+        *@throws std::invalid_argument if the matrix is not 3D.
+        */
+        T& operator()(unsigned i, unsigned j, unsigned k){
+            if (i >= _numberOfRows or j >= _numberOfColumns or k >= _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles > 1)
+                return _array->at(i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k);
+            else
+                throw invalid_argument("The matrix is not three-dimensional.");
+        }
+
+        /**
+        * () operator overloading. Allows to read the elements of the matrix and returns a constant reference to the element at position (i, j, k).
+        *
+        * @param i The row index of the element to access.
+        * @param j The column index of the element to access.
+        * @param k The aisle index of the element to access.
+        * @return A constant reference to the element at position (i, j, k).
+        * @throws std::out_of_range if the index is out of bounds.
+        *@throws std::invalid_argument if the matrix is not 3D.
+        */
+        const T& operator()(unsigned i, unsigned j, unsigned k) const{
+            if (i >= _numberOfRows or j >= _numberOfColumns or k >= _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles > 1)
+                return _array->at(i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k);
+            else
+                throw invalid_argument("The matrix is not three-dimensional.");
+        }
+
+        /**
+        * at() function to read and write the elements of the matrix and returns a reference to the element at position (i).
+        * Throws an `out_of_range` exception if the index is out of bounds.
+        * 
+        * @param i The row index of the element.
+        * @return A reference to the element at position (i).
+        * @throws std::out_of_range if i is out of bounds.
+        * @throws std::invalid_argument if the matrix is not 1D.
+        */
+        T& at(unsigned i) {
+            if (i >= _numberOfRows * _numberOfColumns * _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfAisles == 1 and _numberOfColumns == 1)
+                return _array->at(i);
+            else
+                throw invalid_argument("The matrix is not one-dimensional.");
+        }
+
+        /**
+        * at() function to read the elements of the matrix and returns a constant reference to the element at position (i).
+        * Throws an `out_of_range` exception if the index is out of bounds.
+        * 
+        * @param i The row index of the element.
+        * @return A constant reference to the element at position (i).
+        * @throws std::out_of_range if i is out of bounds.
+        * @throws std::invalid_argument if the matrix is not 1D.
+         * */
+        const T& at(unsigned i) const {
+            if (i >= _numberOfRows * _numberOfColumns * _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfAisles == 1 and _numberOfColumns == 1)
+                return _array->at(i);
+            else
+                throw invalid_argument("The matrix is not one-dimensional.");
+        }
+
+        /**
+        * at() function to read and write the elements of the matrix and returns a reference to the element at position (i, j).
+        * Throws an `out_of_range` exception if the index is out of bounds.
+        * 
+        * @param i The row index of the element to access.
+        * @param j The column index of the element to access.
+        * @return A reference to the element at position (i, j).
+        * @throws std::out_of_range if the index is out of bounds.
+        * @throws std::invalid_argument if the matrix is not 2D.
+        */
+        T& at(unsigned i, unsigned j) {
+            if (i >= _numberOfRows or j >= _numberOfColumns)
+                throw out_of_range("The index is out of bounds.");
+            
+            if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles == 1)
+                return (*_array)[i * _numberOfColumns + j];
+        }
+
+        /**
+        * at() function to read the elements of the matrix and returns a constant reference to the element at position (i, j).
+        * Throws an `out_of_range` exception if the index is out of bounds.
+        * 
+        * @param i The row index of the element to access.
+        * @param j The column index of the element to access.
+        * @return A constant reference to the element at position (i, j).
+        * @throws std::out_of_range if the index is out of bounds.
+        * @throws std::invalid_argument if the matrix is not 2D.
+        */
+        const T& at(unsigned i, unsigned j) const {
+            if (i >= _numberOfRows or j >= _numberOfColumns)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles == 1)
+                return (*_array)[i * _numberOfColumns + j];
+            else
+                throw invalid_argument("The matrix is not two-dimensional.");
+        }
+
+        /**
+        * at() function to read and write the elements of the matrix and returns a reference to the element at position (i, j, k).
+        * Throws an `out_of_range` exception if the index is out of bounds.
+        * 
+        * @param i The row index of the element to access.
+        * @param j The column index of the element to access.
+        * @param k The aisle index of the element to access.
+        * @return A reference to the element at position (i, j, k).
+        * @throws std::out_of_range if the index is out of bounds.
+        * @throws std::invalid_argument if the matrix is not 3D.
+        */
+        T& at(unsigned i, unsigned j, unsigned k) {
+            if (i >= _numberOfRows or j >= _numberOfColumns or k >= _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles > 1)
+                return _array->at(i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k);
+            else
+                throw invalid_argument("The matrix is not three-dimensional.");
+        }
+
+        /**
+        * at() function to read the elements of the matrix and returns a constant reference to the element at position (i, j, k).
+        * Throws an `out_of_range` exception if the index is out of bounds.
+        * 
+        * @param i The row index of the element to access.
+        * @param j The column index of the element to access.
+        * @param k The aisle index of the element to access.
+        * @return A constant reference to the element at position (i, j, k).
+        * @throws std::out_of_range if the index is out of bounds.
+        * @throws std::invalid_argument if the matrix is not 3D.
+        */
+        const T& at(unsigned i, unsigned j, unsigned k) const{
+            if (i >= _numberOfRows or j >= _numberOfColumns or k >= _numberOfAisles)
+                throw out_of_range("The index is out of bounds.");
+            if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles > 1)
+                return _array->at(i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + k);
+            else
+                throw invalid_argument("The matrix is not three-dimensional.");
+        }
