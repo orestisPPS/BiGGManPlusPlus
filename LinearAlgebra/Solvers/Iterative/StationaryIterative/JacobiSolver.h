@@ -13,10 +13,16 @@ namespace LinearAlgebra {
     class JacobiSolver : public StationaryIterative{
         
     public:
-        JacobiSolver(ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance = 1E-9, unsigned maxIterations = 1E4, bool throwExceptionOnMaxFailure = true);
-    
+        explicit JacobiSolver(VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4,
+                     bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = Wank);
     protected:
-        void _threadJob(unsigned start, unsigned end) override;
+        void _singleThreadSolution() override;
+
+        void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows) override;
+        
+    private:
+        void _threadJobJacobi(unsigned start, unsigned end);
+        
     };
 
 } // LinearAlgebra

@@ -9,8 +9,7 @@
 #include "../StructuredMeshGeneration/MeshFactory.h"
 #include "../StructuredMeshGeneration/MeshSpecs.h"
 #include "../StructuredMeshGeneration/DomainBoundaryFactory.h"
-#include "../LinearAlgebra/Solvers/Direct/SolverLUP.h"
-
+#include "../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
 
 
 namespace Tests {

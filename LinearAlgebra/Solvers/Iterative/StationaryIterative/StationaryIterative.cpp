@@ -5,177 +5,98 @@
 #include "StationaryIterative.h"
 
 namespace LinearAlgebra {
-    StationaryIterative::StationaryIterative(ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance, unsigned maxIterations,
-                                         bool throwExceptionOnMaxFailure) :
-            IterativeSolver(normType, tolerance, maxIterations, throwExceptionOnMaxFailure) {
-        _parallelization = parallelizationMethod;
-        _residualNorms = make_shared<list<double>>();
+    StationaryIterative::StationaryIterative(VectorNormType normType, double tolerance, unsigned maxIterations, bool throwExceptionOnMaxFailure, ParallelizationMethod parallelizationMethod) :
+            IterativeSolver(normType, tolerance, maxIterations, throwExceptionOnMaxFailure, parallelizationMethod) {
+        _difference = nullptr;
     }
 
+
+    
+    void StationaryIterative::_initializeVectors() {
+        _xNew = make_shared<vector<double>>(_linearSystem->rhs->size());
+        _xOld = make_shared<vector<double>>(_linearSystem->rhs->size());
+        _difference = make_shared<vector<double>>(_linearSystem->rhs->size());
+        _vectorsInitialized = true;    
+    }
+    
+    
+    
     void StationaryIterative::_iterativeSolution() {
         auto start = std::chrono::high_resolution_clock::now();
         unsigned n = _linearSystem->matrix->numberOfRows();
-        unsigned short iteration = 0;
-        double norm = 1.0;
-        //double sum = 0.0;
-        //Check if the initial solution has been set from the user. If not, it is set to 0.0
-        if (!_isInitialized) {
-            setInitialSolution(0.0);
-        }
-        //TODO Check if the matrix is diagonally dominant
-
-        if (_parallelization == vTechKickInYoo) {
-            cout<< " " << endl;
-            cout << "----------------------------------------" << endl;
-            cout << _solverName << " Solver Multi Thread - VTEC KICKED IN YO!" << endl;
-            //Find the number of threads available for parallel execution
-            unsigned numberOfThreads = std::thread::hardware_concurrency();
-            cout << "Total Number of threads available for parallel execution: " << numberOfThreads << endl;
-            cout << "Number of threads involved in parallel solution: " << numberOfThreads << endl;
-
-            //Define the available threads (2 less than the number of threads available for parallel execution)
-            while (iteration < _maxIterations && norm >= _tolerance) {
-
-                _multiThreadSolution(numberOfThreads, n);
-                // Calculate the norm of the _difference
-                norm = VectorNorm(_difference, _normType).value();
-                // Add the norm to the list of norms
-                _residualNorms->push_back(norm);
-                if (iteration % 100 == 0) {
-                    cout << "Iteration: " << iteration << " - Norm: " << norm << endl;
-                }
-                iteration++;
-            }
-        }
-        else if (_parallelization == Wank) {
-            cout<< " " << endl;
-            cout << "----------------------------------------" << endl;
-            cout << _solverName << " Solver Single Thread" << endl;
-            while (iteration < _maxIterations && norm >= _tolerance) {
+        _exitNorm = 1.0;
+        _difference = make_shared<vector<double>>(n);
+        
+        if (_parallelization == Wank) {
+            _printSingleThreadInitializationText();
+            while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
                 _singleThreadSolution();
-                // Calculate the norm of the _difference
-                norm = VectorNorm(_difference, _normType).value();
-                // Add the norm to the list of norms
-                _residualNorms->push_back(norm);
-                if (iteration % 100 == 0) {
-                    cout << "Iteration: " << iteration << " - Norm: " << norm << endl;
-                }
-                iteration++;
+                _exitNorm = _calculateNorm();
+                _printIterationAndNorm();
+                _iteration++;
             }
         }
-        else if (_parallelization == turboVTechKickInYoo){
+        if (_parallelization == vTechKickedInYo) {
+            auto numberOfThreads = std::thread::hardware_concurrency();
+            _printMultiThreadInitializationText(numberOfThreads);
+            while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
+                _multiThreadSolution(numberOfThreads, n);
+                _exitNorm = _calculateNorm();
+                _printIterationAndNorm();
+                _iteration++;
+            }
+
+        }
+
+        else if (_parallelization == turboVTechKickedInYo) {
             
-/*
-            for (int i = 0; i < 1; i++) {
-                cudaDeviceProp deviceProps = cudaDeviceProp();
-                cudaGetDeviceProperties(&deviceProps, i);
-
-                std::cout << "Device " << i << ": " << deviceProps.name << std::endl;
-                std::cout << "  Max threads per block: " << deviceProps.maxThreadsPerBlock << std::endl;
-                std::cout << "  Max thread dimensions (x, y, z): ("
-                          << deviceProps.maxThreadsDim[0] << ", "
-                          << deviceProps.maxThreadsDim[1] << ", "
-                          << deviceProps.maxThreadsDim[2] << ")" << std::endl;
-                std::cout << "  Max grid dimensions (x, y, z): ("
-                          << deviceProps.maxGridSize[0] << ", "
-                          << deviceProps.maxGridSize[1] << ", "
-                          << deviceProps.maxGridSize[2] << ")" << std::endl;
-            }*/
-            //cuda file with all gpu utility as extern here 
-
-            double* d_matrix = _linearSystem->matrix->getArrayPointer();
-            double* d_rhs = _linearSystem->rhs->data();
-            double* d_xOld = _xOld->data();
-            double* d_xNew = _xNew->data();
-            double* d_difference = _difference->data();
+            double *d_matrix = _linearSystem->matrix->getArrayPointer();
+            double *d_rhs = _linearSystem->rhs->data();
+            double *d_xOld = _xOld->data();
+            double *d_xNew = _xNew->data();
+            double *d_difference = _difference->data();
             int vectorSize = static_cast<int>(_linearSystem->rhs->size());
 
             _stationaryIterativeCuda = make_unique<StationaryIterativeCuda>(
-                    d_matrix, d_rhs, d_xOld, d_xNew, d_difference, vectorSize, 32);
-            
-            while (iteration < _maxIterations && norm >= _tolerance) {
+                    d_matrix, d_rhs, d_xOld, d_xNew, d_difference, vectorSize, 256);
+
+            while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
 
                 _stationaryIterativeCuda->performGaussSeidelIteration();
                 _stationaryIterativeCuda->getDifferenceVector(_difference->data());
-                norm = VectorNorm(_difference, _normType).value();
+                _exitNorm = VectorNorm(_difference, _normType).value();
                 //norm = _stationaryIterativeCuda->getNorm();
                 // Add the norm to the list of norms
-                _residualNorms->push_back(norm);
+                _residualNorms->push_back(_exitNorm);
 
-                if (iteration % 100 == 0) {
-                    cout << "Iteration: " << iteration << " - Norm: " << norm << endl;
+                if (_iteration % 100 == 0) {
+                    cout << "Iteration: " << _iteration << " - Norm: " << _exitNorm << endl;
                 }
 
-                iteration++;
+                _iteration++;
             }
-
-            if (norm < _tolerance) {
-                cout << "Solver converged after " << iteration << " iterations." << endl;
-            } else {
-                cout << "Solver reached maximum iterations without converging." << endl;
-            }
-
             _stationaryIterativeCuda->getSolutionVector(_xNew->data());
             _stationaryIterativeCuda.reset();
 
         }
-        // If the maximum number of iterations is reached and the user has set the flag to throw an exception, throw an exception
-        if (iteration == _maxIterations && _throwExceptionOnMaxFailure) {
-            throw std::runtime_error("Maximum number of iterations reached.");
-        }
-        auto end = std::chrono::high_resolution_clock::now();
 
-        bool isInMicroSeconds = false;
-        auto _elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        if (_elapsedTime == 0) {
-            _elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
-            isInMicroSeconds = true;
-        }
-        if (isInMicroSeconds) {
-            cout << "Elapsed time: " << _elapsedTime << " μs" << " Iterations : " << iteration << " Exit norm : " << norm << endl;
-            cout << "----------------------------------------" << endl;
-        }
-        else {
-            cout << "Elapsed time: " << _elapsedTime << " ms" << " Iterations : " << iteration << " Exit norm : " << norm << endl;
-            cout << "----------------------------------------" << endl;
-        }
+        auto end = std::chrono::high_resolution_clock::now();
+        printAnalysisOutcome(_iteration, _exitNorm, start, end);
+        
     }
 
-    void StationaryIterative::_multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows) {
+    void StationaryIterative::_multiThreadSolution(const unsigned short &availableThreads,
+                                                   const unsigned short &numberOfRows) {
+    }
 
-        //Initiate the thread pool map
-        map<unsigned, thread> threadPool = map <unsigned, thread>();
-        for (unsigned int i = 0; i < availableThreads; ++i) {
-            threadPool.insert(pair<unsigned, thread>(i, thread()));
-        }
-
-        // Calculate the number of rows to assign to each thread
-        unsigned rowsPerThread = numberOfRows / availableThreads;
-        unsigned lastRows = numberOfRows % availableThreads;
-
-        // Launch the threads and assign the work
-        unsigned startRow = 0;
-        unsigned endRow = 0;
-        for (unsigned i = 0; i < availableThreads; ++i) {
-            endRow = startRow + rowsPerThread;
-            if (i == availableThreads - 1) {
-                endRow = endRow + lastRows;
-            }
-            threadPool[i] = thread(&StationaryIterative::_threadJob, this, startRow, endRow);
-            startRow = endRow;
-        }
-        // Wait for all the threads to finish
-        for (auto& thread : threadPool) {
-            thread.second.join();
-        }
-
+    void StationaryIterative::_cudaSolution() {
     }
 
     void StationaryIterative::_singleThreadSolution() {
-        _threadJob(0, _linearSystem->matrix->numberOfRows());
     }
+    
 
-    void StationaryIterative::_threadJob(unsigned start, unsigned end) {
 
-    }
-} // LinearAlgebra
+}
+// LinearAlgebra
+

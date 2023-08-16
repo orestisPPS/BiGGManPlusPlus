@@ -2,7 +2,7 @@
 
 namespace LinearAlgebra {
 
-    VectorNorm::VectorNorm(std::shared_ptr<std::vector<double>> vector, VectorNormType normType, unsigned short lP_Order)
+    VectorNorm::VectorNorm(const shared_ptr<vector<double>>& vector, VectorNormType normType, unsigned short lP_Order)
             : _normType(normType) {
         switch (_normType) {
             case L1:
@@ -35,7 +35,7 @@ namespace LinearAlgebra {
         for (const auto& component : *vector) {
             norm += std::abs(component);
         }
-        return norm / double (vector->size());
+        return norm;
     }
 
     double VectorNorm::_calculateL2Norm(const std::shared_ptr<std::vector<double>>& vector) {
@@ -43,7 +43,7 @@ namespace LinearAlgebra {
         for (const auto& component : *vector) {
             norm += std::pow(component, 2);
         }
-        return std::sqrt(norm / double (vector->size()));
+        return std::sqrt(norm);
     }
 
     double VectorNorm::_calculateLInfNorm(const std::shared_ptr<std::vector<double>>& vector) {
@@ -51,7 +51,7 @@ namespace LinearAlgebra {
         for (const auto& component : *vector) {
             norm = std::max(norm, std::abs(component));
         }
-        return norm / double (vector->size());;
+        return norm;
     }
 
     double VectorNorm::_calculateLpNorm(const std::shared_ptr<std::vector<double>>& vector, double order) {
@@ -59,7 +59,7 @@ namespace LinearAlgebra {
         for (const auto& component : *vector) {
             norm += std::pow(std::abs(component), order);
         }
-        return std::pow(norm, 1.0 / order) / double (vector->size());
+        return std::pow(norm, 1.0 / order);
     }
 
 } // LinearAlgebra

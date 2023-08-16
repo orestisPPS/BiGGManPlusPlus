@@ -16,14 +16,14 @@ namespace PartialDifferentialEquations {
     };*/
 
     struct SpaceFieldProperties {
-        shared_ptr<Array<double>> secondOrderCoefficients;
+        shared_ptr<LinearAlgebra::Array<double>> secondOrderCoefficients;
         shared_ptr<vector<double>> firstOrderCoefficients;
         shared_ptr<double> zerothOrderCoefficient;
         shared_ptr<double> sourceTerm;
     };
 
     struct TimeFieldProperties {
-        shared_ptr<Array<double>> secondOrderCoefficients;
+        shared_ptr<LinearAlgebra::Array<double>> secondOrderCoefficients;
         shared_ptr<vector<double>> firstOrderCoefficients;
         shared_ptr<double> zerothOrderCoefficient;
         shared_ptr<double> sourceTerm;

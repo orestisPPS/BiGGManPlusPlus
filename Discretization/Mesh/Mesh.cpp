@@ -3,8 +3,6 @@
 //
 
 #include "Mesh.h"
-#include "../../LinearAlgebra/FiniteDifferences/FDSchemeType.h"
-#include "../../LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h"
 #include "../../Utility/Exporters/Exporters.h"
 
 using namespace  Discretization;

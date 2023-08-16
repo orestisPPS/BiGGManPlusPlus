@@ -8,7 +8,9 @@
 #include "Node.h"
 #include <utility>
 #include <algorithm>
+#include <memory>
 #include "../../LinearAlgebra/Operations/VectorOperations.h"
+using namespace LinearAlgebra;
 
 using namespace Discretization;
 

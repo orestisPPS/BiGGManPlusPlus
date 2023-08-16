@@ -20,16 +20,28 @@ namespace LinearAlgebra {
     class Solver {
         
     public:
-
-        virtual void setLinearSystem(shared_ptr<LinearSystem> linearSystem);
+        
+        void setLinearSystem(shared_ptr<LinearSystem> linearSystem);
 
         SolverType type();
 
         virtual void solve();
 
+        virtual void setInitialSolution(shared_ptr<vector<double>> initialValue);
 
+        virtual void setInitialSolution(double initialValue);
+        
     protected:
-        shared_ptr<LinearSystem> _linearSystem;        
+        
+        virtual void _initializeVectors();
+        
+        shared_ptr<LinearSystem> _linearSystem;
+
+        bool _linearSystemInitialized;
+        
+        bool _vectorsInitialized;
+        
+        bool _solutionSet;
         
         SolverType _solverType;
 

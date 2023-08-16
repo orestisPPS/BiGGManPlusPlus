@@ -45,7 +45,8 @@ namespace LinearAlgebra {
         explicit Array(short unsigned numberOfRows, short unsigned numberOfColumns = 1, short unsigned numberOfAisles = 1,
                        T initialValue = 0, bool isPositiveDefinite = false) :
                 _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _numberOfAisles(numberOfAisles),
-                _array(make_unique<vector<T>>(numberOfRows * numberOfColumns * numberOfAisles, initialValue)),
+                //_array(make_shared<vector<T>>(numberOfRows * numberOfColumns * numberOfAisles, initialValue)),
+                _array(new vector<T>(numberOfRows * numberOfColumns * numberOfAisles, initialValue)),
                 _isPositiveDefinite(isPositiveDefinite), _isSquare(false),
                 parallelizationThreshold(1E4) {
             if (numberOfRows == numberOfColumns and numberOfColumns == numberOfAisles)
@@ -65,6 +66,8 @@ namespace LinearAlgebra {
                 
         ~Array() {
             _array->clear();
+            delete _array;
+            _array = nullptr;
         }
 
         /**
@@ -229,10 +232,9 @@ namespace LinearAlgebra {
         T& at(unsigned i, unsigned j) {
             if (i >= _numberOfRows or j >= _numberOfColumns)
                 throw out_of_range("The index is out of bounds.");
+            
             if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles == 1)
-                return _array->at(i * _numberOfColumns + j);
-            else
-                throw invalid_argument("The matrix is not two-dimensional.");
+                return (*_array)[i * _numberOfColumns + j];
         }
 
         /**
@@ -249,7 +251,7 @@ namespace LinearAlgebra {
             if (i >= _numberOfRows or j >= _numberOfColumns)
                 throw out_of_range("The index is out of bounds.");
             if (_numberOfRows > 1 and _numberOfColumns > 1 and _numberOfAisles == 1)
-                return _array->at(i * _numberOfColumns + j);
+                return (*_array)[i * _numberOfColumns + j];
             else
                 throw invalid_argument("The matrix is not two-dimensional.");
         }
@@ -398,7 +400,13 @@ namespace LinearAlgebra {
             }
             return result;
         }
-
+        
+        void scale(T scalar){
+            for (auto& element : *_array) {
+                element *= scalar;
+            }
+        }
+        
 
         Array<T> transpose() const{
             if (_numberOfRows != _numberOfColumns)
@@ -433,16 +441,20 @@ namespace LinearAlgebra {
             return _isSquare;
         }
 
-        bool isSymmetric() const {
+        bool isSymmetric(double tolerance = 1E-11) const {
             if (_numberOfRows != _numberOfColumns)
                 throw invalid_argument("The matrix is not square.");
+            auto result = true;
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = i + 1; j < _numberOfColumns; ++j) {
-                    if (_array[i * _numberOfColumns + j] != _array[j * _numberOfColumns + i])
-                        return false;
+                    
+                    if (abs(_array->at(i * _numberOfColumns + j) - _array->at(j * _numberOfColumns + i)) < tolerance && abs(_array->at(i * _numberOfColumns + j) - _array->at(j * _numberOfColumns + i)) > 0) {
+                        cout << "i: " << i << " j: " << j <<" "<<  _array->at(i * _numberOfColumns + j) - _array->at(j * _numberOfColumns + i) << endl;
+                        result = false;
+                    }
                 }
             }
-            return true;
+            return result;
         }
 
         bool isPositiveDefinite() const {
@@ -497,30 +509,178 @@ namespace LinearAlgebra {
             return _array->size();
         }
 
-        vector<T> getRow(unsigned row){
-            vector<T> rowVector;
+        
+        shared_ptr<vector<T>> getRow(unsigned row){
+            auto rowVector = make_shared<vector<T>>(_numberOfColumns);
             for (int i = 0; i < _numberOfColumns; ++i) {
-                rowVector.push_back(_array[row * _numberOfColumns + i]);
+                (*rowVector)[i] = (*_array)[row * _numberOfColumns + i];
             }
             return rowVector;
         }
 
-        vector<T> getColumn(unsigned column){
-            vector<T> columnVector;
+        /**
+        * @brief Retrieves a part of a given row from the matrix.
+        * 
+        * This method extracts values from the matrix starting from the `minCol` 
+        * column to the `maxCol` column for the specified `row`.
+        * 
+        * @param row Index of the row to retrieve (0-based index).
+        * @param minCol Starting column index for retrieval (0-based index).
+        * @param maxCol Ending column index for retrieval (0-based index).
+        * 
+        * @return A shared pointer to a vector containing the extracted values.
+        * 
+        * @throws out_of_range if the specified row or column indices are out of valid bounds.
+        */
+        shared_ptr<vector<T>> getRowPartial(unsigned row, unsigned minCol, unsigned maxCol) {
+            // Boundary checks for matrix dimensions.
+            if (row >= _numberOfRows || minCol >= _numberOfColumns || maxCol >= _numberOfColumns) {
+                throw out_of_range("Invalid row or column indices");
+            }
+
+            // Construct a vector with the correct size.
+            auto rowVector = make_shared<vector<T>>(maxCol - minCol + 1);
+
+            // Extract the values from the matrix.
+            for (unsigned i = minCol; i <= maxCol; ++i) {
+                rowVector->at(i - minCol) = _array->at(row * _numberOfColumns + i);
+            }
+            return rowVector;
+        }
+
+
+
+        void setRow(unsigned row, shared_ptr<vector<T>> rowVector){
+            for (int i = 0; i < _numberOfColumns; ++i) {
+                (*_array)[row * _numberOfColumns + i] = (*rowVector)[i];
+            }
+        }
+
+        /**
+        * @brief Sets a part of a given row in the matrix using values from the provided vector.
+        * 
+        * This method replaces values in the matrix starting from the `minCol` 
+        * column to the `maxCol` column for the specified `row` using values from `rowVector`.
+        * 
+        * @param row Index of the row to set (0-based index).
+        * @param minCol Starting column index for setting values (0-based index).
+        * @param maxCol Ending column index for setting values (0-based index).
+        * @param rowVector A shared pointer to a vector containing values to set in the matrix.
+        * 
+        * @throws out_of_range if the specified row or column indices are out of valid bounds.
+        * @throws invalid_argument if the size of `rowVector` doesn't match the specified column range.
+        */
+        void setRowPartial(unsigned row, unsigned minCol, unsigned maxCol, shared_ptr<vector<T>> rowVector) {
+            // Boundary checks for matrix dimensions.
+            if (row >= _numberOfRows || minCol >= _numberOfColumns || maxCol >= _numberOfColumns) {
+                throw out_of_range("Invalid row or column indices");
+            }
+
+            // Check if the input vector has the correct size.
+            if (rowVector->size() != (maxCol - minCol + 1)) {
+                throw invalid_argument("Size of rowVector doesn't match specified column range.");
+            }
+
+            // Set the values in the matrix.
+            for (unsigned i = minCol; i <= maxCol; ++i) {
+                _array->at(row * _numberOfColumns + i) = rowVector->at(i - minCol);
+            }
+        }
+        
+
+        shared_ptr<vector<T>> getColumn(unsigned column){
+            auto columnVector = make_shared<vector<T>>(_numberOfRows);
             for (int i = 0; i < _numberOfRows; ++i) {
-                columnVector.push_back(_array[i * _numberOfColumns + column]);
+                (*columnVector)[i] = (*_array)[i * _numberOfColumns + column];
             }
             return columnVector;
         }
 
-        vector<T> getAisle(unsigned aisle){
-            vector<T> aisleVector;
+        /**
+        * @brief Retrieves a part of a given column from the matrix.
+        * 
+        * This method extracts values from the matrix starting from the `minRow` 
+        * row to the `maxRow` row for the specified `column`.
+        * 
+        * @param column Index of the column to retrieve (0-based index).
+        * @param minRow Starting row index for retrieval (0-based index).
+        * @param maxRow Ending row index for retrieval (0-based index).
+        * 
+        * @return A shared pointer to a vector containing the extracted values.
+        * 
+        * @throws out_of_range if the specified column or row indices are out of valid bounds.
+        */
+        shared_ptr<vector<T>> getColumnPartial(unsigned column, unsigned minRow, unsigned maxRow) {
+            // Boundary checks for matrix dimensions.
+            if (column >= _numberOfColumns || minRow >= _numberOfRows || maxRow >= _numberOfRows) {
+                throw out_of_range("Invalid row or column indices");
+            }
+
+            // Construct a vector with the correct size.
+            auto columnVector = make_shared<vector<T>>(maxRow - minRow + 1);
+
+            // Extract the values from the matrix.
+            for (unsigned i = minRow; i <= maxRow; ++i) {
+                columnVector->at(i - minRow) = _array->at(i * _numberOfColumns + column);
+            }
+            return columnVector;
+        }
+        
+        void setColumn(unsigned column, shared_ptr<vector<T>> columnVector){
+            for (int i = 0; i < _numberOfRows; ++i) {
+                (*_array)[i * _numberOfColumns + column] = (*columnVector)[i];
+            }
+        }
+
+
+        /**
+        * @brief Sets a part of a given column in the matrix using values from the provided vector.
+        * 
+        * This method replaces values in the matrix starting from the `minRow` 
+        * row to the `maxRow` row for the specified `column` using values from `columnVector`.
+        * 
+        * @param column Index of the column to set (0-based index).
+        * @param minRow Starting row index for setting values (0-based index).
+        * @param maxRow Ending row index for setting values (0-based index).
+        * @param columnVector A shared pointer to a vector containing values to set in the matrix.
+        * 
+        * @throws out_of_range if the specified column or row indices are out of valid bounds.
+        * @throws invalid_argument if the size of `columnVector` doesn't match the specified row range.
+        */
+        void setColumnPartial(unsigned column, unsigned minRow, unsigned maxRow, shared_ptr<vector<T>> columnVector) {
+            // Boundary checks for matrix dimensions.
+            if (column >= _numberOfColumns || minRow >= _numberOfRows || maxRow >= _numberOfRows) {
+                throw out_of_range("Invalid row or column indices");
+            }
+
+            // Check if the input vector has the correct size.
+            if (columnVector->size() != (maxRow - minRow + 1)) {
+                throw invalid_argument("Size of columnVector doesn't match specified row range.");
+            }
+
+            // Set the values in the matrix.
+            for (unsigned i = minRow; i <= maxRow; ++i) {
+                _array->at(i * _numberOfColumns + column) = columnVector->at(i - minRow);
+            }
+        }
+        
+        
+        shared_ptr<vector<T>> getAisle(unsigned aisle){
+            auto aisleVector = make_shared<vector<T>>(_numberOfRows * _numberOfColumns);
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = 0; j < _numberOfColumns; ++j) {
-                    aisleVector.push_back(_array[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + aisle]);
+                    (*aisleVector)[i * _numberOfColumns + j] = (*_array)[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + aisle];
                 }
             }
             return aisleVector;
+        }
+        
+        void getAisle(unsigned aisle, Array<T> & aisleArray){
+            for (int i = 0; i < _numberOfRows; ++i) {
+                for (int j = 0; j < _numberOfColumns; ++j) {
+                    aisleArray(i, j) = (*_array)[i * _numberOfColumns * _numberOfAisles + j * _numberOfAisles + aisle];
+                }
+            }
         }
 
         // Swap the elements of the i-th and j-th rows of the matrix
@@ -545,10 +705,79 @@ namespace LinearAlgebra {
             }
         }
 
+        shared_ptr<Array<T>> getSubMatrixPtr(unsigned minRow, unsigned maxRow, unsigned minColumn, unsigned maxColumn) {
+            // Boundary checks for matrix dimensions.
+            if (minRow >= _numberOfRows || maxRow >= _numberOfRows || minColumn >= _numberOfColumns || maxColumn >= _numberOfColumns) {
+                throw out_of_range("Invalid row or column indices");
+            }
+
+            // Construct a vector with the correct size.
+            auto subMatrix = make_shared<Array<T>>((maxRow - minRow + 1), (maxColumn - minColumn + 1));
+
+            // Extract the values from the matrix.
+            for (unsigned i = minRow; i <= maxRow; ++i) {
+                for (unsigned j = minColumn; j <= maxColumn; ++j) {
+                    subMatrix->at(i - minRow, j - minColumn) = _array->at(i * _numberOfColumns + j);
+                }
+            }
+            return subMatrix;
+        }
+
+        
+        Array<T> getSubMatrix(unsigned minRow, unsigned maxRow, unsigned minColumn, unsigned maxColumn) {
+            // Boundary checks for matrix dimensions.
+            if (minRow >= _numberOfRows || maxRow >= _numberOfRows || minColumn >= _numberOfColumns || maxColumn >= _numberOfColumns) {
+                throw out_of_range("Invalid row or column indices");
+            }
+            auto subMatrix = Array<T>(maxRow - minRow + 1, maxColumn - minColumn + 1);
+            // Extract the values from the matrix.
+            for (unsigned i = minRow; i <= maxRow; ++i) {
+                for (unsigned j = minColumn; j <= maxColumn; ++j) {
+                    subMatrix(i - minRow, j - minColumn) = _array->at(i * _numberOfColumns + j);
+                }
+            }
+            return subMatrix;
+        }
+        
+        void setSubMatrix(unsigned minRow, unsigned maxRow, unsigned minColumn, unsigned maxColumn, Array<T> & subMatrix) {
+            // Boundary checks for matrix dimensions.
+            if (minRow >= _numberOfRows || maxRow >= _numberOfRows || minColumn >= _numberOfColumns || maxColumn >= _numberOfColumns) {
+                throw out_of_range("Invalid row or column indices");
+            }
+            // Check if the input vector has the correct size.
+            if (subMatrix.numberOfRows() != (maxRow - minRow + 1) || subMatrix.numberOfColumns() != (maxColumn - minColumn + 1)) {
+                throw invalid_argument("Size of subMatrix doesn't match specified row range.");
+            }
+            // Set the values in the matrix.
+            for (unsigned i = minRow; i <= maxRow; ++i) {
+                for (unsigned j = minColumn; j <= maxColumn; ++j) {
+                    (*_array)[i * _numberOfColumns + j] = subMatrix->at(i - minRow, j - minColumn);
+                }
+            }
+        }
+        
+        void setSubMatrix(unsigned minRow, unsigned maxRow, unsigned minColumn, unsigned maxColumn, shared_ptr<Array<T>> subMatrix) {
+            // Boundary checks for matrix dimensions.
+            if (minRow >= _numberOfRows || maxRow >= _numberOfRows || minColumn >= _numberOfColumns || maxColumn >= _numberOfColumns) {
+                throw out_of_range("Invalid row or column indices");
+            }
+            // Check if the input vector has the correct size.
+            if (subMatrix->numberOfRows() != (maxRow - minRow + 1) || subMatrix->numberOfColumns() != (maxColumn - minColumn + 1)) {
+                throw invalid_argument("Size of subMatrix doesn't match specified row range.");
+            }
+            // Set the values in the matrix.
+            for (unsigned i = minRow; i <= maxRow; ++i) {
+                for (unsigned j = minColumn; j <= maxColumn; ++j) {
+                    (*_array)[i * _numberOfColumns + j] = subMatrix->at(i - minRow, j - minColumn);
+                }
+            }
+        }
+        
+
         void print(int precision = 1) const {
             for (int i = 0; i < _numberOfRows; ++i) {
                 for (int j = 0; j < _numberOfColumns; ++j) {
-                    std::cout << std::scientific << std::setprecision(precision) << _array[i * _numberOfColumns + j] << " ";
+                    std::cout << std::scientific << std::setprecision(precision) << _array->at(i * _numberOfColumns + j) << " ";
                 }
                 std::cout << std::endl;
             }
@@ -583,7 +812,8 @@ namespace LinearAlgebra {
 
     private:
         // The 1D array that stores the matrix. The elements are stored in row-major order.
-        unique_ptr<vector<T>> _array;
+        //shared_ptr<vector<T>> _array;
+        vector<T>* _array;
         //Number of Rows. Array size : Height
         unsigned _numberOfRows;
         //Number of Columns.Array size : Width
@@ -600,78 +830,3 @@ namespace LinearAlgebra {
 } // Numerics
 
 #endif //UNTITLED_ARRAY_H
-
-
-/*
-
-
-
-
-        //Performs the cholesky decomposition (A=LL^T) and returns L and L^T.
-        //Applies only to symmetric positive definite matrices
-        tuple<shared_ptr<Array<double>>, shared_ptr<Array<double>>> CholeskyDecomposition(){
-            if (!_isPositiveDefinite){
-                throw invalid_argument("The matrix is not square");
-            }
-
-            auto n = _numberOfRows;
-            auto l = new Array<double>(_numberOfRows, _numberOfColumns);
-            auto lT = new Array<double>(_numberOfRows, _numberOfColumns);
-            for (int i = 0; i < n; i++) {
-                double sum = 0.0;
-                for (int k = 0; k < i; k++) {
-                    sum += l->at(i, k) * l->at(i, k);
-                }
-                l->at(i, i) = sqrt(_array[i * n + i] - sum);
-
-                for (int j = i + 1; j < n; j++) {
-                    sum = 0.0;
-                    for (int k = 0; k < i; k++) {
-                        sum += l->at(j, k) * l->at(i, k);
-                    }
-                    l->at(j, i) = (_array[j * n + i] - sum) / l->at(i, i);
-                }
-            }
-            //Compute LT
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    lT->at(i, j) = l->at(j, i);
-                }
-            }
-            //Return the Cholesky Decomposition of the matrix (A=LL^T)
-            auto LLT = tuple<shared_ptr<Array<double>>, shared_ptr<Array<double>>>(l, lT);
-            return LLT;
-        }
-
-        void CholeskyDecompositionOnMatrix(){
-            if (!_isPositiveDefinite){
-                throw std::invalid_argument("The matrix is not square");
-            }
-            auto n = _numberOfRows;
-
-            // March through rows of A and L
-            for (int i = 0; i < n; ++i) {
-                // Compute diagonal element
-                auto sum = 0.0;
-                for (int k = 0; k < i; ++k) {
-                    sum += _array[i * n + k] * _array[i * n + k];
-                }
-                _array[i * n + i] = sqrt(_array[i * n + i] - sum);
-
-                // Compute sub-diagonal elements
-                for (int j = i + 1; j < n ; ++j) {
-                    sum = 0.0;
-                    for (int k = 0; k < i; ++k) {
-                        sum += _array[j * n + k] * _array[i * n + k];
-                    }
-                    _array[j * n + i] = (_array[j * n + i] - sum) / _array[i * n + i];
-                }
-            }
-
-            // Store L and LT in the original object
-            for (int i = 0; i < n; ++i) {
-                for (int j = 0; j <= i; ++j) {
-                    _array[i * n + j] = _array[j * n + i];
-                }
-            }
-        }*/

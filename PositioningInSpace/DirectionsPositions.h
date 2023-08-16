@@ -6,9 +6,7 @@
 #include <list>
 #include <vector>
 #include <set>
-#include "../LinearAlgebra/Operations/VectorOperations.h"
 using namespace std;
-using namespace LinearAlgebra;
 namespace PositioningInSpace {
 
     /// Directions of the simulation space.  Direction One can be x, ξ, r,

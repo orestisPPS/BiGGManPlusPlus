@@ -42,7 +42,7 @@ CMAKE_COLOR_DIAGNOSTICS:BOOL=ON
 CMAKE_CUDA_ARCHITECTURES:STRING=52
 
 //CUDA compiler
-CMAKE_CUDA_COMPILER:FILEPATH=/usr/bin/nvcc
+CMAKE_CUDA_COMPILER:STRING=/usr/bin/nvcc
 
 //Flags used by the CUDA compiler during all build types.
 CMAKE_CUDA_FLAGS:STRING=
@@ -60,7 +60,7 @@ CMAKE_CUDA_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 CMAKE_CUDA_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
 //CXX compiler
-CMAKE_CXX_COMPILER:FILEPATH=/usr/bin/c++
+CMAKE_CXX_COMPILER:STRING=/usr/bin/c++
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler

@@ -84,7 +84,6 @@ add_executable(untitled main.cpp
         Discretization/Mesh/Metrics/Metrics.h
         Discretization/Mesh/Metrics/Metrics.cpp
         LinearAlgebra/Operations/VectorOperations.h
-        LinearAlgebra/Operations/VectorOperations.cpp
         LinearAlgebra/Solvers/Solver.h LinearAlgebra/Solvers/Solver.cpp 
         LinearAlgebra/Norms/VectorNorm.h LinearAlgebra/Norms/VectorNorm.cpp
         LinearAlgebra/Solvers/Iterative/IterativeSolver.h 
@@ -100,8 +99,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.h
         LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.cpp
         LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp
-        LinearAlgebra/Operations/NumberOperations.h
-        LinearAlgebra/Operations/NumberOperations.cpp 
         LinearAlgebra/FiniteDifferences/FDWeightCalculator.h 
         PartialDifferentialEquations/SpaceFieldProperties.h 
         StructuredMeshGeneration/DomainBoundaryFactory.h
@@ -124,7 +121,32 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cuh
         LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu
         LinearAlgebra/Norms/VectorNormCuda.cuh
-        LinearAlgebra/Norms/VectorNormCuda.cu LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu)
+        LinearAlgebra/Norms/VectorNormCuda.cu LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu LinearAlgebraCUDA/NumericalOperationsCUDA.cuh LinearAlgebraCUDA/NumericalOperationsCUDA.cu LinearAlgebraCUDA/MemoryManagementCUDA.cuh LinearAlgebraCUDA/MemoryManagementCUDA.cu Tests/OperationsCUDA.h Tests/OperationsCUDA.cpp LinearAlgebra/Array/NumericalArray.h LinearAlgebra/Array/NumericalArray.cpp LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp
+        LinearAlgebra/Operations/MultiThreadVectorOperations.h
+        Tests/VectorOperationsTest.h
+        Tests/VectorOperationsTest.cpp
+        Tests/SteadyStateDirichlet3D.h
+        Tests/SteadyStateDirichlet3D.cpp
+        Tests/Mesh3dTest.h
+        Tests/Mesh3dTest.cpp
+        LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.h
+        LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp
+        Tests/LanczosEigenDecompositionTest.h
+        Tests/LanczosEigenDecompositionTest.cpp
+        LinearAlgebra/EigenDecomposition/PowerMethod.h
+        LinearAlgebra/EigenDecomposition/PowerMethod.cpp
+        LinearAlgebra/EigenDecomposition/QR/DecompositionQR.h
+        LinearAlgebra/EigenDecomposition/QR/IterationQR.h
+        LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp
+        LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.h
+        LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp
+        LinearAlgebra/ParallelizationMethods.h
+        LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp
+        Tests/QRTest.h
+        Tests/QRTest.cpp
+        LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.h
+        LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp
+)
 
 
 target_link_libraries(untitled cudart)

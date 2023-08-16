@@ -34,7 +34,7 @@ namespace LinearAlgebra {
  * \param[in] numRows The number of rows in the matrix.
  * \param[in] numColumns The number of columns in the matrix.
  */
-    __global__ void kernelJobJacobi(double* matrix, double* vector, double* result, int numRows, int numColumns);
+    __global__ void kernelJobJacobi(double* matrix, double* vector, int numRows, int numColumns);
 
 /**
  * \brief CUDA kernel for implementing the Gauss-Seidel iterative method.
@@ -61,7 +61,7 @@ namespace LinearAlgebra {
  * \param[in] numColumns The number of columns in the matrix.
  * \param[in] relaxationFactor The relaxation factor used in the SOR method to improve convergence.
  */
-    __global__ void kernelJobSOR(double* matrix, double* vector, double* result, int numRows, int numColumns, int relaxationFactor);
+    __global__ void kernelJobSOR(double* matrix, double* vector, int numRows, int numColumns, int relaxationFactor);
 
     /**
      * \class StationaryIterativeCuda
@@ -158,6 +158,8 @@ namespace LinearAlgebra {
         void getDifferenceVector(double *diff);
 
         void getSolutionVector(double *xNew);
+        
+        static void printDeviceSpecs();
 
 
     private:

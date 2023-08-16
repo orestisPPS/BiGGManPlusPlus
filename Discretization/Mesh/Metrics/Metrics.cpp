@@ -3,6 +3,8 @@
 //
 
 #include "Metrics.h"
+#include "../../../LinearAlgebra/Operations/VectorOperations.h"
+
 
 namespace Discretization{
     

@@ -1,20 +1,11 @@
+vector operation ->user interface calling the following
+1)single thread vector operations
+2)multi thread vector operations
+3)cuda vector operations
 
+matrix operation ->user interface calling the following
+1)single thread vector operations
+2)multi thread vector operations
+3)cuda vector operations
 
-1)Create Finite Difference implementation with input error order (up to 4?)
-
-2)Calculate metrix
-
-3)Search for gnuplot addon
-
-4)Check if all destructors are implemented correctly up to this point (steady state fd analysis test)
-    (nodes,dofs ->with their ids, mathematical objects etc)
-    
-
-
-------------------------ROAD TO LAPLACE EQUATION------------------------
-1)Fix bug in neighbour finder.
-2)Check if the produced matrix for 1-2-1 fd scheme is correct (check with c#) 
-3)Create rhs vector
-4)Implement Dirichlet BCs (leave Neumann for later)
-5)Implement solver (LU decomposition - Jacobi)
-
+matrix operations :  add, sub, mul, transpose, deepCopy;

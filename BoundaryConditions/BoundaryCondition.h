@@ -6,6 +6,7 @@
 #define UNTITLED_BOUNDARYCONDITION_H
 
 #include <vector>
+#include <memory>
 #include <map>
 #include <functional>
 #include "../PositioningInSpace/DirectionsPositions.h"
@@ -29,7 +30,9 @@ namespace BoundaryConditions {
                                    function<double (shared_ptr<vector<double>>)>>> bcForDof);
         
         //Only for double bc
-        explicit BoundaryCondition(BoundaryConditionType bcType, map<DOFType, double>* bcForDof);
+        explicit BoundaryCondition(BoundaryConditionType bcType, shared_ptr<map<DOFType, double>> bcValueForDof);
+        
+        ~BoundaryCondition();
         
         //Returns the double value of the boundary condition for the given degree of freedom
         //at the given boundary node coordinates vector pointer.

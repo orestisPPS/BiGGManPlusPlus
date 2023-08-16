@@ -10,7 +10,6 @@
 #include <tuple>
 #include <stdexcept>
 #include "FDSchemeType.h"
-#include "../Operations/VectorOperations.h"
 
 using namespace std;
 

@@ -12,8 +12,13 @@ namespace BoundaryConditions {
             _bcType(bcType), _bcFunctionForDof(std::move(bcForDof)), _bcValueForDof(nullptr) {
     }
     
-    BoundaryCondition::BoundaryCondition(BoundaryConditionType bcType, map<DOFType, double>* bcValueForDof) :
-            _bcType(bcType), _bcValueForDof(bcValueForDof), _bcFunctionForDof(nullptr) {
+    BoundaryCondition::BoundaryCondition(BoundaryConditionType bcType, shared_ptr<map<DOFType, double>> bcValueForDof) :
+            _bcType(bcType), _bcValueForDof(std::move(bcValueForDof)), _bcFunctionForDof(nullptr) {
+    }
+    
+    BoundaryCondition::~BoundaryCondition() {
+        _bcFunctionForDof.reset();
+        _bcValueForDof.reset();
     }
     
     double BoundaryCondition::getBoundaryConditionValueAtCoordinates(DOFType type, const shared_ptr<vector<double>> &coordinates) {

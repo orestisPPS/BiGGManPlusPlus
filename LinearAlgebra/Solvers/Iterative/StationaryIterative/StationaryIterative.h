@@ -12,35 +12,29 @@
 
 namespace LinearAlgebra {
     
-    enum ParallelizationMethod{
-        //Multi-thread solution
-        vTechKickInYoo,
-        //INSSSSSSSSSSSSANE GPU GAINS
-        turboVTechKickInYoo,
-        //:( Single thread 
-        Wank
-    };
+
     class StationaryIterative : public IterativeSolver {
 
     public:
-        StationaryIterative(ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance = 1E-9, unsigned maxIterations = 1E4, bool throwExceptionOnMaxFailure = true);
+        explicit StationaryIterative(VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4,
+                                     bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = Wank);
+
+        void _initializeVectors() override;
+        
+        void _iterativeSolution() override;
+        
+        void _singleThreadSolution() override;
+        
+        void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows) override;
+        
+        void _cudaSolution() override;
+        
+        
         
     protected:
-        void _iterativeSolution() override;
 
-        void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows);
-        
-
-        virtual void _singleThreadSolution();
-        
-        //Thread job. Parallel for each row. Changes for each solver.
-        virtual void _threadJob(unsigned start, unsigned end);
-
-        ParallelizationMethod _parallelization;
-        
+    private:
         unique_ptr<StationaryIterativeCuda> _stationaryIterativeCuda;
-        
-        string _solverName;
         
     };
 

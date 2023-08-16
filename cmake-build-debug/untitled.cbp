@@ -241,6 +241,48 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/NumericalArray.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/NumericalArray.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/PowerMethod.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/PowerMethod.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/DecompositionQR.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/QR/IterationQR.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp">
 			<Option target="untitled"/>
 		</Unit>
@@ -289,10 +331,7 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Norms/VectorNormCuda.cuh">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/NumberOperations.cpp">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/NumberOperations.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/MultiThreadVectorOperations.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/TransformationTensors.h">
@@ -304,10 +343,10 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/Transformations.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/VectorOperations.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/VectorOperations.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/VectorOperations.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ParallelizationMethods.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Direct/Cholesky.cpp">
@@ -326,6 +365,12 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Direct/SolverLUP.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp">
@@ -374,6 +419,18 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Solver.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebraCUDA/MemoryManagementCUDA.cu">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebraCUDA/MemoryManagementCUDA.cuh">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebraCUDA/NumericalOperationsCUDA.cu">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebraCUDA/NumericalOperationsCUDA.cuh">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalProblem/MathematicalProblem.cpp">
@@ -448,10 +505,46 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/StructuredMeshGeneration/NodeFactory.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/LanczosEigenDecompositionTest.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/LanczosEigenDecompositionTest.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/Mesh3dTest.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/Mesh3dTest.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/OperationsCUDA.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/OperationsCUDA.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/QRTest.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/QRTest.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyState3DNeumann.cpp">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyState3DNeumann.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyStateDirichlet3D.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyStateDirichlet3D.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/VectorOperationsTest.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/VectorOperationsTest.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Utility/Calculators.h">

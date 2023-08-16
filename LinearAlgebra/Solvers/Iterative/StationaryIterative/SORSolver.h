@@ -7,21 +7,24 @@
 
 #include "StationaryIterative.h"
 
-class SORSolver : public StationaryIterative {
-    
-public:
-    SORSolver(double relaxationParameter, ParallelizationMethod parallelizationMethod, VectorNormType normType, double tolerance = 1E-9, unsigned maxIterations = 1E4, bool throwExceptionOnMaxFailure = true);
+namespace LinearAlgebra{
+    class SORSolver : public StationaryIterative {
 
-protected:
-    
-    void _threadJob(unsigned start, unsigned end) override;
-    
-    //TODO create a function that allows to change the relaxation parameter mid calculation
-    
-    //Relaxation parameter
-    double _relaxationParameter;
+    public:
+        SORSolver(double relaxationParameter, VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4,
+                  bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = Wank);
 
-};
+    protected:
+        void _singleThreadSolution() override;
+
+        void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows) override;
+    
+    private:
+        void _threadJobSOR(unsigned start, unsigned end);
+
+        double _relaxationParameter;
+    };
+}
 
 
 #endif //UNTITLED_SORSOLVER_H

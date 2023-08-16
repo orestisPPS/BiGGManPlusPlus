@@ -729,6 +729,174 @@ LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp.s
 .PHONY : LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp.s
 
+LinearAlgebra/Array/NumericalArray.o: LinearAlgebra/Array/NumericalArray.cpp.o
+.PHONY : LinearAlgebra/Array/NumericalArray.o
+
+# target to build an object file
+LinearAlgebra/Array/NumericalArray.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Array/NumericalArray.cpp.o
+.PHONY : LinearAlgebra/Array/NumericalArray.cpp.o
+
+LinearAlgebra/Array/NumericalArray.i: LinearAlgebra/Array/NumericalArray.cpp.i
+.PHONY : LinearAlgebra/Array/NumericalArray.i
+
+# target to preprocess a source file
+LinearAlgebra/Array/NumericalArray.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Array/NumericalArray.cpp.i
+.PHONY : LinearAlgebra/Array/NumericalArray.cpp.i
+
+LinearAlgebra/Array/NumericalArray.s: LinearAlgebra/Array/NumericalArray.cpp.s
+.PHONY : LinearAlgebra/Array/NumericalArray.s
+
+# target to generate assembly for a file
+LinearAlgebra/Array/NumericalArray.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Array/NumericalArray.cpp.s
+.PHONY : LinearAlgebra/Array/NumericalArray.cpp.s
+
+LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.o: LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.o
+
+# target to build an object file
+LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.o
+
+LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.i: LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.i
+
+# target to preprocess a source file
+LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.i
+
+LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.s: LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.s
+
+# target to generate assembly for a file
+LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.s
+
+LinearAlgebra/EigenDecomposition/PowerMethod.o: LinearAlgebra/EigenDecomposition/PowerMethod.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/PowerMethod.o
+
+# target to build an object file
+LinearAlgebra/EigenDecomposition/PowerMethod.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/PowerMethod.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/PowerMethod.cpp.o
+
+LinearAlgebra/EigenDecomposition/PowerMethod.i: LinearAlgebra/EigenDecomposition/PowerMethod.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/PowerMethod.i
+
+# target to preprocess a source file
+LinearAlgebra/EigenDecomposition/PowerMethod.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/PowerMethod.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/PowerMethod.cpp.i
+
+LinearAlgebra/EigenDecomposition/PowerMethod.s: LinearAlgebra/EigenDecomposition/PowerMethod.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/PowerMethod.s
+
+# target to generate assembly for a file
+LinearAlgebra/EigenDecomposition/PowerMethod.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/PowerMethod.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/PowerMethod.cpp.s
+
+LinearAlgebra/EigenDecomposition/QR/DecompositionQR.o: LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/DecompositionQR.o
+
+# target to build an object file
+LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.o
+
+LinearAlgebra/EigenDecomposition/QR/DecompositionQR.i: LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/DecompositionQR.i
+
+# target to preprocess a source file
+LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.i
+
+LinearAlgebra/EigenDecomposition/QR/DecompositionQR.s: LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/DecompositionQR.s
+
+# target to generate assembly for a file
+LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/DecompositionQR.cpp.s
+
+LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.o: LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.o
+
+# target to build an object file
+LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.o
+
+LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.i: LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.i
+
+# target to preprocess a source file
+LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.i
+
+LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.s: LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.s
+
+# target to generate assembly for a file
+LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.cpp.s
+
+LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.o: LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.o
+
+# target to build an object file
+LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.o
+
+LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.i: LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.i
+
+# target to preprocess a source file
+LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.i
+
+LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.s: LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.s
+
+# target to generate assembly for a file
+LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp.s
+
+LinearAlgebra/EigenDecomposition/QR/IterationQR.o: LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/IterationQR.o
+
+# target to build an object file
+LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp.o
+.PHONY : LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp.o
+
+LinearAlgebra/EigenDecomposition/QR/IterationQR.i: LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/IterationQR.i
+
+# target to preprocess a source file
+LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp.i
+.PHONY : LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp.i
+
+LinearAlgebra/EigenDecomposition/QR/IterationQR.s: LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/IterationQR.s
+
+# target to generate assembly for a file
+LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp.s
+.PHONY : LinearAlgebra/EigenDecomposition/QR/IterationQR.cpp.s
+
 LinearAlgebra/FiniteDifferences/FDSchemeSpecs.o: LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp.o
 .PHONY : LinearAlgebra/FiniteDifferences/FDSchemeSpecs.o
 
@@ -897,30 +1065,6 @@ LinearAlgebra/Norms/VectorNormCuda.cu.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Norms/VectorNormCuda.cu.s
 .PHONY : LinearAlgebra/Norms/VectorNormCuda.cu.s
 
-LinearAlgebra/Operations/NumberOperations.o: LinearAlgebra/Operations/NumberOperations.cpp.o
-.PHONY : LinearAlgebra/Operations/NumberOperations.o
-
-# target to build an object file
-LinearAlgebra/Operations/NumberOperations.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/NumberOperations.cpp.o
-.PHONY : LinearAlgebra/Operations/NumberOperations.cpp.o
-
-LinearAlgebra/Operations/NumberOperations.i: LinearAlgebra/Operations/NumberOperations.cpp.i
-.PHONY : LinearAlgebra/Operations/NumberOperations.i
-
-# target to preprocess a source file
-LinearAlgebra/Operations/NumberOperations.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/NumberOperations.cpp.i
-.PHONY : LinearAlgebra/Operations/NumberOperations.cpp.i
-
-LinearAlgebra/Operations/NumberOperations.s: LinearAlgebra/Operations/NumberOperations.cpp.s
-.PHONY : LinearAlgebra/Operations/NumberOperations.s
-
-# target to generate assembly for a file
-LinearAlgebra/Operations/NumberOperations.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/NumberOperations.cpp.s
-.PHONY : LinearAlgebra/Operations/NumberOperations.cpp.s
-
 LinearAlgebra/Operations/Transformations.o: LinearAlgebra/Operations/Transformations.cpp.o
 .PHONY : LinearAlgebra/Operations/Transformations.o
 
@@ -944,30 +1088,6 @@ LinearAlgebra/Operations/Transformations.s: LinearAlgebra/Operations/Transformat
 LinearAlgebra/Operations/Transformations.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/Transformations.cpp.s
 .PHONY : LinearAlgebra/Operations/Transformations.cpp.s
-
-LinearAlgebra/Operations/VectorOperations.o: LinearAlgebra/Operations/VectorOperations.cpp.o
-.PHONY : LinearAlgebra/Operations/VectorOperations.o
-
-# target to build an object file
-LinearAlgebra/Operations/VectorOperations.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/VectorOperations.cpp.o
-.PHONY : LinearAlgebra/Operations/VectorOperations.cpp.o
-
-LinearAlgebra/Operations/VectorOperations.i: LinearAlgebra/Operations/VectorOperations.cpp.i
-.PHONY : LinearAlgebra/Operations/VectorOperations.i
-
-# target to preprocess a source file
-LinearAlgebra/Operations/VectorOperations.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/VectorOperations.cpp.i
-.PHONY : LinearAlgebra/Operations/VectorOperations.cpp.i
-
-LinearAlgebra/Operations/VectorOperations.s: LinearAlgebra/Operations/VectorOperations.cpp.s
-.PHONY : LinearAlgebra/Operations/VectorOperations.s
-
-# target to generate assembly for a file
-LinearAlgebra/Operations/VectorOperations.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Operations/VectorOperations.cpp.s
-.PHONY : LinearAlgebra/Operations/VectorOperations.cpp.s
 
 LinearAlgebra/Solvers/Direct/Cholesky.o: LinearAlgebra/Solvers/Direct/Cholesky.cpp.o
 .PHONY : LinearAlgebra/Solvers/Direct/Cholesky.o
@@ -1040,6 +1160,30 @@ LinearAlgebra/Solvers/Direct/SolverLUP.s: LinearAlgebra/Solvers/Direct/SolverLUP
 LinearAlgebra/Solvers/Direct/SolverLUP.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Direct/SolverLUP.cpp.s
 .PHONY : LinearAlgebra/Solvers/Direct/SolverLUP.cpp.s
+
+LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.o: LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.o
+.PHONY : LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.o
+
+# target to build an object file
+LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.o
+.PHONY : LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.o
+
+LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.i: LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.i
+.PHONY : LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.i
+
+# target to preprocess a source file
+LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.i
+.PHONY : LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.i
+
+LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.s: LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.s
+.PHONY : LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.s
+
+# target to generate assembly for a file
+LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.s
+.PHONY : LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp.s
 
 LinearAlgebra/Solvers/Iterative/IterativeSolver.o: LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp.o
 .PHONY : LinearAlgebra/Solvers/Iterative/IterativeSolver.o
@@ -1232,6 +1376,54 @@ LinearAlgebra/Solvers/Solver.s: LinearAlgebra/Solvers/Solver.cpp.s
 LinearAlgebra/Solvers/Solver.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Solver.cpp.s
 .PHONY : LinearAlgebra/Solvers/Solver.cpp.s
+
+LinearAlgebraCUDA/MemoryManagementCUDA.o: LinearAlgebraCUDA/MemoryManagementCUDA.cu.o
+.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.o
+
+# target to build an object file
+LinearAlgebraCUDA/MemoryManagementCUDA.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/MemoryManagementCUDA.cu.o
+.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.cu.o
+
+LinearAlgebraCUDA/MemoryManagementCUDA.i: LinearAlgebraCUDA/MemoryManagementCUDA.cu.i
+.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.i
+
+# target to preprocess a source file
+LinearAlgebraCUDA/MemoryManagementCUDA.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/MemoryManagementCUDA.cu.i
+.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.cu.i
+
+LinearAlgebraCUDA/MemoryManagementCUDA.s: LinearAlgebraCUDA/MemoryManagementCUDA.cu.s
+.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.s
+
+# target to generate assembly for a file
+LinearAlgebraCUDA/MemoryManagementCUDA.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/MemoryManagementCUDA.cu.s
+.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.cu.s
+
+LinearAlgebraCUDA/NumericalOperationsCUDA.o: LinearAlgebraCUDA/NumericalOperationsCUDA.cu.o
+.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.o
+
+# target to build an object file
+LinearAlgebraCUDA/NumericalOperationsCUDA.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/NumericalOperationsCUDA.cu.o
+.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.cu.o
+
+LinearAlgebraCUDA/NumericalOperationsCUDA.i: LinearAlgebraCUDA/NumericalOperationsCUDA.cu.i
+.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.i
+
+# target to preprocess a source file
+LinearAlgebraCUDA/NumericalOperationsCUDA.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/NumericalOperationsCUDA.cu.i
+.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.cu.i
+
+LinearAlgebraCUDA/NumericalOperationsCUDA.s: LinearAlgebraCUDA/NumericalOperationsCUDA.cu.s
+.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.s
+
+# target to generate assembly for a file
+LinearAlgebraCUDA/NumericalOperationsCUDA.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/NumericalOperationsCUDA.cu.s
+.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.cu.s
 
 MathematicalProblem/MathematicalProblem.o: MathematicalProblem/MathematicalProblem.cpp.o
 .PHONY : MathematicalProblem/MathematicalProblem.o
@@ -1497,6 +1689,102 @@ StructuredMeshGeneration/NodeFactory.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/StructuredMeshGeneration/NodeFactory.cpp.s
 .PHONY : StructuredMeshGeneration/NodeFactory.cpp.s
 
+Tests/LanczosEigenDecompositionTest.o: Tests/LanczosEigenDecompositionTest.cpp.o
+.PHONY : Tests/LanczosEigenDecompositionTest.o
+
+# target to build an object file
+Tests/LanczosEigenDecompositionTest.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/LanczosEigenDecompositionTest.cpp.o
+.PHONY : Tests/LanczosEigenDecompositionTest.cpp.o
+
+Tests/LanczosEigenDecompositionTest.i: Tests/LanczosEigenDecompositionTest.cpp.i
+.PHONY : Tests/LanczosEigenDecompositionTest.i
+
+# target to preprocess a source file
+Tests/LanczosEigenDecompositionTest.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/LanczosEigenDecompositionTest.cpp.i
+.PHONY : Tests/LanczosEigenDecompositionTest.cpp.i
+
+Tests/LanczosEigenDecompositionTest.s: Tests/LanczosEigenDecompositionTest.cpp.s
+.PHONY : Tests/LanczosEigenDecompositionTest.s
+
+# target to generate assembly for a file
+Tests/LanczosEigenDecompositionTest.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/LanczosEigenDecompositionTest.cpp.s
+.PHONY : Tests/LanczosEigenDecompositionTest.cpp.s
+
+Tests/Mesh3dTest.o: Tests/Mesh3dTest.cpp.o
+.PHONY : Tests/Mesh3dTest.o
+
+# target to build an object file
+Tests/Mesh3dTest.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/Mesh3dTest.cpp.o
+.PHONY : Tests/Mesh3dTest.cpp.o
+
+Tests/Mesh3dTest.i: Tests/Mesh3dTest.cpp.i
+.PHONY : Tests/Mesh3dTest.i
+
+# target to preprocess a source file
+Tests/Mesh3dTest.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/Mesh3dTest.cpp.i
+.PHONY : Tests/Mesh3dTest.cpp.i
+
+Tests/Mesh3dTest.s: Tests/Mesh3dTest.cpp.s
+.PHONY : Tests/Mesh3dTest.s
+
+# target to generate assembly for a file
+Tests/Mesh3dTest.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/Mesh3dTest.cpp.s
+.PHONY : Tests/Mesh3dTest.cpp.s
+
+Tests/OperationsCUDA.o: Tests/OperationsCUDA.cpp.o
+.PHONY : Tests/OperationsCUDA.o
+
+# target to build an object file
+Tests/OperationsCUDA.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/OperationsCUDA.cpp.o
+.PHONY : Tests/OperationsCUDA.cpp.o
+
+Tests/OperationsCUDA.i: Tests/OperationsCUDA.cpp.i
+.PHONY : Tests/OperationsCUDA.i
+
+# target to preprocess a source file
+Tests/OperationsCUDA.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/OperationsCUDA.cpp.i
+.PHONY : Tests/OperationsCUDA.cpp.i
+
+Tests/OperationsCUDA.s: Tests/OperationsCUDA.cpp.s
+.PHONY : Tests/OperationsCUDA.s
+
+# target to generate assembly for a file
+Tests/OperationsCUDA.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/OperationsCUDA.cpp.s
+.PHONY : Tests/OperationsCUDA.cpp.s
+
+Tests/QRTest.o: Tests/QRTest.cpp.o
+.PHONY : Tests/QRTest.o
+
+# target to build an object file
+Tests/QRTest.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/QRTest.cpp.o
+.PHONY : Tests/QRTest.cpp.o
+
+Tests/QRTest.i: Tests/QRTest.cpp.i
+.PHONY : Tests/QRTest.i
+
+# target to preprocess a source file
+Tests/QRTest.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/QRTest.cpp.i
+.PHONY : Tests/QRTest.cpp.i
+
+Tests/QRTest.s: Tests/QRTest.cpp.s
+.PHONY : Tests/QRTest.s
+
+# target to generate assembly for a file
+Tests/QRTest.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/QRTest.cpp.s
+.PHONY : Tests/QRTest.cpp.s
+
 Tests/SteadyState3DNeumann.o: Tests/SteadyState3DNeumann.cpp.o
 .PHONY : Tests/SteadyState3DNeumann.o
 
@@ -1520,6 +1808,54 @@ Tests/SteadyState3DNeumann.s: Tests/SteadyState3DNeumann.cpp.s
 Tests/SteadyState3DNeumann.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyState3DNeumann.cpp.s
 .PHONY : Tests/SteadyState3DNeumann.cpp.s
+
+Tests/SteadyStateDirichlet3D.o: Tests/SteadyStateDirichlet3D.cpp.o
+.PHONY : Tests/SteadyStateDirichlet3D.o
+
+# target to build an object file
+Tests/SteadyStateDirichlet3D.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyStateDirichlet3D.cpp.o
+.PHONY : Tests/SteadyStateDirichlet3D.cpp.o
+
+Tests/SteadyStateDirichlet3D.i: Tests/SteadyStateDirichlet3D.cpp.i
+.PHONY : Tests/SteadyStateDirichlet3D.i
+
+# target to preprocess a source file
+Tests/SteadyStateDirichlet3D.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyStateDirichlet3D.cpp.i
+.PHONY : Tests/SteadyStateDirichlet3D.cpp.i
+
+Tests/SteadyStateDirichlet3D.s: Tests/SteadyStateDirichlet3D.cpp.s
+.PHONY : Tests/SteadyStateDirichlet3D.s
+
+# target to generate assembly for a file
+Tests/SteadyStateDirichlet3D.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyStateDirichlet3D.cpp.s
+.PHONY : Tests/SteadyStateDirichlet3D.cpp.s
+
+Tests/VectorOperationsTest.o: Tests/VectorOperationsTest.cpp.o
+.PHONY : Tests/VectorOperationsTest.o
+
+# target to build an object file
+Tests/VectorOperationsTest.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/VectorOperationsTest.cpp.o
+.PHONY : Tests/VectorOperationsTest.cpp.o
+
+Tests/VectorOperationsTest.i: Tests/VectorOperationsTest.cpp.i
+.PHONY : Tests/VectorOperationsTest.i
+
+# target to preprocess a source file
+Tests/VectorOperationsTest.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/VectorOperationsTest.cpp.i
+.PHONY : Tests/VectorOperationsTest.cpp.i
+
+Tests/VectorOperationsTest.s: Tests/VectorOperationsTest.cpp.s
+.PHONY : Tests/VectorOperationsTest.s
+
+# target to generate assembly for a file
+Tests/VectorOperationsTest.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/VectorOperationsTest.cpp.s
+.PHONY : Tests/VectorOperationsTest.cpp.s
 
 Utility/Exporters/Exporters.o: Utility/Exporters/Exporters.cpp.o
 .PHONY : Utility/Exporters/Exporters.o
@@ -1653,6 +1989,27 @@ help:
 	@echo "... LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.o"
 	@echo "... LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.i"
 	@echo "... LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.s"
+	@echo "... LinearAlgebra/Array/NumericalArray.o"
+	@echo "... LinearAlgebra/Array/NumericalArray.i"
+	@echo "... LinearAlgebra/Array/NumericalArray.s"
+	@echo "... LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.o"
+	@echo "... LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.i"
+	@echo "... LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.s"
+	@echo "... LinearAlgebra/EigenDecomposition/PowerMethod.o"
+	@echo "... LinearAlgebra/EigenDecomposition/PowerMethod.i"
+	@echo "... LinearAlgebra/EigenDecomposition/PowerMethod.s"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/DecompositionQR.o"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/DecompositionQR.i"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/DecompositionQR.s"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.o"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.i"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/GramSchmidtQR.s"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.o"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.i"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.s"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/IterationQR.o"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/IterationQR.i"
+	@echo "... LinearAlgebra/EigenDecomposition/QR/IterationQR.s"
 	@echo "... LinearAlgebra/FiniteDifferences/FDSchemeSpecs.o"
 	@echo "... LinearAlgebra/FiniteDifferences/FDSchemeSpecs.i"
 	@echo "... LinearAlgebra/FiniteDifferences/FDSchemeSpecs.s"
@@ -1674,15 +2031,9 @@ help:
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.o"
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.i"
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.s"
-	@echo "... LinearAlgebra/Operations/NumberOperations.o"
-	@echo "... LinearAlgebra/Operations/NumberOperations.i"
-	@echo "... LinearAlgebra/Operations/NumberOperations.s"
 	@echo "... LinearAlgebra/Operations/Transformations.o"
 	@echo "... LinearAlgebra/Operations/Transformations.i"
 	@echo "... LinearAlgebra/Operations/Transformations.s"
-	@echo "... LinearAlgebra/Operations/VectorOperations.o"
-	@echo "... LinearAlgebra/Operations/VectorOperations.i"
-	@echo "... LinearAlgebra/Operations/VectorOperations.s"
 	@echo "... LinearAlgebra/Solvers/Direct/Cholesky.o"
 	@echo "... LinearAlgebra/Solvers/Direct/Cholesky.i"
 	@echo "... LinearAlgebra/Solvers/Direct/Cholesky.s"
@@ -1692,6 +2043,9 @@ help:
 	@echo "... LinearAlgebra/Solvers/Direct/SolverLUP.o"
 	@echo "... LinearAlgebra/Solvers/Direct/SolverLUP.i"
 	@echo "... LinearAlgebra/Solvers/Direct/SolverLUP.s"
+	@echo "... LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.o"
+	@echo "... LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.i"
+	@echo "... LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.s"
 	@echo "... LinearAlgebra/Solvers/Iterative/IterativeSolver.o"
 	@echo "... LinearAlgebra/Solvers/Iterative/IterativeSolver.i"
 	@echo "... LinearAlgebra/Solvers/Iterative/IterativeSolver.s"
@@ -1716,6 +2070,12 @@ help:
 	@echo "... LinearAlgebra/Solvers/Solver.o"
 	@echo "... LinearAlgebra/Solvers/Solver.i"
 	@echo "... LinearAlgebra/Solvers/Solver.s"
+	@echo "... LinearAlgebraCUDA/MemoryManagementCUDA.o"
+	@echo "... LinearAlgebraCUDA/MemoryManagementCUDA.i"
+	@echo "... LinearAlgebraCUDA/MemoryManagementCUDA.s"
+	@echo "... LinearAlgebraCUDA/NumericalOperationsCUDA.o"
+	@echo "... LinearAlgebraCUDA/NumericalOperationsCUDA.i"
+	@echo "... LinearAlgebraCUDA/NumericalOperationsCUDA.s"
 	@echo "... MathematicalProblem/MathematicalProblem.o"
 	@echo "... MathematicalProblem/MathematicalProblem.i"
 	@echo "... MathematicalProblem/MathematicalProblem.s"
@@ -1749,9 +2109,27 @@ help:
 	@echo "... StructuredMeshGeneration/NodeFactory.o"
 	@echo "... StructuredMeshGeneration/NodeFactory.i"
 	@echo "... StructuredMeshGeneration/NodeFactory.s"
+	@echo "... Tests/LanczosEigenDecompositionTest.o"
+	@echo "... Tests/LanczosEigenDecompositionTest.i"
+	@echo "... Tests/LanczosEigenDecompositionTest.s"
+	@echo "... Tests/Mesh3dTest.o"
+	@echo "... Tests/Mesh3dTest.i"
+	@echo "... Tests/Mesh3dTest.s"
+	@echo "... Tests/OperationsCUDA.o"
+	@echo "... Tests/OperationsCUDA.i"
+	@echo "... Tests/OperationsCUDA.s"
+	@echo "... Tests/QRTest.o"
+	@echo "... Tests/QRTest.i"
+	@echo "... Tests/QRTest.s"
 	@echo "... Tests/SteadyState3DNeumann.o"
 	@echo "... Tests/SteadyState3DNeumann.i"
 	@echo "... Tests/SteadyState3DNeumann.s"
+	@echo "... Tests/SteadyStateDirichlet3D.o"
+	@echo "... Tests/SteadyStateDirichlet3D.i"
+	@echo "... Tests/SteadyStateDirichlet3D.s"
+	@echo "... Tests/VectorOperationsTest.o"
+	@echo "... Tests/VectorOperationsTest.i"
+	@echo "... Tests/VectorOperationsTest.s"
 	@echo "... Utility/Exporters/Exporters.o"
 	@echo "... Utility/Exporters/Exporters.i"
 	@echo "... Utility/Exporters/Exporters.s"

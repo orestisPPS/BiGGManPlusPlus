@@ -21,10 +21,6 @@ namespace Utility {
         
     public:
 
-        // Creates a .m file that can be takes as input the linear system matrix and vector and solves the system.
-        // Then the solution is plotted.
-        static void exportLinearSystemToMatlabFile(Array<double> matrix, vector<double> vector, const string& filePath,
-                                                   const string& fileName,  bool print = false);
 
         static void exportScalarFieldResultInVTK(const std::string& filePath, const std::string& fileName,
                                                  const std::string& fieldName, shared_ptr<Mesh> mesh) {
@@ -71,12 +67,12 @@ namespace Utility {
         
         //static void saveGhostNodesToParaviewFile(GhostPseudoMesh* mesh, const std::string &filePath, const std::string &fileName);
         static void
-        exportLinearSystemToMatlabFile(const shared_ptr<Array<double>> &matrix, const shared_ptr<Array<double>> &vector,
-                                       const string &filePath, const string &fileName, bool print);
+        exportLinearSystemToMatlabFile(const shared_ptr<Array<double>>& matrix, const shared_ptr<vector<double>>& vector,
+                                       const std::string& filePath, const std::string& fileName, bool print);
 
-        void exportLinearSystemToMatlabFile(const shared_ptr<Array<double>> &matrix,
-                                            const shared_ptr<vector<double>> &vector,
-                                            const string &filePath, const string &fileName, bool print);
+        static void exportMatrixToMatlabFile(const shared_ptr<Array<double>>& matrix,
+        const std::string& filePath, const std::string& fileName, bool print);
+
     };
 
 } // Utility
