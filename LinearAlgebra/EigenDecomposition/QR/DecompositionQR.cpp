@@ -13,13 +13,13 @@ namespace LinearAlgebra {
 
     void DecompositionQR::decompose() {
         switch (_parallelizationMethod) {
-            case Wank:
+            case SingleThread:
                 _singleThreadDecomposition();
                 break;
-            case vTechKickedInYo:
+            case MultiThread:
                 _multiThreadDecomposition();
                 break;
-            case turboVTechKickedInYo:
+            case CUDA:
                 _CUDADecomposition();
                 break;
         }
@@ -81,13 +81,13 @@ namespace LinearAlgebra {
 
     void DecompositionQR::getRQ(shared_ptr<Array<double>>& result) {
         switch (_parallelizationMethod) {
-            case Wank:
+            case SingleThread:
                 _getRQSingleThread(result);
                 break;
-            case vTechKickedInYo:
+            case MultiThread:
                 _getRQMultithread(result);
                 break;
-            case turboVTechKickedInYo:
+            case CUDA:
                 _getRQCuda(result);
         }
     }

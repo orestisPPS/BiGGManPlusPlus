@@ -93,7 +93,7 @@ namespace LinearAlgebra {
             _vectorsInitialized = true;
 
         } else {
-            throw runtime_error("Matrix not set");
+            throw runtime_error("NumericalMatrix not set");
         }
     }
 

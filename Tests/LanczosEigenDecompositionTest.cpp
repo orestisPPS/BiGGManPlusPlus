@@ -64,7 +64,7 @@ namespace Tests {
         //auto solver = make_shared<JacobiSolver>(VectorNormType::L2, 1E-10, 1E4, true, vTechKickInYoo);
         //auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo, VectorNormType::LInf, 1E-9);
         //auto solver = make_shared<GaussSeidelSolver>(VectorNormType::L2, 1E-9, 1E4, false, turboVTechKickInYoo);
-        auto solver = make_shared<ConjugateGradientSolver>(VectorNormType::L2, 1E-12, 1E4, true, vTechKickedInYo);
+        auto solver = make_shared<ConjugateGradientSolver>(VectorNormType::L2, 1E-12, 1E4, true, MultiThread);
         //auto solver = make_shared<SORSolver>(1.8, VectorNormType::L2, 1E-5);
         auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specsFD);
 
@@ -78,7 +78,7 @@ namespace Tests {
         //eigenDecomposition->calculateEigenvalues();
         //eigenDecomposition->calculateDominantEigenValue();
 
-        auto qr = make_shared<IterationQR>(10, 1E-4, Householder, Wank, true);
+        auto qr = make_shared<IterationQR>(10, 1E-4, Householder, SingleThread, true);
         qr->setMatrix(analysis->linearSystem->matrix);
         qr->calculateEigenvalues();
         Utility::Exporters::exportLinearSystemToMatlabFile(analysis->linearSystem->matrix, analysis->linearSystem->rhs,"/home/hal9000/code/BiGGMan++/Testing/", "linearSystemEigen2.m", false);

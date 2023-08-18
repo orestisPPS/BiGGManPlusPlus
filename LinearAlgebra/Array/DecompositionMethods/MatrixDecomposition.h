@@ -69,7 +69,7 @@ namespace LinearAlgebra {
 
     protected:
         /**
-        * Matrix to be decomposed
+        * NumericalMatrix to be decomposed
         */
         shared_ptr<Array<double>> _matrix;
         /**

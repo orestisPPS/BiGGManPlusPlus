@@ -121,7 +121,7 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cuh
         LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu
         LinearAlgebra/Norms/VectorNormCuda.cuh
-        LinearAlgebra/Norms/VectorNormCuda.cu LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu LinearAlgebraCUDA/NumericalOperationsCUDA.cuh LinearAlgebraCUDA/NumericalOperationsCUDA.cu LinearAlgebraCUDA/MemoryManagementCUDA.cuh LinearAlgebraCUDA/MemoryManagementCUDA.cu Tests/OperationsCUDA.h Tests/OperationsCUDA.cpp LinearAlgebra/Array/NumericalArray.h LinearAlgebra/Array/NumericalArray.cpp LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp
+        LinearAlgebra/Norms/VectorNormCuda.cu LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu LinearAlgebraCUDA/NumericalOperationsCUDA.cuh LinearAlgebraCUDA/NumericalOperationsCUDA.cu LinearAlgebraCUDA/MemoryManagementCUDA.cuh LinearAlgebraCUDA/MemoryManagementCUDA.cu Tests/OperationsCUDA.h Tests/OperationsCUDA.cpp LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp
         LinearAlgebra/Operations/MultiThreadVectorOperations.h
         Tests/VectorOperationsTest.h
         Tests/VectorOperationsTest.cpp
@@ -146,6 +146,11 @@ add_executable(untitled main.cpp
         Tests/QRTest.cpp
         LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.h
         LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp
+        LinearAlgebra/Array/Array2.h
+        LinearAlgebra/Array/NumericalMatrix.h
+        LinearAlgebra/Array/NumericalMatrix.cpp
+        LinearAlgebra/NumericalVector.h
+        Tests/NumericalVectorTest.h
 )
 
 

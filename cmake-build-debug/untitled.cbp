@@ -229,6 +229,9 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/Array.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/Array2.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.cpp">
 			<Option target="untitled"/>
 		</Unit>
@@ -241,10 +244,10 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/NumericalArray.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/NumericalMatrix.cpp">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/NumericalArray.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/NumericalMatrix.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp">
@@ -329,6 +332,9 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Norms/VectorNormCuda.cuh">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/NumericalVector.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/MultiThreadVectorOperations.h">
@@ -515,6 +521,9 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/Mesh3dTest.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/NumericalVectorTest.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/OperationsCUDA.cpp">

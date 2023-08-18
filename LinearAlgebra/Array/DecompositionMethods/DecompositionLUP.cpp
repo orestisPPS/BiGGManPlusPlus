@@ -44,11 +44,11 @@ namespace LinearAlgebra {
             _isSingular = maxA < _pivotTolerance;
             if (_isSingular && _throwExceptionOnSingularMatrix) {
                 // Throw an exception if the matrix is singular and the flag is set
-                throw runtime_error("WARNING: Matrix is singular. It is degenerate like yourself.");
+                throw runtime_error("WARNING: NumericalMatrix is singular. It is degenerate like yourself.");
             }
             else if (_isSingular && !_throwExceptionOnSingularMatrix) {
                 // print a warning message if the matrix is singular and the flag is not set
-                cout << "WARNING: Matrix is singular. It is degenerate like yourself." << endl;
+                cout << "WARNING: NumericalMatrix is singular. It is degenerate like yourself." << endl;
                 break;
             }
 
@@ -112,10 +112,10 @@ namespace LinearAlgebra {
             // Check if the matrix is singular
             _isSingular = maxA < _pivotTolerance;
             if (_isSingular && _throwExceptionOnSingularMatrix) {
-                throw runtime_error("WARNING: Matrix is singular. It is degenerate like yourself.");
+                throw runtime_error("WARNING: NumericalMatrix is singular. It is degenerate like yourself.");
             }
             else if (_isSingular && !_throwExceptionOnSingularMatrix) {
-                cout << "WARNING: Matrix is singular. It is degenerate like yourself." << endl;
+                cout << "WARNING: NumericalMatrix is singular. It is degenerate like yourself." << endl;
                 break;
             }
 

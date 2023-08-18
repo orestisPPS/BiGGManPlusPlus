@@ -17,7 +17,7 @@ namespace LinearAlgebra {
         * @param parallelizationMethod Enum indicating the method of parallelization to use.
         * @param storeOnMatrix Boolean indicating whether to store the results on the original matrix.
         */
-        explicit HouseHolderQR(bool returnQ, ParallelizationMethod parallelizationMethod = Wank, bool storeOnMatrix = false);
+        explicit HouseHolderQR(bool returnQ, ParallelizationMethod parallelizationMethod = SingleThread, bool storeOnMatrix = false);
 
         const shared_ptr<Array<double>> &  getQ() override;
 

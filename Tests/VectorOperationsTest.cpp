@@ -47,7 +47,7 @@ namespace Tests {
         "Correct Solution : " << 0 << ", " << 0 << ", " << 0 << std::endl;
         //{14, 32, 50}
         VectorOperations::matrixVectorMultiplication(array, vector1, result);
-        std::cout << "Matrix vector multiplication: " << result->at(0) << ", " << result->at(1) << ", " << result->at(2) <<
+        std::cout << "NumericalMatrix vector multiplication: " << result->at(0) << ", " << result->at(1) << ", " << result->at(2) <<
         "Correct Solution : " << 14 << ", " << 32 << ", " << 50 << std::endl;
         
         VectorOperations::add(vector1, vector2, result, 2);

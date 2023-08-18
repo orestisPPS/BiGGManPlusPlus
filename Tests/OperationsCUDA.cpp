@@ -23,7 +23,7 @@ namespace Tests{
         std::cout << "Dot product: " << dotProduct << std::endl;
         std::cout << "Addition: " << addition[0] << ", " << addition[1] << ", " << addition[2] << std::endl;
         std::cout << "Subtraction: " << subtraction[0] << ", " << subtraction[1] << ", " << subtraction[2] << std::endl;
-        std::cout << "Matrix vector multiplication: " << matrixVector[0] << ", " << matrixVector[1] << ", " << matrixVector[2] << std::endl;
+        std::cout << "NumericalMatrix vector multiplication: " << matrixVector[0] << ", " << matrixVector[1] << ", " << matrixVector[2] << std::endl;
         
         
     }

@@ -27,7 +27,7 @@ namespace LinearAlgebra {
         _exitNorm = 1.0;
         _difference = make_shared<vector<double>>(n);
         
-        if (_parallelization == Wank) {
+        if (_parallelization == SingleThread) {
             _printSingleThreadInitializationText();
             while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
                 _singleThreadSolution();
@@ -36,7 +36,7 @@ namespace LinearAlgebra {
                 _iteration++;
             }
         }
-        if (_parallelization == vTechKickedInYo) {
+        if (_parallelization == MultiThread) {
             auto numberOfThreads = std::thread::hardware_concurrency();
             _printMultiThreadInitializationText(numberOfThreads);
             while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
@@ -48,7 +48,7 @@ namespace LinearAlgebra {
 
         }
 
-        else if (_parallelization == turboVTechKickedInYo) {
+        else if (_parallelization == CUDA) {
             
             double *d_matrix = _linearSystem->matrix->getArrayPointer();
             double *d_rhs = _linearSystem->rhs->data();

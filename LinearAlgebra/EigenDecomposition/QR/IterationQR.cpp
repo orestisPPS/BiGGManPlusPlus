@@ -22,7 +22,7 @@ namespace LinearAlgebra {
     void IterationQR::calculateEigenvalues() {
         
         if (!_matrixSet) {
-            throw runtime_error("Matrix not set");
+            throw runtime_error("NumericalMatrix not set");
         }
         
         while (_iteration < _maxIterations) {

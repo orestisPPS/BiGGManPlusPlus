@@ -18,7 +18,7 @@ namespace LinearAlgebra {
     class IterativeSolver : public Solver {
     public:
         explicit IterativeSolver(VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4, 
-                                 bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = Wank);
+                                 bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = SingleThread);
         
         ~IterativeSolver();
 

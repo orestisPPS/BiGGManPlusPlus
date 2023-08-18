@@ -13,7 +13,7 @@ namespace LinearAlgebra {
     class IterationQR {
     public:
         explicit IterationQR(unsigned maxIterations = 20, double exitError = 1E-4, DecompositionType decompositionType = Householder,
-                             ParallelizationMethod parallelizationMethod = Wank, bool storeOnMatrix = true);
+                             ParallelizationMethod parallelizationMethod = SingleThread, bool storeOnMatrix = true);
         
         void calculateEigenvalues();
 

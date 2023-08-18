@@ -67,7 +67,7 @@ namespace LinearAlgebraCUDA {
          * 
          * \param[in] matrixA First input matrix.
          * \param[in] matrixB Second input matrix.
-         * \param[out] result Matrix to store the resulting product.
+         * \param[out] result NumericalMatrix to store the resulting product.
          * \param[in] rowsA Number of rows in matrix A.
          * \param[in] colsA Number of columns in matrix A.
          * \param[in] colsB Number of columns in matrix B.
