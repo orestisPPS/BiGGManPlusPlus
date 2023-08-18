@@ -49,7 +49,8 @@ int main() {
     
 auto subtraction = numericalVectorRawPtr->dotProduct(numericalVectorSharedPtr);
     
-    auto numericalVector2 = NumericalVector<double>(numericalVector);
+    auto numericalVector2 = NumericalVector<double>(numericalVectorSharedPtr);
+    auto numericalVector4 = NumericalVector<double>(numericalVector);
     
     auto numericalVector3 = NumericalVector<double>(10, MultiThread);
     numericalVector3 = numericalVector2;

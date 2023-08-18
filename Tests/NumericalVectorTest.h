@@ -194,9 +194,9 @@ public:
     static void testNorms() {
         logTestStart("testNorms");
         NumericalVector<double> vec({1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-        assert(std::fabs(vec.norm(L1) - 55) < 0.001);
-        assert(std::fabs(vec.norm(L2) - 19.6214) < 0.001);
-        assert(std::fabs(vec.norm(LInf) - 10) < 0.001);
+        assert(std::fabs(vec.normL1() - 55) < 0.001);
+        assert(std::fabs(vec.normL2() - 19.6214) < 0.001);
+        assert(std::fabs(vec.normLInf() - 10) < 0.001);
         logTestEnd();
     }
 
@@ -329,9 +329,9 @@ public:
     static void testNormsMultiThread() {
         logTestStart("testNormsMultiThread");
         NumericalVector<double> vec({1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, MultiThread);
-        assert(std::fabs(vec.norm(L1) - 55) < 0.001);
-        assert(std::fabs(vec.norm(L2) - 19.6214) < 0.001);
-        assert(std::fabs(vec.norm(LInf) - 10) < 0.001);
+        assert(std::fabs(vec.normL1() - 55) < 0.001);
+        assert(std::fabs(vec.normL2() - 19.6214) < 0.001);
+        assert(std::fabs(vec.normLInf() - 10) < 0.001);
         logTestEnd();
     }
 };

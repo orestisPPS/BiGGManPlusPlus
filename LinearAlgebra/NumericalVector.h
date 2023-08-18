@@ -55,7 +55,7 @@ namespace LinearAlgebra {
     class NumericalVector {
 
     public:
-
+        
         /**
         * @brief Constructs a new NumericalVector object.
         * 
@@ -65,14 +65,17 @@ namespace LinearAlgebra {
         */
         explicit NumericalVector(unsigned int size, T initialValue = 0,
                                  ParallelizationMethod parallelizationMethod = SingleThread) {
-            _values = make_shared<vector<T>>
-                    (size, initialValue);
+            _values = make_shared<vector<T>> (size, initialValue);
             _parallelizationMethod = parallelizationMethod;
         }
 
+        /**
+        * @brief Constructs a new NumericalVector object.
+        * @param values Initial values for the vector.
+        * @param parallelizationMethod Parallelization method to be used for vector operations.
+        */
         NumericalVector(std::initializer_list<T> values, ParallelizationMethod parallelizationMethod = SingleThread) {
-            _values = make_shared<vector<T>>
-                    (values);
+            _values = make_shared<vector<T>>(values);
             _parallelizationMethod = parallelizationMethod;
         }
 
@@ -96,15 +99,37 @@ namespace LinearAlgebra {
         * 
         * @param other The source object to be copied from.
         */
-        template<typename InputType>
-        explicit NumericalVector(const InputType &other) {
-            static_assert(std::is_same<InputType, NumericalVector<T>>::value
-                          || std::is_same<InputType, std::shared_ptr<NumericalVector<T>>>::value
-                          || std::is_same<InputType, std::unique_ptr<NumericalVector<T>>>::value
-                          || std::is_same<InputType, NumericalVector<T>*>::value,
-                          "NumericalVector can only be constructed from another NumericalVector, its pointers, or its smart pointers.");
+        NumericalVector(const NumericalVector<T> &other) {
             _deepCopy(other);
-            _parallelizationMethod = dereference_trait<InputType>::parallelizationMethod(other);
+            _parallelizationMethod = other._parallelizationMethod;
+        }
+        
+        
+        /**
+        * @brief Copy constructor.
+        * @param other Constant reference to the source object to be copied from.
+        */
+        explicit NumericalVector(const std::shared_ptr<NumericalVector<T>> &other) {
+            _deepCopy(other);
+            _parallelizationMethod = other->_parallelizationMethod;
+        }
+        
+        /**
+         * @brief Construct a new Numerical Vector object from a unique pointer.
+         * @param other Unique pointer to the source object to be copied from.
+         */
+        explicit NumericalVector(const std::unique_ptr<NumericalVector<T>> &other) {
+            _deepCopy(other);
+            _parallelizationMethod = other->_parallelizationMethod;
+        }
+        
+        /**
+         * @brief Construct a new Numerical Vector object from a raw pointer.
+         * @param other Pointer to the source object to be copied from.
+         */
+        explicit NumericalVector(const NumericalVector<T> *other) {
+            _deepCopy(other);
+            _parallelizationMethod = other->_parallelizationMethod;
         }
 
         /**
@@ -130,6 +155,7 @@ namespace LinearAlgebra {
         */
         template<typename InputType>
         bool operator==(const InputType &other) const {
+            _checkInputType(other);
             // Using the dereference trait to obtain the pointer to the source data
             const T *otherData = dereference_trait<InputType>::dereference(other);
             return _areElementsEqual(otherData, other.size());
@@ -362,6 +388,8 @@ namespace LinearAlgebra {
         */
         template<typename InputType>
         double distance(const InputType &inputVector) {
+            
+            _checkInputType(inputVector);
             if (size() != dereference_trait<InputType>::size(inputVector)) {
                 throw invalid_argument("Vectors must be of the same size.");
             }
@@ -395,6 +423,7 @@ namespace LinearAlgebra {
         template<typename InputType>
         auto angle(const InputType &inputVector) {
 
+            _checkInputType(inputVector);
             if (size() != dereference_trait<InputType>::size(inputVector)) {
                 throw invalid_argument("Vectors must be of the same size.");
             }
@@ -489,6 +518,8 @@ namespace LinearAlgebra {
         */
         template<typename InputType>
         double covariance(const InputType &inputVector) {
+
+            _checkInputType(inputVector);
             if (size() != dereference_trait<InputType>::size(inputVector)) {
                 throw invalid_argument("Vectors must be of the same size.");
             }
@@ -531,6 +562,8 @@ namespace LinearAlgebra {
         */
         template<typename InputType>
         double correlation(const InputType &inputVector) {
+
+            _checkInputType(inputVector);
             if (size() != dereference_trait<InputType>::size(inputVector)) {
                 throw invalid_argument("Vectors must be of the same size.");
             }
@@ -567,22 +600,8 @@ namespace LinearAlgebra {
 
             return covarianceOfVectors / (stdDevOfThis * stdDevOfInput);
         }
-
-
-        double norm(VectorNormType normType) {
-            switch (normType) {
-                case VectorNormType::L1:
-                    return _normL1();
-                case VectorNormType::L2:
-                    return _normL2();
-                case VectorNormType::LInf:
-                    return _normLInf();
-                default:
-                    throw std::runtime_error("Invalid norm type.");
-            }
-        }
-
-        double _normL1() {
+        
+        double normL1() {
             auto normL1Job = [&](unsigned start, unsigned end) -> double {
                 double sum = 0;
                 for (unsigned i = start; i < end && i < _values->size(); ++i) {
@@ -594,7 +613,7 @@ namespace LinearAlgebra {
             return _executeParallelJobWithReductionForDoubles(normL1Job);
         }
 
-        double _normL2() {
+        double normL2() {
             auto normL2Job = [&](unsigned start, unsigned end) -> double {
                 double sum = 0;
                 for (unsigned i = start; i < end && i < _values->size(); ++i) {
@@ -606,7 +625,7 @@ namespace LinearAlgebra {
             return sqrt(_executeParallelJobWithReductionForDoubles(normL2Job));
         }
 
-        double _normLInf() {
+        double normLInf() {
             auto normLInfJob = [&](unsigned start, unsigned end) -> double {
                 double maxVal = 0;
                 for (unsigned i = start; i < end && i < _values->size(); ++i) {
@@ -628,7 +647,7 @@ namespace LinearAlgebra {
             return *std::max_element(reductionResults.begin(), reductionResults.end());
         }
 
-        double _normLp(double p) {
+        double normLp(double p) {
             auto normLpJob = [&](unsigned start, unsigned end) -> double {
                 double sum = 0;
                 for (unsigned i = start; i < end && i < _values->size(); ++i) {
@@ -659,6 +678,8 @@ namespace LinearAlgebra {
         */
         template<typename InputType>
         T dotProduct(const InputType &vector) {
+            
+            _checkInputType(vector);
             if (size() != dereference_trait<InputType>::size(vector)) {
                 throw invalid_argument("Vectors must be of the same size.");
             }
@@ -694,6 +715,9 @@ namespace LinearAlgebra {
         */
         template<typename InputType1, typename InputType2>
         void add(const InputType1 &inputVector, InputType2 &result, T scaleThis = 1, T scaleInput = 1) {
+            
+            _checkInputType(inputVector);
+            _checkInputType(result);
             if (size() != dereference_trait<InputType1>::size(inputVector)) {
                 throw invalid_argument("Vectors must be of the same size.");
             }
@@ -723,6 +747,7 @@ namespace LinearAlgebra {
         */
         template<typename InputType>
         void addIntoThis(const InputType &inputVector, T scaleThis = 1, T scaleInput = 1) {
+            _checkInputType(inputVector);
             if (size() != dereference_trait<InputType>::size(inputVector)) {
                 throw invalid_argument("Vectors must be of the same size.");
             }
@@ -748,6 +773,9 @@ namespace LinearAlgebra {
         */
         template<typename InputType1, typename InputType2>
         void subtract(const InputType1 &inputVector, InputType2 &result, T scaleThis = 1, T scaleInput = 1) {
+            
+            _checkInputType(inputVector);
+            _checkInputType(result);
             if (size() != dereference_trait<InputType1>::size(inputVector)) {
                 throw invalid_argument("Vectors must be of the same size.");
             }
@@ -777,31 +805,7 @@ namespace LinearAlgebra {
         */
         template<typename InputType>
         void subtractIntoThis(const InputType &inputVector, T scaleThis = 1, T scaleInput = 1) {
-            if (size() != dereference_trait<InputType>::size(inputVector)) {
-                throw invalid_argument("Vectors must be of the same size.");
-            }
-
-            const T *otherData = dereference_trait<InputType>::dereference(inputVector);
-            auto subtractJob = [&](unsigned start, unsigned end) -> void {
-                for (unsigned i = start; i < end && i < _values->size(); ++i) {
-                    (*_values)[i] = scaleThis * (*_values)[i] - scaleInput * otherData[i];
-                }
-            };
-
-            _executeParallelJob(subtractJob);
-        }
-
-        /**
-        * \brief Performs element-wise subtraction of a scaled vector into the current vector.
-        * Given vector v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], and scalar factors a and b, the updated vector is:
-        * v = [a*v1- b*w1, a*v2 - b*w2, ..., a*vn - b*wn]. The subtraction is performed in parallel across multiple threads.
-        * 
-        * \param inputVector The input vector to subtract.
-        * \param scaleThis Scaling factor for the current vector (default is 1).
-        * \param scaleInput Scaling factor for the input vector (default is 1).
-        */
-        template<typename InputType>
-        void subtractIntoThis(const NumericalVector<T> *&inputVector, T scaleThis = 1, T scaleInput = 1) {
+            _checkInputType(inputVector);
             if (size() != dereference_trait<InputType>::size(inputVector)) {
                 throw invalid_argument("Vectors must be of the same size.");
             }
@@ -1192,6 +1196,15 @@ namespace LinearAlgebra {
         struct dereference_trait<std::shared_ptr<NumericalVector<U>>>
                 : public dereference_trait_pointer_base<std::shared_ptr, U> {
         };
+        
+        template<typename InputType>
+        void _checkInputType(const InputType &input) {
+            static_assert(std::is_same<InputType, NumericalVector<T>>::value
+                          || std::is_same<InputType, std::shared_ptr<NumericalVector<T>>>::value
+                          || std::is_same<InputType, std::unique_ptr<NumericalVector<T>>>::value
+                          || std::is_same<InputType, NumericalVector<T>*>::value,
+                          "Input must be a NumericalVector, its pointer, or its smart pointers.");
+        }
     };
     
 }
