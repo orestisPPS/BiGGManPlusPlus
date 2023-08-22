@@ -1,0 +1,428 @@
+//
+// Created by hal9000 on 8/16/23.
+//
+
+#ifndef UNTITLED_NUMERICALVECTOR_H
+#define UNTITLED_NUMERICALVECTOR_H
+
+#include <vector>
+#include <stdexcept>
+#include <memory>
+#include <thread>
+#include <type_traits>
+#include <valarray>
+#include <random>
+#include "ParallelizationMethods.h"
+using namespace LinearAlgebra;
+using namespace std;
+
+namespace LinearAlgebra {
+    enum VectorNormType {
+        // L1 (Manhattan / Taxicab) norm
+        // The sum of the absolute values of the vectors' components.
+        // For a vector x with n components, the L1 norm is denoted as ||x||1 and defined as:
+        // ||x||1 = |x₁| + |x₂| + ... + |xₙ|
+        L1,
+
+        // L2 (Euclidean) norm
+        // The square root of the sum of the squares of the vectors' components.
+        // For a vector x with n components, the L2 norm is denoted as ||x||2 and defined as:
+        // ||x||2 = √(x₁² + x₂² + ... + xₙ²)
+        L2,
+
+        // L∞ (Chebyshev) norm
+        // The maximum absolute value of the vectors' components.
+        // For a vector x with n components, the L∞ norm is denoted as ||x||∞ and defined as:
+        // ||x||∞ = max(|x₁|, |x₂|, ..., |xₙ|)
+        LInf,
+
+
+        // Lp norm
+        // The pth root of the sum of the pth powers of the vectors' components.    
+        // For a vector x with n components, the Lp norm is denoted as ||x||p and defined as:
+        // ||x||p = (|x₁|^p + |x₂|^p + ... + |xₙ|^p)^(1/p)
+        Lp,
+
+/*        //Frobenius (Euclidean for matrices) norm
+        // Defined only for Array class. 
+        // The square root of the sum of the squares of the matrices' components.
+        // For a matrix A with m rows and n columns, the Frobenius norm is denoted as ||A||F and defined as:
+        // ||A||F = √(A₁₁² + A₁₂² + ... + Aₘₙ²)
+        Frobenius*/
+    };
+    
+    template<typename T>
+    class NumericalVector {
+
+    public:
+
+        /**
+        * @brief Constructs a new NumericalVector object.
+        * 
+        * @param size Size of the numerical vector.
+        * @param initialValue Default value for vector elements.
+        * @param parallelizationMethod Parallelization method to be used for vector operations.
+        */
+        explicit NumericalVector(unsigned int size, T initialValue = 0,
+                                 ParallelizationMethod parallelizationMethod = SingleThread) {
+            _values = make_shared<vector<T>>(size, initialValue);
+            _parallelizationMethod = parallelizationMethod;
+        }
+
+        /**
+        * @brief Destructor for NumericalVector.
+        * 
+        * Cleans up and deallocates the vector.
+        */
+        ~NumericalVector() {
+            _values->clear();
+            _values = nullptr;
+        }
+
+        //=================================================================================================================//
+        //=================================================== Operators ====================================================//
+        //=================================================================================================================//
+
+        /**
+        * @brief Copy constructor.
+        * 
+        * @param other The source object to be copied from.
+        */
+        NumericalVector(const NumericalVector& other) {
+            // Using the dereference trait to obtain the pointer to the source data
+            const T* otherData = dereference_trait<T>::dereference(other);
+            _deepCopy(otherData);
+            _parallelizationMethod = other._parallelizationMethod;
+        }
+
+        /**
+        * @brief Overloaded assignment operator.
+        * 
+        * @param other The source object to be copied from.
+        * @return Reference to the current object.
+        */
+        NumericalVector& operator=(const NumericalVector& other) {
+            if (this != &other) {
+                // Using the dereference trait to obtain the pointer to the source data
+                const T* otherData = dereference_trait<T>::dereference(other);
+                _deepCopy(otherData);
+                _parallelizationMethod = other._parallelizationMethod;
+            }
+            return *this;
+        }
+
+        /**
+        * @brief Overloaded equality operator.
+        * 
+        * @param other The object to be compared with.
+        * @return true if the objects have the same data, false otherwise.
+        */
+        bool operator==(const NumericalVector& other) const {
+            // Using the dereference trait to obtain the pointer to the source data
+            const T* otherData = dereference_trait<T>::dereference(other);
+            return _areElementsEqual(otherData, other.size());
+        }
+
+        /**
+        * @brief Overloaded inequality operator.
+        * 
+        * @param other The object to be compared with.
+        * @return true if the objects do not have the same data, false otherwise.
+        */
+        bool operator!=(const NumericalVector& other) const {
+            return !(*this == other);
+        }
+        
+        /**
+        * @brief Accesses the element at the specified index.
+        * 
+        * @param index Index of the element to access.
+        * @return T& Reference to the element at the specified index.
+        */
+        T &operator[](unsigned int index) {
+            if (index >= _values->size()) {
+                throw out_of_range("Index out of range.");
+            }
+            return (*_values)[index];
+        }
+
+
+        /**
+        * @brief Accesses the element at the specified index (const version).
+        * 
+        * @param index Index of the element to access.
+        * @return const T& Constant reference to the element at the specified index.
+        */
+        const T &operator[](unsigned int index) const {
+            if (index >= _values->size()) {
+                throw out_of_range("Index out of range.");
+            }
+            return (*_values)[index];
+        }
+
+        /**
+        * @brief Accesses the element at the specified index with bounds checking.
+        * 
+        * Throws std::out_of_range exception if index is out of bounds.
+        * 
+        * @param index Index of the element to access.
+        * @return T& Reference to the element at the specified index.
+        */
+        T &at(unsigned int index) {
+            if (index >= _values->size()) {
+                throw out_of_range("Index out of range.");
+            }
+            return (*_values)[index];
+        }
+
+        /**
+        * @brief Accesses the element at the specified index with bounds checking (const version).
+        * 
+        * Throws std::out_of_range exception if index is out of bounds.
+        * 
+        * @param index Index of the element to access.
+        * @return const T& Constant reference to the element at the specified index.
+        */
+        const T &at(unsigned int index) const {
+            if (index >= _values->size()) {
+                throw out_of_range("Index out of range.");
+            }
+            return (*_values)[index];
+        }
+
+        //=================================================================================================================//
+        //=================================================== Utility ====================================================//
+        //=================================================================================================================//
+
+        /**
+        * @brief Returns the size of the vector.
+        * 
+        * @return unsigned int Size of the vector.
+        */
+        unsigned int size() const {
+            return _values->size();
+        }
+        
+        /**
+         * @brief Checks if the vector is empty.
+         * @return true if the vector is empty, false otherwise.
+         */
+        bool empty() const {
+            return _values->empty();
+        }
+        
+        /**
+        * @brief Fill the vector with the specified value.
+        * @param value The value to fill the vector with.
+        */
+        void fill(T value) {
+            auto fillJob = [&](unsigned int start, unsigned int end) {
+                for (unsigned int i = start; i < end; i++) {
+                    (*_values)[i] = value;
+                }
+            };
+            _executeInParallel(fillJob);
+        }
+
+        /**
+        * \brief Fills the vector with random values between the specified minimum and maximum.
+        * 
+        * This function uses the Mersenne Twister random number generator to generate 
+        * random values. The generator is seeded with a device-dependent random number 
+        * to ensure different sequences in different program runs.
+        * 
+        * \tparam T The data type of the vector components (e.g., double, float).
+        * 
+        * \param min The minimum value for the random numbers.
+        * \param max The maximum value for the random numbers.
+        */
+        void fillRandom(T min, T max) {
+            //Mersenne Twister generator seeded with a device-dependent random number
+            // Static to retain state across calls
+            static std::mt19937 generator(std::random_device{}());
+            std::uniform_real_distribution<T> distribution(min, max);
+
+            for (auto &component : *_values) {
+                component = distribution(generator);
+            }
+        }
+        
+        
+        /**
+         * @brief Returns a pointer to the underlying data.
+         * @return T* Pointer to the underlying data.
+         */
+        T* data() {
+            return _values->data();
+        }
+
+        /**
+        * @brief Computes the sum of the elements of the NumericalVector.
+        * 
+        * This method employs parallel processing to compute the sum and then aggregates the results.
+        * 
+        * @return T The sum of the elements of the NumericalVector.
+        */
+        T sum() const {
+            auto sumElementsJob = [&](unsigned start, unsigned end) -> T {
+                T sum = 0;
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    sum += (*_values)[i];
+                }
+                return sum;
+            };
+
+            if (_parallelizationMethod == SingleThread) {
+                return _executeInParallelWithReduction<T>(_values->size(), sumElementsJob, 1);
+            }
+
+            if (_parallelizationMethod == MultiThread) {
+                return _executeInParallelWithReduction<T>(_values->size(), sumElementsJob,
+                                                          std::thread::hardware_concurrency());
+            }
+        }
+
+        /**
+         * @brief Computes the magnitude (Euclidean norm) of the NumericalVector.
+         * 
+         * This method employs parallel processing to compute the sum of squares and then aggregates the results.
+         * The square root of the aggregated sum is taken to get the magnitude.
+         * 
+         * @return double The magnitude of the NumericalVector.
+         */
+        double magnitude() const {
+            auto magnitudeJob = [&](unsigned start, unsigned end) -> double {
+                double sum = 0;
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    sum += (*_values)[i] * (*_values)[i];
+                }
+                return sum;
+            };
+            
+            return sqrt(_executeInParallelWithReductionForDoubles(magnitudeJob));
+        }
+
+        /**
+        * @brief Normalizes this vector.
+        * 
+        * Normalization of a vector refers to the process of dividing each component of the vector by the vector magnitude. 
+        * After normalization, the magnitude of the vector will be 1.
+        */
+        void normalize() {
+            double vectorMagnitude = magnitude();
+            if (vectorMagnitude == 0) {
+                throw std::runtime_error("Cannot normalize a vector with magnitude 0.");
+            }
+            scale(1.0 / vectorMagnitude);
+        }
+
+        /**
+        * @brief Normalizes this vector to a custom magnitude.
+        * @param customMagnitude The magnitude to normalize to.
+        * 
+        * Normalization of a vector refers to the process of dividing each component of the vector by the vector magnitude.
+        * After normalization, the magnitude of the vector will be equal to the custom magnitude.
+        */
+        void normalizeTo(double customMagnitude) {
+        if (customMagnitude == 0) {
+            throw std::runtime_error("Cannot normalize a vector with magnitude 0.");
+        }
+            scale(1.0 / customMagnitude);
+        }
+
+        /**
+        * @brief Calculates the Euclidean distance between this vector and the input vector.
+        * @param inputVector Input vector to calculate the distance to.
+        * @return The distance between the two vectors.
+        * @throws invalid_argument If the input vectors are of different sizes.
+        * 
+        * The distance between two vectors v and w is defined as the magnitude of their difference.
+        * distance(v, w) = magnitude(v - w)
+        */
+        double distance(const NumericalVector& inputVector) const {
+            if (size() != dereference_trait<NumericalVector<T>>::size(inputVector)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+
+            auto distanceThreadJob = [&](unsigned start, unsigned end) -> double {
+                double sum = 0;
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    sum += ((*_values)[i] - inputVector[i]) * ((*_values)[i] - inputVector[i]);
+                }
+                return sum;
+            };
+
+            double distanceSquared = _executeInParallelWithReductionForDoubles(distanceThreadJob);
+            return sqrt(distanceSquared);
+        }
+
+
+        /**
+        * @brief Calculates the angle between this vector and the input vector.
+        * @param inputVector Input vector to calculate the distance to.
+        * @return The angle between the two vectors.
+        * @throws invalid_argument If the input vectors are of different sizes.
+        * 
+        * The angle θ between two vectors v and w is given by the formula:
+        * cos(θ) = (dot(v, w)) / (magnitude(v) * magnitude(w))
+        */
+        double angle(const NumericalVector& inputVector) const {
+            if (size() != dereference_trait<NumericalVector<T>>::size(inputVector)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+
+            double dotProduct = dot(inputVector);
+            double thisMagnitude = magnitude();
+
+            auto inputMagnitudeThreadJob = [&](unsigned start, unsigned end) -> double {
+                double sum = 0;
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    sum += inputVector[i] * inputVector[i];
+                }
+                return sum;
+            };
+
+            double inputMagnitudeSquared = _executeInParallelWithReductionForDoubles(inputMagnitudeThreadJob);
+            double inputMagnitude = sqrt(inputMagnitudeSquared);
+
+            if (thisMagnitude == 0 || inputMagnitude == 0) {
+                throw std::runtime_error("Cannot compute angle between vectors with magnitude 0.");
+            }
+            return acos(dotProduct / (thisMagnitude * inputMagnitude));
+        }
+
+        /**
+        * @brief Calculates the sum of all the elements of this vector.
+        * @return The sum of all components of the vector.
+        * 
+        * Given a vector v = [v1, v2, ..., vn], the sum is calculated as:
+        * sum(v) = v1 + v2 + ... + vn
+        */
+        double average() {
+            return sum() / _values->size();
+        }
+
+
+        /**
+        @brief Calculates the variance of the elements of this vector.
+        @return The variance of the vector.
+        * 
+        * The variance of a vector is a measure of how spread out its values are. It is calculated as the average of the
+        * squared differences between each element and the mean of the vector.
+        * Given a vector x with n elements, the variance is calculated as:
+        * variance(x) = (1/n) * (sum of (x[i] - mean(x))^2 for i=1 to n)
+        */
+        double variance() {
+            double averageOfElements = average();
+
+            auto varianceJob = [&](unsigned start, unsigned end) -> double {
+                double sum = 0;
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    double diff = (*_values)[i] - averageOfElements;
+                    sum += diff * diff;
+                }
+                return sum;
+            };
+
+            return _executeInParallelWithReductionForDoubles(varianceJob) / _values->size();
+        }

@@ -28,6 +28,8 @@ public:
             testCovariance();
             testCorrelation();
             testNorms();
+            //testProjection();
+            testHouseHolderTransformation();
             testSumMultiThread();
             testMagnitudeMultiThread();
             testAdditionMultiThread();
@@ -199,6 +201,48 @@ public:
         assert(std::fabs(vec.normLInf() - 10) < 0.001);
         logTestEnd();
     }
+
+    static void testIteratorsAndRanges() {
+        logTestStart("testIteratorsAndRanges");
+
+        NumericalVector<double> vec({1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+        auto beginIter = vec.begin();
+        auto endIter = vec.end();
+
+        assert(*beginIter == 1);
+        assert(*(endIter - 1) == 10);
+
+        auto range = vec.range(2, 7);
+        assert(*range.first == 3);
+        assert(*range.second == 8);
+
+        logTestEnd();
+    }
+
+    static void testProjection() {
+        logTestStart("testProjection");
+        NumericalVector<double> vec({1, 2, 3});
+        NumericalVector<double> toBeProjected({2, 3, 4});
+        NumericalVector<double> result(3);
+        vec.project(toBeProjected, result);
+        assert(std::fabs(result[0] - 1.42857143) < 0.001);
+        assert(std::fabs(result[1] - 2.85714286) < 0.001);
+        assert(std::fabs(result[2] - 4.28571429) < 0.001);
+        logTestEnd();
+    }
+
+    static void testHouseHolderTransformation() {
+        logTestStart("testHouseHolderTransformation");
+        NumericalVector<double> vec({1, 2, 3});
+        NumericalVector<double> result(3);
+        vec.houseHolderTransformation(result);
+        assert(std::fabs(result[0] + 3.74165739) < 0.001);
+        assert(std::fabs(result[1]) < 0.001); // close to zero
+        assert(std::fabs(result[2]) < 0.001); // close to zero
+        logTestEnd();
+    }
+
+    
 
     static void testSumMultiThread() {
         logTestStart("testSumMultiThread");

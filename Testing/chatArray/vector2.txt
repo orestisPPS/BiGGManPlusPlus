@@ -1,0 +1,573 @@
+
+        /**
+        * @brief Calculates the standard deviation of the elements of this vector.
+        * @return The standard deviation of the vector.
+        * 
+        * The standard deviation of a vector is the square root of its variance. It is a measure of how spread out its values
+        * are, but it is expressed in the same units as the original data.
+        */
+        double standardDeviation() {
+            return sqrt(variance());
+        }
+
+        /**
+        * @brief Calculates the covariance between this vector and the input vector.
+        * @param inputVector Input vector to calculate the covariance to.
+        * @return The covariance between the two vectors.
+        * 
+        * The covariance between two vectors is a measure of how they vary together. If the covariance is positive, the values of
+        * one vector tend to be high when the values of the other vector are high, and low when the values of the other vector are
+        * low. If the covariance is negative, the values of one vector tend to be high when the values of the other vector are low,
+        * and vice versa. A covariance of zero means that the vectors are uncorrelated, i.e., their values do not vary together.
+        * Given two vectors X = [x1, x2, ..., xn] and Y = [y1, y2, ..., yn], their covariance is calculated as:
+        * cov(X, Y) = 1/n * sum((xi - mean(X)) * (yi - mean(Y))), where mean(X) and mean(Y) are the means of X and Y, respectively.
+        * If the two vectors have the same length, the formula simplifies to:
+        * cov(X, Y) = 1/n * dot(X - mean(X), Y - mean(Y)), where dot() is the dot product.
+        */
+        double covariance(const NumericalVector& inputVector) {
+            if (size() != dereference_trait<NumericalVector<T>>::size(inputVector)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+
+            double averageOfThis = average();
+
+            auto averageOfInputJob = [&](unsigned start, unsigned end) -> double {
+                double sum = 0;
+                for (unsigned i = start; i < end; ++i) {
+                    sum += inputVector[i];
+                }
+                return sum;
+            };
+
+            double averageOfInput = _executeInParallelWithReductionForDoubles(averageOfInputJob) / _values->size();
+
+            auto covarianceJob = [&](unsigned start, unsigned end) -> double {
+                double sum = 0;
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    sum += ((*_values)[i] - averageOfThis) * (inputVector[i] - averageOfInput);
+                }
+                return sum;
+            };
+
+            return _executeInParallelWithReductionForDoubles(covarianceJob) / _values->size();
+        }
+
+        /**
+        * @brief Calculates the correlation between this vector and the input vector.
+        * @param inputVector Input vector to calculate the correlation to.
+        * @return The correlation between the two vectors.
+        * 
+        * The correlation coefficient between two vectors is a measure of how strong the linear relationship is between them. It
+        * ranges from -1 (perfect negative correlation) to 1 (perfect positive correlation), with 0 indicating no correlation.
+        * Given two vectors X = [x1, x2, ..., xn] and Y = [y1, y2, ..., yn], their correlation coefficient is calculated as:
+        * cor(X, Y) = cov(X, Y) / (sd(X) * sd(Y)), where cov(X, Y) is the covariance between X and Y, and sd(X) and sd(Y) are the
+        * standard deviations of X and Y, respectively.
+        */
+        double correlation(const NumericalVector& inputVector) {
+        if (size() != dereference_trait<NumericalVector<T>>::size(inputVector)) {
+            throw invalid_argument("Vectors must be of the same size.");
+        }
+        
+        double covarianceOfVectors = covariance(inputVector);
+        double stdDevOfThis = standardDeviation();
+        
+        auto stdDevOfInputJob = [&](unsigned start, unsigned end) -> double {
+            double sum = 0;
+            for (unsigned i = start; i < end; ++i) {
+                sum += inputVector[i] * inputVector[i];
+            }
+            return sum;
+        };
+        
+        double stdDevOfInput = sqrt(_executeInParallelWithReductionForDoubles(stdDevOfInputJob));
+        
+        if (stdDevOfThis == 0 || stdDevOfInput == 0) {
+            throw std::runtime_error("Cannot compute correlation between vectors with standard deviation 0.");
+        }
+        
+        return covarianceOfVectors / (stdDevOfThis * stdDevOfInput);
+        }
+        
+        double norm(VectorNormType normType) {
+            switch (normType) {
+                case VectorNormType::L1:
+                    return _normL1();
+                case VectorNormType::L2:
+                    return _normL2();
+                case VectorNormType::LInf:
+                    return _normLInf();
+                default:
+                    throw std::runtime_error("Invalid norm type.");
+            }
+        }
+
+        double _normL1() {
+            auto normL1Job = [&](unsigned start, unsigned end) -> double {
+                double sum = 0;
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    sum += abs((*_values)[i]);
+                }
+                return sum;
+            };
+
+            return _executeInParallelWithReductionForDoubles(normL1Job);
+        }
+
+        double _normL2() {
+            auto normL2Job = [&](unsigned start, unsigned end) -> double {
+                double sum = 0;
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    sum += (*_values)[i] * (*_values)[i];
+                }
+                return sum;
+            };
+
+            return sqrt(_executeInParallelWithReductionForDoubles(normL2Job));
+        }
+
+        double _normLInf() {
+            auto normLInfJob = [&](unsigned start, unsigned end) -> double {
+                double maxVal = 0;
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    double absValue = abs((*_values)[i]);
+                    if (absValue > maxVal) {
+                        maxVal = absValue;
+                    }
+                }
+                return maxVal;
+            };
+
+            return _executeInParallelWithReductionForDoubles(normLInfJob);
+        }
+
+        double _normLp(double p) {
+            auto normLpJob = [&](unsigned start, unsigned end) -> double {
+                double sum = 0;
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    sum += pow(abs((*_values)[i]), p);
+                }
+                return sum;
+            };
+
+            return pow(_executeInParallelWithReductionForDoubles(normLpJob), 1.0/p);
+        }
+
+
+
+
+
+
+        //=================================================================================================================//
+        //================================================== Vector Operations ============================================//
+        //=================================================================================================================//
+        /**
+        * \brief Calculates the dot product of 2 vectors.
+        * The dot product of two vectors is defined as the sum of the products of their corresponding components.
+        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], their dot product is calculated as:
+        * dot(v, w) = v1w1 + v2w2 + ... + vn*wn
+        * Geometrically, the dot product of two vectors gives the cosine of the angle between them multiplied by the magnitudes
+        * of the vectors. If the dot product is zero, it means the vectors are orthogonal (perpendicular) to each other.
+        * The subtraction is performed in parallel across multiple threads.
+        *
+        * \tparam T The data type of the vectors (e.g., double, float).
+        * 
+        * \param vector The input vector.
+         * @return T The dot product of the two vectors.
+        */
+        T dotProduct(const NumericalVector<T>& vector) const {
+            
+            if (size() != dereference_trait<T>::size(vector)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+            
+            const T *otherData = dereference_trait<T>::dereference(vector);
+            auto dotProductJob = [&](unsigned start, unsigned end) -> T {
+                T localDotProduct = 0;
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    localDotProduct += (*_values)[i] * otherData[i];
+                }
+                return localDotProduct;
+            };
+            if (_parallelizationMethod == SingleThread) {
+                return _executeInParallelWithReduction<T>(_values->size(), dotProductJob, 1);
+            }
+            else if (_parallelizationMethod == MultiThread) {
+                return _executeInParallelWithReduction<T>(_values->size(), dotProductJob,
+                                                          std::thread::hardware_concurrency());
+            }
+
+        }
+        
+        /**
+        * \brief Performs element-wise addition of two scaled vectors.
+        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], and scalar factors a and b, their addition is:
+        * add(v, w) = [a*v1+b*w1, a*v2+b*w2, ..., a*vn+b*wn]. The addition is performed in parallel across multiple threads.
+        * 
+        * \param inputVector The input vector to add.
+        * \param result The result vector after addition.
+        * \param scaleThis Scaling factor for the current vector (default is 1).
+        * \param scaleInput Scaling factor for the input vector (default is 1).
+        */
+        void add(const NumericalVector<T>& inputVector, NumericalVector<T>& result, T scaleThis = 1, T scaleInput = 1) const {
+            if (size() != dereference_trait<NumericalVector<T>>::size(inputVector)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+            if (size() != dereference_trait<NumericalVector<T>>::size(result)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+            
+            const T *otherData = dereference_trait<T>::dereference(inputVector);
+            T *resultData = dereference_trait<T>::dereference(result);
+            auto addJob = [&](unsigned start, unsigned end) -> void {
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    resultData[i] = scaleThis * (*_values)[i] + scaleInput * otherData[i];
+                }
+            };
+            _executeInParallel(addJob);
+        }
+
+        /**
+        * \brief Performs element-wise addition of a scaled vector into the current vector.
+        * Given vector v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], and scalar factors a and b, the updated vector is:
+        * v = [a*v1+b*w1, a*v2+b*w2, ..., a*vn+b*wn]. The addition is performed in parallel across multiple threads.
+        * 
+        * \param inputVector The input vector to add.
+        * \param scaleThis Scaling factor for the current vector (default is 1).
+        * \param scaleInput Scaling factor for the input vector (default is 1).
+        */
+        void addIntoThis(const NumericalVector<T>& inputVector, T scaleThis = 1, T scaleInput = 1) {
+            if (size() != dereference_trait<NumericalVector<T>>::size(inputVector)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+            
+            const T *otherData = dereference_trait<T>::dereference(inputVector);
+            auto addJob = [&](unsigned start, unsigned end) -> void {
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    (*_values)[i] = scaleThis * (*_values)[i] + scaleInput * otherData[i];
+                }
+            };
+            _executeInParallel(addJob);
+        }
+        
+        /**
+        * \brief Performs element-wise subtraction of two scaled vectors.
+        * Given two vectors v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], and scalar factors a and b, their subtraction is:
+        * subtract(v, w) = [a*v1-b*w1, a*v2-b*w2, ..., a*vn-b*wn]. The subtraction is performed in parallel across multiple threads.
+        * 
+        * \param inputVector The input vector to subtract.
+        * \param result The result vector after subtraction.
+        * \param scaleThis Scaling factor for the current vector (default is 1).
+        * \param scaleInput Scaling factor for the input vector (default is 1).
+        */
+        void subtract(const NumericalVector<T>& inputVector, NumericalVector<T>& result, T scaleThis = 1, T scaleInput = 1) const {
+            if (size() != dereference_trait<NumericalVector<T>>::size(inputVector)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+            if (size() != dereference_trait<NumericalVector<T>>::size(result)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+            
+            const T *otherData = dereference_trait<T>::dereference(inputVector);
+            T *resultData = dereference_trait<T>::dereference(result);
+            auto subtractJob = [&](unsigned start, unsigned end) -> void {
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    resultData[i] = scaleThis * (*_values)[i] - scaleInput * otherData[i];
+                }
+            };
+            _executeInParallel(subtractJob);
+        }
+
+        /**
+        * \brief Performs element-wise subtraction of a scaled vector from the current vector.
+        * Given vector v = [v1, v2, ..., vn] and w = [w1, w2, ..., wn], and scalar factors a and b, the updated vector is:
+        * v = [a*v1-b*w1, a*v2-b*w2, ..., a*vn-b*wn]. The subtraction is performed in parallel across multiple threads.
+        * 
+        * \param inputVector The input vector to subtract.
+        * \param scaleThis Scaling factor for the current vector (default is 1).
+        * \param scaleInput Scaling factor for the input vector (default is 1).
+        */
+        void subtractIntoThis(const NumericalVector<T>& inputVector, T scaleThis = 1, T scaleInput = 1) {
+            if (size() != dereference_trait<NumericalVector<T>>::size(inputVector)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+
+            const T *otherData = dereference_trait<T>::dereference(inputVector);
+            auto subtractJob = [&](unsigned start, unsigned end) -> void {
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    (*_values)[i] = scaleThis * (*_values)[i] - scaleInput * otherData[i];
+                }
+            };
+
+            _executeInParallel(subtractJob);
+        }
+
+        /**
+        * \brief Scales the elements of the current vector by a given factor.
+        * Given vector v = [v1, v2, ..., vn] and scalar factor a, the updated vector is:
+        * v = [a*v1, a*v2, ..., a*vn]. The scaling is performed in parallel across multiple threads.
+        * 
+        * \param scale The scaling factor.
+        */
+        void scale(T scale) {
+            auto scaleJob = [&](unsigned start, unsigned end) -> void {
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    (*_values)[i] *= scale;
+                }
+            };
+            _executeInParallel(scaleJob);
+        }
+        
+    private:
+        shared_ptr<vector<T>> _values; ///< The underlying data.
+
+        LinearAlgebra::ParallelizationMethod _parallelizationMethod; ///< Parallelization method used for matrix operations.
+        
+
+        /**
+        * \brief Executes the provided task in parallel across multiple threads.
+        * 
+        * This method distributes the task across available CPU cores. Each thread operates on a distinct segment
+        * of the data, ensuring parallel processing without race conditions.
+        * 
+        * \tparam ThreadJob A callable object type (function, lambda, functor).
+        *
+        * \param size The size of the data being processed.
+        * \param task The callable object that describes the work each thread should execute.
+         * \param availableThreads The number of threads available for processing.
+        * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
+        */
+        template<typename ThreadJob>
+        static void
+        _executeInParallel(size_t size, ThreadJob task, unsigned availableThreads, unsigned cacheLineSize = 64) {
+
+            // Determine the number of doubles that fit in a cache line.
+            // A cache line is the smallest amount of cache that can be loaded and stored from memory.
+            // By calculating doublesPerCacheLine, we're determining how many double values we can efficiently
+            // load/store at once
+            // This is used to ensure that each thread operates on a distinct cache line.
+            unsigned doublesPerCacheLine = cacheLineSize / sizeof(double);
+            unsigned int numThreads = availableThreads;
+
+            // The size + numThreads - 1 expression is used to round up the division result to ensure that all data is
+            // covered even when size is not a multiple of numThreads
+            unsigned blockSize = (size + numThreads - 1) / numThreads;
+
+            //This is done to ensure that each block of data processed by a thread aligns with the cache lines
+            // This is done to avoid false sharing, which is when two threads are accessing the same cache line
+            // False sharing can cause performance issues because the cache line has to be reloaded/stored
+            blockSize = (blockSize + doublesPerCacheLine - 1) / doublesPerCacheLine * doublesPerCacheLine;
+
+            vector<thread> threads;
+            for (unsigned int i = 0; i < numThreads; ++i) {
+                unsigned start = i * blockSize;
+                unsigned end = start + blockSize;
+                if (start >= size) break;
+                threads.push_back(thread(task, start, end));
+            }
+
+            for (auto &thread: threads) {
+                thread.join();
+            }
+        }
+
+        /**
+        * \brief Executes the provided task in parallel across multiple threads with a reduction step.
+        * 
+        * This method distributes the task across available CPU cores. Each thread operates on a distinct segment
+        * of the data and produces a local result. After all threads have completed their work, a reduction step
+        * combines these local results into a single global result.
+        * 
+        * \tparam T The data type of the result (e.g., double, float).
+        * \tparam ThreadJob A callable object type (function, lambda, functor).
+        *
+        * \param size The size of the data being processed.
+        * \param task The callable object that describes the work each thread should execute and return a local result.
+         * \param availableThreads The number of threads available for processing.
+        * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
+        * 
+        * \return The combined result after the reduction step.
+        */
+        template<typename ThreadJob>
+        static T _executeInParallelWithReduction(size_t size, ThreadJob task, unsigned availableThreads,
+                                                 unsigned cacheLineSize = 64) {
+            unsigned doublesPerCacheLine = cacheLineSize / sizeof(double);
+            unsigned int numThreads = availableThreads;
+
+            unsigned blockSize = (size + numThreads - 1) / numThreads;
+            blockSize = (blockSize + doublesPerCacheLine - 1) / doublesPerCacheLine * doublesPerCacheLine;
+
+            vector<T> localResults(numThreads);
+            vector<thread> threads;
+
+            for (unsigned int i = 0; i < numThreads; ++i) {
+                unsigned start = i * blockSize;
+                unsigned end = start + blockSize;
+                if (start >= size) break;
+                threads.push_back(thread([&](unsigned start, unsigned end, unsigned idx) {
+                    localResults[idx] = task(start, end);
+                }, start, end, i));
+            }
+
+            for (auto &thread: threads) {
+                thread.join();
+            }
+
+            T finalResult = 0;
+            for (T val: localResults) {
+                finalResult += val;
+            }
+            return finalResult;
+        }
+
+        template<typename ThreadJob>
+        void _executeInParallel(ThreadJob task) {
+            if (_parallelizationMethod == SingleThread) {
+                _executeInParallel(_values->size(), task, 1);
+            }
+            else if (_parallelizationMethod == MultiThread) {
+                _executeInParallel(_values->size(), task, std::thread::hardware_concurrency());
+            }
+        }
+        
+        template<typename ThreadJob>
+        double _executeInParallelWithReductionForDoubles(ThreadJob task) {
+            if (_parallelizationMethod == SingleThread) {
+                return _executeInParallelWithReduction(_values->size(), task, 1);
+            }
+            else if (_parallelizationMethod == MultiThread) {
+                return _executeInParallelWithReduction(_values->size(), task, std::thread::hardware_concurrency());
+            }
+        }
+
+
+        /**
+        * @brief Performs a deep copy from the source to the current object.
+        * 
+        * This method uses the dereference_trait to handle various types of sources 
+        * such as raw pointers, unique pointers, shared pointers, and direct objects.
+        * 
+        * @param source The source object to be copied from.
+        */
+        void _deepCopy(const T*& source, size_t size) {
+
+            if (_values->size() != source->size()) {
+                throw std::invalid_argument("Source vector must be the same size as the destination vector.");
+            }
+
+            auto deepCopyThreadJob = [&](unsigned start, unsigned end) {
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    (*_values)[i] = source[i];
+                }
+            };
+
+            if (_parallelizationMethod == SingleThread) {
+                _executeInParallel(_values->size(), deepCopyThreadJob, 1);
+            } else if (_parallelizationMethod == MultiThread)
+                _executeInParallel(_values->size(), deepCopyThreadJob, thread::hardware_concurrency());
+        }
+
+        /**
+        * @brief Checks if the elements of the current object are equal to those of the provided source.
+        * 
+        * This method uses parallelization to perform the comparison and then reduces the results to determine 
+        * if all elements are equal.
+        * 
+        * @param source The source object to be compared with.
+        * @return true if all elements are equal, false otherwise.
+        */
+        bool _areElementsEqual(const T*& source, size_t size) {
+
+            if (_values->size() != source->size()) {
+                throw std::invalid_argument("Source vector must be the same size as the destination vector.");
+            }
+
+            auto compareElementsJob = [&](unsigned start, unsigned end) -> bool {
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    if ((*_values)[i] != source[i]) {
+                        return false;
+                    }
+                }
+                return true;
+            };
+
+            // Check elements in parallel and reduce the results
+            if (_parallelizationMethod == SingleThread) {
+                return _executeInParallelWithReduction(_values->size(), compareElementsJob, 1);
+            }
+
+            if (_parallelizationMethod == MultiThread) {
+                return _executeInParallelWithReduction(_values->size(), compareElementsJob,
+                                                       std::thread::hardware_concurrency());
+            }
+        }
+
+        
+
+        //=================================================================================================================//
+        //============================================ Dereference Traits =================================================//
+        //=================================================================================================================//
+
+        /**
+         * @brief Trait to standardize dereferencing of various types.
+         *
+         * This trait provides a unified way to dereference types such as raw pointers,
+         * unique pointers, shared pointers, and direct objects.
+         */
+        template<typename U>
+        struct dereference_trait {
+            /**
+             * @brief Dereference the given object.
+             * 
+             * For generic types, this function just returns the object itself.
+             * 
+             * @param source The object to dereference.
+             * @return A pointer to the dereferenced object's data.
+             */
+            static auto dereference(const U &source) -> decltype(source.data()) {
+                return source.data();
+            }
+
+            /**
+             * @brief Returns the size of the given object.
+             * 
+             * For generic types, this function just returns the size of the object.
+             * 
+             * @param source The object to get the size from.
+             * @return The size of the object.
+             */
+            static unsigned size(const U &source) {
+                return source.size();
+            }
+        };
+
+        /**
+        * @brief Specialization for std::vector<T>.
+        */
+        template<typename U>
+        struct dereference_trait<std::vector<U>> {
+            /**
+             * @brief Dereference the given vector.
+             * 
+             * @param source The vector to dereference.
+             * @return A pointer to the vector's data.
+             */
+            static U* dereference(const std::vector<U> &source) {
+                return source.data();
+            }
+
+            /**
+             * @brief Returns the size of the given vector.
+             * 
+             * @param source The vector to get the size from.
+             * @return The size of the vector.
+             */
+            static unsigned size(const std::vector<U> &source) {
+                return source.size();
+            }
+        };
+        
+        
+    };
+}
+
+#endif //UNTITLED_NUMERICALVECTOR_H

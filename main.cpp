@@ -46,8 +46,9 @@ int main() {
         (*numericalVectorSharedPtr)[i] = i;
         (*numericalVectorUniquePtr)[i] = i;
     }
-    
-auto subtraction = numericalVectorRawPtr->dotProduct(numericalVectorSharedPtr);
+
+    NumericalVector<double> subtraction = NumericalVector<double>(10);
+    numericalVectorSharedPtr->subtract(numericalVectorSharedPtr, subtraction);
     
     auto numericalVector2 = NumericalVector<double>(numericalVectorSharedPtr);
     auto numericalVector4 = NumericalVector<double>(numericalVector);

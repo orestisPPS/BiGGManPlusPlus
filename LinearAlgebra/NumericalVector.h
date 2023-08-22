@@ -65,6 +65,7 @@ namespace LinearAlgebra {
         */
         explicit NumericalVector(unsigned int size, T initialValue = 0,
                                  ParallelizationMethod parallelizationMethod = SingleThread) {
+            static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _values = make_shared<vector<T>> (size, initialValue);
             _parallelizationMethod = parallelizationMethod;
         }
@@ -75,6 +76,7 @@ namespace LinearAlgebra {
         * @param parallelizationMethod Parallelization method to be used for vector operations.
         */
         NumericalVector(std::initializer_list<T> values, ParallelizationMethod parallelizationMethod = SingleThread) {
+            static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _values = make_shared<vector<T>>(values);
             _parallelizationMethod = parallelizationMethod;
         }
@@ -100,6 +102,7 @@ namespace LinearAlgebra {
         * @param other The source object to be copied from.
         */
         NumericalVector(const NumericalVector<T> &other) {
+            static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _deepCopy(other);
             _parallelizationMethod = other._parallelizationMethod;
         }
@@ -110,6 +113,7 @@ namespace LinearAlgebra {
         * @param other Constant reference to the source object to be copied from.
         */
         explicit NumericalVector(const std::shared_ptr<NumericalVector<T>> &other) {
+            static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _deepCopy(other);
             _parallelizationMethod = other->_parallelizationMethod;
         }
@@ -119,6 +123,7 @@ namespace LinearAlgebra {
          * @param other Unique pointer to the source object to be copied from.
          */
         explicit NumericalVector(const std::unique_ptr<NumericalVector<T>> &other) {
+            static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _deepCopy(other);
             _parallelizationMethod = other->_parallelizationMethod;
         }
@@ -128,6 +133,7 @@ namespace LinearAlgebra {
          * @param other Pointer to the source object to be copied from.
          */
         explicit NumericalVector(const NumericalVector<T> *other) {
+            static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _deepCopy(other);
             _parallelizationMethod = other->_parallelizationMethod;
         }
@@ -140,6 +146,7 @@ namespace LinearAlgebra {
         */
         template<typename InputType>
         NumericalVector &operator=(const InputType &other) {
+            
             if (this != &other) {
                 _deepCopy(other);
                 _parallelizationMethod = dereference_trait<InputType>::parallelizationMethod(other);
@@ -228,7 +235,97 @@ namespace LinearAlgebra {
             }
             return (*_values)[index];
         }
+        
+        //=================================================================================================================//
+        //=================================================== Iterators ===================================================//
+        //=================================================================================================================//
+        
+        /**
+        * \brief Type definition for iterator.
+        */
+        using iterator = typename std::vector<T>::iterator;
 
+        /**
+         * \brief Type definition for constant iterator.
+         */
+        using const_iterator = typename std::vector<T>::const_iterator;
+
+        /**
+         * \brief Returns an iterator to the beginning of the vector.
+         * \return An iterator to the beginning of the vector.
+         */
+        iterator begin() {
+            return _values->begin();
+        }
+
+        /**
+         * \brief Returns an iterator to the end of the vector.
+         * \return An iterator to the end of the vector.
+         */
+        iterator end() {
+            return _values->end();
+        }
+
+        /**
+         * \brief Returns a constant iterator to the beginning of the vector.
+         * \return A constant iterator to the beginning of the vector.
+         */
+        const_iterator begin() const {
+            return _values->begin();
+        }
+
+        /**
+         * \brief Returns a constant iterator to the end of the vector.
+         * \return A constant iterator to the end of the vector.
+         */
+        const_iterator end() const {
+            return _values->end();
+        }
+
+        /**
+         * \brief Returns a constant iterator to the beginning of the vector.
+         * \return A constant iterator to the beginning of the vector.
+         */
+        const_iterator cbegin() const {
+            return _values->cbegin();
+        }
+
+        /**
+         * \brief Returns a constant iterator to the end of the vector.
+         * \return A constant iterator to the end of the vector.
+         */
+        const_iterator cend() const {
+            return _values->cend();
+        }
+
+        /**
+         * \brief Provides a range of iterators for a specific subrange of the vector.
+         * \param start The starting index of the range.
+         * \param end The ending index of the range.
+         * \return A pair of iterators representing the beginning and end of the specified subrange.
+         */
+        std::pair<iterator, iterator> range(unsigned start, unsigned end) {
+            if (start >= _values->size() || end > _values->size() || start > end) {
+                throw std::out_of_range("Invalid range specified.");
+            }
+            return {_values->begin() + start, _values->begin() + end};
+        }
+
+        /**
+         * \brief Provides a range of constant iterators for a specific subrange of the vector.
+         * \param start The starting index of the range.
+         * \param end The ending index of the range.
+         * \return A pair of constant iterators representing the beginning and end of the specified subrange.
+         */
+        std::pair<const_iterator, const_iterator> range(unsigned start, unsigned end) const {
+            if (start >= _values->size() || end > _values->size() || start > end) {
+                throw std::out_of_range("Invalid range specified.");
+            }
+            return {_values->begin() + start, _values->begin() + end};
+        }
+        
+        
+        
         //=================================================================================================================//
         //=================================================== Utility ====================================================//
         //=================================================================================================================//
@@ -454,6 +551,183 @@ namespace LinearAlgebra {
             return acos(cosValue);
 
         }
+
+        
+        /**
+         * @brief Projects one vector onto another and stores the result in a third vector.
+         *
+         * This function computes the projection of the provided input vector onto the current instance vector
+         * and stores the result in the result vector.
+         *
+         * The projection of vector B (toBeProjected) onto vector A (current instance) is computed using the formula:
+         * proj_A B = (B . A) / (A . A) * A
+         * This result is stored in the result vector.
+         *
+         * @tparam InputType1 The type of the input vector that needs to be projected. Can be a raw pointer,
+         *         a shared pointer, a unique pointer, or a direct object of NumericalVector.
+         * @tparam InputType2 The type of the result vector where the projection result will be stored. Can be
+         *         a raw pointer, a shared pointer, a unique pointer, or a direct object of NumericalVector.
+         * @param toBeProjected The vector that is to be projected onto the current instance.
+         * @param result The vector where the projection result will be stored.
+         * @throws std::invalid_argument If any of the vectors are not of the same size.
+         * @throws std::runtime_error If the magnitude of the input vector to be projected is zero.
+         */
+        template<typename InputType1, typename InputType2>
+        void project(const InputType1 &toBeProjected, InputType2 &result){
+
+            _checkInputType(toBeProjected);
+            _checkInputType(result);
+            if (size() != dereference_trait<InputType1>::size(toBeProjected)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+            if (size() != dereference_trait<InputType2>::size(result)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+            const T *inputVectorData1 = dereference_trait<InputType1>::dereference(toBeProjected);
+            T *resultData = dereference_trait<InputType2>::dereference(result);
+
+            double dot = dotProduct(toBeProjected);
+
+            auto inputMagnitudeThreadJob = [&](unsigned start, unsigned end) -> double {
+                double sum = 0;
+                for (unsigned i = start; i < end && i < size(); ++i) {
+                    sum += inputVectorData1[i] * inputVectorData1[i];
+                }
+                return sum;
+            };
+
+            double inputMagnitudeSquared = _executeParallelJobWithReductionForDoubles(inputMagnitudeThreadJob);
+            double inputMagnitude = sqrt(inputMagnitudeSquared);
+
+            if (inputMagnitude == 0) {
+                throw std::runtime_error("Cannot project on a vector with magnitude 0.");
+            }
+            double scalar = dot / inputMagnitudeSquared;
+            
+            auto projectionThreadJob = [&](unsigned start, unsigned end) {
+                for (unsigned i = start; i < end && i < size(); ++i) {
+                    resultData[i] = inputVectorData1[i] * scalar;
+                }
+            };
+            _executeParallelJob(projectionThreadJob);
+        }
+
+        /**
+         * @brief Projects a given vector onto the current instance vector.
+         *
+         * This function computes the projection of the provided input vector onto the current instance vector
+         * and updates the current instance with the result.
+         *
+         * The projection of vector B (toBeProjected) onto vector A (current instance) is computed using the formula:
+         * proj_A B = (B . A) / (A . A) * A
+         * This result updates the current instance vector.
+         *
+         * @tparam InputType The type of the vector that needs to be projected. Can be a raw pointer,
+         *         a shared pointer, a unique pointer, or a direct object of NumericalVector.
+         * @param toBeProjected The vector that is to be projected onto the current instance.
+         * @throws std::invalid_argument If the vectors are not of the same size.
+         * @throws std::runtime_error If the magnitude of the vector to be projected is zero.
+         */
+        template<typename InputType>
+        void projectOntoThis(const InputType &toBeProjected) {
+            _checkInputType(toBeProjected);
+            if (size() != dereference_trait<InputType>::size(toBeProjected)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+            const T *inputVectorData1 = dereference_trait<InputType>::dereference(toBeProjected);
+
+            double dot = dotProduct(toBeProjected);
+
+            auto inputMagnitudeThreadJob = [&](unsigned start, unsigned end) -> double {
+                double sum = 0;
+                for (unsigned i = start; i < end && i < size(); ++i) {
+                    sum += inputVectorData1[i] * inputVectorData1[i];
+                }
+                return sum;
+            };
+
+            double inputMagnitudeSquared = _executeParallelJobWithReductionForDoubles(inputMagnitudeThreadJob);
+            double inputMagnitude = sqrt(inputMagnitudeSquared);
+
+            if (inputMagnitude == 0) {
+                throw std::runtime_error("Cannot project on a vector with magnitude 0.");
+            }
+            double scalar = dot / inputMagnitudeSquared;
+
+            auto projectionThreadJob = [&](unsigned start, unsigned end) {
+                for (unsigned i = start; i < end && i < size(); ++i) {
+                    (*_values)[i] = inputVectorData1[i] * scalar;
+                }
+            };
+            _executeParallelJob(projectionThreadJob);
+        }
+
+        /**
+         * @brief Applies the Householder transformation to a given vector.
+         * 
+         * Householder transformation is a method used to zero out certain components of a vector.
+         * It reflects a given vector about a plane or hyperplane. This function applies the
+         * transformation  to the current instance vector and stores the result in the result vector.
+         * 
+         * Mathematically, the Householder matrix is defined as:
+         *    H = I - 2 * (v * v^T) / (v^T * v)
+         * where `v` is the reflection vector. This function uses this concept to reflect the
+         * the current instance vector and stores the result in the result vector.
+         * 
+         * @tparam InputType The type of the result vector. The function supports various types
+         *                   like raw pointers, shared pointers, and the NumericalVector itself.
+         * 
+         * @param result The vector to which the transformation will be stored. This vector will
+         *               be modified in place.
+         * 
+         * @throw invalid_argument if the size of the input vector and the current vector don't match.
+         */
+        template<typename InputType>
+        void houseHolderTransformation(InputType &result) {
+            _checkInputType(result);
+            if (size() != dereference_trait<InputType>::size(result)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+            T *resultData = dereference_trait<InputType>::dereference(result);
+            
+            auto sign = [](double x) -> int {   
+                return x >= 0.0 ? 1 : -1;
+            };
+            
+            double norm = normL2();
+            double alpha = -sign((*_values)[0]) * norm;
+            auto threadJob = [&](unsigned start, unsigned end) {
+                for (unsigned i = start; i < end && i < size(); ++i) {
+                    resultData[i] = (*_values)[i];
+                }
+            };
+            _executeParallelJob(threadJob);
+            resultData[0] -= alpha;
+        }
+
+        /**
+         * @brief Applies the Householder transformation to a given vector.
+         * 
+         * Householder transformation is a method used to zero out certain components of a vector.
+         * It reflects a given vector about a plane or hyperplane. This function applies the
+         * transformation  to the current instance vector and stores the result in the result vector.
+         * 
+         * Mathematically, the Householder matrix is defined as:
+         *    H = I - 2 * (v * v^T) / (v^T * v)
+         * where `v` is the reflection vector. This function uses this concept to reflect the current instance 
+         * of the vector.
+         */
+        template<typename InputType>
+        void houseHolderTransformationIntoThis(){
+            auto sign = [](double x) -> int {
+                return x >= 0.0 ? 1 : -1;
+            };
+            double norm = normL2();
+            double alpha = -sign((*_values)[0]) * norm;
+            auto range = std::make_pair(1, size());
+            (*_values)[0] -= alpha;
+        }
+        
 
         /**
         * @brief Calculates the sum of all the elements of this vector.
@@ -1082,6 +1356,8 @@ namespace LinearAlgebra {
             * \return A pointer to the data of the source.
             */
             static U *dereference(U *source) {
+                static_assert(std::is_arithmetic<U>::value, "Template type T must be an arithmetic type (integral or floating-point)");
+
                 if (!source) throw std::runtime_error("Null pointer dereferenced");
                 return source->data();
             }
@@ -1118,6 +1394,7 @@ namespace LinearAlgebra {
             * \return A pointer to the data of the source.
             */
             static U* dereference(const NumericalVector<U> &source) {
+                static_assert(std::is_arithmetic<U>::value, "Template type T must be an arithmetic type (integral or floating-point)");
                 return source.data();
             }
 
@@ -1160,6 +1437,7 @@ namespace LinearAlgebra {
             * \return A pointer to the data of the source.
             */
             static U *dereference(const PtrType<NumericalVector<U>> &source) {
+                static_assert(std::is_arithmetic<U>::value, "Template type T must be an arithmetic type (integral or floating-point)");
                 if (!source) throw std::runtime_error("Null pointer dereferenced");
                 return source->data();
             }
