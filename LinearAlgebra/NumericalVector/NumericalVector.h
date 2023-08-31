@@ -12,7 +12,7 @@
 #include <type_traits>
 #include <valarray>
 #include <random>
-#include "ParallelizationMethods.h"
+#include "../ParallelizationMethods.h"
 using namespace LinearAlgebra;
 using namespace std;
 

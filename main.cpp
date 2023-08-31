@@ -6,7 +6,7 @@
 #include "Tests/LanczosEigenDecompositionTest.h"
 #include "Tests/NumericalVectorTest.h"
 #include "Tests/QRTest.h"
-#include "LinearAlgebra/NumericalVector.h"
+#include "LinearAlgebra/NumericalVector/NumericalVector.h"
 #include "Tests/OperationsCUDA.h"
 #include "Tests/VectorOperationsTest.h"
 #include "StructuredMeshGeneration/MeshTest2D.h"

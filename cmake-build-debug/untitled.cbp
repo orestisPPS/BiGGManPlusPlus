@@ -334,7 +334,13 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Norms/VectorNormCuda.cuh">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/NumericalVector.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/NumericalVector/NumericalVector.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/NumericalVector/NumericalVectorCUDA.cu">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/NumericalVector/NumericalVectorCUDA.cuh">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/MultiThreadVectorOperations.h">

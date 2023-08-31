@@ -149,8 +149,10 @@ add_executable(untitled main.cpp
         LinearAlgebra/Array/Array2.h
         LinearAlgebra/Array/NumericalMatrix.h
         LinearAlgebra/Array/NumericalMatrix.cpp
-        LinearAlgebra/NumericalVector.h
+        LinearAlgebra/NumericalVector/NumericalVector.h
         Tests/NumericalVectorTest.h
+        LinearAlgebra/NumericalVector/NumericalVectorCUDA.cuh
+        LinearAlgebra/NumericalVector/NumericalVectorCUDA.cu
 )
 
 
