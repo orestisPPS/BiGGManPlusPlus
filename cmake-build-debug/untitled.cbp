@@ -24,6 +24,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DWITH_CUDA"/>
 					<Add directory="/usr/include/c++/11"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
 					<Add directory="/usr/include/c++/11/backward"/>
@@ -46,6 +47,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DWITH_CUDA"/>
 					<Add directory="/usr/include/c++/11"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
 					<Add directory="/usr/include/c++/11/backward"/>
@@ -244,10 +246,19 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/NumericalMatrix.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalArray.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Array/NumericalMatrix.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalVector/NumericalVector.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalVectorCUDA.cuh">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp">
@@ -332,15 +343,6 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Norms/VectorNormCuda.cuh">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/NumericalVector/NumericalVector.h">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/NumericalVector/NumericalVectorCUDA.cu">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/NumericalVector/NumericalVectorCUDA.cuh">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Operations/MultiThreadVectorOperations.h">
@@ -431,18 +433,6 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Solver.h">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebraCUDA/MemoryManagementCUDA.cu">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebraCUDA/MemoryManagementCUDA.cuh">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebraCUDA/NumericalOperationsCUDA.cu">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebraCUDA/NumericalOperationsCUDA.cuh">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalProblem/MathematicalProblem.cpp">
@@ -562,6 +552,9 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/VectorOperationsTest.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/ThreadingOperations/ThreadingOperations.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Utility/Calculators.h">
 			<Option target="untitled"/>
 		</Unit>
@@ -572,6 +565,15 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Utility/Exporters/Exporters.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/UtilityCUDA/MemoryManagementCUDA.cuh">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/UtilityCUDA/NumericalOperationsCUDA.cu">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/UtilityCUDA/NumericalOperationsCUDA.cuh">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/main.cpp">
