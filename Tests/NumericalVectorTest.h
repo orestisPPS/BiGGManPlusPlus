@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cassert>
 #include <cmath>
-#include "../LinearAlgebra/NumericalVector/NumericalVector.h"
+#include "../LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalVector/NumericalVector.h"
 
 class NumericalVectorTest {
 public:

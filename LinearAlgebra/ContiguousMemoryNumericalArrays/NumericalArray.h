@@ -12,6 +12,8 @@
 #include <valarray>
 #include <random>
 #include "../ParallelizationMethods.h"
+#include "../../ThreadingOperations/ThreadingOperations.h"
+
 using namespace LinearAlgebra;
 using namespace std;
 
@@ -20,15 +22,38 @@ namespace LinearAlgebra{
     class NumericalArray {
     
     public:
-        explicit NumericalArray(T initialValue = 0, ParallelizationMethod parallelizationMethod = SingleThread) : _parallelizationMethod(parallelizationMethod) {
+        explicit NumericalArray(T initialValue = 0, ParallelizationMethod parallelizationMethod = SingleThread) :
+                                _parallelizationMethod(parallelizationMethod) {
             _values = nullptr;
             _parallelizationMethod = parallelizationMethod;
+            _threading = ThreadingOperations<T>(_parallelizationMethod);
+        }
+
+        /**
+        * \brief Scales all elements of this numerical array.
+        * Given vector v = [v1, v2, ..., vn] and scalar factor a, the updated vector is:
+        * v = [a*v1, a*v2, ..., a*vn]. The scaling is performed in parallel across multiple threads.
+        * 
+        * \param scalar The scaling factor.
+        */
+        void scale(T scalar){
+            auto scaleJob = [&](unsigned start, unsigned end) -> void {
+                for (unsigned i = start; i < end; ++i) {
+                    (*_values)[i] *= scalar;
+                }
+            };
+            _threading.executeParallelJob(scaleJob);
         }
 
     protected: 
         shared_ptr<vector<T>> _values; ///< The underlying data.
         
         ParallelizationMethod _parallelizationMethod; ///< Parallelization method used for array operations.
+        
+        ThreadingOperations<T> _threading; ///< Threading operations object.
+        
+    
+        
     } 
     
 
