@@ -318,9 +318,9 @@ namespace LinearAlgebra {
 
         /**
         * \brief Performs element-wise subtraction of two scaled matrices.
-        * Given two vectors A = [v1, v2, ..., vn] and B = [w1, w2, ..., wn] representing the matrices in row major format,
+        * Given two vectors A = [A11, A12, ..., Anm] and B = [B11, B12, ..., Bnm] representing the matrices in row major format,
         * and scalar factors a and b, their subtraction is:
-        * add(A, B) = [a*A11-b*B11, a*A12-b*w12, ..., a*Anm-b*Bnm].
+        * add(A, B) = [a*A11-b*B11, a*A12-b*B12, ..., a*Anm-b*Bnm].
         * 
         * \param inputMatrix The input matrix to subtract.
         * \param result The result matrix after subtraction.
