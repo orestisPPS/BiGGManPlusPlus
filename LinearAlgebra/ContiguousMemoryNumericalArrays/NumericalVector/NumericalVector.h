@@ -360,7 +360,7 @@ namespace LinearAlgebra {
         bool empty() const {
             return _values->empty();
         }
-
+        
         /**
         * @brief Fills the vector with the specified value.
         * @param value The value to fill the vector with.

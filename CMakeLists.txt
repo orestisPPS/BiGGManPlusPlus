@@ -159,6 +159,9 @@ add_executable(untitled main.cpp
         Tests/NumericalVectorTest.h
         ThreadingOperations/ThreadingOperations.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalArray.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/NumericalMatrixStorage.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/RowMajorMatrixStorage.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/CompressedSparseRowMatrixStorage.h
 )
 
 
