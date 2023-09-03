@@ -38,9 +38,11 @@ namespace LinearAlgebra {
          * @param initialValue Default value for matrix elements.
          * @param parallelizationMethod Parallelization method to be used for matrix operations.
          */
-        explicit NumericalMatrix(unsigned int rows, unsigned int columns, T initialValue = 0, ParallelizationMethod parallelizationMethod = SingleThread) :
+        explicit NumericalMatrix(unsigned int rows, unsigned int columns, T initialValue = 0, NumericalMatrixStorageType storageType,
+                                 ParallelizationMethod parallelizationMethod = SingleThread) :
                 _numberOfRows(rows), _numberOfColumns(columns), _parallelizationMethod(parallelizationMethod) {
             _values = new NumericalVector<T>(rows * columns, initialValue, parallelizationMethod);
+            _storage = NumericalMatrixStorage<T>(storageType, rows, columns, parallelizationMethod);
         }
 
         /**

@@ -5,6 +5,7 @@
 #ifndef UNTITLED_COMPRESSEDSPARSEROWMATRIXSTORAGE_H
 #define UNTITLED_COMPRESSEDSPARSEROWMATRIXSTORAGE_H
 
+#include "SparseMatrixBuilder.h"
 #include "SparseMatrixStorage.h"
 
 namespace LinearAlgebra {
@@ -13,100 +14,57 @@ namespace LinearAlgebra {
     public:
         explicit CompressedSparseRowMatrixStorage(unsigned numberOfRows, unsigned numberOfColumns, ParallelizationMethod parallelizationMethod) :
                 NumericalMatrixStorage<T>(CSR, numberOfRows, numberOfColumns, parallelizationMethod) {
-                this->_values = make_shared<NumericalVector<T>>();
-                this->_columnIndices = make_shared<NumericalVector<unsigned>>();
-                this->_rowPointers = make_shared<NumericalVector<unsigned>>(numberOfRows + 1);
-                (*_rowPointers)[0] = 0;
+                this->_values = nullptr;
+                this->_columnIndices = nullptr;
+                this->_rowOffsets= nullptr;
         }
         
         vector<NumericalVector<T>&> getNecessaryStorageVectors() override {
-            return {*this->_values, *this->_columnIndices, *this->_rowPointers};
+            return {*this->_values, *this->_columnIndices, *this->_rowOffsets};
         }
 
-        void initializeElementAssignment() override {
-            if (this->_elementAssignmentRunning)
-                throw runtime_error("Element assignment is already running. Call finalizeElementAssignment() first.");
+        T getElement(unsigned int row, unsigned int column) const override {
+            if (row >= this->_numberOfRows || column >= this->_numberOfColumns)
+                throw runtime_error("Row or column index out of bounds.");
 
-            this->_elementAssignmentRunning = true;
-            this->_cooHashMap->clear();
-            
-            this->_values->getData()->clear();
-            _columnIndices->getData()->clear();
-            _rowPointers->getData()->clear();
-            
-            this->_values->resize(0);
-            this->_columnIndices->resize(0);
-            
-            this->_rowPointers->getData()->push_back(0);
-        }
-
-        void finalizeElementAssignment() override {
-            if (!this->_elementAssignmentRunning) {
-                throw runtime_error("Element assignment is not running. Call initializeElementAssignment() first.");
+            if (this->_elementAssignmentRunning) {
+                return this->_builder.get(row, column);
+            } else {
+                unsigned rowStart = (*_rowOffsets)[row];
+                unsigned rowEnd = (*_rowOffsets)[row + 1];
+                for (unsigned i = rowStart; i < rowEnd; i++) {
+                    if ((*_columnIndices)[i] == column)
+                        return (*this->_values)[i];
+                }
+                return static_cast<T>(0);  // Return zero of type T
             }
-            
-            this->_values->getData()->resize(this->_cooHashMap->size());
-            this->_columnIndices->getData()->resize(this->_cooHashMap->size());
-            
-            unsigned i = 0;
-            auto thisValuesData = this->_values->getDataPointer();
-            auto thisColumnIndicesData = this->_columnIndices->getDataPointer();
-            auto thisRowPointersData = this->_rowPointers->getDataPointer();
-            
-            for (auto& element : *this->_cooHashMap){
-                thisValuesData[i] = *element.second;
-                thisColumnIndicesData[i] = element.first.second;
-                i++;
-            }
-            
         }
-
+        
         void setElement(unsigned int row, unsigned int column, const T &value) override {
             if (!this->_elementAssignmentRunning) {
                 throw runtime_error("Element assignment is not running. Call initializeElementAssignment() first.");
             }
-
-            unsigned int rowStart = (*_rowPointers)[row];
-            unsigned int rowEnd = (*_rowPointers)[row + 1];
-
-            // Find the position where the column should be (or is) in columnIndices
-            unsigned int position = rowStart;
-            while (position < rowEnd && (*_columnIndices)[position] < column) {
-                position++;
+            this->_builder.insert(row, column, value);
+        }
+        
+        void eraseElement(unsigned int row, unsigned int column, const T &value) override {
+            if (!this->_elementAssignmentRunning) {
+                throw runtime_error("Element assignment is not running. Call initializeElementAssignment() first.");
             }
-
-            // If we found the column index, just update the value
-            if (position < rowEnd && (*_columnIndices)[position] == column)
-                (*_values)[position] = value;
-            else {
-                // Otherwise, we need to insert a new value and column index
-                _values->getData()->insert(_values->getData()->begin() + position, value);
-                _columnIndices->getData()->insert(_columnIndices->getData()->begin() + position, column);
-
-                // Update the row pointers for this row and all subsequent rows
-                for (unsigned int r = row + 1; r <= this->_numberOfRows; r++) {
-                    (*_rowPointers)[r]++;
-                }
-            }
+            this->_builder.remove(row, column);
         }
 
         shared_ptr<NumericalVector<T>> getRowSharedPtr(unsigned row) override {
             if (row >= this->_numberOfRows) {
                 throw runtime_error("Row index out of bounds.");
             }
-            auto rowVector = make_shared<NumericalVector<T>>(this->_numberOfColumns);
-            auto vectorData = rowVector->getDataPointer();
-            unsigned int rowStart = (*_rowPointers)[row];
-            unsigned int rowEnd = (*_rowPointers)[row + 1];
-
-            for (unsigned int i = 0; i < this->_numberOfColumns; i++) {
-                vectorData[i] = 0; // Initialize all elements to zero
-            }
+            auto rowVector = make_shared<NumericalVector<T>>(this->_numberOfColumns, static_cast<T>(0));
+            unsigned int rowStart = (*_rowOffsets)[row];
+            unsigned int rowEnd = (*_rowOffsets)[row + 1];
 
             for (unsigned int i = rowStart; i < rowEnd; i++) {
-                vectorData[(*_columnIndices)[i]] = (*_values)[i];
+                (*rowVector)[(*_columnIndices)[i]] = (*this->_values)[i];
             }
-
             return rowVector;
         }
 
@@ -114,21 +72,38 @@ namespace LinearAlgebra {
             if (column >= this->_numberOfColumns) {
                 throw runtime_error("Column index out of bounds.");
             }
-            auto columnVector = make_shared<NumericalVector<T>>(this->_numberOfRows);
-            auto vectorData = columnVector->getDataPointer();
-
+            auto columnVector = make_shared<NumericalVector<T>>(this->_numberOfRows, static_cast<T>(0));
             for (unsigned int row = 0; row < this->_numberOfRows; row++) {
-                unsigned int rowStart = (*_rowPointers)[row];
-                unsigned int rowEnd = (*_rowPointers)[row + 1];
-                vectorData[row] = 0; // Initialize to zero
+                unsigned int rowStart = (*_rowOffsets)[row];
+                unsigned int rowEnd = (*_rowOffsets)[row + 1];
                 for (unsigned int i = rowStart; i < rowEnd; i++) {
                     if ((*_columnIndices)[i] == column) {
-                        vectorData[row] = (*_values)[i];
+                        (*columnVector)[row] = (*this->_values)[i];
                         break;
                     }
                 }
             }
-            return columnVector;
+        }
+
+        void initializeElementAssignment() override {
+            if (this->_elementAssignmentRunning)
+                throw runtime_error("Element assignment is already running. Call finalizeElementAssignment() first.");
+
+            this->_elementAssignmentRunning = true;
+            this->_builder.enableElementAssignment();
+
+        }
+
+        void finalizeElementAssignment() override {
+            if (!this->_elementAssignmentRunning) {
+                throw runtime_error("Element assignment is not running. Call initializeElementAssignment() first.");
+            }
+            this->_elementAssignmentRunning = false;
+            this->_builder.disableElementAssignment();
+            auto dataVectors = this->_builder.getCSRDataVectors();
+            this->_values = std::move(dataVectors[0]);
+            this->_columnIndices = move(dataVectors[1]);
+            this->_rowOffsets = move(dataVectors[2]);
         }
 
         void matrixAdd(NumericalMatrixStorage<T> &inputMatrixData,
@@ -137,7 +112,7 @@ namespace LinearAlgebra {
 
             vector<T>& thisValues = *this->_values->getData();
             vector<unsigned>& thisColumnIndices = *this->_columnIndices->getData();
-            vector<unsigned>& thisRowPointers = *this->_rowPointers->getData();
+            vector<unsigned>& thisRowPointers = *this->_rowOffsets->getData();
 
             auto inputStorage = inputMatrixData.getNecessaryStorageVectors();
             vector<T>& inputValues = inputStorage[0];
@@ -215,7 +190,7 @@ namespace LinearAlgebra {
 
             vector<T>& thisValues = *this->_values->getData();
             vector<unsigned>& thisColumnIndices = *this->_columnIndices->getData();
-            vector<unsigned>& thisRowPointers = *this->_rowPointers->getData();
+            vector<unsigned>& thisRowPointers = *this->_rowOffsets->getData();
 
             auto inputStorage = inputMatrixData[0].getNecessaryStorageVectors();
             vector<T>& inputValues = inputStorage[0];
@@ -275,10 +250,10 @@ namespace LinearAlgebra {
                     // Adjust the row pointers for the threads after the first one
                     unsigned offset = localResultsRowPointers[t-1].back();
                     for (unsigned val : localResultsRowPointers[t]) {
-                        this->_rowPointers->push_back(val + offset);
+                        this->_rowOffsets->push_back(val + offset);
                     }
                 } else {
-                    this->_rowPointers->insert(this->_rowPointers->end(), localResultsRowPointers[t].begin(), localResultsRowPointers[t].end());
+                    this->_rowOffsets->insert(this->_rowOffsets->end(), localResultsRowPointers[t].begin(), localResultsRowPointers[t].end());
                 }
             }
         }
@@ -289,7 +264,7 @@ namespace LinearAlgebra {
 
             vector<T>& thisValues = *this->_values->getData();
             vector<unsigned>& thisColumnIndices = *this->_columnIndices->getData();
-            vector<unsigned>& thisRowPointers = *this->_rowPointers->getData();
+            vector<unsigned>& thisRowPointers = *this->_rowOffsets->getData();
 
             auto inputStorage = inputMatrixData[0].getNecessaryStorageVectors();
             vector<T>& inputValues = inputStorage[0];
@@ -366,7 +341,7 @@ namespace LinearAlgebra {
 
             vector<T>& thisValues = *this->_values->getData();
             vector<unsigned>& thisColumnIndices = *this->_columnIndices->getData();
-            vector<unsigned>& thisRowPointers = *this->_rowPointers->getData();
+            vector<unsigned>& thisRowPointers = *this->_rowOffsets->getData();
 
             auto inputStorage = inputMatrixData[0].getNecessaryStorageVectors();
             vector<T>& inputValues = inputStorage[0];
@@ -425,10 +400,10 @@ namespace LinearAlgebra {
                     // Adjust the row pointers for the threads after the first one
                     unsigned offset = localResultsRowPointers[t-1].back();
                     for (unsigned val : localResultsRowPointers[t]) {
-                        this->_rowPointers->push_back(val + offset);
+                        this->_rowOffsets->push_back(val + offset);
                     }
                 } else {
-                    this->_rowPointers->insert(this->_rowPointers->end(), localResultsRowPointers[t].begin(), localResultsRowPointers[t].end());
+                    this->_rowOffsets->insert(this->_rowOffsets->end(), localResultsRowPointers[t].begin(), localResultsRowPointers[t].end());
                 }
             }
         }
@@ -436,7 +411,7 @@ namespace LinearAlgebra {
         void matrixMultiply(NumericalMatrixStorage<T> &inputMatrixData, NumericalMatrixStorage<T>& resultMatrixData, T scaleThis, T scaleOther) override {
             T *thisValues = this->_values->getDataPointer();
             unsigned *thisColumnIndices = this->_columnIndices->getDataPointer();
-            unsigned *thisRowPointers = this->_rowPointers->getDataPointer();
+            unsigned *thisRowPointers = this->_rowOffsets->getDataPointer();
 
             T *inputValues = inputMatrixData[0];
             unsigned *inputColumnIndices = reinterpret_cast<unsigned*>(inputMatrixData[1]);
@@ -473,7 +448,7 @@ namespace LinearAlgebra {
 
     private:
             shared_ptr<NumericalVector<unsigned>> _columnIndices;
-            shared_ptr<NumericalVector<unsigned>> _rowPointers;
+            shared_ptr<NumericalVector<unsigned>> _rowOffsets;
 
     };
 

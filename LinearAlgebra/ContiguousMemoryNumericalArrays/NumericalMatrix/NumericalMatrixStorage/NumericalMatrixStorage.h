@@ -38,25 +38,24 @@ namespace LinearAlgebra {
         }
         
         virtual vector<const NumericalVector<T>&> getNecessaryStorageVectors() = 0;
-        
-        virtual void initializeElementAssignment() = 0;
-        
+
+        virtual T&  getElement(unsigned row, unsigned column) = 0;
+
+        virtual void setElement(unsigned row, unsigned column, const T &value) = 0;
+
+        virtual void eraseElement(unsigned row, unsigned column, const T &value) = 0;
+
         virtual shared_ptr<NumericalVector<T>> getRowSharedPtr(unsigned row) = 0;
         
-        virtual void getRow(unsigned row, shared_ptr<NumericalVector<T>> &vector) = 0;
-        
         virtual shared_ptr<NumericalVector<T>> getColumnSharedPtr(unsigned column) = 0;
+
+        virtual void getRow(unsigned row, shared_ptr<NumericalVector<T>> &vector) = 0;
         
         virtual void getColumn(unsigned column, shared_ptr<NumericalVector<T>> &vector) = 0;
 
+        virtual void initializeElementAssignment() = 0;
+
         virtual void finalizeElementAssignment() = 0;
-
-
-        virtual T&  getElement(unsigned row, unsigned column) = 0;
-        
-        virtual void setElement(unsigned row, unsigned column, const T &value) = 0;
-        
-        virtual void eraseElement(unsigned row, unsigned column, const T &value) = 0;
         
         virtual void scale(T scalar){
             auto scaleJob = [&](unsigned start, unsigned end) -> void {
