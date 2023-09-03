@@ -2,8 +2,8 @@
 // Created by hal9000 on 9/2/23.
 //
 
-#ifndef UNTITLED_ROWMAJORMATRIXSTORAGE_H
-#define UNTITLED_ROWMAJORMATRIXSTORAGE_H
+#ifndef UNTITLED_FULLMATRIXSTORAGE_H
+#define UNTITLED_FULLMATRIXSTORAGE_H
 
 
 #include "NumericalMatrixStorage.h"
@@ -11,11 +11,11 @@
 namespace LinearAlgebra {
 
     template<typename T>
-    class RowMajorMatrixStorage : public NumericalMatrixStorage<T> {
+    class FullMatrixStorage : public NumericalMatrixStorage<T> {
         
     public:
-        explicit RowMajorMatrixStorage(unsigned &numberOfRows, unsigned &numberOfColumns) : 
-        NumericalMatrixStorage<T>(RowMajor, numberOfRows, numberOfColumns) {
+        explicit FullMatrixStorage() : 
+                  NumericalMatrixStorage<T>(RowMajor, numberOfRows, numberOfColumns) {
             this->_values = make_shared<NumericalVector<T>>(numberOfRows * numberOfColumns);
         }
         
@@ -234,4 +234,4 @@ namespace LinearAlgebra {
 
 } // LinearAlgebra
 
-#endif //UNTITLED_ROWMAJORMATRIXSTORAGE_H
+#endif //UNTITLED_FULLMATRIXSTORAGE_H

@@ -8,7 +8,7 @@
 #include <list>
 namespace LinearAlgebra {
     enum NumericalMatrixStorageType {
-        RowMajor,
+        FullMatrix,
         CoordinateList,
         CSR,
         
@@ -16,12 +16,10 @@ namespace LinearAlgebra {
     template <typename T>
     class NumericalMatrixStorage {
     public:
-        explicit NumericalMatrixStorage(NumericalMatrixStorageType &storageType, unsigned &numberOfRows, unsigned &numberOfColumns,
-                                        ThreadingOperations<T> &threadingOperations, ParallelizationMethod &parallelizationMethod,
-                                        double sparsityPercentage = 0.0) :
-        _storageType(storageType), _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _threading(threadingOperations),
-        _parallelizationMethod(parallelizationMethod),  _sparsityPercentage(sparsityPercentage), _values(nullptr),
-        _elementAssignmentRunning(false) { }
+        explicit NumericalMatrixStorage(NumericalMatrixStorageType storageType, unsigned numberOfRows, unsigned numberOfColumns, 
+                                        ParallelizationMethod parallelizationMethod) :
+        _storageType(storageType), _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _threading(ThreadingOperations<T>(parallelizationMethod)),
+        _parallelizationMethod(parallelizationMethod), _values(nullptr), _elementAssignmentRunning(false) { }
         
         virtual ~NumericalMatrixStorage() = default;
         
@@ -31,8 +29,6 @@ namespace LinearAlgebra {
             }
             return _values;
         }
-
-        virtual const T& operator()(unsigned int row, unsigned int column) const = 0;
         
         unsigned numberOfNonZeroElements(){
             if (_elementAssignmentRunning){
@@ -41,7 +37,7 @@ namespace LinearAlgebra {
             return _values->size();
         }
         
-        virtual vector<shared_ptr<NumericalVector<T>&>> getNecessaryStorageVectors() = 0;
+        virtual vector<const NumericalVector<T>&> getNecessaryStorageVectors() = 0;
         
         virtual void initializeElementAssignment() = 0;
         
@@ -54,8 +50,13 @@ namespace LinearAlgebra {
         virtual void getColumn(unsigned column, shared_ptr<NumericalVector<T>> &vector) = 0;
 
         virtual void finalizeElementAssignment() = 0;
+
+
+        virtual T&  getElement(unsigned row, unsigned column) = 0;
         
         virtual void setElement(unsigned row, unsigned column, const T &value) = 0;
+        
+        virtual void eraseElement(unsigned row, unsigned column, const T &value) = 0;
         
         virtual void scale(T scalar){
             auto scaleJob = [&](unsigned start, unsigned end) -> void {
@@ -100,18 +101,13 @@ namespace LinearAlgebra {
         
         ParallelizationMethod _parallelizationMethod;
         
-        ThreadingOperations<T>& _threading;
-        
-        double _sparsityPercentage;
+        ThreadingOperations<T> _threading;
         
         unsigned _numberOfRows;
         
         unsigned _numberOfColumns;
         
         bool _elementAssignmentRunning;
-        
-        list<unique_ptr<list<T>>> _storageTypeSpecificLists;
-
     };
 
 } // LinearAlgebra

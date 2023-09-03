@@ -5,52 +5,60 @@
 #ifndef UNTITLED_COMPRESSEDSPARSEROWMATRIXSTORAGE_H
 #define UNTITLED_COMPRESSEDSPARSEROWMATRIXSTORAGE_H
 
-#include "NumericalMatrixStorage.h"
+#include "SparseMatrixStorage.h"
 
 namespace LinearAlgebra {
     template <typename T>
-    class CompressedSparseRowMatrixStorage : public NumericalMatrixStorage<T> {
+    class CompressedSparseRowMatrixStorage : public SparseMatrixStorage<T>{
     public:
-        explicit CompressedSparseRowMatrixStorage(unsigned &numberOfRows, unsigned &numberOfColumns) :
-                NumericalMatrixStorage<T>(CSR, numberOfRows, numberOfColumns) {
-                auto numberOfNonZeroElements = static_cast<unsigned int>(this->_numberOfRows * this->_numberOfColumns * this->_sparsityPercentage);
-                this->_values = make_shared<NumericalVector<T>>(numberOfNonZeroElements);
-                this->_columnIndices = make_shared<NumericalVector<unsigned>>(numberOfNonZeroElements);
-                this->_rowPointers = make_shared<NumericalVector<unsigned>>(this->_numberOfRows + 1);
+        explicit CompressedSparseRowMatrixStorage(unsigned numberOfRows, unsigned numberOfColumns, ParallelizationMethod parallelizationMethod) :
+                NumericalMatrixStorage<T>(CSR, numberOfRows, numberOfColumns, parallelizationMethod) {
+                this->_values = make_shared<NumericalVector<T>>();
+                this->_columnIndices = make_shared<NumericalVector<unsigned>>();
+                this->_rowPointers = make_shared<NumericalVector<unsigned>>(numberOfRows + 1);
+                (*_rowPointers)[0] = 0;
         }
-
-
         
-        vector<T *> getNecessaryStorageVectors() override {
-            return {this->_values->getDataPointer(), this->_columnIndices->getDataPointer(), this->_rowPointers->getDataPointer()};
+        vector<NumericalVector<T>&> getNecessaryStorageVectors() override {
+            return {*this->_values, *this->_columnIndices, *this->_rowPointers};
         }
 
         void initializeElementAssignment() override {
-            if (this->_elementAssignmentRunning) {
+            if (this->_elementAssignmentRunning)
                 throw runtime_error("Element assignment is already running. Call finalizeElementAssignment() first.");
-            }
+
             this->_elementAssignmentRunning = true;
-            _values->fill(0.0);
-            _columnIndices->fill(0);
-            _rowPointers->fill(0);
+            this->_cooHashMap->clear();
+            
+            this->_values->getData()->clear();
+            _columnIndices->getData()->clear();
+            _rowPointers->getData()->clear();
+            
+            this->_values->resize(0);
+            this->_columnIndices->resize(0);
+            
+            this->_rowPointers->getData()->push_back(0);
         }
 
         void finalizeElementAssignment() override {
             if (!this->_elementAssignmentRunning) {
                 throw runtime_error("Element assignment is not running. Call initializeElementAssignment() first.");
             }
-            auto lastNonZeroElementIndex = 0;
-            auto data = this->_values->getDataPointer();
-            for (auto &value : *data) {
-                if (value != 0.0) {
-                    lastNonZeroElementIndex++;
-                }
-                else {
-                    break;
-                }
+            
+            this->_values->getData()->resize(this->_cooHashMap->size());
+            this->_columnIndices->getData()->resize(this->_cooHashMap->size());
+            
+            unsigned i = 0;
+            auto thisValuesData = this->_values->getDataPointer();
+            auto thisColumnIndicesData = this->_columnIndices->getDataPointer();
+            auto thisRowPointersData = this->_rowPointers->getDataPointer();
+            
+            for (auto& element : *this->_cooHashMap){
+                thisValuesData[i] = *element.second;
+                thisColumnIndicesData[i] = element.first.second;
+                i++;
             }
-            this->_values->getData()->resize(lastNonZeroElementIndex);
-            this->_columnIndices->getData()->resize(lastNonZeroElementIndex);
+            
         }
 
         void setElement(unsigned int row, unsigned int column, const T &value) override {
@@ -464,7 +472,6 @@ namespace LinearAlgebra {
 
 
     private:
-            shared_ptr<NumericalVector<T>> _values;
             shared_ptr<NumericalVector<unsigned>> _columnIndices;
             shared_ptr<NumericalVector<unsigned>> _rowPointers;
 
