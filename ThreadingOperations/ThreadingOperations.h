@@ -23,8 +23,13 @@ class ThreadingOperations {
 
 public:
     
-    explicit ThreadingOperations(ParallelizationMethod parallelizationMethod) : _parallelizationMethod(parallelizationMethod) {}
+    explicit ThreadingOperations(ParallelizationMethod parallelizationMethod, unsigned availableThreads) :
+    _parallelizationMethod(parallelizationMethod), _availableThreads(availableThreads) {}
 
+    unsigned getAvailableThreads() {
+        return _availableThreads;
+    }
+    
     template<typename ThreadJob>
     static void
     executeParallelJob(size_t size, ThreadJob task, unsigned availableThreads, unsigned cacheLineSize = 64) {
@@ -164,6 +169,8 @@ public:
     
     private:
     ParallelizationMethod _parallelizationMethod;
+    
+    unsigned _availableThreads;
 };
 
 #endif //UNTITLED_THREADINGOPERATIONS_H

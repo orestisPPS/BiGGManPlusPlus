@@ -396,6 +396,17 @@ namespace LinearAlgebra {
                 component = distribution(generator);
             }
         }
+        
+        /**
+         * @brief Resizes the vector. If the new size is smaller than the current size, the vector is truncated.
+         * If the new size is larger than the current size, the vector is extended and the new elements are initialized
+         * with the specified value.
+         * @param newSize The new size of the vector.
+         * @param initialValue The value to initialize the new elements with.
+         */
+        void resize(unsigned int newSize, T initialValue = 0) {
+            _values->resize(newSize, initialValue);
+        }
 
 
         /**
@@ -404,6 +415,14 @@ namespace LinearAlgebra {
          */
         T *getDataPointer() const {
             return _values->data();
+        }
+        
+        /**
+         * @brief Returns a shared pointer to the underlying data std vector<T>.
+         * @return shared_ptr<vector<T>> Shared pointer to the underlying data.
+         */
+        shared_ptr<vector<T>>& getData() {
+            return _values;
         }
 
         /**

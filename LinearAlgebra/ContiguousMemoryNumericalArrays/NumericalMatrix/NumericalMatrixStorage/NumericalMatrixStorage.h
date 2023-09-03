@@ -16,15 +16,14 @@ namespace LinearAlgebra {
     template <typename T>
     class NumericalMatrixStorage {
     public:
-        explicit NumericalMatrixStorage(NumericalMatrixStorageType &storageType, unsigned &numberOfRows, unsigned &numberOfColumns, double sparsityPercentage = 0.0) :
-        _storageType(storageType), _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns),
-        _elementAssignmentRunning(false), _sparsityPercentage(sparsityPercentage) { }
+        explicit NumericalMatrixStorage(NumericalMatrixStorageType &storageType, unsigned &numberOfRows, unsigned &numberOfColumns,
+                                        ThreadingOperations<T> &threadingOperations, ParallelizationMethod &parallelizationMethod,
+                                        double sparsityPercentage = 0.0) :
+        _storageType(storageType), _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _threading(threadingOperations),
+        _parallelizationMethod(parallelizationMethod),  _sparsityPercentage(sparsityPercentage), _values(nullptr),
+        _elementAssignmentRunning(false) { }
         
         virtual ~NumericalMatrixStorage() = default;
-        
-        const NumericalMatrixStorageType& getStorageType(){
-            return _storageType;
-        }
         
         const shared_ptr<NumericalVector<T> >& getValues(){
             if (_elementAssignmentRunning){
@@ -41,7 +40,9 @@ namespace LinearAlgebra {
             }
             return _values->size();
         }
-
+        
+        virtual vector<shared_ptr<NumericalVector<T>&>> getNecessaryStorageVectors() = 0;
+        
         virtual void initializeElementAssignment() = 0;
         
         virtual shared_ptr<NumericalVector<T>> getRowSharedPtr(unsigned row) = 0;
@@ -55,19 +56,57 @@ namespace LinearAlgebra {
         virtual void finalizeElementAssignment() = 0;
         
         virtual void setElement(unsigned row, unsigned column, const T &value) = 0;
+        
+        virtual void scale(T scalar){
+            auto scaleJob = [&](unsigned start, unsigned end) -> void {
+                for (unsigned i = start; i < end; ++i) {
+                    (*_values)[i] *= scalar;
+                }
+            };
+            _threading.executeParallelJob(scaleJob, _values->size());
+        }
+        
+        virtual void matrixAdd(NumericalMatrixStorage<T> &inputMatrixData,
+                               NumericalMatrixStorage<T> &resultMatrixData,
+                               T scaleThis, T scaleOther) = 0;
+        
+        virtual void matrixAddIntoThis(NumericalMatrixStorage<T> &inputMatrixData,
+                                       T scaleThis, T scaleOther) = 0;
+        
+        virtual void matrixSubtract(NumericalMatrixStorage<T> &inputMatrixData,
+                                    NumericalMatrixStorage<T> &resultMatrixData,
+                                    T scaleThis, T scaleOther) = 0;
+        
+        virtual void matrixSubtractFromThis(NumericalMatrixStorage<T> &inputMatrixData,
+                                            T scaleThis, T scaleOther) = 0;
+        
+        virtual void matrixMultiply(NumericalMatrixStorage<T> &inputMatrixData,
+                                    NumericalMatrixStorage<T> &resultMatrixData,
+                                    T scaleThis, T scaleOther) = 0;
+        
+        virtual void matrixMultiplyIntoThis(NumericalMatrixStorage<T> &inputMatrixData,
+                                            T scaleThis, T scaleOther) = 0;
+        
+        virtual void matrixMultiplyWithVector(T *&inputVectorData, T *&resultVectorData, T scaleThis, T scaleOther) = 0;
+        
+        virtual void axpy(T *&multipliedVectorData, T *&addedVectorData, T scaleMultiplication, T scaleAddition) = 0;
 
 
     protected:
         
         shared_ptr<NumericalVector<T> > _values;
         
-        NumericalMatrixStorageType &_storageType;
+        NumericalMatrixStorageType _storageType;
+        
+        ParallelizationMethod _parallelizationMethod;
+        
+        ThreadingOperations<T>& _threading;
         
         double _sparsityPercentage;
         
-        unsigned &_numberOfRows;
+        unsigned _numberOfRows;
         
-        unsigned &_numberOfColumns;
+        unsigned _numberOfColumns;
         
         bool _elementAssignmentRunning;
         
