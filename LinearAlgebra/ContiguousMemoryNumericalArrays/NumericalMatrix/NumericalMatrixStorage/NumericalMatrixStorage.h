@@ -18,8 +18,7 @@ namespace LinearAlgebra {
     public:
         explicit NumericalMatrixStorage(NumericalMatrixStorageType storageType, unsigned numberOfRows, unsigned numberOfColumns, 
                                         ParallelizationMethod parallelizationMethod, unsigned availableThreads = 1) :
-        _storageType(storageType), _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns),
-        threading(ThreadingOperations<T>(parallelizationMethod, availableThreads)) { }
+        _storageType(storageType), _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns) { }
         
         virtual ~NumericalMatrixStorage() = default;
         

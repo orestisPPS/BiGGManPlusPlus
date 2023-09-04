@@ -12,7 +12,6 @@
 #include <type_traits>
 #include <valarray>
 #include <random>
-#include "../../ParallelizationMethods.h"
 #include "../../../ThreadingOperations/ThreadingOperations.h"
 using namespace LinearAlgebra;
 using namespace std;
@@ -64,12 +63,11 @@ namespace LinearAlgebra {
         * @param initialValue Default value for vector elements.
         * @param parallelizationMethod Parallelization method to be used for vector operations.
         */
-        explicit NumericalVector(unsigned int size, T initialValue = 0,
-                                 ParallelizationMethod parallelizationMethod = SingleThread, unsigned availableThreads = 1){
+        explicit NumericalVector(unsigned int size, T initialValue = 0, unsigned availableThreads = 1){
             
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _values = make_shared<vector<T>> (size, initialValue);
-            _threading = ThreadingOperations<T>(parallelizationMethod, availableThreads);
+            _availableThreads = availableThreads;
         }
 
         /**
@@ -77,13 +75,11 @@ namespace LinearAlgebra {
         * @param values Initial values for the vector.
         * @param parallelizationMethod Parallelization method to be used for vector operations.
         */
-        NumericalVector(std::initializer_list<T> values, ParallelizationMethod parallelizationMethod = SingleThread, unsigned availableThreads = 1) :
-        _threading(ThreadingOperations<T>(parallelizationMethod, availableThreads))
-        {
+        NumericalVector(std::initializer_list<T> values, unsigned availableThreads = 1) {
             
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _values = make_shared<vector<T>>(values);
-            //_threading = ThreadingOperations<T>(parallelizationMethod, availableThreads);
+            _availableThreads = availableThreads;
         }
 
 
@@ -108,9 +104,7 @@ namespace LinearAlgebra {
         */
         NumericalVector(const NumericalVector<T> &other){
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
-            auto parallelizationMethod = other->getParallelizationMethod();
-            auto availableThreads = other->getAvailableThreads();
-            _threading = ThreadingOperations<T>(parallelizationMethod, availableThreads);
+            _availableThreads = other._availableThreads;
             _deepCopy(other);
         }
         
@@ -122,9 +116,7 @@ namespace LinearAlgebra {
         explicit NumericalVector(const std::shared_ptr<NumericalVector<T>> &other) {
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _deepCopy(other);
-            auto parallelizationMethod = other->getParallelizationMethod();
-            auto availableThreads = other->getAvailableThreads();
-            _threading = ThreadingOperations<T>(parallelizationMethod, availableThreads);
+            _availableThreads = other->_availableThreads;
         }
         
         /**
@@ -134,9 +126,7 @@ namespace LinearAlgebra {
         explicit NumericalVector(const std::unique_ptr<NumericalVector<T>> &other) {
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _deepCopy(other);
-            auto parallelizationMethod = other->getParallelizationMethod();
-            auto availableThreads = other->getAvailableThreads();
-            _threading = ThreadingOperations<T>(parallelizationMethod, availableThreads);
+            _availableThreads = other->_availableThreads;
         }
         
         /**
@@ -146,9 +136,7 @@ namespace LinearAlgebra {
         explicit NumericalVector(const NumericalVector<T> *other) {
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _deepCopy(other);
-            auto parallelizationMethod = other->getParallelizationMethod();
-            auto availableThreads = other->getAvailableThreads();
-            _threading = ThreadingOperations<T>(parallelizationMethod, availableThreads);
+            _availableThreads = other->_availableThreads;
         }
 
         /**
@@ -162,8 +150,7 @@ namespace LinearAlgebra {
             
             if (this != &other) {
                 _deepCopy(other);
-                auto parallelizationMethod = other.getParallelizationMethod();
-                auto availableThreads = other.getAvailableThreads();
+                _availableThreads = other.getAvailableThreads();
             }
             return *this;
         }
@@ -438,35 +425,27 @@ namespace LinearAlgebra {
         //=================================================================================================================//
 
         /**
-         * @brief Returns the parallelization method used for vector operations.
-         * @return ParallelizationMethod The parallelization method used for vector operations.
-         */
-        ParallelizationMethod getParallelizationMethod(){
-            return _threading.getParallelizationMethod();
-        }
-
-        /**
-         * @brief Sets the parallelization method to be used for vector operations.
-         * @param parallelizationMethod The parallelization method to be used for vector operations.
-         */
-        void setParallelizationMethod(ParallelizationMethod parallelizationMethod){
-            _threading.setParallelizationMethod(parallelizationMethod);
-        }
-
-        /**
-         * @brief Returns the number of threads used for vector operations.
-         * @return unsigned int The number of threads used for vector operations.
-         */
+        * @brief Returns the number of threads used for vector operations.
+        * @return unsigned int The number of threads used for vector operations.
+        */
         unsigned getAvailableThreads() const{
-            return _threading.getAvailableThreads();
+            return _availableThreads;
         }
 
         /**
-         * @brief Sets the number of threads to be used for vector operations.
-         * @param availableThreads The number of threads to be used for vector operations.
-         */
+        * @brief Sets the number of threads to be used for vector operations.
+        * @param availableThreads The number of threads to be used for vector operations.
+         * @throws runtime_error If the number of threads is 0.
+         * @throws runtime_error If the number of threads exceeds the number of available CPU cores.
+        */
         void setAvailableThreads(unsigned availableThreads){
-            _threading.setAvailableThreads(availableThreads);
+            if (availableThreads == 0){
+                throw runtime_error("Number of threads must be greater than 0.");
+            }
+            if (availableThreads > thread::hardware_concurrency()){
+                throw runtime_error("Number of threads cannot exceed the number of available CPU cores.");
+            }
+            _availableThreads = availableThreads;
         }
 
 
@@ -490,11 +469,7 @@ namespace LinearAlgebra {
                 return sum;
             };
 
-            auto lol =  ThreadingOperations<T>::executeParallelJobWithIncompleteReduction(sumElementsJob, _values->size());
-            auto sum = 0;
-            for (auto &i : lol){
-                sum += i;
-            }
+            return ThreadingOperations<T>::executeParallelJobWithReduction(sumElementsJob, _values->size(), _availableThreads);
             
         }
 
@@ -515,7 +490,7 @@ namespace LinearAlgebra {
                 return sum;
             };
 
-            return sqrt(_threading.executeParallelJobWithReductionForDoubles(magnitudeJob, _values->size()));
+            return sqrt(_threading.executeParallelJobWithReductionForDoubles(magnitudeJob, _values->size(), _availableThreads));
         }
 
         /**
@@ -575,7 +550,7 @@ namespace LinearAlgebra {
                 return sum;
             };
 
-            double distanceSquared = _threading.executeParallelJobWithReductionForDoubles(distanceThreadJob, size());
+            double distanceSquared = _threading.executeParallelJobWithReductionForDoubles(distanceThreadJob, size(), _availableThreads);
             return sqrt(distanceSquared);
         }
 
@@ -612,7 +587,7 @@ namespace LinearAlgebra {
                 return sum;
             };
 
-            double inputMagnitudeSquared = _threading.executeParallelJobWithReductionForDoubles(inputMagnitudeThreadJob, size());
+            double inputMagnitudeSquared = _threading.executeParallelJobWithReductionForDoubles(inputMagnitudeThreadJob, size(), _availableThreads);
             double inputMagnitude = sqrt(inputMagnitudeSquared);
 
             if (thisMagnitude == 0 || inputMagnitude == 0) {
@@ -668,7 +643,7 @@ namespace LinearAlgebra {
                 return sum;
             };
 
-            double inputMagnitudeSquared = _threading.executeParallelJobWithReductionForDoubles(inputMagnitudeThreadJob, size());
+            double inputMagnitudeSquared = _threading.executeParallelJobWithReductionForDoubles(inputMagnitudeThreadJob, size(), _availableThreads);
             double inputMagnitude = sqrt(inputMagnitudeSquared);
 
             if (inputMagnitude == 0) {
@@ -681,7 +656,7 @@ namespace LinearAlgebra {
                     resultData[i] = inputVectorData1[i] * scalar;
                 }
             };
-            _threading.executeParallelJob(projectionThreadJob, size());
+            _threading.executeParallelJob(projectionThreadJob, size(), _availableThreads);
         }
 
         /**
@@ -718,7 +693,7 @@ namespace LinearAlgebra {
                 return sum;
             };
 
-            double inputMagnitudeSquared = _threading.executeParallelJobWithReductionForDoubles(inputMagnitudeThreadJob, size());
+            double inputMagnitudeSquared = _threading.executeParallelJobWithReductionForDoubles(inputMagnitudeThreadJob, size(), _availableThreads);
             double inputMagnitude = sqrt(inputMagnitudeSquared);
 
             if (inputMagnitude == 0) {
@@ -731,7 +706,7 @@ namespace LinearAlgebra {
                     (*_values)[i] = inputVectorData1[i] * scalar;
                 }
             };
-            _threading.executeParallelJob(projectionThreadJob);
+            _threading.executeParallelJob(projectionThreadJob, size(), _availableThreads);
         }
 
         /**
@@ -773,7 +748,7 @@ namespace LinearAlgebra {
                     resultData[i] = (*_values)[i];
                 }
             };
-            _threading.executeParallelJob(threadJob, size());
+            _threading.executeParallelJob(threadJob, size(), _availableThreads);
             resultData[0] -= alpha;
         }
 
@@ -834,7 +809,7 @@ namespace LinearAlgebra {
                 return sum;
             };
 
-            return _threading.executeParallelJobWithReductionForDoubles(varianceJob, size()) / size();
+            return _threading.executeParallelJobWithReductionForDoubles(varianceJob, size(), _availableThreads) / size();
         }
 
         /**
@@ -882,7 +857,7 @@ namespace LinearAlgebra {
                 return sum;
             };
 
-            double averageOfInput = _threading.executeParallelJobWithReductionForDoubles(averageOfInputJob, size()) / _values->size();
+            double averageOfInput = _threading.executeParallelJobWithReductionForDoubles(averageOfInputJob, size(), _availableThreads) / _values->size();
 
             auto covarianceJob = [&](unsigned start, unsigned end) -> double {
                 double sum = 0;
@@ -892,7 +867,7 @@ namespace LinearAlgebra {
                 return sum;
             };
 
-            return _threading.executeParallelJobWithReductionForDoubles(covarianceJob, size()) / size();
+            return _threading.executeParallelJobWithReductionForDoubles(covarianceJob, size(), _availableThreads) / size();
         }
 
         /**
@@ -926,7 +901,7 @@ namespace LinearAlgebra {
                 }
                 return sum;
             };
-            double meanOfInput = _threading.executeParallelJobWithReductionForDoubles(meanOfInputJob, size()) / _values->size();
+            double meanOfInput = _threading.executeParallelJobWithReductionForDoubles(meanOfInputJob, size(), _availableThreads) / _values->size();
 
             // Calculate variance of inputVector
             auto varianceOfInputJob = [&](unsigned start, unsigned end) -> double {
@@ -937,7 +912,7 @@ namespace LinearAlgebra {
                 }
                 return sum;
             };
-            double varianceOfInput = _threading.executeParallelJobWithReductionForDoubles(varianceOfInputJob, size()) / _values->size();
+            double varianceOfInput = _threading.executeParallelJobWithReductionForDoubles(varianceOfInputJob, size(), _availableThreads) / _values->size();
             double stdDevOfInput = sqrt(varianceOfInput);
 
             if (stdDevOfThis == 0 || stdDevOfInput == 0) {
@@ -956,7 +931,7 @@ namespace LinearAlgebra {
                 return sum;
             };
 
-            return _threading.executeParallelJobWithReductionForDoubles(normL1Job, size());
+            return _threading.executeParallelJobWithReductionForDoubles(normL1Job, size(), _availableThreads);
         }
 
         double normL2() {
@@ -968,7 +943,7 @@ namespace LinearAlgebra {
                 return sum;
             };
 
-            return sqrt(_threading.executeParallelJobWithReductionForDoubles(normL2Job, size()));
+            return sqrt(_threading.executeParallelJobWithReductionForDoubles(normL2Job, size(), _availableThreads));
         }
 
         double normLInf() {
@@ -982,7 +957,7 @@ namespace LinearAlgebra {
                 }
                 return maxVal;
             };
-            auto reductionResults = _threading.executeParallelJobWithIncompleteReduction(normLInfJob, size());
+            auto reductionResults = _threading.executeParallelJobWithIncompleteReduction(normLInfJob, size(), _availableThreads);
             return *std::max_element(reductionResults.begin(), reductionResults.end());
         }
 
@@ -995,7 +970,7 @@ namespace LinearAlgebra {
                 return sum;
             };
 
-            return pow(_threading.executeParallelJobWithReductionForDoubles(normLpJob, size()), 1.0 / p);
+            return pow(_threading.executeParallelJobWithReductionForDoubles(normLpJob, size()), _availableThreads);
         }
 
         //=================================================================================================================//
@@ -1033,7 +1008,7 @@ namespace LinearAlgebra {
                 return localDotProduct;
             };
 
-            return _threading.executeParallelJobWithReduction(dotProductJob, _values->size());
+            return _threading.executeParallelJobWithReduction(dotProductJob, _values->size(), _availableThreads);
         }
 
 
@@ -1067,7 +1042,7 @@ namespace LinearAlgebra {
                     resultData[i] = scaleThis * (*_values)[i] + scaleInput * otherData[i];
                 }
             };
-            _threading.executeParallelJob(addJob, _values->size());
+            _threading.executeParallelJob(addJob, _values->size(), _availableThreads);
         }
 
         /**
@@ -1092,7 +1067,7 @@ namespace LinearAlgebra {
                     (*_values)[i] = scaleThis * (*_values)[i] + scaleInput * otherData[i];
                 }
             };
-            _threading.executeParallelJob(addJob, _values->size());
+            _threading.executeParallelJob(addJob, _values->size(), _availableThreads);
         }
 
         /**
@@ -1125,7 +1100,7 @@ namespace LinearAlgebra {
                     resultData[i] = scaleThis * (*_values)[i] - scaleInput * otherData[i];
                 }
             };
-            _threading.executeParallelJob(subtractJob, _values->size());
+            _threading.executeParallelJob(subtractJob, _values->size(), _availableThreads);
         }
 
         /**
@@ -1151,7 +1126,7 @@ namespace LinearAlgebra {
                 }
             };
 
-            _threading.executeParallelJob(subtractJob, _values->size());
+            _threading.executeParallelJob(subtractJob, _values->size(), _availableThreads);
         }
         
         void scale(T scalar) {
@@ -1160,7 +1135,7 @@ namespace LinearAlgebra {
                     value *= scalar;
                 }
             };
-            _threading.executeParallelJob(scaleJob, _values->size());
+            _threading.executeParallelJob(scaleJob, _values->size(), _availableThreads);
         }
 
 
@@ -1168,6 +1143,9 @@ namespace LinearAlgebra {
         shared_ptr<vector<T>> _values; ///< The underlying data.
         
         ThreadingOperations<T> _threading; ///< Threading operations used for parallelization.
+        
+        unsigned _availableThreads; ///< The number of threads available for operations on this vector.
+        
 
         /**
         * @brief Performs a deep copy from the source to the current object.
@@ -1191,7 +1169,7 @@ namespace LinearAlgebra {
                     (*_values)[i] = sourceData[i];
                 }
             };
-            _threading.executeParallelJob(deepCopyThreadJob, _values->size());
+            _threading.executeParallelJob(deepCopyThreadJob, _values->size(), _availableThreads);
         }
 
         /**
@@ -1218,7 +1196,7 @@ namespace LinearAlgebra {
                 return true;
             };
 
-            return _threading.executeParallelJobWithReduction(compareElementsJob, _values->size());
+            return _threading.executeParallelJobWithReduction(compareElementsJob, _values->size(), _availableThreads);
         }
 
 
@@ -1256,17 +1234,6 @@ namespace LinearAlgebra {
                 return source->getDataPointer();
             }
 
-
-            /**
-            * \brief Dereferences the source.
-            * \param source A smart pointer to the source object.
-            * \return The parallelization method of the source.
-            */
-            static ThreadingOperations<U> &threadingOperations(const NumericalVector<U> &source) {
-                return source->_parallelizationMethod;
-            }
-            
-
             /**
             * \brief Fetches the size of the source.
             * \param source A pointer to the source object.
@@ -1291,11 +1258,7 @@ namespace LinearAlgebra {
                 static_assert(std::is_arithmetic<U>::value, "Template type T must be an arithmetic type (integral or floating-point)");
                 return source.getDataPointer();
             }
-
-            static ThreadingOperations<U> &threadingOperations(const NumericalVector<U> &source) {
-                return source._threading;
-            }
-
+            
             /**
             * \brief Fetches the size of the source.
             * \param source A smart pointer to the source object.

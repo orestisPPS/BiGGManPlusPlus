@@ -19,30 +19,11 @@ class ThreadingOperations {
 
 public:
     
-    ThreadingOperations(ParallelizationMethod parallelizationMethod, unsigned availableThreads) :
-    _parallelizationMethod(parallelizationMethod), _availableThreads(availableThreads){}
-    
-    
-    const ParallelizationMethod &getParallelizationMethod() {
-        return _parallelizationMethod;
-    }
-    
-    void setParallelizationMethod(ParallelizationMethod parallelizationMethod) {
-        _parallelizationMethod = parallelizationMethod;
-    }
-    
-    const unsigned& getAvailableThreads() const {
-        return _availableThreads;
-    }
-    
-    void setAvailableThreads(unsigned availableThreads) {
-        _availableThreads = availableThreads;
-    }
     
     template<typename ThreadJob>
-    void executeParallelJob(size_t size, ThreadJob task, unsigned cacheLineSize = 64) {
+    static void executeParallelJob(ThreadJob task, size_t size, unsigned availableThreads, unsigned cacheLineSize = 64) {
         unsigned doublesPerCacheLine = cacheLineSize / sizeof(T);
-        unsigned int numThreads = std::min(_availableThreads, static_cast<unsigned>(size));
+        unsigned int numThreads = std::min(availableThreads, static_cast<unsigned>(size));
 
         unsigned blockSize = (size + numThreads - 1) / numThreads;
         blockSize = (blockSize + doublesPerCacheLine - 1) / doublesPerCacheLine * doublesPerCacheLine;
@@ -79,7 +60,7 @@ public:
     * \return The combined result after the reduction step.
     */
     template<typename ThreadJob>
-    static T executeParallelJobWithReduction(size_t size, ThreadJob task, unsigned availableThreads, unsigned cacheLineSize = 64) {
+    static T executeParallelJobWithReduction(ThreadJob task, size_t size, unsigned availableThreads, unsigned cacheLineSize = 64) {
         unsigned doublesPerCacheLine = cacheLineSize / sizeof(T);
         unsigned int numThreads = std::min(availableThreads, static_cast<unsigned>(size));
 
@@ -122,15 +103,15 @@ public:
     *
     * \param size The size of the data being processed.
     * \param task The callable object that describes the work each thread should execute and return a local result.
-     * \param _availableThreads The number of threads available for processing.
+     * \param availableThreads The number of threads available for processing.
     * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
     * 
     * \return The result vector after the reduction step.
     */
     template<typename ThreadJob>
-    vector<T> executeParallelJobWithIncompleteReduction(size_t size, ThreadJob task, unsigned cacheLineSize = 64) {
+    static vector<T> executeParallelJobWithIncompleteReduction(ThreadJob task, size_t size, unsigned availableThreads, unsigned cacheLineSize = 64) {
         unsigned doublesPerCacheLine = cacheLineSize / sizeof(T);
-        unsigned int numThreads = std::min(_availableThreads, static_cast<unsigned>(size));
+        unsigned int numThreads = std::min(availableThreads, static_cast<unsigned>(size));
 
         unsigned blockSize = (size + numThreads - 1) / numThreads;
         blockSize = (blockSize + doublesPerCacheLine - 1) / doublesPerCacheLine * doublesPerCacheLine;
@@ -153,29 +134,16 @@ public:
         }
         return localResults;
     }
-    
-    template<typename ThreadJob>
-    void executeParallelJob(ThreadJob task, unsigned int size) {
-        if (_parallelizationMethod == SingleThread) {
-            executeParallelJob(size, task, 1);
-        } else if (_parallelizationMethod == MultiThread) {
-            executeParallelJob(size, task, _availableThreads);
-        }
-    }
 
     template<typename ThreadJob>
-    double executeParallelJobWithReductionForDoubles(ThreadJob task, unsigned int size) {
-        if (_parallelizationMethod == SingleThread) {
-            return executeParallelJobWithReduction(size, task, 1);
-        } else if (_parallelizationMethod == MultiThread) {
-            return executeParallelJobWithReduction(size, task, _availableThreads);
+    double executeParallelJobWithReductionForDoubles(ThreadJob task, unsigned int size, unsigned availableThreads) {
+       auto resultsVector = executeParallelJobWithIncompleteReduction(task, size, availableThreads);
+        double finalResult = 0;
+        for (double val: resultsVector) {
+            finalResult += val;
         }
+        return finalResult;
     }
-    
-    private:
-    ParallelizationMethod _parallelizationMethod;
-    
-    unsigned _availableThreads;
 };
 
 #endif //UNTITLED_THREADINGOPERATIONS_H
