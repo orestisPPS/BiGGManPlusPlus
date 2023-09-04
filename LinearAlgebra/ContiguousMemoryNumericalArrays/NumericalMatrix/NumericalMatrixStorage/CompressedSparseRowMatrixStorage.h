@@ -5,7 +5,7 @@
 #ifndef UNTITLED_COMPRESSEDSPARSEROWMATRIXSTORAGE_H
 #define UNTITLED_COMPRESSEDSPARSEROWMATRIXSTORAGE_H
 
-#include "SparseMatrixBuilder.h"
+#include "NumericalMatrixDataStructuresProvider.h"
 #include "SparseMatrixStorage.h"
 
 namespace LinearAlgebra {
@@ -19,39 +19,145 @@ namespace LinearAlgebra {
                 this->_rowOffsets= nullptr;
         }
         
-        vector<NumericalVector<T>&> getNecessaryStorageVectors() override {
+        vector<NumericalVector<T>&> getSupplementaryVectors() override {
             return {*this->_values, *this->_columnIndices, *this->_rowOffsets};
         }
 
-        T getElement(unsigned int row, unsigned int column) const override {
+        T& getElement(unsigned int row, unsigned int column) const override {
             if (row >= this->_numberOfRows || column >= this->_numberOfColumns)
                 throw runtime_error("Row or column index out of bounds.");
 
             if (this->_elementAssignmentRunning) {
-                return this->_builder.get(row, column);
-            } else {
+                return this->_builder.getElement(row, column);
+            }
+            else {
                 unsigned rowStart = (*_rowOffsets)[row];
                 unsigned rowEnd = (*_rowOffsets)[row + 1];
                 for (unsigned i = rowStart; i < rowEnd; i++) {
                     if ((*_columnIndices)[i] == column)
                         return (*this->_values)[i];
                 }
-                return static_cast<T>(0);  // Return zero of type T
+                return this->_zero;  // Return zero of type T
             }
         }
-        
+
+        /**
+        * @brief Sets the value at the specified row and column index of the sparse matrix.
+        * 
+        * The function is designed to handle both the case when the matrix is being built (using the COO format in the builder)
+        * and when the matrix is already complete (using the CSR format).
+         * WARNING : Avoid calling this function when element assignment is not running. When a lot of elements need to be
+         * changed and stored in the matrix, it is more efficient to use the builder to insert the elements and then call
+         * finalizeElementAssignment() to convert the matrix to CSR format.
+        *
+        * @param row The row index at which to set the value.
+        * @param column The column index at which to set the value.
+        * @param value The value to be set.
+        * 
+        * @throws runtime_error if the row or column indices are out of bounds.
+        * 
+        * @note 
+        * 1. If the element is already present in the CSR format, the function updates the value.
+        * 2. If the matrix is still being built (i.e., `_elementAssignmentRunning` is true), the function inserts the value in the COO format using the builder.
+        * 3. If the matrix is in CSR format and the element doesn't exist, the function inserts the element in the correct position in the CSR format.
+        *    However, if the value to be set is zero, the insertion is skipped since the CSR format doesn't store zero values.
+        * 4. The insertion in the CSR format involves:
+        *    - Resizing the `values` and `columnIndices` vectors (size + 1).
+        *    - Shifting the existing elements to accommodate the new value.
+        *    - Adjusting the row offsets for the subsequent rows.
+        */
         void setElement(unsigned int row, unsigned int column, const T &value) override {
-            if (!this->_elementAssignmentRunning) {
-                throw runtime_error("Element assignment is not running. Call initializeElementAssignment() first.");
+            if (row >= this->_numberOfRows || column >= this->_numberOfColumns)
+                throw runtime_error("Row or column index out of bounds.");
+
+            bool elementFound = false;
+            if (this->_elementAssignmentRunning) {
+                this->_builder.insertElement(row, column, value);
+                elementFound = true;
+                return;
             }
-            this->_builder.insert(row, column, value);
+            
+            //Check if the element already exists in csr format
+            unsigned rowStart = (*_rowOffsets)[row];
+            unsigned rowEnd = (*_rowOffsets)[row + 1];
+            for (unsigned i = rowStart; i < rowEnd; i++) {
+                if ((*_columnIndices)[i] == column) {
+                    (*this->_values)[i] = value;
+                    elementFound = true;
+                    break;
+                }
+            }
+            if (!elementFound and value != static_cast<T>(0)){
+                NumericalVector<T>& valuesData = *this->_values->getData();
+                NumericalVector<unsigned>& columnIndicesData = *this->_columnIndices->getData();
+                NumericalVector<unsigned>& rowOffsetsData = *this->_rowOffsets->getData();
+
+                // Resize the vectors to accommodate the new element
+                valuesData.resize(valuesData.size() + 1);
+                columnIndicesData.resize(columnIndicesData.size() + 1);
+
+                // Shift elements to the right by one position, starting from the end
+                for (unsigned i = valuesData.size() - 1; i > rowEnd; i--) {
+                    valuesData[i] = valuesData[i-1];
+                    columnIndicesData[i] = columnIndicesData[i-1];
+                }
+
+                // Insert the new value and column index at the identified location
+                valuesData[rowEnd] = value;
+                columnIndicesData[rowEnd] = column;
+
+                // Adjust the row offsets for subsequent rows
+                for (unsigned i = row + 1; i <= this->_numberOfRows; i++) {
+                    rowOffsetsData[i]++;
+                }
+
+            }
         }
-        
-        void eraseElement(unsigned int row, unsigned int column, const T &value) override {
-            if (!this->_elementAssignmentRunning) {
-                throw runtime_error("Element assignment is not running. Call initializeElementAssignment() first.");
+
+        void eraseElement(unsigned int row, unsigned int column) override {
+
+            if (row >= this->_numberOfRows || column >= this->_numberOfColumns)
+                throw runtime_error("Row or column index out of bounds.");
+
+            if (this->_elementAssignmentRunning) {
+                this->_builder.erase(row, column);
+                return;
             }
-            this->_builder.remove(row, column);
+
+            // Check if the element exists in csr format
+            unsigned rowStart = (*_rowOffsets)[row];
+            unsigned rowEnd = (*_rowOffsets)[row + 1];
+
+            // Identify the position of the element to be erased
+            unsigned positionToErase = rowEnd; // Default to end (i.e., element not found)
+            for (unsigned i = rowStart; i < rowEnd; i++) {
+                if ((*_columnIndices)[i] == column) {
+                    positionToErase = i;
+                    break;
+                }
+            }
+
+            // If the element is found
+            if (positionToErase != rowEnd) {
+                NumericalVector<T>& valuesData = *this->_values->getData();
+                NumericalVector<unsigned>& columnIndicesData = *this->_columnIndices->getData();
+                NumericalVector<unsigned>& rowOffsetsData = *this->_rowOffsets->getData();
+
+                // Shift elements to the left by one position, starting from the identified position
+                for (unsigned i = positionToErase; i < valuesData.size() - 1; i++) {
+                    valuesData[i] = valuesData[i+1];
+                    columnIndicesData[i] = columnIndicesData[i+1];
+                }
+
+                // Resize the vectors to remove the last element
+                valuesData.resize(valuesData.size() - 1);
+                columnIndicesData.resize(columnIndicesData.size() - 1);
+
+                // Adjust the row offsets for subsequent rows
+                for (unsigned i = row + 1; i <= this->_numberOfRows; i++) {
+                    rowOffsetsData[i]--;
+                }
+            }
         }
 
         shared_ptr<NumericalVector<T>> getRowSharedPtr(unsigned row) override {
@@ -91,7 +197,9 @@ namespace LinearAlgebra {
 
             this->_elementAssignmentRunning = true;
             this->_builder.enableElementAssignment();
-
+            this->_values->clear();
+            this->_columnIndices->clear();
+            this->_rowOffsets->clear();
         }
 
         void finalizeElementAssignment() override {
@@ -106,7 +214,7 @@ namespace LinearAlgebra {
             this->_rowOffsets = move(dataVectors[2]);
         }
 
-        void matrixAdd(NumericalMatrixStorage<T> &inputMatrixData,
+        /*void matrixAdd(NumericalMatrixStorage<T> &inputMatrixData,
                        NumericalMatrixStorage<T> &resultMatrixData,
                        T scaleThis, T scaleOther) override {
 
@@ -440,7 +548,7 @@ namespace LinearAlgebra {
             };
 
             this->_threading.executeParallelJob(matrixMultiplyJob, this->_numberOfRows);
-        }
+        }*/
 
 
 

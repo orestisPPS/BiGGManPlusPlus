@@ -2,8 +2,8 @@
 // Created by hal9000 on 9/3/23.
 //
 
-#ifndef UNTITLED_SPARSEMATRIXBUILDER_H
-#define UNTITLED_SPARSEMATRIXBUILDER_H
+#ifndef UNTITLED_NUMERICALMATRIXDATASTRUCTURESPROVIDER_H
+#define UNTITLED_NUMERICALMATRIXDATASTRUCTURESPROVIDER_H
 
 #include <map>
 #include <unordered_map>
@@ -27,10 +27,10 @@ namespace LinearAlgebra{
     * @tparam T The datatype of matrix elements. It should support basic arithmetic operations.
     */
     template <typename T>
-    class SparseMatrixBuilder{
+    class NumericalMatrixDataStructuresProvider{
     public:
 
-        SparseMatrixBuilder(unsigned numberOfRows, unsigned numberOfColumns) :
+        NumericalMatrixDataStructuresProvider(unsigned numberOfRows, unsigned numberOfColumns) :
         _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _elementAssignmentRunning(false),
         _cooMap(make_unique<map<tuple<unsigned, unsigned>, T>>()) { }
 
@@ -174,6 +174,90 @@ namespace LinearAlgebra{
         }
 
         /**
+         * @brief Converts a matrix from Compressed Sparse Row (CSR) format to Coordinate (COO) format.
+         * 
+         * The COO format represents a sparse matrix as a map with row and column indices as keys and matrix values as values.
+         * This function converts the matrix from the CSR format to the COO format and stores it in the _cooMap member.
+         * 
+         * @param values A NumericalVector containing the non-zero values of the matrix in row-major order.
+         * @param rowOffsets A NumericalVector containing the starting indices in the 'values' and 'columnIndices' arrays for each row.
+         * @param columnIndices A NumericalVector containing the column indices for each value in the 'values' array.
+         */
+        void getCOOMapFromCSR(NumericalVector<T> &values,
+                              NumericalVector<unsigned> &rowOffsets,
+                              NumericalVector<unsigned> &columnIndices) {
+
+            // Ensure the provided vectors have valid data
+            if (values.empty() || rowOffsets.empty() || columnIndices.empty()) {
+                throw runtime_error("CSR data is incomplete.");
+            }
+
+            // Clear the existing COO map.
+            _cooMap->clear();
+
+            // Iterate through each row of the matrix.
+            for (unsigned row = 0; row < _numberOfRows; ++row) {
+
+                // Get the start and end indices for the current row from the rowOffsets array.
+                unsigned startId = rowOffsets[row];
+                unsigned endId = rowOffsets[row + 1];
+
+                // Iterate through the non-zero entries in the current row.
+                for (unsigned id = startId; id < endId; ++id) {
+
+                    // Get the column index and value for the current non-zero entry.
+                    unsigned col = columnIndices[id];
+                    T value = values[id];
+
+                    // Insert the non-zero entry into the COO map.
+                    (*_cooMap)[std::make_tuple(row, col)] = value;
+                }
+            }
+        }
+        
+        /**
+         * @brief Converts a matrix from Compressed Sparse Column (CSC) format to Coordinate (COO) format.
+         * 
+         * The COO format represents a sparse matrix as a map with row and column indices as keys and matrix values as values.
+         * This function converts the matrix from the CSC format to the COO format and stores it in the _cooMap member.
+         * 
+         * @param values A NumericalVector containing the non-zero values of the matrix in column-major order.
+         * @param columnOffsets A NumericalVector containing the starting indices in the 'values' and 'rowIndices' arrays for each column.
+         * @param rowIndices A NumericalVector containing the row indices for each value in the 'values' array.
+         */
+        void getCOOMapFromCSC(NumericalVector<T> &values,
+                              NumericalVector<unsigned> &columnOffsets,
+                              NumericalVector<unsigned> &rowIndices) {
+
+            // Ensure the provided vectors have valid data
+            if (values.empty() || columnOffsets.empty() || rowIndices.empty()) {
+                throw runtime_error("CSC data is incomplete.");
+            }
+
+            // Clear the existing COO map.
+            _cooMap->clear();
+
+            // Iterate through each column of the matrix.
+            for (unsigned col = 0; col < _numberOfColumns; ++col) {
+
+                // Get the start and end indices for the current column from the columnOffsets array.
+                unsigned startId = columnOffsets[col];
+                unsigned endId = columnOffsets[col + 1];
+
+                // Iterate through the non-zero entries in the current column.
+                for (unsigned id = startId; id < endId; ++id) {
+
+                    // Get the row index and value for the current non-zero entry.
+                    unsigned row = rowIndices[id];
+                    T value = values[id];
+
+                    // Insert the non-zero entry into the COO map.
+                    (*_cooMap)[std::make_tuple(row, col)] = value;
+                }
+            }
+        }
+
+        /**
         * @brief Inserts a value into the matrix at the specified row and column.
         * 
         * @param row The row index.
@@ -183,7 +267,7 @@ namespace LinearAlgebra{
         * @throws out_of_range If the row or column index is out of the matrix's range.
          * @throws runtime_error If element assignment is still running.
         */
-        void insert(unsigned row, unsigned column, const T &value) {
+        void insertElement(unsigned row, unsigned column, const T &value) {
             if (!_elementAssignmentRunning){
                 throw runtime_error("Element assignment is not running. Call enableElementAssignment() first.");
             }
@@ -194,7 +278,7 @@ namespace LinearAlgebra{
         }
 
         /**
-        * @brief Retrieves the value at the specified row and column.
+        * @brief Retrieves a reference to the value at the specified row and column.
         * 
         * @param row The row index.
         * @param column The column index.
@@ -203,7 +287,7 @@ namespace LinearAlgebra{
         * 
         * @throws out_of_range If the row or column index is out of the matrix's range.
         */
-        T get(unsigned row, unsigned column) {
+        T& getElement(unsigned row, unsigned column) {
             if (row >= this->_numberOfRows || column >= this->_numberOfColumns) {
                 throw out_of_range("Row or column index out of range.");
             }
@@ -212,7 +296,23 @@ namespace LinearAlgebra{
             }
             return _cooMap->at({row, column});
         }
-
+        
+        /**
+         * @brief Retrieves a constant reference to the value at the specified row and column.
+         * @param row The row index.
+         * @param column The column index.
+         * @return The value at the specified row and column. Returns 0 if the element is not in the map.
+         */
+        const T& getElement(unsigned row, unsigned column) const {
+            if (row >= this->_numberOfRows || column >= this->_numberOfColumns) {
+                throw out_of_range("Row or column index out of range.");
+            }
+            if (_cooMap->find({row, column}) == _cooMap->end()) {
+                return 0;
+            }
+            return _cooMap->at({row, column});
+        }
+ 
         /**
         * @brief Removes the value at the specified row and column.
         * 
@@ -222,7 +322,7 @@ namespace LinearAlgebra{
         * @throws out_of_range If the row or column index is out of the matrix's range.
         * @throws runtime_error If element assignment is not running.
         */
-        void remove(unsigned row, unsigned column) {
+        void removeElement(unsigned row, unsigned column) {
             if (!_elementAssignmentRunning){
                 throw runtime_error("Element assignment is not running. Call enableElementAssignment() first.");
             }
@@ -261,4 +361,4 @@ namespace LinearAlgebra{
     };
 }
 
-#endif //UNTITLED_SPARSEMATRIXBUILDER_H
+#endif //UNTITLED_NUMERICALMATRIXDATASTRUCTURESPROVIDER_H

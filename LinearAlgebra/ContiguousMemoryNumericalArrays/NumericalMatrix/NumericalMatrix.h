@@ -5,14 +5,10 @@
 #ifndef UNTITLED_NUMERICALMATRIX_H
 #define UNTITLED_NUMERICALMATRIX_H
 
-#include <vector>
-#include <stdexcept>
-#include <memory>
-#include <type_traits>
-#include "../../ParallelizationMethods.h"
 #include "../NumericalVector/NumericalVector.h"
-#include "../../../ThreadingOperations/ThreadingOperations.h"
-#include "NumericalMatrixStorage/NumericalMatrixStorage.h"
+#include "NumericalMatrixStorage/CompressedSparseRowMatrixStorage.h"
+#include "NumericalMatrixStorage/FullMatrixStorage.h"
+#include "NumericalMatrixStorage/NumericalMatrixDataStructuresProvider.h"
 
 using namespace std;
 
@@ -38,18 +34,10 @@ namespace LinearAlgebra {
          * @param initialValue Default value for matrix elements.
          * @param parallelizationMethod Parallelization method to be used for matrix operations.
          */
-        explicit NumericalMatrix(unsigned int rows, unsigned int columns, T initialValue = 0, NumericalMatrixStorageType storageType,
-                                 ParallelizationMethod parallelizationMethod = SingleThread) :
-                _numberOfRows(rows), _numberOfColumns(columns), _parallelizationMethod(parallelizationMethod) {
-            _values = new NumericalVector<T>(rows * columns, initialValue, parallelizationMethod);
-            _storage = NumericalMatrixStorage<T>(storageType, rows, columns, parallelizationMethod);
-        }
-
-        /**
-         * @brief Deletes the NumericalMatrix object and deallocates the data vector pointer
-         */
-        ~NumericalMatrix(){
-            _values->clear();
+        explicit NumericalMatrix(unsigned int rows, unsigned int columns, T initialValue = 0, NumericalMatrixStorageType storageType = FullMatrix,
+                                 ParallelizationMethod parallelizationMethod = SingleThread, unsigned availableThreads = 1) :
+                _numberOfRows(rows), _numberOfColumns(columns), _parallelizationMethod(parallelizationMethod), _storage(NumericalMatrixStorage<T>(storageType, rows, columns, parallelizationMethod)) {
+            
         }
 
         /**
@@ -61,7 +49,13 @@ namespace LinearAlgebra {
          */
         NumericalMatrix(const NumericalMatrix& other) :
                 _numberOfRows(other._numberOfRows), _numberOfColumns(other._numberOfColumns), _parallelizationMethod(other._parallelizationMethod) {
-            _values = _deepCopy(other._values);
+                if (_storage.getStorageType() == other._storage.getStorageType()){
+                    //_storage._values-> = other._values;
+                }
+                else{
+                    //_values = new NumericalVector<T>(other._values->size(), 0, _parallelizationMethod);
+                    _deepCopy(other);
+                }
         }
 
         /**
@@ -75,7 +69,7 @@ namespace LinearAlgebra {
                 _numberOfRows(std::exchange(other._numberOfRows, 0)),
                 _numberOfColumns(std::exchange(other._numberOfColumns, 0)),
                 _parallelizationMethod(std::move(other._parallelizationMethod)),
-                _values(std::move(other._values)) {}
+                _storage(std::move(other._storage)) {}
         
         /**
         * @brief Move assignment operator for NumericalMatrix.
@@ -87,7 +81,7 @@ namespace LinearAlgebra {
         */
         NumericalMatrix& operator=(NumericalMatrix&& other) noexcept {
             if (this != &other) {
-                _values = std::move(other._values);
+                //_values = std::move(other._values);
                 _numberOfRows = std::exchange(other._numberOfRows, 0);
                 _numberOfColumns = std::exchange(other._numberOfColumns, 0);
                 _parallelizationMethod = std::move(other._parallelizationMethod);
@@ -103,10 +97,11 @@ namespace LinearAlgebra {
         * @return T& Reference to the element at the specified position.
         */
         T& operator()(unsigned int row, unsigned int column) {
-            if (row >= _numberOfRows || column >= _numberOfColumns) {
-                throw std::out_of_range("Index out of range");
-            }
-            return (*_values)[row * _numberOfColumns + column];
+            return _storage.getElement(row, column);
+        }
+        
+        const T& operator()(unsigned int row, unsigned int column) const {
+            return _storage.getElement(row, column);
         }
 
         /**
@@ -133,6 +128,17 @@ namespace LinearAlgebra {
             return !(*this == other);
         }
         
+        T& getElement(unsigned row, unsigned column){
+            return _storage.getElement(row, column);
+        }
+        
+        void setElement(unsigned row, unsigned column, const T &value){
+            _storage.setElement(row, column, value);
+        }
+        
+        void eraseElement(unsigned row, unsigned column, const T &value){
+            _storage.eraseElement(row, column, value);
+        }
         
         /**
          * @brief Gets the number of rows in the matrix.
@@ -170,6 +176,7 @@ namespace LinearAlgebra {
             return _parallelizationMethod;
         }
         
+        
         /**
         * @brief Sets the parallelization method used for matrix operations.
         * 
@@ -177,14 +184,24 @@ namespace LinearAlgebra {
         */
         void setParallelizationMethod(ParallelizationMethod parallelizationMethod) {
             _parallelizationMethod = parallelizationMethod;
+            _storage.setThreadingMethod(parallelizationMethod);
+        }
+
+        /**
+        * @brief Gets the storage type of the matrix.
+        * 
+        * @return NumericalMatrixStorageType  Enum representing the storage type (FullMatrix, CSR, etc.).
+        */
+        const NumericalMatrixStorageType& storageType() const {
+            return _storage.getStorageType();
         }
 
         /**
         * @brief Checks if this vector is empty.
         * @return true if the vector is empty, false otherwise.
         */
-        bool empty() const {
-            return _values->empty();
+        bool isEmpty() const {
+            return _storage._storage._values->empty();
         }
 
         /**
@@ -192,7 +209,7 @@ namespace LinearAlgebra {
         * @param value The value to fill the matrix with.
         */
         void fill(T value) {
-            _values->fill(value);
+            _storage._values->fill(value);
         }
 
 
@@ -209,7 +226,7 @@ namespace LinearAlgebra {
         * \param max The maximum value for the random numbers.
         */
         void fillRandom(T min, T max) {
-            _values->fillRandom(min, max);
+            _storage._values->fillRandom(min, max);
         }
 
         /**
@@ -218,7 +235,7 @@ namespace LinearAlgebra {
         * @return T* Pointer to the matrix data.
         */
         T* getDataPointer() const {
-            return _values->getDataPointer();
+            return _storage._values->getDataPointer();
         }
         
         /**
@@ -227,7 +244,7 @@ namespace LinearAlgebra {
         * @return shared_ptr<NumericalVector<T>> Shared pointer to the data NumericalVector.
         */
         shared_ptr<NumericalVector<T>> getDataNumericalVector() const {
-            return _values;
+            return _storage._values;
         }
 
         /**
@@ -238,7 +255,7 @@ namespace LinearAlgebra {
         * sum(v) = v1 + v2 + ... + vn
         */
         T sum() const {
-            return _values->sum();
+            return _storage._storage._values->sum();
         }
 
         /**
@@ -249,7 +266,7 @@ namespace LinearAlgebra {
         * sum(v) = v1 + v2 + ... + vn
         */
         double average() {
-            return _values->average();
+            return _storage._values->average();
         }
 
         //=================================================================================================================//
@@ -264,7 +281,7 @@ namespace LinearAlgebra {
         * @param scalar The scaling factor.
         */
         void scale(T scalar){
-            _values->scale(scalar);
+            _storage._values->scale(scalar);
         }
 
         /**
@@ -278,7 +295,7 @@ namespace LinearAlgebra {
         * \param scaleThis Scaling factor for the current vector (default is 1).
         * \param scaleInput Scaling factor for the input vector (default is 1).
         */
-        template<typename InputType1, typename InputType2>
+/*        template<typename InputType1, typename InputType2>
         void add(const InputType1 &inputMatrix, InputType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1) {
 
             _checkInputType(inputMatrix);
@@ -293,18 +310,18 @@ namespace LinearAlgebra {
             }
 
             const T *otherData = dereference_trait<InputType1>::dereference(inputMatrix);
-            const auto thisData = _values->getDataPointer();
+            const auto thisData = _storage._values->getDataPointer();
             T *resultMatrixData = dereference_trait<InputType2>::dereference(resultMatrix);
 
             auto addJob = [&](unsigned start, unsigned end) -> void {
-                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                for (unsigned i = start; i < end && i < _storage._values->size(); ++i) {
                     resultMatrixData[i] = scaleThis * (*thisData)[i] + scaleInput * otherData[i];
                 }
             };
             _threading.executeParallelJob(addJob);
         }
         
-        /**
+        *//**
          * @brief Performs element-wise addition of two matrices and stores the resultMatrix in the current matrix.
          * Given two vectors A = [A11, A12, ..., Anm] and B = [B11, B12, ..., Bnm] representing the matrices in row major format,
          * and scalar factors a and b, their addition is:
@@ -313,13 +330,13 @@ namespace LinearAlgebra {
          * @param inputMatrix The input matrix to add.
          * @param scaleThis Scaling factor for the current vector (default is 1).
          * @param scaleInput Scaling factor for the input vector (default is 1).
-         */
+         *//*
         template<typename InputType>
         void addIntoThis(const InputType &inputMatrix, T scaleThis = 1, T scaleInput = 1) {
             add(inputMatrix, *this, scaleThis, scaleInput);
         }
 
-        /**
+        *//**
         * \brief Performs element-wise subtraction of two scaled matrices.
         * Given two vectors A = [A11, A12, ..., Anm] and B = [B11, B12, ..., Bnm] representing the matrices in row major format,
         * and scalar factors a and b, their subtraction is:
@@ -329,7 +346,7 @@ namespace LinearAlgebra {
         * \param resultMatrix The resultMatrix matrix after subtraction.
         * \param scaleThis Scaling factor for the current vector (default is 1).
         * \param scaleInput Scaling factor for the input vector (default is 1).
-        */
+        *//*
         template<typename InputType1, typename InputType2>
         void subtract(const InputType1 &inputMatrix, InputType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1) {
 
@@ -345,16 +362,16 @@ namespace LinearAlgebra {
             }
 
             const T *otherData = dereference_trait<InputType1>::dereference(inputMatrix);
-            const auto thisData = _values->getDataPointer();
+            const auto thisData = _storage._values->getDataPointer();
             T *resultMatrixData = dereference_trait<InputType2>::dereference(resultMatrix);
 
             auto subtractJob = [&](unsigned start, unsigned end) -> void {
-                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                for (unsigned i = start; i < end && i < _storage._values->size(); ++i) {
                     resultMatrixData[i] = scaleThis * (*thisData)[i] - scaleInput * otherData[i];
                 }
             };
             _threading.executeParallelJob(subtractJob);
-        }
+        }*/
         
         /**
          * @brief Performs element-wise subtraction of two matrices and stores the result in the current matrix.
@@ -372,8 +389,6 @@ namespace LinearAlgebra {
         }
         
     private:
-
-        shared_ptr<NumericalVector<T>>  _values; ///< Shared ptr to the NumericalVector storing the matrix elements in row-major order.
         
         unsigned int _numberOfRows; ///< Number of rows in the matrix.
         
@@ -381,19 +396,17 @@ namespace LinearAlgebra {
         
         ParallelizationMethod _parallelizationMethod; ///< Parallelization method used for matrix operations.
         
-        ThreadingOperations<T> _threading; ///< Threading operations object.
-        
         NumericalMatrixStorage<T> _storage; ///< Storage object for the matrix elements.
 
 
-        /**
+/*        *//**
         * @brief Performs a deep copy from the source to the current object.
         * 
         * This method uses the dereference_trait to handle various types of sources 
         * such as raw pointers, unique pointers, shared pointers, and direct objects.
         * 
         * @param source The source object to be copied from.
-        */
+        *//*
         template<typename InputType>
         void _deepCopy(const InputType &source) {
 
@@ -404,14 +417,14 @@ namespace LinearAlgebra {
             const T *sourceData = dereference_trait<InputType>::dereference(source);
 
             auto deepCopyThreadJob = [&](unsigned start, unsigned end) {
-                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                for (unsigned i = start; i < end && i < _storage._values->size(); ++i) {
                     (*_values)[i] = sourceData[i];
                 }
             };
-            _threading.executeParallelJob(deepCopyThreadJob, _values->size());
+            _threading.executeParallelJob(deepCopyThreadJob, _storage._values->size());
         }
 
-        /**
+        *//**
         * @brief Checks if the elements of the current object are equal to those of the provided source.
         * 
         * This method uses parallelization to perform the comparison and then reduces the results to determine 
@@ -419,15 +432,15 @@ namespace LinearAlgebra {
         * 
         * @param source The source object to be compared with.
         * @return true if all elements are equal, false otherwise.
-        */
+        *//*
         bool _areElementsEqual(const T *&source, size_t size) {
 
-            if (_values->size() != source->size()) {
+            if (_storage._values->size() != source->size()) {
                 throw std::invalid_argument("Source vector must be the same size as the destination vector.");
             }
 
             auto compareElementsJob = [&](unsigned start, unsigned end) -> bool {
-                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                for (unsigned i = start; i < end && i < _storage._values->size(); ++i) {
                     if ((*_values)[i] != source[i]) {
                         return false;
                     }
@@ -437,15 +450,27 @@ namespace LinearAlgebra {
 
             // Check elements in parallel and reduce the results
             if (_parallelizationMethod == SingleThread) {
-                return _threading.executeParallelJobWithReduction(_values->size(), compareElementsJob, 1);
+                return _threading.executeParallelJobWithReduction(_storage._values->size(), compareElementsJob, 1);
             }
 
             if (_parallelizationMethod == MultiThread) {
-                return _threading.executeParallelJobWithReduction(_values->size(), compareElementsJob,
+                return _threading.executeParallelJobWithReduction(_storage._values->size(), compareElementsJob,
                                                         std::thread::hardware_concurrency());
             }
-        }
+        }*/
         
+        void initializeStorage(NumericalMatrixStorageType storageType){
+            switch (storageType) {
+                case FullMatrix:
+                    //_storage = FullMatrixStorage<T>(_numberOfRows, _numberOfColumns, _parallelizationMethod);
+                    break;
+                case CSR:
+                    _storage = CompressedSparseRowMatrixStorage<T>(_numberOfRows, _numberOfColumns, _parallelizationMethod);
+                    break;
+                default:
+                    throw std::invalid_argument("Invalid storage type.");
+            }
+        }
         
         //=================================================================================================================//
         //============================================ Dereference Traits =================================================//

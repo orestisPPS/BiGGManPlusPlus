@@ -1689,6 +1689,30 @@ Tests/Mesh3dTest.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/Mesh3dTest.cpp.s
 .PHONY : Tests/Mesh3dTest.cpp.s
 
+Tests/NumericalMatrixTest.o: Tests/NumericalMatrixTest.cpp.o
+.PHONY : Tests/NumericalMatrixTest.o
+
+# target to build an object file
+Tests/NumericalMatrixTest.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/NumericalMatrixTest.cpp.o
+.PHONY : Tests/NumericalMatrixTest.cpp.o
+
+Tests/NumericalMatrixTest.i: Tests/NumericalMatrixTest.cpp.i
+.PHONY : Tests/NumericalMatrixTest.i
+
+# target to preprocess a source file
+Tests/NumericalMatrixTest.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/NumericalMatrixTest.cpp.i
+.PHONY : Tests/NumericalMatrixTest.cpp.i
+
+Tests/NumericalMatrixTest.s: Tests/NumericalMatrixTest.cpp.s
+.PHONY : Tests/NumericalMatrixTest.s
+
+# target to generate assembly for a file
+Tests/NumericalMatrixTest.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/NumericalMatrixTest.cpp.s
+.PHONY : Tests/NumericalMatrixTest.cpp.s
+
 Tests/OperationsCUDA.o: Tests/OperationsCUDA.cpp.o
 .PHONY : Tests/OperationsCUDA.o
 
@@ -2085,6 +2109,9 @@ help:
 	@echo "... Tests/Mesh3dTest.o"
 	@echo "... Tests/Mesh3dTest.i"
 	@echo "... Tests/Mesh3dTest.s"
+	@echo "... Tests/NumericalMatrixTest.o"
+	@echo "... Tests/NumericalMatrixTest.i"
+	@echo "... Tests/NumericalMatrixTest.s"
 	@echo "... Tests/OperationsCUDA.o"
 	@echo "... Tests/OperationsCUDA.i"
 	@echo "... Tests/OperationsCUDA.s"

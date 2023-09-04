@@ -6,7 +6,7 @@
 #define UNTITLED_SPARSEMATRIXSTORAGE_H
 
 #include "NumericalMatrixStorage.h"
-#include "SparseMatrixBuilder.h"
+#include "NumericalMatrixDataStructuresProvider.h"
 
 namespace LinearAlgebra {
 
@@ -16,10 +16,14 @@ namespace LinearAlgebra {
         SparseMatrixStorage(NumericalMatrixStorageType storageType, unsigned numberOfRows, unsigned numberOfColumns,
                             ParallelizationMethod parallelizationMethod) :
         NumericalMatrixStorage<T>(storageType, numberOfRows, numberOfColumns, parallelizationMethod){
-            _builder = SparseMatrixBuilder<T>(numberOfRows, numberOfColumns);
+            _builder = NumericalMatrixDataStructuresProvider<T>(numberOfRows, numberOfColumns);
+            _zero = static_cast<T>(0);
+            
         }
     protected:
-        SparseMatrixBuilder<T> _builder;
+        NumericalMatrixDataStructuresProvider<T> _builder;
+        
+        T _zero;
     };
 
 } // LinearAlgebra

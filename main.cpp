@@ -6,9 +6,9 @@
 #include "Tests/LanczosEigenDecompositionTest.h"
 #include "Tests/NumericalVectorTest.h"
 #include "Tests/QRTest.h"
-#include "LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalVector/NumericalVector.h"
 #include "Tests/OperationsCUDA.h"
 #include "Tests/VectorOperationsTest.h"
+#include "Tests/NumericalMatrixTest.h"
 #include "StructuredMeshGeneration/MeshTest2D.h"
 #include "BoundaryConditions/DomainBoundaryConditions.h"
 #include "DegreesOfFreedom/DegreeOfFreedomTypes.h"
@@ -35,6 +35,12 @@ int main() {
 
     auto vectorTest = new NumericalVectorTest();
     vectorTest->runTests();
+ //Tests::NumericalMatrixTest::runTests();
+
+ 
+ 
+    //auto vectorTest = new NumericalVectorTest();
+/*    vectorTest->runTests();
     
     auto numericalVector = NumericalVector<double>(10, MultiThread);
     auto numericalVectorRawPtr = new NumericalVector<double>(10, MultiThread);
@@ -54,7 +60,7 @@ int main() {
     auto numericalVector4 = NumericalVector<double>(numericalVector);
     
     auto numericalVector3 = NumericalVector<double>(10, MultiThread);
-    numericalVector3 = numericalVector2;
+    numericalVector3 = numericalVector2;*/
     
     
     

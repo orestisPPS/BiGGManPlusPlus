@@ -6,13 +6,9 @@
 #define UNTITLED_THREADINGOPERATIONS_H
 
 
-#include <vector>
 #include <stdexcept>
 #include <memory>
 #include <thread>
-#include <type_traits>
-#include <valarray>
-#include <random>
 #include "../LinearAlgebra/ParallelizationMethods.h"
 using namespace LinearAlgebra;
 using namespace std;
@@ -23,18 +19,30 @@ class ThreadingOperations {
 
 public:
     
-    explicit ThreadingOperations(ParallelizationMethod parallelizationMethod, unsigned availableThreads) :
-    _parallelizationMethod(parallelizationMethod), _availableThreads(availableThreads) {}
-
-    unsigned getAvailableThreads() {
+    ThreadingOperations(ParallelizationMethod parallelizationMethod, unsigned availableThreads) :
+    _parallelizationMethod(parallelizationMethod), _availableThreads(availableThreads){}
+    
+    
+    const ParallelizationMethod &getParallelizationMethod() {
+        return _parallelizationMethod;
+    }
+    
+    void setParallelizationMethod(ParallelizationMethod parallelizationMethod) {
+        _parallelizationMethod = parallelizationMethod;
+    }
+    
+    const unsigned& getAvailableThreads() const {
         return _availableThreads;
     }
     
+    void setAvailableThreads(unsigned availableThreads) {
+        _availableThreads = availableThreads;
+    }
+    
     template<typename ThreadJob>
-    static void
-    executeParallelJob(size_t size, ThreadJob task, unsigned availableThreads, unsigned cacheLineSize = 64) {
-        unsigned doublesPerCacheLine = cacheLineSize / sizeof(double);
-        unsigned int numThreads = std::min(availableThreads, static_cast<unsigned>(size));
+    void executeParallelJob(size_t size, ThreadJob task, unsigned cacheLineSize = 64) {
+        unsigned doublesPerCacheLine = cacheLineSize / sizeof(T);
+        unsigned int numThreads = std::min(_availableThreads, static_cast<unsigned>(size));
 
         unsigned blockSize = (size + numThreads - 1) / numThreads;
         blockSize = (blockSize + doublesPerCacheLine - 1) / doublesPerCacheLine * doublesPerCacheLine;
@@ -71,9 +79,8 @@ public:
     * \return The combined result after the reduction step.
     */
     template<typename ThreadJob>
-    static T executeParallelJobWithReduction(size_t size, ThreadJob task, unsigned availableThreads,
-                                              unsigned cacheLineSize = 64) {
-        unsigned doublesPerCacheLine = cacheLineSize / sizeof(double);
+    static T executeParallelJobWithReduction(size_t size, ThreadJob task, unsigned availableThreads, unsigned cacheLineSize = 64) {
+        unsigned doublesPerCacheLine = cacheLineSize / sizeof(T);
         unsigned int numThreads = std::min(availableThreads, static_cast<unsigned>(size));
 
         unsigned blockSize = (size + numThreads - 1) / numThreads;
@@ -115,17 +122,15 @@ public:
     *
     * \param size The size of the data being processed.
     * \param task The callable object that describes the work each thread should execute and return a local result.
-     * \param availableThreads The number of threads available for processing.
+     * \param _availableThreads The number of threads available for processing.
     * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
     * 
     * \return The result vector after the reduction step.
     */
     template<typename ThreadJob>
-    static vector<T>
-    executeParallelJobWithIncompleteReduction(size_t size, ThreadJob task, unsigned availableThreads,
-                                               unsigned cacheLineSize = 64) {
-        unsigned doublesPerCacheLine = cacheLineSize / sizeof(double);
-        unsigned int numThreads = std::min(availableThreads, static_cast<unsigned>(size));
+    vector<T> executeParallelJobWithIncompleteReduction(size_t size, ThreadJob task, unsigned cacheLineSize = 64) {
+        unsigned doublesPerCacheLine = cacheLineSize / sizeof(T);
+        unsigned int numThreads = std::min(_availableThreads, static_cast<unsigned>(size));
 
         unsigned blockSize = (size + numThreads - 1) / numThreads;
         blockSize = (blockSize + doublesPerCacheLine - 1) / doublesPerCacheLine * doublesPerCacheLine;
@@ -154,7 +159,7 @@ public:
         if (_parallelizationMethod == SingleThread) {
             executeParallelJob(size, task, 1);
         } else if (_parallelizationMethod == MultiThread) {
-            executeParallelJob(size, task, std::thread::hardware_concurrency());
+            executeParallelJob(size, task, _availableThreads);
         }
     }
 
@@ -163,7 +168,7 @@ public:
         if (_parallelizationMethod == SingleThread) {
             return executeParallelJobWithReduction(size, task, 1);
         } else if (_parallelizationMethod == MultiThread) {
-            return executeParallelJobWithReduction(size, task, std::thread::hardware_concurrency());
+            return executeParallelJobWithReduction(size, task, _availableThreads);
         }
     }
     

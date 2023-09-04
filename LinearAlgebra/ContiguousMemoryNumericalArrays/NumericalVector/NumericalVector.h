@@ -65,10 +65,11 @@ namespace LinearAlgebra {
         * @param parallelizationMethod Parallelization method to be used for vector operations.
         */
         explicit NumericalVector(unsigned int size, T initialValue = 0,
-                                 ParallelizationMethod parallelizationMethod = SingleThread) :
-                                 _parallelizationMethod(parallelizationMethod), _threading(ThreadingOperations<T>(_parallelizationMethod)){
+                                 ParallelizationMethod parallelizationMethod = SingleThread, unsigned availableThreads = 1){
+            
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _values = make_shared<vector<T>> (size, initialValue);
+            _threading = ThreadingOperations<T>(parallelizationMethod, availableThreads);
         }
 
         /**
@@ -76,12 +77,15 @@ namespace LinearAlgebra {
         * @param values Initial values for the vector.
         * @param parallelizationMethod Parallelization method to be used for vector operations.
         */
-        NumericalVector(std::initializer_list<T> values, ParallelizationMethod parallelizationMethod = SingleThread) :
-        _parallelizationMethod(parallelizationMethod), _threading(ThreadingOperations<T>(_parallelizationMethod))
+        NumericalVector(std::initializer_list<T> values, ParallelizationMethod parallelizationMethod = SingleThread, unsigned availableThreads = 1) :
+        _threading(ThreadingOperations<T>(parallelizationMethod, availableThreads))
         {
+            
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _values = make_shared<vector<T>>(values);
+            //_threading = ThreadingOperations<T>(parallelizationMethod, availableThreads);
         }
+
 
 
         /**
@@ -90,8 +94,7 @@ namespace LinearAlgebra {
         * Cleans up and deallocates the vector.
         */
         ~NumericalVector() {
-            _values->clear();
-            _values = nullptr;
+
         }
 
         //=================================================================================================================//
@@ -103,9 +106,11 @@ namespace LinearAlgebra {
         * 
         * @param other The source object to be copied from.
         */
-        NumericalVector(const NumericalVector<T> &other) :
-        _parallelizationMethod(other._parallelizationMethod), _threading(ThreadingOperations<T>(_parallelizationMethod)){
+        NumericalVector(const NumericalVector<T> &other){
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
+            auto parallelizationMethod = other->getParallelizationMethod();
+            auto availableThreads = other->getAvailableThreads();
+            _threading = ThreadingOperations<T>(parallelizationMethod, availableThreads);
             _deepCopy(other);
         }
         
@@ -114,12 +119,12 @@ namespace LinearAlgebra {
         * @brief Copy constructor.
         * @param other Constant reference to the source object to be copied from.
         */
-        explicit NumericalVector(const std::shared_ptr<NumericalVector<T>> &other) :
-        _parallelizationMethod(other->_parallelizationMethod), _threading(ThreadingOperations<T>(_parallelizationMethod)){
+        explicit NumericalVector(const std::shared_ptr<NumericalVector<T>> &other) {
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _deepCopy(other);
-            _parallelizationMethod = other->_parallelizationMethod;
-            _threading = other->_threading;
+            auto parallelizationMethod = other->getParallelizationMethod();
+            auto availableThreads = other->getAvailableThreads();
+            _threading = ThreadingOperations<T>(parallelizationMethod, availableThreads);
         }
         
         /**
@@ -129,8 +134,9 @@ namespace LinearAlgebra {
         explicit NumericalVector(const std::unique_ptr<NumericalVector<T>> &other) {
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _deepCopy(other);
-            _parallelizationMethod = other->_parallelizationMethod;
-            _threading = ThreadingOperations<T>(_parallelizationMethod);
+            auto parallelizationMethod = other->getParallelizationMethod();
+            auto availableThreads = other->getAvailableThreads();
+            _threading = ThreadingOperations<T>(parallelizationMethod, availableThreads);
         }
         
         /**
@@ -140,8 +146,9 @@ namespace LinearAlgebra {
         explicit NumericalVector(const NumericalVector<T> *other) {
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _deepCopy(other);
-            _parallelizationMethod = other->_parallelizationMethod;
-            _threading = ThreadingOperations<T>(_parallelizationMethod);
+            auto parallelizationMethod = other->getParallelizationMethod();
+            auto availableThreads = other->getAvailableThreads();
+            _threading = ThreadingOperations<T>(parallelizationMethod, availableThreads);
         }
 
         /**
@@ -155,7 +162,8 @@ namespace LinearAlgebra {
             
             if (this != &other) {
                 _deepCopy(other);
-                _parallelizationMethod = dereference_trait<InputType>::parallelizationMethod(other);
+                auto parallelizationMethod = other.getParallelizationMethod();
+                auto availableThreads = other.getAvailableThreads();
             }
             return *this;
         }
@@ -345,14 +353,7 @@ namespace LinearAlgebra {
             return _values->size();
         }
         
-        /**
-         * @brief Returns the parallelization method used for vector operations.
-         * @return ParallelizationMethod The parallelization method used for vector operations.
-         */
-        ParallelizationMethod getParallelizationMethod() const {
-            return _parallelizationMethod;
-        }
-
+        
         /**
          * @brief Checks if the vector is empty.
          * @return true if the vector is empty, false otherwise.
@@ -407,6 +408,13 @@ namespace LinearAlgebra {
         void resize(unsigned int newSize, T initialValue = 0) {
             _values->resize(newSize, initialValue);
         }
+        
+        /**
+        * @brief Clears the vector calling the clear() method of the underlying std::vector<T>.
+        */
+        void clear() {
+            _values->clear();
+        }
 
 
         /**
@@ -425,6 +433,47 @@ namespace LinearAlgebra {
             return _values;
         }
 
+        //=================================================================================================================//
+        //=================================================== Threading   =================================================//
+        //=================================================================================================================//
+
+        /**
+         * @brief Returns the parallelization method used for vector operations.
+         * @return ParallelizationMethod The parallelization method used for vector operations.
+         */
+        ParallelizationMethod getParallelizationMethod(){
+            return _threading.getParallelizationMethod();
+        }
+
+        /**
+         * @brief Sets the parallelization method to be used for vector operations.
+         * @param parallelizationMethod The parallelization method to be used for vector operations.
+         */
+        void setParallelizationMethod(ParallelizationMethod parallelizationMethod){
+            _threading.setParallelizationMethod(parallelizationMethod);
+        }
+
+        /**
+         * @brief Returns the number of threads used for vector operations.
+         * @return unsigned int The number of threads used for vector operations.
+         */
+        unsigned getAvailableThreads() const{
+            return _threading.getAvailableThreads();
+        }
+
+        /**
+         * @brief Sets the number of threads to be used for vector operations.
+         * @param availableThreads The number of threads to be used for vector operations.
+         */
+        void setAvailableThreads(unsigned availableThreads){
+            _threading.setAvailableThreads(availableThreads);
+        }
+
+
+        //=================================================================================================================//
+        //============================================== Numerical Operations =============================================//
+        //=================================================================================================================//
+        
         /**
         * @brief Computes the sum of the elements of the NumericalVector.
         * 
@@ -432,7 +481,7 @@ namespace LinearAlgebra {
         * 
         * @return T The sum of the elements of the NumericalVector.
         */
-        T sum() const {
+        T sum() {
             auto sumElementsJob = [&](unsigned start, unsigned end) -> T {
                 T sum = 0;
                 for (unsigned i = start; i < end && i < _values->size(); ++i) {
@@ -441,14 +490,12 @@ namespace LinearAlgebra {
                 return sum;
             };
 
-            if (_parallelizationMethod == SingleThread) {
-                return _threading.executeParallelJobWithReduction(_values->size(), sumElementsJob, 1);
+            auto lol =  ThreadingOperations<T>::executeParallelJobWithIncompleteReduction(sumElementsJob, _values->size());
+            auto sum = 0;
+            for (auto &i : lol){
+                sum += i;
             }
-
-            if (_parallelizationMethod == MultiThread) {
-                return _threading.executeParallelJobWithReduction(_values->size(), sumElementsJob,
-                                                        std::thread::hardware_concurrency());
-            }
+            
         }
 
         /**
@@ -935,14 +982,7 @@ namespace LinearAlgebra {
                 }
                 return maxVal;
             };
-            auto reductionResults = vector<T>(
-                    _parallelizationMethod == SingleThread ? 1 : std::thread::hardware_concurrency());
-            if (_parallelizationMethod == SingleThread) {
-                reductionResults = _threading.executeParallelJobWithIncompleteReduction(_values->size(), normLInfJob, 1);
-            } else if (_parallelizationMethod == MultiThread) {
-                reductionResults = _threading.executeParallelJobWithIncompleteReduction(_values->size(), normLInfJob,
-                                                                              std::thread::hardware_concurrency());
-            }
+            auto reductionResults = _threading.executeParallelJobWithIncompleteReduction(normLInfJob, size());
             return *std::max_element(reductionResults.begin(), reductionResults.end());
         }
 
@@ -993,12 +1033,7 @@ namespace LinearAlgebra {
                 return localDotProduct;
             };
 
-            if (_parallelizationMethod == SingleThread) {
-                return _threading.executeParallelJobWithReduction(_values->size(), dotProductJob, 1);
-            } else if (_parallelizationMethod == MultiThread) {
-                return _threading.executeParallelJobWithReduction(_values->size(), dotProductJob,
-                                                        std::thread::hardware_concurrency());
-            }
+            return _threading.executeParallelJobWithReduction(dotProductJob, _values->size());
         }
 
 
@@ -1131,8 +1166,6 @@ namespace LinearAlgebra {
 
     protected:
         shared_ptr<vector<T>> _values; ///< The underlying data.
-
-        LinearAlgebra::ParallelizationMethod _parallelizationMethod; ///< Parallelization method used for matrix operations.
         
         ThreadingOperations<T> _threading; ///< Threading operations used for parallelization.
 
@@ -1185,15 +1218,7 @@ namespace LinearAlgebra {
                 return true;
             };
 
-            // Check elements in parallel and reduce the results
-            if (_parallelizationMethod == SingleThread) {
-                return _threading.executeParallelJobWithReduction(_values->size(), compareElementsJob, 1);
-            }
-
-            if (_parallelizationMethod == MultiThread) {
-                return _threading.executeParallelJobWithReduction(_values->size(), compareElementsJob,
-                                                        std::thread::hardware_concurrency());
-            }
+            return _threading.executeParallelJobWithReduction(compareElementsJob, _values->size());
         }
 
 
@@ -1237,7 +1262,7 @@ namespace LinearAlgebra {
             * \param source A smart pointer to the source object.
             * \return The parallelization method of the source.
             */
-            static ParallelizationMethod parallelizationMethod(const NumericalVector<U> &source) {
+            static ThreadingOperations<U> &threadingOperations(const NumericalVector<U> &source) {
                 return source->_parallelizationMethod;
             }
             
@@ -1267,13 +1292,8 @@ namespace LinearAlgebra {
                 return source.getDataPointer();
             }
 
-            /**
-            * \brief Dereferences the source.
-            * \param source A smart pointer to the source object.
-            * \return The parallelization method of the source.
-            */
-            static ParallelizationMethod parallelizationMethod(const NumericalVector<U> &source) {
-                return source._parallelizationMethod;
+            static ThreadingOperations<U> &threadingOperations(const NumericalVector<U> &source) {
+                return source._threading;
             }
 
             /**
@@ -1311,14 +1331,8 @@ namespace LinearAlgebra {
                 return source->getDataPointer();
             }
 
-            /**
-            * \brief Dereferences the source.
-            * \param source A smart pointer to the source object.
-            * \return The parallelization method of the source.
-            */
-            static ParallelizationMethod parallelizationMethod(const PtrType<NumericalVector<U>> &source) {
-                if (!source) throw std::runtime_error("Null pointer dereferenced");
-                return source->_parallelizationMethod;
+            static ThreadingOperations<U> &threadingOperations(const PtrType<NumericalVector<U>> &source) {
+                return source->_threading;
             }
             
             /**
