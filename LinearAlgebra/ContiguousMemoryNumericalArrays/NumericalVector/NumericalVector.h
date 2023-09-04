@@ -359,7 +359,7 @@ namespace LinearAlgebra {
                     (*_values)[i] = value;
                 }
             };
-            _threading._executeParallelJob(fillJob);
+            _threading.executeParallelJob(fillJob, _values->size(), _availableThreads);
         }
 
         /**

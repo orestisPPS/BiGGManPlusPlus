@@ -2,13 +2,11 @@
 // Created by hal9000 on 9/3/23.
 //
 
-#ifndef UNTITLED_NUMERICALMATRIXDATASTRUCTURESPROVIDER_H
-#define UNTITLED_NUMERICALMATRIXDATASTRUCTURESPROVIDER_H
+#ifndef UNTITLED_NUMERICALMATRIXDATASTRUCTURESBUILDER_H
+#define UNTITLED_NUMERICALMATRIXDATASTRUCTURESBUILDER_H
 
 #include <map>
 #include <unordered_map>
-#include "NumericalMatrixStorage.h"
-
 namespace LinearAlgebra{
 
     /**
@@ -27,13 +25,14 @@ namespace LinearAlgebra{
     * @tparam T The datatype of matrix elements. It should support basic arithmetic operations.
     */
     template <typename T>
-    class NumericalMatrixDataStructuresProvider{
+    class NumericalMatrixDataStructuresBuilder{
     public:
 
-        NumericalMatrixDataStructuresProvider(unsigned numberOfRows, unsigned numberOfColumns) :
+        NumericalMatrixDataStructuresBuilder(unsigned numberOfRows, unsigned numberOfColumns) :
         _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _elementAssignmentRunning(false),
-        _cooMap(make_unique<map<tuple<unsigned, unsigned>, T>>()) { }
-
+        _cooMap(make_unique<map<tuple<unsigned, unsigned>, T>>()){
+            _zero = static_cast<T>(0);  
+        }
 
         /**
         * @brief Converts a matrix from Coordinate (COO) format to Compressed Sparse Row (CSR) format.
@@ -69,7 +68,7 @@ namespace LinearAlgebra{
             else{
                 unsigned currentRow = 0;
                 unsigned currentIndex = 0;
-                *rowOffsets[0] = 0;
+                (*rowOffsets)[0] = 0;
 
                 // Iterate through the entries in the COO map (sorted by row, then column) to build the CSR format.
                 for (const auto &element: *_cooMap) {
@@ -274,7 +273,7 @@ namespace LinearAlgebra{
             if (row >= this->_numberOfRows || column >= this->_numberOfColumns) {
                 throw out_of_range("Row or column index out of range.");
             }
-            _cooMap->insert(make_tuple(row, column), value);
+            _cooMap->insert(pair<tuple<unsigned, unsigned>, T>({row, column}, value));
         }
 
         /**
@@ -292,7 +291,7 @@ namespace LinearAlgebra{
                 throw out_of_range("Row or column index out of range.");
             }
             if (_cooMap->find({row, column}) == _cooMap->end()) {
-                return 0;
+                return _zero;
             }
             return _cooMap->at({row, column});
         }
@@ -356,9 +355,11 @@ namespace LinearAlgebra{
         unsigned _numberOfColumns;
         
         bool _elementAssignmentRunning;
+        
+        T _zero;
 
  
     };
 }
 
-#endif //UNTITLED_NUMERICALMATRIXDATASTRUCTURESPROVIDER_H
+#endif //UNTITLED_NUMERICALMATRIXDATASTRUCTURESBUILDER_H

@@ -1,4 +1,3 @@
-/*
 //
 // Created by hal9000 on 9/2/23.
 //
@@ -15,17 +14,25 @@ namespace LinearAlgebra {
     class FullMatrixStorage : public NumericalMatrixStorage<T> {
         
     public:
-        explicit FullMatrixStorage() : 
-                  NumericalMatrixStorage<T>(RowMajor, numberOfRows, numberOfColumns) {
-            this->_values = make_shared<NumericalVector<T>>(numberOfRows * numberOfColumns);
+        explicit FullMatrixStorage(unsigned numberOfRows, unsigned numberOfColumns, unsigned availableThreads) :
+                  NumericalMatrixStorage<T>(numberOfRows, numberOfColumns, availableThreads) {
+            this->_values = make_shared<NumericalVector<T>>(numberOfRows * numberOfColumns, 0, availableThreads);
         }
         
-        const T& operator()(unsigned int row, unsigned int column) const override {
-            this->_values->getDataPointer()[row * this->_numberOfColumns + column];
+        T& getElement(unsigned row, unsigned column) override {
+            return this->_values->getDataPointer()[row * this->_numberOfColumns + column];
         }
         
-        vector<vector<T>&> getNecessaryStorageVectors() override {
-            return {*this->_values->getData()};
+        void setElement(unsigned row, unsigned column, T value) override {
+            this->_values->getDataPointer()[row * this->_numberOfColumns + column] = value;
+        }
+        
+        void eraseElement(unsigned row, unsigned column) override {
+            this->_values->getDataPointer()[row * this->_numberOfColumns + column] = static_cast<T>(0);
+        }
+
+        vector<shared_ptr<NumericalVector<unsigned>>> getSupplementaryVectors() override{
+            throw runtime_error("FullMatrixStorage does not have supplementary vectors.");
         }
         
         void initializeElementAssignment() override {
@@ -42,12 +49,7 @@ namespace LinearAlgebra {
             }
             this->_elementAssignmentRunning = false;
         }
-        
-        void setElement(unsigned int row, unsigned int column, const T &value) override {
 
-            this->_values->getDataPointer()[row * this->_numberOfColumns + column] = value;
-        }
-        
         shared_ptr<NumericalVector<T>> getRowSharedPtr(unsigned row) override {
             if (row >= this->_numberOfRows){
                 throw runtime_error("Row index out of bounds.");
@@ -95,145 +97,144 @@ namespace LinearAlgebra {
                 vectorData[row] = thisData[row * this->_numberOfColumns + column];
             }
         }
-        
-        void matrixAdd(NumericalMatrixStorage<T> &inputMatrixData, NumericalMatrixStorage<T> &resultMatrixData, T scaleThis, T scaleOther) override {
-            
-            T *&thisMatrixDataPtr = this->_values->getDataPointer();
-            T *&inputMatrixDataPtr = inputMatrixData[0]._values->getDataPointer();
-            T *&resultMatrixDataPtr = resultMatrixData[0]._values->getDataPointer();
-            
-            auto matrixAddJob = [&](unsigned start, unsigned end) -> void {
-                for (unsigned i = start; i < end; ++i) {
-                    resultMatrixDataPtr[i] = scaleThis * thisMatrixDataPtr[i] +
-                                             scaleOther * inputMatrixDataPtr[i];
-                }
-            };
-            this->_threading.executeParallelJob(matrixAddJob, this->_values->size());
-        }
-        
-        void matrixAddIntoThis(NumericalMatrixStorage<T> &inputMatrixData, T scaleThis, T scaleOther) override {
-            
-            T *&thisMatrixDataPtr = this->_values->getDataPointer();
-            T *&inputMatrixDataPtr = inputMatrixData[0]._values->getDataPointer();
-            
-            auto matrixAddJob = [&](unsigned start, unsigned end) -> void {
-                for (unsigned i = start; i < end; ++i) {
-                    thisMatrixDataPtr[i] = scaleThis * thisMatrixDataPtr[i] +
-                                           scaleOther * inputMatrixDataPtr[i];
-                }
-            };
-            this->_threading.executeParallelJob(matrixAddJob, this->_values->size());
-        }
-        
-        void matrixSubtract(NumericalMatrixStorage<T> &inputMatrixData, NumericalMatrixStorage<T> &resultMatrixData, T scaleThis, T scaleOther) override {
 
-            T *&thisMatrixDataPtr = this->_values->getDataPointer();
-            T *&inputMatrixDataPtr = inputMatrixData[0]._values->getDataPointer();
-            T *&resultMatrixDataPtr = resultMatrixData[0]._values->getDataPointer();
+        /*void matrixAdd(NumericalMatrixStorage<T> &inputMatrixData, NumericalMatrixStorage<T> &resultMatrixData, T scaleThis, T scaleOther) override {
+         
+         T *&thisMatrixDataPtr = this->_values->getDataPointer();
+         T *&inputMatrixDataPtr = inputMatrixData[0]._values->getDataPointer();
+         T *&resultMatrixDataPtr = resultMatrixData[0]._values->getDataPointer();
+         
+         auto matrixAddJob = [&](unsigned start, unsigned end) -> void {
+             for (unsigned i = start; i < end; ++i) {
+                 resultMatrixDataPtr[i] = scaleThis * thisMatrixDataPtr[i] +
+                                          scaleOther * inputMatrixDataPtr[i];
+             }
+         };
+         this->_threading.executeParallelJob(matrixAddJob, this->_values->size(), this->_availableThreads);
+     }
+     
+     void matrixAddIntoThis(NumericalMatrixStorage<T> &inputMatrixData, T scaleThis, T scaleOther) override {
+         
+         T *&thisMatrixDataPtr = this->_values->getDataPointer();
+         T *&inputMatrixDataPtr = inputMatrixData[0]._values->getDataPointer();
+         
+         auto matrixAddJob = [&](unsigned start, unsigned end) -> void {
+             for (unsigned i = start; i < end; ++i) {
+                 thisMatrixDataPtr[i] = scaleThis * thisMatrixDataPtr[i] +
+                                        scaleOther * inputMatrixDataPtr[i];
+             }
+         };
+         this->_threading.executeParallelJob(matrixAddJob, this->_values->size(), this->_availableThreads);
+     }
+     
+     void matrixSubtract(NumericalMatrixStorage<T> &inputMatrixData, NumericalMatrixStorage<T> &resultMatrixData, T scaleThis, T scaleOther) override {
 
-            auto matrixSubtractJob = [&](unsigned start, unsigned end) -> void {
-                for (unsigned i = start; i < end; ++i) {
-                    resultMatrixDataPtr[i] = scaleThis * thisMatrixDataPtr[i] -
-                                             scaleOther * inputMatrixDataPtr[i];
-                }
-            };
-            this->_threading.executeParallelJob(matrixSubtractJob, this->_values->size());
-        }
-        
-        void matrixSubtractIntoThis(NumericalMatrixStorage<T> &inputMatrixData, T scaleThis, T scaleOther) override {
+         T *&thisMatrixDataPtr = this->_values->getDataPointer();
+         T *&inputMatrixDataPtr = inputMatrixData[0]._values->getDataPointer();
+         T *&resultMatrixDataPtr = resultMatrixData[0]._values->getDataPointer();
 
-            T *&thisMatrixDataPtr = this->_values->getDataPointer();
-            T *&inputMatrixDataPtr = inputMatrixData[0]._values->getDataPointer();
+         auto matrixSubtractJob = [&](unsigned start, unsigned end) -> void {
+             for (unsigned i = start; i < end; ++i) {
+                 resultMatrixDataPtr[i] = scaleThis * thisMatrixDataPtr[i] -
+                                          scaleOther * inputMatrixDataPtr[i];
+             }
+         };
+         this->_threading.executeParallelJob(matrixSubtractJob, this->_values->size(), this->_availableThreads);
+     }
+     
+  void matrixSubtractIntoThis(NumericalMatrixStorage<T> &inputMatrixData, T scaleThis, T scaleOther) override {
 
-            auto matrixSubtractJob = [&](unsigned start, unsigned end) -> void {
-                for (unsigned i = start; i < end; ++i) {
-                    thisMatrixDataPtr[i] = scaleThis * thisMatrixDataPtr[i] -
-                                           scaleOther * inputMatrixDataPtr[i];
-                }
-            };
-            this->_threading.executeParallelJob(matrixSubtractJob, this->_values->size());
-        }
+         T *&thisMatrixDataPtr = this->_values->getDataPointer();
+         T *&inputMatrixDataPtr = inputMatrixData[0]._values->getDataPointer();
 
-        void matrixMultiply(NumericalMatrixStorage<T> &inputMatrixData, NumericalMatrixStorage<T> &resultMatrixData, T scaleThis, T scaleOther) override {
+         auto matrixSubtractJob = [&](unsigned start, unsigned end) -> void {
+             for (unsigned i = start; i < end; ++i) {
+                 thisMatrixDataPtr[i] = scaleThis * thisMatrixDataPtr[i] -
+                                        scaleOther * inputMatrixDataPtr[i];
+             }
+         };
+         this->_threading.executeParallelJob(matrixSubtractJob, this->_values->size(), this->_availableThreads);
+     }
 
-            T *&thisMatrixDataPtr = this->_values->getDataPointer();
-            T *&inputMatrixDataPtr = inputMatrixData[0]._values->getDataPointer();
-            T *&resultMatrixDataPtr = resultMatrixData[0]._values->getDataPointer();
+     void matrixMultiply(NumericalMatrixStorage<T> &inputMatrixData, NumericalMatrixStorage<T> &resultMatrixData, T scaleThis, T scaleOther) override {
 
-            auto matrixMultiplyJob = [&](unsigned startRow, unsigned endRow) {
-                for (unsigned i = startRow; i < endRow; ++i) {
-                    for (unsigned j = 0; j < this->_numberOfColumns; j++) {
-                        T sum = 0.0;
-                        for (unsigned k = 0; k < this->_numberOfColumns; k++) {
-                            sum += scaleThis * thisMatrixDataPtr[i * this->_numberOfColumns + k] *
-                                scaleOther * inputMatrixDataPtr[k * this->_numberOfColumns + j];
-                        }
-                    }
-                }
-            };
+         T *&thisMatrixDataPtr = this->_values->getDataPointer();
+         T *&inputMatrixDataPtr = inputMatrixData[0]._values->getDataPointer();
+         T *&resultMatrixDataPtr = resultMatrixData[0]._values->getDataPointer();
 
-            this->_threading.executeParallelJob(matrixMultiplyJob, this->_numberOfRows);
-        }
+         auto matrixMultiplyJob = [&](unsigned startRow, unsigned endRow) {
+             for (unsigned i = startRow; i < endRow; ++i) {
+                 for (unsigned j = 0; j < this->_numberOfColumns; j++) {
+                     T sum = 0.0;
+                     for (unsigned k = 0; k < this->_numberOfColumns; k++) {
+                         sum += scaleThis * thisMatrixDataPtr[i * this->_numberOfColumns + k] *
+                             scaleOther * inputMatrixDataPtr[k * this->_numberOfColumns + j];
+                     }
+                 }
+             }
+         };
 
-        void matrixMultiplyIntoThis(vector<NumericalMatrixStorage<T>>&inputMatrixData, T scaleThis, T scaleOther) override {
+         this->_threading.executeParallelJob(matrixMultiplyJob, this->_numberOfRows, this->_availableThreads);
+     }
 
-            T *&thisMatrixDataPtr = this->_values->getDataPointer();
-            T *&inputMatrixDataPtr = inputMatrixData[0]._values->getDataPointer();
+     void matrixMultiplyIntoThis(vector<NumericalMatrixStorage<T>>&inputMatrixData, T scaleThis, T scaleOther) override {
 
-            auto matrixMultiplyJob = [&](unsigned startRow, unsigned endRow) {
-                for (unsigned i = startRow; i < endRow; ++i) {
-                    for (unsigned j = 0; j < this->_numberOfColumns; j++) {
-                        T sum = 0.0;
-                        for (unsigned k = 0; k < this->_numberOfColumns; k++) {
-                            sum += scaleThis * thisMatrixDataPtr[i * this->_numberOfColumns + k] *
-                                scaleOther * inputMatrixDataPtr[k * this->_numberOfColumns + j];
-                        }
-                    }
-                }
-            };
-            
-            this->_threading.executeParallelJob(matrixMultiplyJob, this->_numberOfRows);
-        }
-                
-        void matrixMultiplyWithVector(T *&inputVectorData, T *&resultVectorData, T scaleThis, T scaleVector) override {
-                
-                T *&thisMatrixDataPtr = this->_values->getDataPointer();
-                
-                auto matrixVectorMultiplicationJob = [&](unsigned startRow, unsigned endRow) {
-                    for (unsigned i = startRow; i < endRow; ++i) {
-                        T sum = 0.0;
-                        for (unsigned j = 0; j < this->_numberOfColumns; j++) {
-                            sum += scaleThis * thisMatrixDataPtr[i * this->_numberOfColumns + j] *
-                                scaleVector * inputVectorData[j];
-                        }
-                        resultVectorData[i] = sum;
-                    }
-                };
-                
-                this->_threading.executeParallelJob(matrixVectorMultiplicationJob, this->_numberOfRows);
-        }
-        
-        void axpy(T *&multipliedVectorData, T *&addedVectorData, T scaleMultiplication, T scaleAddition) override {
-                
-                T *&thisMatrixDataPtr = this->_values->getDataPointer();
-                
-                auto axpyJob = [&](unsigned startRow, unsigned endRow) {
-                    for (unsigned i = startRow; i < endRow; ++i) {
-                        T sum = 0.0;
-                        for (unsigned j = 0; j < this->_numberOfColumns; j++) {
-                            sum += scaleMultiplication * thisMatrixDataPtr[i * this->_numberOfColumns + j] *
-                                multipliedVectorData[j];
-                        }
-                        addedVectorData[i] += scaleAddition * sum;
-                    }
-                };
-                
-                this->_threading.executeParallelJob(axpyJob, this->_numberOfRows);
-        }
+         T *&thisMatrixDataPtr = this->_values->getDataPointer();
+         T *&inputMatrixDataPtr = inputMatrixData[0]._values->getDataPointer();
+
+         auto matrixMultiplyJob = [&](unsigned startRow, unsigned endRow) {
+             for (unsigned i = startRow; i < endRow; ++i) {
+                 for (unsigned j = 0; j < this->_numberOfColumns; j++) {
+                     T sum = 0.0;
+                     for (unsigned k = 0; k < this->_numberOfColumns; k++) {
+                         sum += scaleThis * thisMatrixDataPtr[i * this->_numberOfColumns + k] *
+                             scaleOther * inputMatrixDataPtr[k * this->_numberOfColumns + j];
+                     }
+                 }
+             }
+         };
+         
+         this->_threading.executeParallelJob(matrixMultiplyJob, this->_numberOfRows, this->_availableThreads);
+     }
+             
+     void matrixMultiplyWithVector(T *&inputVectorData, T *&resultVectorData, T scaleThis, T scaleVector) override {
+             
+             T *&thisMatrixDataPtr = this->_values->getDataPointer();
+             
+             auto matrixVectorMultiplicationJob = [&](unsigned startRow, unsigned endRow) {
+                 for (unsigned i = startRow; i < endRow; ++i) {
+                     T sum = 0.0;
+                     for (unsigned j = 0; j < this->_numberOfColumns; j++) {
+                         sum += scaleThis * thisMatrixDataPtr[i * this->_numberOfColumns + j] *
+                             scaleVector * inputVectorData[j];
+                     }
+                     resultVectorData[i] = sum;
+                 }
+             };
+             
+             this->_threading.executeParallelJob(matrixVectorMultiplicationJob, this->_numberOfRows, this->_availableThreads);
+     }
+     
+     void axpy(T *&multipliedVectorData, T *&addedVectorData, T scaleMultiplication, T scaleAddition) override {
+             
+             T *&thisMatrixDataPtr = this->_values->getDataPointer();
+             
+             auto axpyJob = [&](unsigned startRow, unsigned endRow) {
+                 for (unsigned i = startRow; i < endRow; ++i) {
+                     T sum = 0.0;
+                     for (unsigned j = 0; j < this->_numberOfColumns; j++) {
+                         sum += scaleMultiplication * thisMatrixDataPtr[i * this->_numberOfColumns + j] *
+                             multipliedVectorData[j];
+                     }
+                     addedVectorData[i] += scaleAddition * sum;
+                 }
+             };
+             
+             this->_threading.executeParallelJob(axpyJob, this->_numberOfRows, this->_availableThreads);
+     }*/
         
     };
 
 } // LinearAlgebra
 
 #endif //UNTITLED_FULLMATRIXSTORAGE_H
-*/

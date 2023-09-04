@@ -16,33 +16,31 @@ namespace LinearAlgebra {
     template <typename T>
     class NumericalMatrixStorage {
     public:
-        explicit NumericalMatrixStorage(NumericalMatrixStorageType storageType, unsigned numberOfRows, unsigned numberOfColumns, 
-                                        ParallelizationMethod parallelizationMethod, unsigned availableThreads = 1) :
-        _storageType(storageType), _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns) { }
+        explicit NumericalMatrixStorage(unsigned numberOfRows, unsigned numberOfColumns, unsigned availableThreads) :
+        _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _availableThreads(availableThreads),
+        _elementAssignmentRunning(false), _values(make_shared<NumericalVector<T>>(numberOfRows * numberOfColumns, 0, availableThreads)) {}
         
         virtual ~NumericalMatrixStorage() = default;
         
-        shared_ptr<NumericalVector<T> >& getValues(){
-            if (_elementAssignmentRunning){
-                throw runtime_error("Element assignment is still running. Call finalizeElementAssignment() first.");
-            }
+        shared_ptr<NumericalVector<T>>& getValues(){
+            if (_values->empty())
+                throw runtime_error("Values vector is empty.");
             return _values;
         }
         
-        virtual vector<shared_ptr<NumericalVector<T>>>& getSupplementaryVectors(){ }
+        virtual vector<shared_ptr<NumericalVector<unsigned>>> getSupplementaryVectors(){ return {}; }
         
         const NumericalMatrixStorageType& getStorageType(){
             return _storageType;
         }
 
         ThreadingOperations<T> threading;
-
-
+        
         virtual T&  getElement(unsigned row, unsigned column) {}
 
-        virtual void setElement(unsigned row, unsigned column, const T &value) {}
+        virtual void setElement(unsigned row, unsigned column, T value) {}
 
-        virtual void eraseElement(unsigned row, unsigned column, const T &value) {}
+        virtual void eraseElement(unsigned row, unsigned column) {}
 
         virtual shared_ptr<NumericalVector<T>> getRowSharedPtr(unsigned row) {}
         
@@ -93,6 +91,10 @@ namespace LinearAlgebra {
         unsigned _numberOfColumns;
         
         bool _elementAssignmentRunning;
+        
+        unsigned _availableThreads;
+        
+        ThreadingOperations<T> _threading;
         
         virtual unsigned _numberOfNonZeroElements() {
             return -1;

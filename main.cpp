@@ -33,9 +33,9 @@ int main() {
 /*    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();
     delete lanczosTest;*/
 
-    auto vectorTest = new NumericalVectorTest();
-    vectorTest->runTests();
- //Tests::NumericalMatrixTest::runTests();
+/*    auto vectorTest = new NumericalVectorTest();
+    vectorTest->runTests();*/
+ Tests::NumericalMatrixTest::runTests();
 
  
  

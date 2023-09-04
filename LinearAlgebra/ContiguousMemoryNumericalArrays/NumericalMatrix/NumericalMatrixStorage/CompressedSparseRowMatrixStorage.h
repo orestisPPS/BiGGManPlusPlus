@@ -5,25 +5,26 @@
 #ifndef UNTITLED_COMPRESSEDSPARSEROWMATRIXSTORAGE_H
 #define UNTITLED_COMPRESSEDSPARSEROWMATRIXSTORAGE_H
 
-#include "NumericalMatrixDataStructuresProvider.h"
 #include "SparseMatrixStorage.h"
 
 namespace LinearAlgebra {
     template <typename T>
     class CompressedSparseRowMatrixStorage : public SparseMatrixStorage<T>{
     public:
-        explicit CompressedSparseRowMatrixStorage(unsigned numberOfRows, unsigned numberOfColumns, ParallelizationMethod parallelizationMethod) :
-                NumericalMatrixStorage<T>(CSR, numberOfRows, numberOfColumns, parallelizationMethod) {
-                this->_values = nullptr;
-                this->_columnIndices = nullptr;
-                this->_rowOffsets= nullptr;
-        }
-        
-        vector<NumericalVector<T>&> getSupplementaryVectors() override {
-            return {*this->_values, *this->_columnIndices, *this->_rowOffsets};
+        explicit CompressedSparseRowMatrixStorage(unsigned numberOfRows, unsigned numberOfColumns, unsigned numberOfThreads)
+                : SparseMatrixStorage<T>(numberOfRows, numberOfColumns, numberOfThreads){
+            this->_storageType = NumericalMatrixStorageType::CSR;
+            this->_values = make_shared<NumericalVector<T>>(0, 0, numberOfThreads);
+            _columnIndices = make_shared<NumericalVector<unsigned>>(0, 0, numberOfThreads);
+            _rowOffsets = make_shared<NumericalVector<unsigned>>(numberOfRows + 1, 0, numberOfThreads);
+            (*_rowOffsets)[0] = 0;
         }
 
-        T& getElement(unsigned int row, unsigned int column) const override {
+        vector<shared_ptr<NumericalVector<unsigned>>> getSupplementaryVectors() override{
+            return {this->_columnIndices, this->_rowOffsets};
+        }
+
+        T& getElement(unsigned int row, unsigned int column) override {
             if (row >= this->_numberOfRows || column >= this->_numberOfColumns)
                 throw runtime_error("Row or column index out of bounds.");
 
@@ -37,7 +38,7 @@ namespace LinearAlgebra {
                     if ((*_columnIndices)[i] == column)
                         return (*this->_values)[i];
                 }
-                return this->_zero;  // Return zero of type T
+                return this->_zero; // Return zero of type T
             }
         }
 
@@ -66,7 +67,7 @@ namespace LinearAlgebra {
         *    - Shifting the existing elements to accommodate the new value.
         *    - Adjusting the row offsets for the subsequent rows.
         */
-        void setElement(unsigned int row, unsigned int column, const T &value) override {
+        void setElement(unsigned int row, unsigned int column, T value) override {
             if (row >= this->_numberOfRows || column >= this->_numberOfColumns)
                 throw runtime_error("Row or column index out of bounds.");
 
@@ -88,9 +89,9 @@ namespace LinearAlgebra {
                 }
             }
             if (!elementFound and value != static_cast<T>(0)){
-                NumericalVector<T>& valuesData = *this->_values->getData();
-                NumericalVector<unsigned>& columnIndicesData = *this->_columnIndices->getData();
-                NumericalVector<unsigned>& rowOffsetsData = *this->_rowOffsets->getData();
+                vector<T>& valuesData = *this->_values->getData();
+                vector<unsigned>& columnIndicesData = *this->_columnIndices->getData();
+                vector<unsigned>& rowOffsetsData = *this->_rowOffsets->getData();
 
                 // Resize the vectors to accommodate the new element
                 valuesData.resize(valuesData.size() + 1);
@@ -120,7 +121,7 @@ namespace LinearAlgebra {
                 throw runtime_error("Row or column index out of bounds.");
 
             if (this->_elementAssignmentRunning) {
-                this->_builder.erase(row, column);
+                this->_builder.removeElement(row, column);
                 return;
             }
 
@@ -139,9 +140,9 @@ namespace LinearAlgebra {
 
             // If the element is found
             if (positionToErase != rowEnd) {
-                NumericalVector<T>& valuesData = *this->_values->getData();
-                NumericalVector<unsigned>& columnIndicesData = *this->_columnIndices->getData();
-                NumericalVector<unsigned>& rowOffsetsData = *this->_rowOffsets->getData();
+                auto &valuesData = *this->_values->getData();
+                auto &columnIndicesData = *this->_columnIndices->getData();
+                auto &rowOffsetsData = *this->_rowOffsets->getData();
 
                 // Shift elements to the left by one position, starting from the identified position
                 for (unsigned i = positionToErase; i < valuesData.size() - 1; i++) {
@@ -197,9 +198,6 @@ namespace LinearAlgebra {
 
             this->_elementAssignmentRunning = true;
             this->_builder.enableElementAssignment();
-            this->_values->clear();
-            this->_columnIndices->clear();
-            this->_rowOffsets->clear();
         }
 
         void finalizeElementAssignment() override {
@@ -209,9 +207,10 @@ namespace LinearAlgebra {
             this->_elementAssignmentRunning = false;
             this->_builder.disableElementAssignment();
             auto dataVectors = this->_builder.getCSRDataVectors();
-            this->_values = std::move(dataVectors[0]);
-            this->_columnIndices = move(dataVectors[1]);
-            this->_rowOffsets = move(dataVectors[2]);
+            
+            this->_values = std::move(get<0>(dataVectors));
+            this->_columnIndices = std::move(get<1>(dataVectors));
+            this->_rowOffsets = std::move(get<2>(dataVectors));
         }
 
         /*void matrixAdd(NumericalMatrixStorage<T> &inputMatrixData,

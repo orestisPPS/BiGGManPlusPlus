@@ -162,10 +162,9 @@ add_executable(untitled main.cpp
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/NumericalMatrixStorage.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/FullMatrixStorage.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/CompressedSparseRowMatrixStorage.h
-        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/NumericalMatrixDataStructuresProvider.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/NumericalMatrixDataStructuresBuilder.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/SparseMatrixStorage.h
         Tests/NumericalMatrixTest.h
-        Tests/NumericalMatrixTest.cpp
 )
 
 

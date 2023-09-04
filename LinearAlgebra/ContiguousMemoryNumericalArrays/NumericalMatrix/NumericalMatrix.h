@@ -8,8 +8,6 @@
 #include "../NumericalVector/NumericalVector.h"
 #include "NumericalMatrixStorage/CompressedSparseRowMatrixStorage.h"
 #include "NumericalMatrixStorage/FullMatrixStorage.h"
-#include "NumericalMatrixStorage/NumericalMatrixDataStructuresProvider.h"
-
 using namespace std;
 
 namespace LinearAlgebra {
@@ -34,12 +32,25 @@ namespace LinearAlgebra {
          * @param initialValue Default value for matrix elements.
          * @param parallelizationMethod Parallelization method to be used for matrix operations.
          */
-        explicit NumericalMatrix(unsigned int rows, unsigned int columns, T initialValue = 0, NumericalMatrixStorageType storageType = FullMatrix,
-                                 ParallelizationMethod parallelizationMethod = SingleThread, unsigned availableThreads = 1) :
-                _numberOfRows(rows), _numberOfColumns(columns), _parallelizationMethod(parallelizationMethod), _storage(NumericalMatrixStorage<T>(storageType, rows, columns, parallelizationMethod)) {
+        explicit NumericalMatrix(unsigned int rows, unsigned int columns, NumericalMatrixStorageType storageType = FullMatrix,
+                                 unsigned availableThreads = 1) :
+                _numberOfRows(rows), _numberOfColumns(columns), _availableThreads(availableThreads), dataStorage(nullptr) {
             
+            
+            switch (storageType) {
+                case FullMatrix:
+                    dataStorage = make_unique<FullMatrixStorage<T>>(rows, columns, availableThreads);
+                    break;
+                case CSR:
+                    dataStorage = make_unique<CompressedSparseRowMatrixStorage<T>>(rows, columns, availableThreads);
+                    break;
+                default:
+                    throw std::invalid_argument("Invalid storage type.");
+                
+            }
         }
 
+        //TODO FIX THIS
         /**
          * @brief Copy constructor for NumericalMatrix.
          * 
@@ -48,8 +59,8 @@ namespace LinearAlgebra {
          * @param other The matrix to be copied from.
          */
         NumericalMatrix(const NumericalMatrix& other) :
-                _numberOfRows(other._numberOfRows), _numberOfColumns(other._numberOfColumns), _parallelizationMethod(other._parallelizationMethod) {
-                if (_storage.getStorageType() == other._storage.getStorageType()){
+                _numberOfRows(other._numberOfRows), _numberOfColumns(other._numberOfColumns), _availableThreads(other._availableThreads) {
+                if (dataStorage.getStorageType() == other.dataStorage.getStorageType()){
                     //_storage._values-> = other._values;
                 }
                 else{
@@ -68,9 +79,13 @@ namespace LinearAlgebra {
         NumericalMatrix(NumericalMatrix&& other) noexcept :
                 _numberOfRows(std::exchange(other._numberOfRows, 0)),
                 _numberOfColumns(std::exchange(other._numberOfColumns, 0)),
-                _parallelizationMethod(std::move(other._parallelizationMethod)),
-                _storage(std::move(other._storage)) {}
-        
+                dataStorage(std::move(other.dataStorage)){
+            _availableThreads = other._availableThreads;
+        }
+
+        unique_ptr<NumericalMatrixStorage<T>> dataStorage; ///< Storage object for the matrix elements.
+
+
         /**
         * @brief Move assignment operator for NumericalMatrix.
         * 
@@ -84,7 +99,8 @@ namespace LinearAlgebra {
                 //_values = std::move(other._values);
                 _numberOfRows = std::exchange(other._numberOfRows, 0);
                 _numberOfColumns = std::exchange(other._numberOfColumns, 0);
-                _parallelizationMethod = std::move(other._parallelizationMethod);
+                dataStorage = std::move(other.dataStorage);
+                _availableThreads = std::exchange(other._availableThreads, 0);
             }
             return *this;
         }
@@ -97,11 +113,11 @@ namespace LinearAlgebra {
         * @return T& Reference to the element at the specified position.
         */
         T& operator()(unsigned int row, unsigned int column) {
-            return _storage.getElement(row, column);
+            return dataStorage.getElement(row, column);
         }
         
         const T& operator()(unsigned int row, unsigned int column) const {
-            return _storage.getElement(row, column);
+            return dataStorage.getElement(row, column);
         }
 
         /**
@@ -129,15 +145,15 @@ namespace LinearAlgebra {
         }
         
         T& getElement(unsigned row, unsigned column){
-            return _storage.getElement(row, column);
+            return dataStorage->getElement(row, column);
         }
         
         void setElement(unsigned row, unsigned column, const T &value){
-            _storage.setElement(row, column, value);
+            dataStorage->setElement(row, column, value);
         }
         
         void eraseElement(unsigned row, unsigned column, const T &value){
-            _storage.eraseElement(row, column, value);
+            dataStorage->eraseElement(row, column, value);
         }
         
         /**
@@ -166,26 +182,6 @@ namespace LinearAlgebra {
         unsigned int size() const {
             return _numberOfRows * _numberOfColumns;
         }
-        
-        /**
-         * @brief Gets the parallelization method used for matrix operations.
-         * 
-         * @return ParallelizationMethod Parallelization method.
-         */
-        const ParallelizationMethod& parallelizationMethod() const {
-            return _parallelizationMethod;
-        }
-        
-        
-        /**
-        * @brief Sets the parallelization method used for matrix operations.
-        * 
-        * @param parallelizationMethod Parallelization method.
-        */
-        void setParallelizationMethod(ParallelizationMethod parallelizationMethod) {
-            _parallelizationMethod = parallelizationMethod;
-            _storage.setThreadingMethod(parallelizationMethod);
-        }
 
         /**
         * @brief Gets the storage type of the matrix.
@@ -193,7 +189,7 @@ namespace LinearAlgebra {
         * @return NumericalMatrixStorageType  Enum representing the storage type (FullMatrix, CSR, etc.).
         */
         const NumericalMatrixStorageType& storageType() const {
-            return _storage.getStorageType();
+            return dataStorage->getStorageType();
         }
 
         /**
@@ -201,7 +197,7 @@ namespace LinearAlgebra {
         * @return true if the vector is empty, false otherwise.
         */
         bool isEmpty() const {
-            return _storage._storage._values->empty();
+            return dataStorage->storage->_values->empty();
         }
 
         /**
@@ -209,7 +205,7 @@ namespace LinearAlgebra {
         * @param value The value to fill the matrix with.
         */
         void fill(T value) {
-            _storage._values->fill(value);
+            dataStorage->_values->fill(value);
         }
 
 
@@ -226,7 +222,7 @@ namespace LinearAlgebra {
         * \param max The maximum value for the random numbers.
         */
         void fillRandom(T min, T max) {
-            _storage._values->fillRandom(min, max);
+            dataStorage->_values->fillRandom(min, max);
         }
 
         /**
@@ -235,7 +231,7 @@ namespace LinearAlgebra {
         * @return T* Pointer to the matrix data.
         */
         T* getDataPointer() const {
-            return _storage._values->getDataPointer();
+            return dataStorage->_values->getDataPointer();
         }
         
         /**
@@ -244,7 +240,7 @@ namespace LinearAlgebra {
         * @return shared_ptr<NumericalVector<T>> Shared pointer to the data NumericalVector.
         */
         shared_ptr<NumericalVector<T>> getDataNumericalVector() const {
-            return _storage._values;
+            return dataStorage->_values;
         }
 
         /**
@@ -255,7 +251,7 @@ namespace LinearAlgebra {
         * sum(v) = v1 + v2 + ... + vn
         */
         T sum() const {
-            return _storage._storage._values->sum();
+            return dataStorage->storage->_values->sum();
         }
 
         /**
@@ -266,7 +262,7 @@ namespace LinearAlgebra {
         * sum(v) = v1 + v2 + ... + vn
         */
         double average() {
-            return _storage._values->average();
+            return dataStorage->_values->average();
         }
 
         //=================================================================================================================//
@@ -281,7 +277,7 @@ namespace LinearAlgebra {
         * @param scalar The scaling factor.
         */
         void scale(T scalar){
-            _storage._values->scale(scalar);
+            dataStorage->_values->scale(scalar);
         }
 
         /**
@@ -310,11 +306,11 @@ namespace LinearAlgebra {
             }
 
             const T *otherData = dereference_trait<InputType1>::dereference(inputMatrix);
-            const auto thisData = _storage._values->getDataPointer();
+            const auto thisData = storage._values->getDataPointer();
             T *resultMatrixData = dereference_trait<InputType2>::dereference(resultMatrix);
 
             auto addJob = [&](unsigned start, unsigned end) -> void {
-                for (unsigned i = start; i < end && i < _storage._values->size(); ++i) {
+                for (unsigned i = start; i < end && i < storage._values->size(); ++i) {
                     resultMatrixData[i] = scaleThis * (*thisData)[i] + scaleInput * otherData[i];
                 }
             };
@@ -362,11 +358,11 @@ namespace LinearAlgebra {
             }
 
             const T *otherData = dereference_trait<InputType1>::dereference(inputMatrix);
-            const auto thisData = _storage._values->getDataPointer();
+            const auto thisData = storage._values->getDataPointer();
             T *resultMatrixData = dereference_trait<InputType2>::dereference(resultMatrix);
 
             auto subtractJob = [&](unsigned start, unsigned end) -> void {
-                for (unsigned i = start; i < end && i < _storage._values->size(); ++i) {
+                for (unsigned i = start; i < end && i < storage._values->size(); ++i) {
                     resultMatrixData[i] = scaleThis * (*thisData)[i] - scaleInput * otherData[i];
                 }
             };
@@ -394,9 +390,8 @@ namespace LinearAlgebra {
         
         unsigned int _numberOfColumns; ///< Number of columns in the matrix.
         
-        ParallelizationMethod _parallelizationMethod; ///< Parallelization method used for matrix operations.
+        unsigned _availableThreads; ///< Number of available threads for parallelization.
         
-        NumericalMatrixStorage<T> _storage; ///< Storage object for the matrix elements.
 
 
 /*        *//**
@@ -417,11 +412,11 @@ namespace LinearAlgebra {
             const T *sourceData = dereference_trait<InputType>::dereference(source);
 
             auto deepCopyThreadJob = [&](unsigned start, unsigned end) {
-                for (unsigned i = start; i < end && i < _storage._values->size(); ++i) {
+                for (unsigned i = start; i < end && i < storage._values->size(); ++i) {
                     (*_values)[i] = sourceData[i];
                 }
             };
-            _threading.executeParallelJob(deepCopyThreadJob, _storage._values->size());
+            _threading.executeParallelJob(deepCopyThreadJob, storage._values->size());
         }
 
         *//**
@@ -435,12 +430,12 @@ namespace LinearAlgebra {
         *//*
         bool _areElementsEqual(const T *&source, size_t size) {
 
-            if (_storage._values->size() != source->size()) {
+            if (storage._values->size() != source->size()) {
                 throw std::invalid_argument("Source vector must be the same size as the destination vector.");
             }
 
             auto compareElementsJob = [&](unsigned start, unsigned end) -> bool {
-                for (unsigned i = start; i < end && i < _storage._values->size(); ++i) {
+                for (unsigned i = start; i < end && i < storage._values->size(); ++i) {
                     if ((*_values)[i] != source[i]) {
                         return false;
                     }
@@ -450,23 +445,18 @@ namespace LinearAlgebra {
 
             // Check elements in parallel and reduce the results
             if (_parallelizationMethod == SingleThread) {
-                return _threading.executeParallelJobWithReduction(_storage._values->size(), compareElementsJob, 1);
+                return _threading.executeParallelJobWithReduction(storage._values->size(), compareElementsJob, 1);
             }
 
             if (_parallelizationMethod == MultiThread) {
-                return _threading.executeParallelJobWithReduction(_storage._values->size(), compareElementsJob,
+                return _threading.executeParallelJobWithReduction(storage._values->size(), compareElementsJob,
                                                         std::thread::hardware_concurrency());
             }
         }*/
         
         void initializeStorage(NumericalMatrixStorageType storageType){
             switch (storageType) {
-                case FullMatrix:
-                    //_storage = FullMatrixStorage<T>(_numberOfRows, _numberOfColumns, _parallelizationMethod);
-                    break;
-                case CSR:
-                    _storage = CompressedSparseRowMatrixStorage<T>(_numberOfRows, _numberOfColumns, _parallelizationMethod);
-                    break;
+
                 default:
                     throw std::invalid_argument("Invalid storage type.");
             }
@@ -504,18 +494,7 @@ namespace LinearAlgebra {
                 if (!source) throw std::runtime_error("Null pointer dereferenced");
                 return source->getDataPointer();
             }
-
-
-            /**
-            * \brief Dereferences the source.
-            * \param source A smart pointer to the source object.
-            * \return The parallelization method of the source.
-            */
-            static ParallelizationMethod parallelizationMethod(const NumericalMatrix<U> &source) {
-                return source->_parallelizationMethod;
-            }
-
-
+            
             /**
             * \brief Fetches the size of the source.
             * \param source A pointer to the source object.
@@ -534,7 +513,7 @@ namespace LinearAlgebra {
              */
             static NumericalMatrixStorage<T> getDataStorageNumericalVectors(U *source) {
                 if (!source) throw std::runtime_error("Null pointer dereferenced");
-                return source->_storage;
+                return source->dataStorage;
             }
         };
 
@@ -555,15 +534,6 @@ namespace LinearAlgebra {
             }
 
             /**
-            * \brief Dereferences the source.
-            * \param source A smart pointer to the source object.
-            * \return The parallelization method of the source.
-            */
-            static ParallelizationMethod parallelizationMethod(const NumericalMatrix<U> &source) {
-                return source._parallelizationMethod;
-            }
-
-            /**
             * \brief Fetches the size of the source.
             * \param source A smart pointer to the source object.
             * \return The size of the source.
@@ -579,7 +549,7 @@ namespace LinearAlgebra {
              * @return The matrix storage object of the source.
              */
             static NumericalMatrixStorage<T> getDataStorageNumericalVectors(const NumericalMatrix<U> &source) {
-                return source._storage;
+                return source.dataStorage;
             }
         };
 
@@ -627,17 +597,6 @@ namespace LinearAlgebra {
             static unsigned size(const PtrType<NumericalMatrix<U>> &source) {
                 if (!source) throw std::runtime_error("Null pointer dereferenced");
                 return source->size();
-            }
-            
-            /**
-            * @brief Gets the NumericalVectorStorage object of the source. Offers utility with respect to the matrix storage
-             *        format (e.g., row major, column major, etc.).
-            * @param source A smart pointer to the source object.
-            * @return The matrix storage object of the source.
-            */
-            static NumericalMatrixStorage<T> getDataStorageNumericalVectors(const PtrType<NumericalMatrix<U>> &source) {
-                if (!source) throw std::runtime_error("Null pointer dereferenced");
-                return source->_storage;
             }
         };
 
