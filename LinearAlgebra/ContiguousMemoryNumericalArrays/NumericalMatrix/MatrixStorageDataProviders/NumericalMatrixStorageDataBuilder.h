@@ -2,13 +2,18 @@
 // Created by hal9000 on 9/3/23.
 //
 
-#ifndef UNTITLED_NUMERICALMATRIXDATASTRUCTURESBUILDER_H
-#define UNTITLED_NUMERICALMATRIXDATASTRUCTURESBUILDER_H
+#ifndef UNTITLED_NUMERICALMATRIXSTORAGEDATABUILDER_H
+#define UNTITLED_NUMERICALMATRIXSTORAGEDATABUILDER_H
 
 #include <map>
 #include <unordered_map>
 namespace LinearAlgebra{
 
+    enum MatrixElementsOrder{
+        RowMajor,
+        ColumnMajor
+    };
+    
     /**
     * @class SparseMatrixBuilder
     * @brief A builder class to currently store a sparse matrix in Coordinate (COO) format and convert it to other s
@@ -25,14 +30,16 @@ namespace LinearAlgebra{
     * @tparam T The datatype of matrix elements. It should support basic arithmetic operations.
     */
     template <typename T>
-    class NumericalMatrixDataStructuresBuilder{
+    class NumericalMatrixStorageDataBuilder{
     public:
 
-        NumericalMatrixDataStructuresBuilder(unsigned numberOfRows, unsigned numberOfColumns) :
+        NumericalMatrixStorageDataBuilder(unsigned numberOfRows, unsigned numberOfColumns) :
         _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _elementAssignmentRunning(false),
-        _cooMap(make_unique<map<tuple<unsigned, unsigned>, T>>()){
+        _cooMapRowMajor(make_unique<map<tuple<unsigned, unsigned>, T>>()), 
+        _cooMapColumnMajor(make_unique<map<tuple<unsigned, unsigned>, T, _compareForColumnMajor>>()) {
             _zero = static_cast<T>(0);  
         }
+        
 
         /**
         * @brief Converts a matrix from Coordinate (COO) format to Compressed Sparse Row (CSR) format.
@@ -47,8 +54,8 @@ namespace LinearAlgebra{
         * 
         * @return A tuple containing three shared pointers:
         *         1. A pointer to the values array.
-        *         2. A pointer to the rowOffsets array.
-        *         3. A pointer to the columnIndices array.
+        *         2. A pointer to the columnIndices array.
+        *         3. A pointer to the rowOffsets array.
         * 
         * @throws runtime_error if the matrix is empty.
         */
@@ -56,53 +63,35 @@ namespace LinearAlgebra{
         shared_ptr<NumericalVector<unsigned>>,
         shared_ptr<NumericalVector<unsigned>>>
         getCSRDataVectors() {
-            auto values = make_shared<NumericalVector<T>>(_cooMap->size());
-            auto rowOffsets = make_shared<NumericalVector<unsigned>>(_cooMap->size() + 1);
-            auto columnIndices = make_shared<NumericalVector<unsigned>>(_cooMap->size());
-            if (_cooMap->empty()) {
+            if (_cooMapRowMajor->empty()) {
                 throw runtime_error("Matrix is empty.");
             }
-            if (_elementAssignmentRunning){
-                throw runtime_error("Element assignment is still running. Call finalizeElementAssignment() first.");
-            }
-            else{
-                unsigned currentRow = 0;
-                unsigned currentIndex = 0;
-                (*rowOffsets)[0] = 0;
+            if(!_cooMapColumnMajor->empty())
+                throw runtime_error("Column major map is not empty. Error at matrix construction.");
+            
+            auto values = make_shared<NumericalVector<T>>(_cooMapRowMajor->size());
+            auto columnIndices = make_shared<NumericalVector<unsigned>>(_cooMapRowMajor->size());
+            auto rowOffsets = make_shared<NumericalVector<unsigned>>(_cooMapRowMajor->size() + 1);
 
-                // Iterate through the entries in the COO map (sorted by row, then column) to build the CSR format.
-                for (const auto &element: *_cooMap) {
+            unsigned currentIndex = 0;
+            // Iterate through the entries in the COO map to build the CSR format.
+            for (const auto &element: *_cooMapRowMajor) {
+                unsigned row = std::get<0>(element.first);
+                unsigned col = std::get<1>(element.first);
 
-                    unsigned row = std::get<0>(element.first);
-                    unsigned col = std::get<1>(element.first);
+                (*values)[currentIndex] = element.second;
+                (*columnIndices)[currentIndex] = col;
 
-                    (*values)[currentIndex] = element.second;
-                    (*columnIndices)[currentIndex] = col;
-
-                    // Move to the next position in values and columnIndices.
-                    ++currentIndex;
-
-                    // If there are any rows from 'currentRow' to 'row' that don't have any non-zero elements,
-                    // their starting and ending position would be the same in the 'values' vector.
-                    while (currentRow < row) {
-                        ++currentRow; // Move to the next row.
-
-                        // Update the 'rowOffsets' vector to point to the current position in 'values'.
-                        (*rowOffsets)[currentRow] = currentIndex;
-                    }
+                // Increment the rowOffsets for the current row and all subsequent rows
+                for (unsigned r = row + 1; r <= _numberOfRows; r++) {
+                    (*rowOffsets)[r]++;
                 }
 
-                // After processing all entries from the COO map, fill in the remaining offsets.
-                // This is necessary for rows at the end of the matrix that have no non-zero elements.
-                while (currentRow < _numberOfRows) {
-                    ++currentRow; // Move to the next row.
-
-                    // Update the 'rowOffsets' vector to point to the end of the 'values' vector.
-                    (*rowOffsets)[currentRow] = currentIndex;
-                }
-
-                return make_tuple(values, rowOffsets, columnIndices);
+                // Move to the next position in values and columnIndices
+                ++currentIndex;
             }
+            _cooMapRowMajor->clear();
+            return make_tuple(values, columnIndices, rowOffsets);
         }
 
         /**
@@ -127,48 +116,38 @@ namespace LinearAlgebra{
         shared_ptr<NumericalVector<unsigned>>,
         shared_ptr<NumericalVector<unsigned>>>
         getCSCDataVectors() {
-            auto values = make_shared<NumericalVector<T>>(_cooMap->size());
-            auto columnOffsets = make_shared<NumericalVector<unsigned>>(_cooMap->size() + 1);
-            auto rowIndices = make_shared<NumericalVector<unsigned>>(_cooMap->size());
-
-            if (_cooMap->empty()) {
+            if (_cooMapColumnMajor->empty()) {
                 throw runtime_error("Matrix is empty.");
             }
-            if (_elementAssignmentRunning){
-                throw runtime_error("Element assignment is still running. Call finalizeElementAssignment() first.");
+            if(!_cooMapRowMajor->empty()) {
+                throw runtime_error("Row major map is not empty. Error at matrix construction.");
             }
-            else{
-                unsigned currentColumn = 0;
-                unsigned currentIndex = 0;
-                (*columnOffsets)[0] = 0;
 
-                // Iterate through the entries in the COO map (sorted by column, then row) to build the CSC format.
-                for (const auto &element: *_cooMap) {
-                    unsigned row = std::get<0>(element.first);
-                    unsigned col = std::get<1>(element.first);
+            auto values = make_shared<NumericalVector<T>>(_cooMapColumnMajor->size());
+            auto rowIndices = make_shared<NumericalVector<unsigned>>(_cooMapColumnMajor->size());
+            auto columnOffsets = make_shared<NumericalVector<unsigned>>(_numberOfColumns + 1, 0); // Initialized with zeros
 
-                    (*values)[currentIndex] = element.second;
-                    (*rowIndices)[currentIndex] = row;
+            unsigned currentIndex = 0;
+            unsigned currentColumn = 0;
 
-                    // Move to the next position in values and rowIndices.
-                    ++currentIndex;
+            for (const auto &element: *_cooMapColumnMajor) {
+                unsigned row = std::get<0>(element.first);
+                unsigned col = std::get<1>(element.first);
 
-                    while (currentColumn < col) {
-                        ++currentColumn; // Move to the next column.
-
-                        // Update the 'columnOffsets' vector to point to the current position in 'values'.
-                        (*columnOffsets)[currentColumn] = currentIndex;
-                    }
+                while (currentColumn < col) {
+                    (*columnOffsets)[++currentColumn] = currentIndex;
                 }
 
-                // After processing all entries from the COO map, fill in the remaining offsets.
-                while (currentColumn < _numberOfColumns) {
-                    ++currentColumn; // Move to the next column.
+                (*values)[currentIndex] = element.second;
+                (*rowIndices)[currentIndex] = row;
 
-                    // Update the 'columnOffsets' vector to point to the end of the 'values' vector.
-                    (*columnOffsets)[currentColumn] = currentIndex;
-                }
+                ++currentIndex;
             }
+            while (currentColumn <= _numberOfColumns) {
+                (*columnOffsets)[++currentColumn] = currentIndex;
+            }
+
+            _cooMapColumnMajor->clear();
             return make_tuple(values, rowIndices, columnOffsets);
         }
 
@@ -190,9 +169,12 @@ namespace LinearAlgebra{
             if (values.empty() || rowOffsets.empty() || columnIndices.empty()) {
                 throw runtime_error("CSR data is incomplete.");
             }
-
+            if (_elementAssignmentRunning){
+                throw runtime_error("Element assignment is still running. Call finalizeElementAssignment() first.");
+            }
+            
             // Clear the existing COO map.
-            _cooMap->clear();
+            _cooMapRowMajor->clear();
 
             // Iterate through each row of the matrix.
             for (unsigned row = 0; row < _numberOfRows; ++row) {
@@ -209,7 +191,7 @@ namespace LinearAlgebra{
                     T value = values[id];
 
                     // Insert the non-zero entry into the COO map.
-                    (*_cooMap)[std::make_tuple(row, col)] = value;
+                    (*_cooMapRowMajor)[std::make_tuple(row, col)] = value;
                 }
             }
         }
@@ -227,31 +209,17 @@ namespace LinearAlgebra{
         void getCOOMapFromCSC(NumericalVector<T> &values,
                               NumericalVector<unsigned> &columnOffsets,
                               NumericalVector<unsigned> &rowIndices) {
-
-            // Ensure the provided vectors have valid data
             if (values.empty() || columnOffsets.empty() || rowIndices.empty()) {
                 throw runtime_error("CSC data is incomplete.");
             }
 
-            // Clear the existing COO map.
-            _cooMap->clear();
+            _cooMapColumnMajor->clear();
 
-            // Iterate through each column of the matrix.
             for (unsigned col = 0; col < _numberOfColumns; ++col) {
-
-                // Get the start and end indices for the current column from the columnOffsets array.
-                unsigned startId = columnOffsets[col];
-                unsigned endId = columnOffsets[col + 1];
-
-                // Iterate through the non-zero entries in the current column.
-                for (unsigned id = startId; id < endId; ++id) {
-
-                    // Get the row index and value for the current non-zero entry.
+                for (unsigned id = columnOffsets[col]; id < columnOffsets[col + 1]; ++id) {
                     unsigned row = rowIndices[id];
                     T value = values[id];
-
-                    // Insert the non-zero entry into the COO map.
-                    (*_cooMap)[std::make_tuple(row, col)] = value;
+                    (*_cooMapColumnMajor)[std::make_tuple(row, col)] = value;
                 }
             }
         }
@@ -266,14 +234,19 @@ namespace LinearAlgebra{
         * @throws out_of_range If the row or column index is out of the matrix's range.
          * @throws runtime_error If element assignment is still running.
         */
-        void insertElement(unsigned row, unsigned column, const T &value) {
+        void insertElement(unsigned row, unsigned column, const T &value, MatrixElementsOrder order = RowMajor) {
             if (!_elementAssignmentRunning){
                 throw runtime_error("Element assignment is not running. Call enableElementAssignment() first.");
             }
             if (row >= this->_numberOfRows || column >= this->_numberOfColumns) {
                 throw out_of_range("Row or column index out of range.");
             }
-            _cooMap->insert(pair<tuple<unsigned, unsigned>, T>({row, column}, value));
+            if (order == RowMajor){
+                _cooMapRowMajor->insert({{row, column}, value});
+            }
+            else{
+                _cooMapColumnMajor->insert({{row, column}, value});
+            }
         }
 
         /**
@@ -286,14 +259,22 @@ namespace LinearAlgebra{
         * 
         * @throws out_of_range If the row or column index is out of the matrix's range.
         */
-        T& getElement(unsigned row, unsigned column) {
+        T& getElement(unsigned row, unsigned column, MatrixElementsOrder order = RowMajor) {
             if (row >= this->_numberOfRows || column >= this->_numberOfColumns) {
                 throw out_of_range("Row or column index out of range.");
             }
-            if (_cooMap->find({row, column}) == _cooMap->end()) {
-                return _zero;
+            if (order == RowMajor){
+                if (_cooMapRowMajor->find({row, column}) == _cooMapRowMajor->end()) {
+                    return _zero;
+                }
+                return _cooMapRowMajor->at({row, column});
             }
-            return _cooMap->at({row, column});
+            else{
+                if (_cooMapColumnMajor->find({row, column}) == _cooMapColumnMajor->end()) {
+                    return _zero;
+                }
+                return _cooMapColumnMajor->at({row, column});
+            }
         }
         
         /**
@@ -302,14 +283,22 @@ namespace LinearAlgebra{
          * @param column The column index.
          * @return The value at the specified row and column. Returns 0 if the element is not in the map.
          */
-        const T& getElement(unsigned row, unsigned column) const {
+        const T& getElement(unsigned row, unsigned column, MatrixElementsOrder order = RowMajor ) const {
             if (row >= this->_numberOfRows || column >= this->_numberOfColumns) {
                 throw out_of_range("Row or column index out of range.");
             }
-            if (_cooMap->find({row, column}) == _cooMap->end()) {
-                return 0;
+            if (order == RowMajor){
+                if (_cooMapRowMajor->find({row, column}) == _cooMapRowMajor->end()) {
+                    return _zero;
+                }
+                return _cooMapRowMajor->at({row, column});
             }
-            return _cooMap->at({row, column});
+            else{
+                if (_cooMapColumnMajor->find({row, column}) == _cooMapColumnMajor->end()) {
+                    return _zero;
+                }
+                return _cooMapColumnMajor->at({row, column});
+            }
         }
  
         /**
@@ -321,14 +310,19 @@ namespace LinearAlgebra{
         * @throws out_of_range If the row or column index is out of the matrix's range.
         * @throws runtime_error If element assignment is not running.
         */
-        void removeElement(unsigned row, unsigned column) {
+        void removeElement(unsigned row, unsigned column, MatrixElementsOrder order = RowMajor) {
             if (!_elementAssignmentRunning){
                 throw runtime_error("Element assignment is not running. Call enableElementAssignment() first.");
             }
             if (row >= this->_numberOfRows || column >= this->_numberOfColumns) {
                 throw out_of_range("Row or column index out of range.");
             }
-            _cooMap->erase({row, column});
+            if (order == RowMajor){
+                _cooMapRowMajor->erase({row, column});
+            }
+            else{
+                _cooMapColumnMajor->erase({row, column});
+            }
         }
         
         /**
@@ -348,7 +342,17 @@ namespace LinearAlgebra{
 
     private:
         
-        unique_ptr<map<tuple<unsigned, unsigned>, T>> _cooMap;
+        unique_ptr<map<tuple<unsigned, unsigned>, T>> _cooMapRowMajor;
+
+        struct _compareForColumnMajor {
+            bool operator()(const tuple<unsigned, unsigned>& a, const tuple<unsigned, unsigned>& b) const {
+                if (std::get<1>(a) == std::get<1>(b))
+                    return std::get<0>(a) < std::get<0>(b);
+                return std::get<1>(a) < std::get<1>(b);
+            }
+        };
+        
+        unique_ptr<map<tuple<unsigned, unsigned>, T, _compareForColumnMajor>> _cooMapColumnMajor;        
         
         unsigned _numberOfRows;
         
@@ -358,8 +362,10 @@ namespace LinearAlgebra{
         
         T _zero;
 
+
+
  
     };
 }
 
-#endif //UNTITLED_NUMERICALMATRIXDATASTRUCTURESBUILDER_H
+#endif //UNTITLED_NUMERICALMATRIXSTORAGEDATABUILDER_H

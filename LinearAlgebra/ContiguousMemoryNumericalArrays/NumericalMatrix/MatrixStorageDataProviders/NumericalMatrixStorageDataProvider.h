@@ -2,8 +2,8 @@
 // Created by hal9000 on 9/2/23.
 //
 
-#ifndef UNTITLED_NUMERICALMATRIXSTORAGE_H
-#define UNTITLED_NUMERICALMATRIXSTORAGE_H
+#ifndef UNTITLED_NUMERICALMATRIXSTORAGEDATAPROVIDER_H
+#define UNTITLED_NUMERICALMATRIXSTORAGEDATAPROVIDER_H
 #include "../../NumericalVector/NumericalVector.h"
 #include <list>
 namespace LinearAlgebra {
@@ -14,13 +14,13 @@ namespace LinearAlgebra {
         
     };
     template <typename T>
-    class NumericalMatrixStorage {
+    class NumericalMatrixStorageDataProvider {
     public:
-        explicit NumericalMatrixStorage(unsigned numberOfRows, unsigned numberOfColumns, unsigned availableThreads) :
+        explicit NumericalMatrixStorageDataProvider(unsigned numberOfRows, unsigned numberOfColumns, unsigned availableThreads) :
         _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _availableThreads(availableThreads),
         _elementAssignmentRunning(false), _values(make_shared<NumericalVector<T>>(numberOfRows * numberOfColumns, 0, availableThreads)) {}
         
-        virtual ~NumericalMatrixStorage() = default;
+        virtual ~NumericalMatrixStorageDataProvider() = default;
         
         shared_ptr<NumericalVector<T>>& getValues(){
             if (_values->empty())
@@ -54,25 +54,29 @@ namespace LinearAlgebra {
 
         virtual void finalizeElementAssignment() {}
         
-        virtual void matrixAdd(NumericalMatrixStorage<T> &inputMatrixData,
-                               NumericalMatrixStorage<T> &resultMatrixData,
+        virtual void deepCopy(NumericalMatrixStorageDataProvider<T> &inputMatrixData) {}
+        
+        virtual bool areElementsEqual(NumericalMatrixStorageDataProvider<T> &inputMatrixData) {}
+        
+        virtual void matrixAdd(NumericalMatrixStorageDataProvider<T> &inputMatrixData,
+                               NumericalMatrixStorageDataProvider<T> &resultMatrixData,
                                T scaleThis, T scaleOther) {}
         
-        virtual void matrixAddIntoThis(NumericalMatrixStorage<T> &inputMatrixData,
+        virtual void matrixAddIntoThis(NumericalMatrixStorageDataProvider<T> &inputMatrixData,
                                        T scaleThis, T scaleOther) {}
         
-        virtual void matrixSubtract(NumericalMatrixStorage<T> &inputMatrixData,
-                                    NumericalMatrixStorage<T> &resultMatrixData,
+        virtual void matrixSubtract(NumericalMatrixStorageDataProvider<T> &inputMatrixData,
+                                    NumericalMatrixStorageDataProvider<T> &resultMatrixData,
                                     T scaleThis, T scaleOther) {}
         
-        virtual void matrixSubtractFromThis(NumericalMatrixStorage<T> &inputMatrixData,
+        virtual void matrixSubtractFromThis(NumericalMatrixStorageDataProvider<T> &inputMatrixData,
                                             T scaleThis, T scaleOther) {}
         
-        virtual void matrixMultiply(NumericalMatrixStorage<T> &inputMatrixData,
-                                    NumericalMatrixStorage<T> &resultMatrixData,
+        virtual void matrixMultiply(NumericalMatrixStorageDataProvider<T> &inputMatrixData,
+                                    NumericalMatrixStorageDataProvider<T> &resultMatrixData,
                                     T scaleThis, T scaleOther) {}
         
-        virtual void matrixMultiplyIntoThis(NumericalMatrixStorage<T> &inputMatrixData,
+        virtual void matrixMultiplyIntoThis(NumericalMatrixStorageDataProvider<T> &inputMatrixData,
                                             T scaleThis, T scaleOther) {}
         
         virtual void matrixMultiplyWithVector(T *&inputVectorData, T *&resultVectorData, T scaleThis, T scaleOther) {}
@@ -111,4 +115,4 @@ namespace LinearAlgebra {
 
 } // LinearAlgebra
 
-#endif //UNTITLED_NUMERICALMATRIXSTORAGE_H
+#endif //UNTITLED_NUMERICALMATRIXSTORAGEDATAPROVIDER_H

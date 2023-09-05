@@ -249,25 +249,34 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalArray.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/CSRDαtaProvider.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/FullMatrixStorageDataProvider.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/NumericalMatrixStorageDataBuilder.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/NumericalMatrixStorageDataProvider.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/SparseMatrixDataStorageProvider.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/CompressedSparseRowMatrixStorage.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixMathematicalOperations/CSRMathematicalOperationsProvider.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/FullMatrixStorage.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixMathematicalOperations/FullMatrixMathematicalOperationsProvider.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/NumericalMatrixDataStructuresBuilder.h">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/NumericalMatrixStorage.h">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/SparseMatrixStorage.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixMathematicalOperations/NumericalMatrixMathematicalOperationsProvider.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalVector/NumericalVector.h">

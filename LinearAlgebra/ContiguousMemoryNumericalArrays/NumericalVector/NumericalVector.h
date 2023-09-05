@@ -165,8 +165,9 @@ namespace LinearAlgebra {
         bool operator==(const InputType &other) const {
             _checkInputType(other);
             // Using the dereference trait to obtain the pointer to the source data
-            const T *otherData = dereference_trait<InputType>::dereference(other);
-            return _areElementsEqual(otherData, other.size());
+            T *otherData = dereference_trait<InputType>::dereference(other);
+            unsigned int otherSize = dereference_trait<InputType>::size(other);
+            return _areElementsEqual(otherData, otherSize);
         }
 
         /**
@@ -1181,9 +1182,9 @@ namespace LinearAlgebra {
         * @param source The source object to be compared with.
         * @return true if all elements are equal, false otherwise.
         */
-        bool _areElementsEqual(const T *&source, size_t size) {
+        bool _areElementsEqual(T * const &source, size_t size) const {
 
-            if (_values->size() != source->size()) {
+            if (_values->size() != size) {
                 throw std::invalid_argument("Source vector must be the same size as the destination vector.");
             }
 
@@ -1322,7 +1323,7 @@ namespace LinearAlgebra {
         };
         
         template<typename InputType>
-        void _checkInputType(const InputType &input) {
+        void _checkInputType(InputType const &input) const {
             static_assert(std::is_same<InputType, NumericalVector<T>>::value
                           || std::is_same<InputType, std::shared_ptr<NumericalVector<T>>>::value
                           || std::is_same<InputType, std::unique_ptr<NumericalVector<T>>>::value

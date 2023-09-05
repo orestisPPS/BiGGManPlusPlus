@@ -159,12 +159,15 @@ add_executable(untitled main.cpp
         Tests/NumericalVectorTest.h
         ThreadingOperations/ThreadingOperations.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalArray.h
-        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/NumericalMatrixStorage.h
-        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/FullMatrixStorage.h
-        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/CompressedSparseRowMatrixStorage.h
-        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/NumericalMatrixDataStructuresBuilder.h
-        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixStorage/SparseMatrixStorage.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/NumericalMatrixStorageDataProvider.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/FullMatrixStorageDataProvider.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/CSRDαtaProvider.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/NumericalMatrixStorageDataBuilder.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/SparseMatrixDataStorageProvider.h
         Tests/NumericalMatrixTest.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixMathematicalOperations/NumericalMatrixMathematicalOperationsProvider.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixMathematicalOperations/CSRMathematicalOperationsProvider.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixMathematicalOperations/FullMatrixMathematicalOperationsProvider.h
 )
 
 

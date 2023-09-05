@@ -18,6 +18,7 @@ namespace Tests {
         }
         
         static void testCSRMatrixWithOnSpotAssignment(){
+            logTestStart("testCSRMatrixWithOnSpotAssignment");
             NumericalMatrix<double> matrixCSR = NumericalMatrix<double>(5, 5, CSR);
             matrixCSR.setElement(0, 0, 3);
             matrixCSR.setElement(1, 3, 7);
@@ -28,24 +29,20 @@ namespace Tests {
             auto values = matrixCSR.dataStorage->getValues();
             auto columnIndices = matrixCSR.dataStorage->getSupplementaryVectors()[0];
             auto rowOffsets = matrixCSR.dataStorage->getSupplementaryVectors()[1];
+
+            NumericalVector<double> expectedValues = {3, 7, 4, 2, 5};
+            NumericalVector<unsigned> expectedRowOffsets = {0, 1, 2, 2, 3, 5};
+            NumericalVector<unsigned> expectedColumnIndices = {0, 3, 1, 3, 4};
+
+            assert(expectedValues == values);
+            assert(expectedRowOffsets == rowOffsets);
+            assert(expectedColumnIndices == columnIndices);
             
-            vector<double> expectedValues = {3, 7, 4, 2, 5};
-            vector<unsigned> expectedRowOffsets = {0, 1, 2, 2, 3, 5};
-            vector<unsigned> expectedColumnIndices = {0, 3, 1, 3, 4};
-            
-            for (unsigned i = 0; i < expectedValues.size(); ++i){
-                if (values->at(i) != expectedValues[i])
-                    throw runtime_error("Values are not correct.");
-                if (rowOffsets->at(i) != expectedRowOffsets[i])
-                    throw runtime_error("Row indices are not correct.");
-                if (columnIndices->at(i) != expectedColumnIndices[i])
-                    throw runtime_error("Column indices are not correct.");
-            }
-            
-            cout << "Test passed" << endl;
+            logTestEnd();
         }
 
         static void testCSRMatrixWithCOOAssignment(){
+            logTestStart("testCSRMatrixWithCOOAssignment");
             NumericalMatrix<double> matrixCSR = NumericalMatrix<double>(5, 5, CSR);
             matrixCSR.dataStorage->initializeElementAssignment();
             matrixCSR.setElement(0, 0, 3);
@@ -59,20 +56,23 @@ namespace Tests {
             auto columnIndices = matrixCSR.dataStorage->getSupplementaryVectors()[0];
             auto rowOffsets = matrixCSR.dataStorage->getSupplementaryVectors()[1];
 
-            vector<double> expectedValues = {3, 7, 4, 2, 5};
-            vector<unsigned> expectedRowOffsets = {0, 1, 2, 2, 3, 5};
-            vector<unsigned> expectedColumnIndices = {0, 3, 1, 3, 4};
+            NumericalVector<double> expectedValues = {3, 7, 4, 2, 5};
+            NumericalVector<unsigned> expectedRowOffsets = {0, 1, 2, 2, 3, 5};
+            NumericalVector<unsigned> expectedColumnIndices = {0, 3, 1, 3, 4};
 
-            for (unsigned i = 0; i < expectedValues.size(); ++i){
-                if (values->at(i) != expectedValues[i])
-                    throw runtime_error("Values are not correct.");
-                if (rowOffsets->at(i) != expectedRowOffsets[i])
-                    throw runtime_error("Row indices are not correct.");
-                if (columnIndices->at(i) != expectedColumnIndices[i])
-                    throw runtime_error("Column indices are not correct.");
-            }
+            assert(expectedValues == values);
+            assert(expectedRowOffsets == rowOffsets);
+            assert(expectedColumnIndices == columnIndices);
+            
+            logTestEnd();
+        }
 
-            cout << "Test Passed " << endl;
+        static void logTestStart(const std::string& testName) {
+            std::cout << "Running " << testName << "... ";
+        }
+
+        static void logTestEnd() {
+            std::cout << "\033[1;32m[PASSED]\033[0m\n";  // This adds a green [PASSED] indicator
         }
     };
 
