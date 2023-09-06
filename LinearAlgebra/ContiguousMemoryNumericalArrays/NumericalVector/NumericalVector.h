@@ -1130,6 +1130,10 @@ namespace LinearAlgebra {
             _threading.executeParallelJob(subtractJob, _values->size(), _availableThreads);
         }
         
+        /**
+         * @brief Scales the current vector by a given scalar.
+         * @param scalar The scalar to scale the vector by.
+         */
         void scale(T scalar) {
             auto scaleJob = [&](unsigned start, unsigned end) -> void {
                 for (auto &value: *_values) {

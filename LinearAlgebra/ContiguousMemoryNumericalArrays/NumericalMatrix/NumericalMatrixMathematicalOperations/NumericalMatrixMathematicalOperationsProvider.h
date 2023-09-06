@@ -16,19 +16,38 @@ namespace LinearAlgebra {
                 shared_ptr<NumericalMatrixStorageDataProvider<T>>& storageData) :
                 _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _storageData(storageData){ }
                 
+        virtual void matrixScalarMultiplication(T scaleThis) {
+            if (static_cast<T>(0) == scaleThis) {
+                //TODO: create zero() method in NumericalMatrixStorageDataProvider
+            }
+            else
+                _storageData->getValues()->scale(scaleThis);
+        }
+                
         virtual void matrixAddition(shared_ptr<NumericalMatrixStorageDataProvider<T>>& otherMatrix,
                                     shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,
-                                    T scale1, T scale2) { }
+                                    T scaleThis, T scaleOther) { }
                                     
-                                    
-        
         virtual void matrixSubtraction(shared_ptr<NumericalMatrixStorageDataProvider<T>>& otherMatrix,
                                        shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,
-                                       T scale1, T scale2) { }
+                                       T scaleThis, T scaleOther) { }
                                        
         virtual void MatrixMultiplication(shared_ptr<NumericalMatrixStorageDataProvider<T>>& otherMatrix,
-                                        shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,
-                                        T scale1, T scale2) { }
+                                          shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,
+                                          T scaleThis, T scaleOther) { }
+                                          
+        virtual void MatrixVectorMultiplication(shared_ptr<NumericalMatrixStorageDataProvider<T>>& otherMatrix,
+                                                T *vector,
+                                                T *resultVector,
+                                                T scaleThis, T scaleOther) { }
+        virtual void Axpy(T *vector, T *resultVector, T scaleThis, T scaleMultipliedVector, T scaleAddedVector) { }
+                                        
+        virtual void matrixTranspose(shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix) { }
+        
+        virtual void inverse() { }
+        
+
+                                                
                                        
         
                 
