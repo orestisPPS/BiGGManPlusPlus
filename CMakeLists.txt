@@ -154,7 +154,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp
         LinearAlgebra/Array/Array2.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h
-        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalVector/NumericalVector.h
         Tests/NumericalVectorTest.h
         ThreadingOperations/ThreadingOperations.h
@@ -168,6 +167,7 @@ add_executable(untitled main.cpp
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixMathematicalOperations/NumericalMatrixMathematicalOperationsProvider.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixMathematicalOperations/CSRMathematicalOperationsProvider.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixMathematicalOperations/FullMatrixMathematicalOperationsProvider.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/EigendecompositionProvider.h
 )
 
 

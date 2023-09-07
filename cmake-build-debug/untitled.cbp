@@ -249,6 +249,9 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalArray.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/EigendecompositionProvider.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/CSRStorageDataProvider.h">
 			<Option target="untitled"/>
 		</Unit>
@@ -262,9 +265,6 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/SparseMatrixDataStorageProvider.h">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h">

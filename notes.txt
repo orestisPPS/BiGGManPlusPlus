@@ -1,11 +1,3 @@
-vector operation ->user interface calling the following
-1)single thread vector operations
-2)multi thread vector operations
-3)cuda vector operations
-
-matrix operation ->user interface calling the following
-1)single thread vector operations
-2)multi thread vector operations
-3)cuda vector operations
-
-matrix operations :  add, sub, mul, transpose, deepCopy;
+1) CSR and CSC matrix operations
+2) Integrate QR decomposition/Iteration, power method into the numerical matrix class
+3) Integrate solvers into the numerical matrix class (?)

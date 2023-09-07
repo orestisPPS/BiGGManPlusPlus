@@ -6,7 +6,6 @@
 #define UNTITLED_FULLMATRIXMATHEMATICALOPERATIONSPROVIDER_H
 
  #include "NumericalMatrixMathematicalOperationsProvider.h"
-
 namespace LinearAlgebra {
     
     template<typename T>
@@ -20,7 +19,8 @@ namespace LinearAlgebra {
         void matrixAddition(shared_ptr<NumericalMatrixStorageDataProvider<T>>& inputMatrix,
                             shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,
                             T scaleThis, T scaleOther) override {
-
+            
+            
             T* thisValues = this->_storageData->getValues()->getDataPointer();
             T* otherValues = inputMatrix->getValues()->getDataPointer();
             T* resultValues = resultMatrix->getValues()->getDataPointer();
@@ -57,7 +57,6 @@ namespace LinearAlgebra {
         void  matrixMultiplication(shared_ptr<NumericalMatrixStorageDataProvider<T>>& inputMatrix,
                                   shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,
                                   T scaleThis, T scaleOther) override {
-            
 
             T* thisValues = this->_storageData->getValues()->getDataPointer();
             T* otherValues = inputMatrix->getValues()->getDataPointer();

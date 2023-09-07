@@ -729,30 +729,6 @@ LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp.s
 .PHONY : LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp.s
 
-LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.o: LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp.o
-.PHONY : LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.o
-
-# target to build an object file
-LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp.o
-.PHONY : LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp.o
-
-LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.i: LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp.i
-.PHONY : LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.i
-
-# target to preprocess a source file
-LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp.i
-.PHONY : LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp.i
-
-LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.s: LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp.s
-.PHONY : LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.s
-
-# target to generate assembly for a file
-LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp.s
-.PHONY : LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.cpp.s
-
 LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.o: LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.o
 .PHONY : LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.o
 
@@ -1965,9 +1941,6 @@ help:
 	@echo "... LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.o"
 	@echo "... LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.i"
 	@echo "... LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.s"
-	@echo "... LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.o"
-	@echo "... LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.i"
-	@echo "... LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.s"
 	@echo "... LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.o"
 	@echo "... LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.i"
 	@echo "... LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.s"
