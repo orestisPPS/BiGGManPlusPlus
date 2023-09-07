@@ -2,16 +2,16 @@
 // Created by hal9000 on 9/2/23.
 //
 
-#ifndef UNTITLED_CSRDΑTAPROVIDER_H
-#define UNTITLED_CSRDΑTAPROVIDER_H
+#ifndef UNTITLED_CSRSTORAGEDATAPROVIDER_H
+#define UNTITLED_CSRSTORAGEDATAPROVIDER_H
 
 #include "SparseMatrixDataStorageProvider.h"
 
 namespace LinearAlgebra {
     template <typename T>
-    class CSRDαtaProvider : public SparseMatrixDataStorageProvider<T>{
+    class CSRStorageDataProvider : public SparseMatrixDataStorageProvider<T>{
     public:
-        explicit CSRDαtaProvider(unsigned numberOfRows, unsigned numberOfColumns, unsigned numberOfThreads)
+        explicit CSRStorageDataProvider(unsigned numberOfRows, unsigned numberOfColumns, unsigned numberOfThreads)
                 : SparseMatrixDataStorageProvider<T>(numberOfRows, numberOfColumns, numberOfThreads){
             this->_storageType = NumericalMatrixStorageType::CSR;
             this->_values = make_shared<NumericalVector<T>>(0, 0, numberOfThreads);
@@ -217,29 +217,27 @@ namespace LinearAlgebra {
             if (inputMatrixData.getStorageType() != this->_storageType)
                 throw runtime_error("Cannot copy from a different storage type.");
             
-            auto inputMatrixDataCSR = dynamic_cast<CSRDαtaProvider<T>*>(&inputMatrixData);
-            if (inputMatrixDataCSR == nullptr)
-                throw runtime_error("Cannot cast input matrix data to CSR format.");
+            auto inputValues = inputMatrixData.getValues();
+            auto inputColumnIndices = inputMatrixData.getSupplementaryVectors()[0];
+            auto inputRowOffsets = inputMatrixData.getSupplementaryVectors()[1];
             
-            this->_values = make_shared<NumericalVector<T>>(*inputMatrixDataCSR->_values);
-            this->_columnIndices = make_shared<NumericalVector<unsigned>>(*inputMatrixDataCSR->_columnIndices);
-            this->_rowOffsets = make_shared<NumericalVector<unsigned>>(*inputMatrixDataCSR->_rowOffsets);
+            this->_values = make_shared<NumericalVector<T>>(*inputValues);
+            _columnIndices = make_shared<NumericalVector<unsigned>>(*inputColumnIndices);
+            _rowOffsets = make_shared<NumericalVector<unsigned>>(*inputRowOffsets);
         }
         
         bool areElementsEqual(NumericalMatrixStorageDataProvider<T> &inputMatrixData) override {
             if (inputMatrixData.getStorageType() != this->_storageType)
                 throw runtime_error("Cannot compare with a different storage type.");
             
-            auto otherValues = inputMatrixData.getValues();
-            auto otherColumnIndices = inputMatrixData.getSupplementaryVectors()[0];
-            auto otherRowOffsets = inputMatrixData.getSupplementaryVectors()[1];
+            auto inputValues = inputMatrixData.getValues();
+            auto inputColumnIndices = inputMatrixData.getSupplementaryVectors()[0];
+            auto inputRowOffsets = inputMatrixData.getSupplementaryVectors()[1];
 
-            return ((this->_values == otherValues) &&
-                    (this->_columnIndices == otherColumnIndices) &&
-                    (this->_rowOffsets == otherRowOffsets));
+            return ((this->_values == inputValues) &&
+                    (_columnIndices == inputColumnIndices) &&
+                    (_rowOffsets == inputRowOffsets));
         }
-        
-
         
 
     private:
@@ -250,7 +248,7 @@ namespace LinearAlgebra {
 
 } // LinearAlgebra
 
-#endif //UNTITLED_CSRDΑTAPROVIDER_H
+#endif //UNTITLED_CSRSTORAGEDATAPROVIDER_H
 
 
 /*void matrixAdd(NumericalMatrixStorage<T> &inputMatrixData,

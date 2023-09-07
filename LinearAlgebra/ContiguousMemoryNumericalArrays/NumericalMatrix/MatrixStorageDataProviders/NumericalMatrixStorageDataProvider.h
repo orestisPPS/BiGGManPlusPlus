@@ -33,8 +33,7 @@ namespace LinearAlgebra {
         const NumericalMatrixStorageType& getStorageType(){
             return _storageType;
         }
-
-        ThreadingOperations<T> threading;
+        
         
         virtual T&  getElement(unsigned row, unsigned column) {}
 
@@ -56,33 +55,14 @@ namespace LinearAlgebra {
         
         virtual void deepCopy(NumericalMatrixStorageDataProvider<T> &inputMatrixData) {}
         
-        virtual bool areElementsEqual(NumericalMatrixStorageDataProvider<T> &inputMatrixData) {}
+        virtual bool areElementsEqual(NumericalMatrixStorageDataProvider<T> &inputMatrixData) {
+            return false;
+        }
         
-        virtual void matrixAdd(NumericalMatrixStorageDataProvider<T> &inputMatrixData,
-                               NumericalMatrixStorageDataProvider<T> &resultMatrixData,
-                               T scaleThis, T scaleOther) {}
+        unsigned getAvailableThreads(){
+            return _availableThreads;
+        }
         
-        virtual void matrixAddIntoThis(NumericalMatrixStorageDataProvider<T> &inputMatrixData,
-                                       T scaleThis, T scaleOther) {}
-        
-        virtual void matrixSubtract(NumericalMatrixStorageDataProvider<T> &inputMatrixData,
-                                    NumericalMatrixStorageDataProvider<T> &resultMatrixData,
-                                    T scaleThis, T scaleOther) {}
-        
-        virtual void matrixSubtractFromThis(NumericalMatrixStorageDataProvider<T> &inputMatrixData,
-                                            T scaleThis, T scaleOther) {}
-        
-        virtual void matrixMultiply(NumericalMatrixStorageDataProvider<T> &inputMatrixData,
-                                    NumericalMatrixStorageDataProvider<T> &resultMatrixData,
-                                    T scaleThis, T scaleOther) {}
-        
-        virtual void matrixMultiplyIntoThis(NumericalMatrixStorageDataProvider<T> &inputMatrixData,
-                                            T scaleThis, T scaleOther) {}
-        
-        virtual void matrixMultiplyWithVector(T *&inputVectorData, T *&resultVectorData, T scaleThis, T scaleOther) {}
-        
-        virtual void axpy(T *&multipliedVectorData, T *&addedVectorData, T scaleMultiplication, T scaleAddition) {}
-
 
     protected:
         

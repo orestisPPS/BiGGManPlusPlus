@@ -6,8 +6,10 @@
 #define UNTITLED_NUMERICALMATRIX_H
 
 #include "../NumericalVector/NumericalVector.h"
-#include "MatrixStorageDataProviders/CSRDαtaProvider.h"
+#include "MatrixStorageDataProviders/CSRStorageDataProvider.h"
 #include "MatrixStorageDataProviders/FullMatrixStorageDataProvider.h"
+#include "NumericalMatrixMathematicalOperations/FullMatrixMathematicalOperationsProvider.h"
+#include "NumericalMatrixMathematicalOperations/CSRMathematicalOperationsProvider.h"
 using namespace std;
 
 namespace LinearAlgebra {
@@ -34,55 +36,58 @@ namespace LinearAlgebra {
          */
         explicit NumericalMatrix(unsigned int rows, unsigned int columns, NumericalMatrixStorageType storageType = FullMatrix,
                                  unsigned availableThreads = 1) :
-                _numberOfRows(rows), _numberOfColumns(columns), _availableThreads(availableThreads), dataStorage(nullptr) {
-            
-            
-            switch (storageType) {
-                case FullMatrix:
-                    dataStorage = make_unique<FullMatrixStorageDataProvider<T>>(rows, columns, availableThreads);
-                    break;
-                case CSR:
-                    dataStorage = make_unique<CSRDαtaProvider<T>>(rows, columns, availableThreads);
-                    break;
-                default:
-                    throw std::invalid_argument("Invalid storage type.");
-                
-            }
+                _numberOfRows(rows), _numberOfColumns(columns), _availableThreads(availableThreads){
+            dataStorage = _initializeStorage(storageType);
+            _math = _initializeMath();
         }
 
         //TODO FIX THIS
         /**
-         * @brief Copy constructor for NumericalMatrix.
-         * 
-         * This copy constructor can handle raw pointers, smart pointers, and other heap objects.
-         * 
-         * @param other The matrix to be copied from.
-         */
-        NumericalMatrix(const NumericalMatrix& other) :
-            _numberOfRows(other._numberOfRows), _numberOfColumns(other._numberOfColumns), _availableThreads(other._availableThreads) {
-            if (dataStorage.getStorageType() == other.dataStorage.getStorageType()){
-                //_storage._values-> = other._values;
+        * Copy constructor for NumericalMatrix.
+        *          * This copy constructor can handle raw pointers, smart pointers, and other heap objects.
+        * 
+        * @param other The matrix to be copied from.
+        */
+        template<typename InputType>
+        explicit NumericalMatrix(const InputType& other) {
+            _checkInputMatrixDataType(other);
+            _numberOfRows = dereference_trait<InputType>::numberOfRows(other);
+            _numberOfColumns = dereference_trait<InputType>::numberOfColumns(other);
+            _availableThreads = dereference_trait<InputType>::getAvailableThreads(other);
+            
+            dataStorage = _initializeStorage(dereference_trait<InputType>::getStorageType(other));
+            auto otherStorage = other.storage;
+
+            auto thisValues = dataStorage->getValues();
+            auto otherValues = otherStorage->getValues();
+            (*thisValues) = (*otherValues);
+            
+            auto thisSupplementaryVectors = dataStorage->getSupplementaryVectors();
+            auto otherSupplementaryVectors = otherStorage->getSupplementaryVectors();
+            if (otherSupplementaryVectors.size() > 0){
+                for (unsigned i = 0; i < otherSupplementaryVectors.size(); ++i){
+                    thisSupplementaryVectors[i] = otherSupplementaryVectors[i];
+                }
             }
-            else{
-                //_values = new NumericalVector<T>(other._values->size(), 0, _parallelizationMethod);
-                _deepCopy(other);
-            }
+
+            _math = _initializeMath();
         }
+        
 
         /**
-        * @brief Move constructor for NumericalMatrix.
-        * 
-        * Efficiently transfers the resources of the given matrix to the current matrix.
-        * 
-        * @param other The matrix to be moved.
-        */
+         * @brief Move constructor for NumericalMatrix.
+         * @param other 
+         */
         NumericalMatrix(NumericalMatrix&& other) noexcept :
-                _numberOfRows(std::exchange(other._numberOfRows, 0)),
-                _numberOfColumns(std::exchange(other._numberOfColumns, 0)),
-                dataStorage(std::move(other.dataStorage)){
-            _availableThreads = other._availableThreads;
+                _numberOfRows(std::move(other._numberOfRows)),
+                _numberOfColumns(std::move(other._numberOfColumns)),
+                _availableThreads(std::move(other._availableThreads)),
+                dataStorage(std::move(other.dataStorage)),
+                _math(_initializeMath())
+        {
         }
 
+        
         shared_ptr<NumericalMatrixStorageDataProvider<T>> dataStorage; ///< Storage object for the matrix elements.
 
 
@@ -113,7 +118,7 @@ namespace LinearAlgebra {
          */
         template<typename InputType>
         bool operator==(const InputType& other) const {
-            _checkInputType(other);
+            _checkInputMatrixDataType(other);
             if (numberOfRows() != dereference_trait<InputType>::numberOfRows(other) ||
                 numberOfColumns() != dereference_trait<InputType>::numberOfColumns(other)) {
                 return false;
@@ -265,42 +270,22 @@ namespace LinearAlgebra {
         * \param scaleThis Scaling factor for the current vector (default is 1).
         * \param scaleInput Scaling factor for the input vector (default is 1).
         */
-       template<typename InputType1, typename InputType2>
-        void add(const InputType1 &inputMatrix, InputType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1) {
+       template<typename InputMatrixType1, typename InputMatrixType2>
+        void add(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1) {
 
-            _checkInputType(inputMatrix);
-            _checkInputDimensions(inputMatrix);
-            _checkInputType(resultMatrix);
-            _checkInputDimensions(resultMatrix);
+            _checkInputMatrixDataType(inputMatrix);
+            _checkInputMatrixDimensions(inputMatrix);
+            _checkInputMatrixStorageType(inputMatrix);
+            _checkInputMatrixDataType(resultMatrix);
+            _checkInputMatrixDimensions(resultMatrix);
+            _checkInputMatrixStorageType(resultMatrix);
             
+            auto inputStorage = dereference_trait<InputMatrixType1>::getDataStorageNumericalVectors(inputMatrix);
+            auto resultStorage = dereference_trait<InputMatrixType2>::getDataStorageNumericalVectors(resultMatrix);
 
-/*            const T *otherData = dereference_trait<InputType1>::dereference(inputMatrix);
-            const auto thisData = storage._values->getDataPointer();
-            T *resultMatrixData = dereference_trait<InputType2>::dereference(resultMatrix);
-
-            auto addJob = [&](unsigned start, unsigned end) -> void {
-                for (unsigned i = start; i < end && i < storage._values->size(); ++i) {
-                    resultMatrixData[i] = scaleThis * (*thisData)[i] + scaleInput * otherData[i];
-                }
-            };
-            ThreadingOperations<T>::executeParallelJob(addJob);*/
+            _math->matrixAddition(inputStorage, resultStorage, scaleThis, scaleInput);
         }
-
-        /**
-         * @brief Performs element-wise addition of two matrices and stores the resultMatrix in the current matrix.
-         * Given two vectors A = [A11, A12, ..., Anm] and B = [B11, B12, ..., Bnm] representing the matrices in row major format,
-         * and scalar factors a and b, their addition is:
-         * add(A, B) = [a*A11+b*B11, a*A12+b*w12, ..., a*Anm+b*Bnm].
-         * 
-         * @param inputMatrix The input matrix to add.
-         * @param scaleThis Scaling factor for the current vector (default is 1).
-         * @param scaleInput Scaling factor for the input vector (default is 1).
-         */
-        template<typename InputType>
-        void addIntoThis(const InputType &inputMatrix, T scaleThis = 1, T scaleInput = 1) {
-            add(inputMatrix, *this, scaleThis, scaleInput);
-        }
-
+        
         /**
         * \brief Performs element-wise subtraction of two scaled matrices.
         * Given two vectors A = [A11, A12, ..., Anm] and B = [B11, B12, ..., Bnm] representing the matrices in row major format,
@@ -312,40 +297,72 @@ namespace LinearAlgebra {
         * \param scaleThis Scaling factor for the current vector (default is 1).
         * \param scaleInput Scaling factor for the input vector (default is 1).
         */
-        template<typename InputType1, typename InputType2>
-        void subtract(const InputType1 &inputMatrix, InputType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1) {
+        template<typename InputMatrixType1, typename InputMatrixType2>
+        void subtract(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1) {
 
-            _checkInputType(inputMatrix);
-            _checkInputDimensions(inputMatrix);
-            _checkInputType(resultMatrix);
-            _checkInputDimensions(resultMatrix);
-
-/*            const T *otherData = dereference_trait<InputType1>::dereference(inputMatrix);
-            const auto thisData = storage._values->getDataPointer();
-            T *resultMatrixData = dereference_trait<InputType2>::dereference(resultMatrix);
-
-            auto subtractJob = [&](unsigned start, unsigned end) -> void {
-                for (unsigned i = start; i < end && i < storage._values->size(); ++i) {
-                    resultMatrixData[i] = scaleThis * (*thisData)[i] - scaleInput * otherData[i];
-                }
-            };
-            ThreadingOperations<T>::executeParallelJob(subtractJob);*/
+            _checkInputMatrixDataType(inputMatrix);
+            _checkInputMatrixDimensions(inputMatrix);
+            _checkInputMatrixStorageType(inputMatrix);
+            _checkInputMatrixDataType(resultMatrix);
+            _checkInputMatrixDimensions(resultMatrix);
+            _checkInputMatrixStorageType(resultMatrix);
+            
+            auto inputStorage = dereference_trait<InputMatrixType1>::getDataStorageNumericalVectors(inputMatrix);
+            auto resultStorage = dereference_trait<InputMatrixType2>::getDataStorageNumericalVectors(resultMatrix);
+            
+            _math->matrixSubtraction(inputStorage, resultStorage, scaleThis, scaleInput);
         }
         
         /**
-         * @brief Performs element-wise subtraction of two matrices and stores the result in the current matrix.
-         * Given two vectors A = [A11, A12, ..., Anm] and B = [B11, B12, ..., Bnm] representing the matrices in row major format,
-         * and scalar factors a and b, their subtraction is:
-         * add(A, B) = [a*A11-b*B11, a*A12-b*w12, ..., a*Anm-b*Bnm].
+         * @brief Performs matrix multiplication of two matrices.
          * 
-         * @param inputMatrix The input matrix to subtract.
+         * @param inputMatrix The input matrix to multiply.
+         * @param resultMatrix The result matrix after multiplication.
          * @param scaleThis Scaling factor for the current vector (default is 1).
          * @param scaleInput Scaling factor for the input vector (default is 1).
          */
-        template<typename InputType>
-        void subtractIntoThis(const InputType &inputMatrix, T scaleThis = 1, T scaleInput = 1) {
-            subtract(inputMatrix, *this, scaleThis, scaleInput);
+        template<typename InputMatrixType1, typename InputMatrixType2>
+        void multiplyMatrix(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1) {
+            
+            _checkInputMatrixDataType(inputMatrix);
+            _checkInputMatrixStorageType(inputMatrix);
+            _checkInputMatrixDataType(resultMatrix);
+            _checkInputMatrixStorageType(resultMatrix);
+            if (_numberOfColumns != dereference_trait<InputMatrixType1>::numberOfColumns(inputMatrix))
+                throw invalid_argument("Input matrix must have the same number of columns as the current matrix.");
+            if (_numberOfRows != dereference_trait<InputMatrixType1>::numberOfRows(inputMatrix))
+                throw invalid_argument("Input matrix must have the same number of rows as the current matrix.");
+            
+            auto inputStorage = dereference_trait<InputMatrixType1>::getDataStorageNumericalVectors(inputMatrix);
+            auto resultStorage = dereference_trait<InputMatrixType2>::getDataStorageNumericalVectors(resultMatrix);
+
+            _math->matrixMultiplication(inputStorage, resultStorage, scaleThis, scaleInput);
         }
+        
+        /**
+         * @brief Performs matrix-vector multiplication.
+         * 
+         * @param inputVector The input vector to multiply.
+         * @param resultVector The result vector after multiplication.
+         * @param scaleThis Scaling factor for the current vector (default is 1).
+         * @param scaleInput Scaling factor for the input vector (default is 1).
+         */
+        template<typename InputVectorType1, typename InputVectorType2>
+        void multiplyVector(const InputVectorType1 &inputVector, const InputVectorType2 &resultVector, T scaleThis = 1, T scaleInput = 1) {
+            
+            _checkInputVectorDataType(inputVector);
+            _checkInputVectorDataType(resultVector);
+            if (_numberOfColumns != dereference_trait_vector<InputVectorType1>::size(inputVector))
+                throw invalid_argument("Input vector must have the same number of columns as the current matrix.");
+            if (dereference_trait_vector<InputVectorType1>::size(inputVector) != dereference_trait_vector<InputVectorType2>::size(resultVector))
+                throw invalid_argument("Input vector must have the same number of rows as the result vector.");
+            auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
+            auto resultVectorData = dereference_trait_vector<InputVectorType2>::dereference(resultVector);
+            
+            _math->matrixVectorMultiplication(inputVectorData, resultVectorData, scaleThis, scaleInput);
+        }
+         
+
         
     private:
         
@@ -354,15 +371,68 @@ namespace LinearAlgebra {
         unsigned int _numberOfColumns; ///< Number of columns in the matrix.
         
         unsigned _availableThreads; ///< Number of available threads for parallelization.
+        
+        unique_ptr<NumericalMatrixMathematicalOperationsProvider<T>> _math; ///< Mathematical operations provider for the matrix.
 
-        template<typename InputType>
-        bool _checkInputDimensions(const InputType &inputMatrix) const {
-            if (numberOfRows() != dereference_trait<InputType>::numberOfRows(inputMatrix) ||
-                numberOfColumns() != dereference_trait<InputType>::numberOfColumns(inputMatrix)) {
+        template<typename InputMatrixType>
+        bool _checkInputMatrixDimensions(const InputMatrixType &inputMatrix) const {
+            if (numberOfRows() != dereference_trait<InputMatrixType>::numberOfRows(inputMatrix) ||
+                numberOfColumns() != dereference_trait<InputMatrixType>::numberOfColumns(inputMatrix)) {
                 return false;
             }
             return true;
         }
+
+        template<typename InputMatrixType>
+        void _checkInputMatrixDataType(const InputMatrixType &input) {
+            static_assert(std::is_same<InputMatrixType, NumericalMatrix<T>>::value
+                          || std::is_same<InputMatrixType, std::shared_ptr<NumericalMatrix<T>>>::value
+                          || std::is_same<InputMatrixType, std::unique_ptr<NumericalMatrix<T>>>::value
+                          || std::is_same<InputMatrixType, NumericalMatrix<T>*>::value,
+                          "Input must be a NumericalMatrix, its pointer, or its smart pointers.");
+        }
+        
+        template<typename InputMatrixType>
+        void _checkInputMatrixStorageType(const InputMatrixType &input) {
+            auto inputStorage = dereference_trait<InputMatrixType>::getDataStorageNumericalVectors(input);
+            if (dataStorage->getStorageType() != dereference_trait<InputMatrixType>::getStorageType(input))
+                throw std::invalid_argument("Input matrix must be stored in the same format as the current matrix.");
+        }
+        
+        template<typename InputVectorType>
+        void _checkInputVectorDataType(const InputVectorType &input) {
+            static_assert(std::is_same<InputVectorType, NumericalVector<T>>::value
+                          || std::is_same<InputVectorType, std::shared_ptr<NumericalVector<T>>>::value
+                          || std::is_same<InputVectorType, std::unique_ptr<NumericalVector<T>>>::value
+                          || std::is_same<InputVectorType, NumericalVector<T>*>::value,
+                          "Input must be a NumericalVector, its pointer, or its smart pointers.");
+        }
+        
+        shared_ptr<NumericalMatrixStorageDataProvider<T>> _initializeStorage(NumericalMatrixStorageType storageType){
+            switch (storageType) {
+                case FullMatrix:
+                    return make_shared<FullMatrixStorageDataProvider<T>>(_numberOfRows, _numberOfColumns, _availableThreads);
+                case CSR:
+                    return make_shared<CSRStorageDataProvider<T>>(_numberOfRows, _numberOfColumns, _availableThreads);
+                default:
+                    throw std::invalid_argument("Invalid storage type.");
+            }
+        }
+        
+        unique_ptr<FullMatrixMathematicalOperationsProvider<T>> _initializeMath(){
+            switch (dataStorage->getStorageType()) {
+                case FullMatrix:
+                    return make_unique<FullMatrixMathematicalOperationsProvider<T>>(_numberOfRows, _numberOfColumns, dataStorage);
+                    break;
+                case CSR:
+                    return make_unique<FullMatrixMathematicalOperationsProvider<T>>(_numberOfRows, _numberOfColumns, dataStorage);
+                    break;
+                default:
+                    throw std::invalid_argument("Invalid storage type.");
+                
+            }
+        }
+        
         
         
         //=================================================================================================================//
@@ -434,9 +504,19 @@ namespace LinearAlgebra {
              * @param source A pointer to the source object.
              * @return The matrix storage object of the source.
              */
-            static NumericalMatrixStorageDataProvider<T>& getStorageNumericalVectors(U *source) {
+            static shared_ptr<NumericalMatrixStorageDataProvider<T>> getStorageNumericalVectors(U *source) {
                 if (!source) throw std::runtime_error("Null pointer dereferenced");
                 return source->dataStorage; 
+            }
+            
+            /**
+             * @brief Gets the storage type of the source.
+             * @param source A pointer to the source object.
+             * @return The storage type of the source.
+             */
+            static NumericalMatrixStorageType getStorageType(U *source) {
+                if (!source) throw std::runtime_error("Null pointer dereferenced");
+                return source->dataStorage.getStorageType();
             }
         };
 
@@ -489,8 +569,17 @@ namespace LinearAlgebra {
              * @param source A smart pointer to the source object.
              * @return The matrix storage object of the source.
              */
-            static NumericalMatrixStorageDataProvider<T>& getDataStorageNumericalVectors(const NumericalMatrix<U> &source) {
+            static shared_ptr<NumericalMatrixStorageDataProvider<T>> getDataStorageNumericalVectors(const NumericalMatrix<U> &source) {
                 return source.dataStorage;
+            }
+            
+            /**
+             * @brief Gets the storage type of the source.
+             * @param source A smart pointer to the source object.
+             * @return The storage type of the source.
+             */
+            static NumericalMatrixStorageType getStorageType(const NumericalMatrix<U> &source) {
+                return source.dataStorage->getStorageType();
             }
         };
 
@@ -556,9 +645,19 @@ namespace LinearAlgebra {
              * @param source A smart pointer to the source object.
              * @return The matrix storage object of the source.
              */
-            static NumericalMatrixStorageDataProvider<T>& getDataStorageNumericalVectors(const PtrType<NumericalMatrix<U>> &source) {
+            static shared_ptr<NumericalMatrixStorageDataProvider<T>> getDataStorageNumericalVectors(const PtrType<NumericalMatrix<U>> &source) {
                 if (!source) throw std::runtime_error("Null pointer dereferenced");
                 return source->dataStorage;
+            }
+            
+            /**
+             * @brief Gets the storage type of the source.
+             * @param source A smart pointer to the source object.
+             * @return The storage type of the source.
+             */
+            static NumericalMatrixStorageType getStorageType(const PtrType<NumericalMatrix<U>> &source) {
+                if (!source) throw std::runtime_error("Null pointer dereferenced");
+                    return source->dataStorage.getStorageType();
             }
         };
 
@@ -574,18 +673,118 @@ namespace LinearAlgebra {
         : public dereference_trait_pointer_base<std::shared_ptr, U> {
         };
 
-        template<typename InputType>
-        void _checkInputType(const InputType &input) {
-            static_assert(std::is_same<InputType, NumericalMatrix<T>>::value
-                                                                     || std::is_same<InputType, std::shared_ptr<NumericalMatrix<T>>>::value
-                                                                     || std::is_same<InputType, std::unique_ptr<NumericalMatrix<T>>>::value
-                                                                     || std::is_same<InputType, NumericalMatrix<T>*>::value,
-                    "Input must be a NumericalMatrix, its pointer, or its smart pointers.");
-        }
+        /**
+        * \brief Trait to standardize dereferencing of various types of numericalVectors.
+        *
+        * This trait provides a unified way to dereference types such as raw pointers,
+        * unique pointers, shared pointers, and direct objects.
+        */
+        template<typename U>
+        struct dereference_trait_vector;
+
+        /**
+        * \brief Base trait for raw pointers and direct objects.
+        *
+        * This trait provides a unified way to dereference types like NumericalVector and 
+        * raw pointers to NumericalVector.
+        */
+        template<typename U>
+        struct dereference_trait_vector_base {
+            /**
+            * \brief Dereferences the source.
+            * \param source A pointer to the source object.
+            * \return A pointer to the data of the source.
+            */
+            static U *dereference(U *source) {
+                static_assert(std::is_arithmetic<U>::value, "Template type T must be an arithmetic type (integral or floating-point)");
+
+                if (!source) throw std::runtime_error("Null pointer dereferenced");
+                return source->getDataPointer();
+            }
+
+            /**
+            * \brief Fetches the size of the source.
+            * \param source A pointer to the source object.
+            * \return The size of the source.
+            */
+            static unsigned size(U *source) {
+                if (!source) throw std::runtime_error("Null pointer dereferenced");
+                    return source->size();
+            }
+        };
+
+        /// Specialization for NumericalVector<U>.
+        template<typename U>
+        struct dereference_trait_vector<NumericalVector<U>> {
+
+            /**
+            * \brief Dereferences the source.
+            * \param source A smart pointer to the source object.
+            * \return A pointer to the data of the source.
+            */
+            static U* dereference(const NumericalVector<U> &source) {
+                static_assert(std::is_arithmetic<U>::value, "Template type T must be an arithmetic type (integral or floating-point)");
+                return source.getDataPointer();
+            }
+
+            /**
+            * \brief Fetches the size of the source.
+            * \param source A smart pointer to the source object.
+            * \return The size of the source.
+            */
+            static unsigned size(const NumericalVector<U> &source) {
+                return source.size();
+            }
+        };
 
 
+        /// Specialization for raw pointer to NumericalVector<U>.
+        template<typename U>
+        struct dereference_trait_vector<NumericalVector<U> *> : public dereference_trait_vector_base<NumericalVector<U>> {
+        };
+
+        /**
+        * \brief Base trait for smart pointers.
+        *
+        * This trait provides a unified way to dereference types like std::unique_ptr and 
+        * std::shared_ptr.
+        */
+        template<template<typename, typename...> class PtrType, typename U>
+        struct dereference_trait_vector_pointer_base {
+            /**
+            * \brief Dereferences the source.
+            * \param source A smart pointer to the source object.
+            * \return A pointer to the data of the source.
+            */
+            static U *dereference(const PtrType<NumericalVector<U>> &source) {
+                static_assert(std::is_arithmetic<U>::value, "Template type T must be an arithmetic type (integral or floating-point)");
+                if (!source) throw std::runtime_error("Null pointer dereferenced");
+                return source->getDataPointer();
+            }
+            
+            /**
+            * \brief Fetches the size of the source.
+            * \param source A smart pointer to the source object.
+            * \return The size of the source.
+            */
+            static unsigned size(const PtrType<NumericalVector<U>> &source) {
+                if (!source) throw std::runtime_error("Null pointer dereferenced");
+                return source->size();
+            }
+        };
+
+        /// Specialization for std::unique_ptr<NumericalVector<U>>.
+        template<typename U>
+        struct dereference_trait<std::unique_ptr<NumericalVector<U>>>
+                : public dereference_trait_pointer_base<std::unique_ptr, U> {
+        };
+
+        /// Specialization for std::shared_ptr<NumericalVector<U>>.
+        template<typename U>
+        struct dereference_trait<std::shared_ptr<NumericalVector<U>>>
+                : public dereference_trait_pointer_base<std::shared_ptr, U> {
+        };
     };
-
 } // LinearAlgebra
 
 #endif //UNTITLED_NUMERICALMATRIX_H
