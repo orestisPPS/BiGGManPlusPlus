@@ -5,6 +5,8 @@
 #ifndef UNTITLED_CSRSTORAGEDATAPROVIDER_H
 #define UNTITLED_CSRSTORAGEDATAPROVIDER_H
 
+#include <utility>
+
 #include "SparseMatrixDataStorageProvider.h"
 
 namespace LinearAlgebra {
@@ -18,6 +20,17 @@ namespace LinearAlgebra {
             _columnIndices = make_shared<NumericalVector<unsigned>>(0, 0, numberOfThreads);
             _rowOffsets = make_shared<NumericalVector<unsigned>>(numberOfRows + 1, 0, numberOfThreads);
             (*_rowOffsets)[0] = 0;
+        }
+
+        explicit CSRStorageDataProvider(shared_ptr<NumericalVector<T>> values,
+                                        shared_ptr<NumericalVector<unsigned>> columnIndices,
+                                        shared_ptr<NumericalVector<unsigned>> rowOffsets,
+                                        unsigned numberOfRows, unsigned numberOfColumns, unsigned numberOfThreads)
+                : SparseMatrixDataStorageProvider<T>(numberOfRows, numberOfColumns, numberOfThreads) {
+            this->_storageType = NumericalMatrixStorageType::CSR;
+            this->_values = std::move(values);
+            _columnIndices = std::move(columnIndices);
+            _rowOffsets = std::move(rowOffsets);
         }
 
         vector<shared_ptr<NumericalVector<unsigned>>> getSupplementaryVectors() override{

@@ -7,6 +7,7 @@
 
 #include "GramSchmidtQR.h"
 #include "HouseHolderQR.h"
+#include "../../ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 
 namespace LinearAlgebra {
 

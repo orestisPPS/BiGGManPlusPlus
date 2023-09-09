@@ -923,6 +923,21 @@ namespace LinearAlgebra {
             return covarianceOfVectors / (stdDevOfThis * stdDevOfInput);
         }
         
+        double norm(VectorNormType2 normType, double p = 1){
+            switch (normType){
+                case VectorNormType2::L12:
+                    return normL1();
+                case VectorNormType2::L22:
+                    return normL2();
+                case VectorNormType2::LInf2:
+                    return normLInf();
+                case VectorNormType2::Lp2:
+                    return normLp(p);
+                default:
+                    throw std::runtime_error("Invalid norm type.");
+            }
+        }
+        
         double normL1() {
             auto normL1Job = [&](unsigned start, unsigned end) -> double {
                 double sum = 0;

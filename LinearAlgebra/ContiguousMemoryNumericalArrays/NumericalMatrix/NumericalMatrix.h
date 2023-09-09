@@ -10,6 +10,7 @@
 #include "MatrixStorageDataProviders/FullMatrixStorageDataProvider.h"
 #include "NumericalMatrixMathematicalOperations/FullMatrixMathematicalOperationsProvider.h"
 #include "NumericalMatrixMathematicalOperations/CSRMathematicalOperationsProvider.h"
+#include "NumericalMatrixMathematicalOperations/EigendecompositionProvider.h"
 using namespace std;
 
 namespace LinearAlgebra {
