@@ -64,7 +64,7 @@ namespace Tests {
             matrixB.setElement(1, 0, 2);
             matrixB.setElement(1, 1, 1);
 
-            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix);
+            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix, General);
             matrixA.add(matrixB, resultMatrix);
 
             NumericalVector<double> expectedValues = {5, 5, 5, 5};
@@ -150,19 +150,19 @@ namespace Tests {
 
             auto fullGasBaby = std::thread::hardware_concurrency();
             
-            NumericalMatrix<double> matrixA(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> matrixA(2, 2, FullMatrix, General, fullGasBaby);
             matrixA.setElement(0, 0, 1);
             matrixA.setElement(0, 1, 2);
             matrixA.setElement(1, 0, 3);
             matrixA.setElement(1, 1, 4);
 
-            NumericalMatrix<double> matrixB(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> matrixB(2, 2, FullMatrix, General, fullGasBaby);
             matrixB.setElement(0, 0, 4);
             matrixB.setElement(0, 1, 3);
             matrixB.setElement(1, 0, 2);
             matrixB.setElement(1, 1, 1);
 
-            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix, General, fullGasBaby);
             matrixA.add(matrixB, resultMatrix);
 
             NumericalVector<double> expectedValues = {5, 5, 5, 5};
@@ -178,19 +178,19 @@ namespace Tests {
 
             auto fullGasBaby = std::thread::hardware_concurrency();
 
-            NumericalMatrix<double> matrixA(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> matrixA(2, 2, FullMatrix, General, fullGasBaby);
             matrixA.setElement(0, 0, 5);
             matrixA.setElement(0, 1, 4);
             matrixA.setElement(1, 0, 3);
             matrixA.setElement(1, 1, 2);
 
-            NumericalMatrix<double> matrixB(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> matrixB(2, 2, FullMatrix, General, fullGasBaby);
             matrixB.setElement(0, 0, 1);
             matrixB.setElement(0, 1, 2);
             matrixB.setElement(1, 0, 3);
             matrixB.setElement(1, 1, 4);
 
-            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix, General, fullGasBaby);
             matrixA.subtract(matrixB, resultMatrix);
 
             NumericalVector<double> expectedValues = {4, 2, 0, -2};
@@ -206,20 +206,20 @@ namespace Tests {
             
             auto fullGasBaby = std::thread::hardware_concurrency();
             
-            NumericalMatrix<double> matrixA(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> matrixA(2, 2, FullMatrix, General, fullGasBaby);
             matrixA.setElement(0, 0, 1);
             matrixA.setElement(0, 1, 2);
             matrixA.setElement(1, 0, 3);
             matrixA.setElement(1, 1, 4);
             
 
-            NumericalMatrix<double> matrixB(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> matrixB(2, 2, FullMatrix, General, fullGasBaby);
             matrixB.setElement(0, 0, 2);
             matrixB.setElement(0, 1, 0);
             matrixB.setElement(1, 0, 1);
             matrixB.setElement(1, 1, 3);
 
-            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix, General, fullGasBaby);
             matrixA.multiplyMatrix(matrixB, resultMatrix);
 
             NumericalVector<double> expectedValues = {4, 6, 10, 12};
@@ -235,7 +235,7 @@ namespace Tests {
 
             auto fullGasBaby = std::thread::hardware_concurrency(); 
             
-            NumericalMatrix<double> matrix(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> matrix(2, 2, FullMatrix, General, fullGasBaby);
             matrix.setElement(0, 0, 1);
             matrix.setElement(0, 1, 2);
             matrix.setElement(1, 0, 3);

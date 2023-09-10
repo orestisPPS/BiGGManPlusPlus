@@ -30,11 +30,11 @@ int main() {
     //auto neumannTest = new Tests::SteadyState3DNeumann();
     //delete neumannTest;
 
-    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();
-    delete lanczosTest;
+/*    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();
+    delete lanczosTest;*/
 
-/*    auto vectorTest = new NumericalVectorTest();
-    vectorTest->runTests();*/
+    auto vectorTest = new NumericalVectorTest();
+    vectorTest->runTests();
  Tests::NumericalMatrixTest::runTests();
 
  

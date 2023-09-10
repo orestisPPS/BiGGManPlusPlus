@@ -14,10 +14,18 @@ namespace LinearAlgebra {
     class FullMatrixStorageDataProvider : public NumericalMatrixStorageDataProvider<T> {
         
     public:
-        explicit FullMatrixStorageDataProvider(unsigned numberOfRows, unsigned numberOfColumns, unsigned availableThreads) :
-                NumericalMatrixStorageDataProvider<T>(numberOfRows, numberOfColumns, availableThreads) {
-            this->_values = make_shared<NumericalVector<T>>(numberOfRows * numberOfColumns, 0, availableThreads);
+        explicit FullMatrixStorageDataProvider(unsigned numberOfRows, unsigned numberOfColumns, NumericalMatrixFormType formType, unsigned availableThreads) :
+                 NumericalMatrixStorageDataProvider<T>(numberOfRows, numberOfColumns, formType, availableThreads) {
             this->_storageType = NumericalMatrixStorageType::FullMatrix;
+                if (formType == General) {
+                    this->_values = make_shared<NumericalVector<T>>(numberOfRows * numberOfColumns, 0, availableThreads);
+                }
+                else if (formType == Symmetric || formType == UpperTriangular || formType == LowerTriangular) {
+                    this->_values = make_shared<NumericalVector<T>>(numberOfRows * (numberOfColumns + 1) / 2, 0, availableThreads);
+                }
+                else {
+                    throw runtime_error("Form type not recognized.");
+            }
         }
         
         T& getElement(unsigned row, unsigned column) override {

@@ -1,4 +1,4 @@
-//
+/*//
 // Created by hal9000 on 8/4/23.
 //
 
@@ -6,7 +6,7 @@
 #define UNTITLED_POWERMETHOD_H
 
 #include "IEigenvalueDecomposition.h"
-#include "../ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
+//#include "../ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 
 namespace LinearAlgebra {
 
@@ -69,7 +69,7 @@ namespace LinearAlgebra {
 
 } // LinearAlgebra
 
-#endif //UNTITLED_POWERMETHOD_H
+#endif //UNTITLED_POWERMETHOD_H*/
 
 
 /*

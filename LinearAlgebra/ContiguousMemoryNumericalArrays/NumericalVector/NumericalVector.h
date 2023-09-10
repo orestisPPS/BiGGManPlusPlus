@@ -725,32 +725,23 @@ namespace LinearAlgebra {
          * @tparam InputType The type of the result vector. The function supports various types
          *                   like raw pointers, shared pointers, and the NumericalVector itself.
          * 
-         * @param result The vector to which the transformation will be stored. This vector will
-         *               be modified in place.
+         * @param targetVector 
          * 
          * @throw invalid_argument if the size of the input vector and the current vector don't match.
          */
         template<typename InputType>
-        void houseHolderTransformation(InputType &result) {
-            _checkInputType(result);
-            if (size() != dereference_trait<InputType>::size(result)) {
-                throw invalid_argument("Vectors must be of the same size.");
-            }
-            T *resultData = dereference_trait<InputType>::dereference(result);
+        void houseHolderTransformation() {
             
-            auto sign = [](double x) -> int {   
+            //Lambda function to calculate the sign of a number
+            auto sign = [](double x) -> int {
                 return x >= 0.0 ? 1 : -1;
             };
             
+            //Calculate the norm of the current vector
             double norm = normL2();
             double alpha = -sign((*_values)[0]) * norm;
-            auto threadJob = [&](unsigned start, unsigned end) {
-                for (unsigned i = start; i < end && i < size(); ++i) {
-                    resultData[i] = (*_values)[i];
-                }
-            };
-            _threading.executeParallelJob(threadJob, size(), _availableThreads);
-            resultData[0] -= alpha;
+            (*_values)[0] -= alpha;
+            normalize();
         }
 
         /**
@@ -1007,7 +998,7 @@ namespace LinearAlgebra {
          * @return T The dot product of the two vectors.
         */
         template<typename InputType>
-        T dotProduct(const InputType &vector) {
+        T dotProduct(const InputType &vector, unsigned userDefinedThreads = 0) {
             
             _checkInputType(vector);
             if (size() != dereference_trait<InputType>::size(vector)) {
@@ -1024,9 +1015,10 @@ namespace LinearAlgebra {
                 return localDotProduct;
             };
 
-            return _threading.executeParallelJobWithReduction(dotProductJob, _values->size(), _availableThreads);
+            unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
+            return _threading.executeParallelJobWithReduction(dotProductJob, _values->size(), availableThreads);
         }
-
+        
 
         /**
         * \brief Performs element-wise addition of two scaled vectors.
@@ -1039,7 +1031,7 @@ namespace LinearAlgebra {
         * \param scaleInput Scaling factor for the input vector (default is 1).
         */
         template<typename InputType1, typename InputType2>
-        void add(const InputType1 &inputVector, InputType2 &result, T scaleThis = 1, T scaleInput = 1) {
+        void add(const InputType1 &inputVector, InputType2 &result, T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
             
             _checkInputType(inputVector);
             _checkInputType(result);
@@ -1058,7 +1050,8 @@ namespace LinearAlgebra {
                     resultData[i] = scaleThis * (*_values)[i] + scaleInput * otherData[i];
                 }
             };
-            _threading.executeParallelJob(addJob, _values->size(), _availableThreads);
+            unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
+            _threading.executeParallelJob(addJob, _values->size(), availableThreads);
         }
 
         /**
@@ -1071,7 +1064,7 @@ namespace LinearAlgebra {
         * \param scaleInput Scaling factor for the input vector (default is 1).
         */
         template<typename InputType>
-        void addIntoThis(const InputType &inputVector, T scaleThis = 1, T scaleInput = 1) {
+        void addIntoThis(const InputType &inputVector, T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
             _checkInputType(inputVector);
             if (size() != dereference_trait<InputType>::size(inputVector)) {
                 throw invalid_argument("Vectors must be of the same size.");
@@ -1083,7 +1076,8 @@ namespace LinearAlgebra {
                     (*_values)[i] = scaleThis * (*_values)[i] + scaleInput * otherData[i];
                 }
             };
-            _threading.executeParallelJob(addJob, _values->size(), _availableThreads);
+            unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
+            _threading.executeParallelJob(addJob, _values->size(), availableThreads);
         }
 
         /**
@@ -1097,7 +1091,7 @@ namespace LinearAlgebra {
         * \param scaleInput Scaling factor for the input vector (default is 1).
         */
         template<typename InputType1, typename InputType2>
-        void subtract(const InputType1 &inputVector, InputType2 &result, T scaleThis = 1, T scaleInput = 1) {
+        void subtract(const InputType1 &inputVector, InputType2 &result, T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
             
             _checkInputType(inputVector);
             _checkInputType(result);
@@ -1116,7 +1110,8 @@ namespace LinearAlgebra {
                     resultData[i] = scaleThis * (*_values)[i] - scaleInput * otherData[i];
                 }
             };
-            _threading.executeParallelJob(subtractJob, _values->size(), _availableThreads);
+            unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
+            _threading.executeParallelJob(subtractJob, _values->size(), availableThreads);
         }
 
         /**
@@ -1129,7 +1124,7 @@ namespace LinearAlgebra {
         * \param scaleInput Scaling factor for the input vector (default is 1).
         */
         template<typename InputType>
-        void subtractIntoThis(const InputType &inputVector, T scaleThis = 1, T scaleInput = 1) {
+        void subtractIntoThis(const InputType &inputVector, T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
             _checkInputType(inputVector);
             if (size() != dereference_trait<InputType>::size(inputVector)) {
                 throw invalid_argument("Vectors must be of the same size.");
@@ -1141,20 +1136,21 @@ namespace LinearAlgebra {
                     (*_values)[i] = scaleThis * (*_values)[i] - scaleInput * otherData[i];
                 }
             };
-
-            _threading.executeParallelJob(subtractJob, _values->size(), _availableThreads);
+            unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
+            _threading.executeParallelJob(subtractJob, _values->size(), availableThreads);
         }
         
         /**
          * @brief Scales the current vector by a given scalar.
          * @param scalar The scalar to scale the vector by.
          */
-        void scale(T scalar) {
+        void scale(T scalar, unsigned userDefinedThreads = 0) {
             auto scaleJob = [&](unsigned start, unsigned end) -> void {
                 for (auto &value: *_values) {
                     value *= scalar;
                 }
             };
+            unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
             _threading.executeParallelJob(scaleJob, _values->size(), _availableThreads);
         }
 

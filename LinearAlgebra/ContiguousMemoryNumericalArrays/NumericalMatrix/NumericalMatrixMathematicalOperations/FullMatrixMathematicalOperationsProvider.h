@@ -18,7 +18,7 @@ namespace LinearAlgebra {
                 
         void matrixAddition(shared_ptr<NumericalMatrixStorageDataProvider<T>>& inputMatrix,
                             shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,
-                            T scaleThis, T scaleOther) override {
+                            T scaleThis, T scaleOther, unsigned availableThreads) override {
             
             
             T* thisValues = this->_storageData->getValues()->getDataPointer();
@@ -32,12 +32,12 @@ namespace LinearAlgebra {
                     resultValues[i] = scaleThis * thisValues[i] + scaleOther * otherValues[i];
                 }
             };
-            ThreadingOperations<T>::executeParallelJob(addJob, size, this->_storageData->getAvailableThreads());
+            ThreadingOperations<T>::executeParallelJob(addJob, size, availableThreads);
         }
         
         void matrixSubtraction(shared_ptr<NumericalMatrixStorageDataProvider<T>>& inputMatrix,
                                shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,
-                               T scaleThis, T scaleOther) override {
+                               T scaleThis, T scaleOther, unsigned availableThreads) override {
             
             T* thisValues = this->_storageData->getValues()->getDataPointer();
             T* otherValues = inputMatrix->getValues()->getDataPointer();
@@ -50,13 +50,13 @@ namespace LinearAlgebra {
                     resultValues[i] = scaleThis * thisValues[i] - scaleOther * otherValues[i];
                 }
             };
-            ThreadingOperations<T>::executeParallelJob(subtractJob, size, this->_storageData->getAvailableThreads());
+            ThreadingOperations<T>::executeParallelJob(subtractJob, size, availableThreads);
 
         }
         
         void  matrixMultiplication(shared_ptr<NumericalMatrixStorageDataProvider<T>>& inputMatrix,
                                   shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,
-                                  T scaleThis, T scaleOther) override {
+                                  T scaleThis, T scaleOther, unsigned availableThreads) override {
 
             T* thisValues = this->_storageData->getValues()->getDataPointer();
             T* otherValues = inputMatrix->getValues()->getDataPointer();
@@ -77,10 +77,11 @@ namespace LinearAlgebra {
                     }
                 }
             };
-            ThreadingOperations<T>::executeParallelJob(multiplyJob, numRows, this->_storageData->getAvailableThreads());
+            
+            ThreadingOperations<T>::executeParallelJob(multiplyJob, numRows, availableThreads);
         }
         
-        void matrixVectorMultiplication(T *vector, T *resultVector, T scaleThis, T scaleOther) override {
+        void vectorMultiplication(T *vector, T *resultVector, T scaleThis, T scaleOther, unsigned availableThreads) override {
             
             T* thisValues = this->_storageData->getValues()->getDataPointer();
             
@@ -97,9 +98,53 @@ namespace LinearAlgebra {
                     resultVector[i] = sum;
                 }
             };
-            ThreadingOperations<T>::executeParallelJob(multiplyJob, numRows, this->_storageData->getAvailableThreads());
+            ThreadingOperations<T>::executeParallelJob(multiplyJob, numRows, availableThreads);
         }
-        
+
+        T vectorMultiplicationRowWisePartial(T *vector, T scaleThis, T scaleOther,
+                                             unsigned targetRow, unsigned startColumn, unsigned endColumn,
+                                             bool operationCondition(unsigned i, unsigned j), unsigned availableThreads) override {
+            T* thisValues = this->_storageData->getValues()->getDataPointer();
+            unsigned numCols = this->_numberOfColumns;
+            T sum = 0;
+            
+            // Ensure endColumn is within bounds
+            endColumn = std::min(endColumn, numCols);
+            
+            auto multiplyJob = [&](unsigned start, unsigned end) -> T {
+                for (unsigned j = startColumn; j < end && j < endColumn; ++j) {
+                    if (operationCondition(targetRow, j)) {
+                        sum += scaleThis * thisValues[targetRow * numCols + j] * scaleOther * vector[j];
+                    }
+                }
+                return sum;
+            };
+            return ThreadingOperations<T>::executeParallelJobWithReduction(multiplyJob, endColumn - startColumn, availableThreads);
+        }
+
+        T vectorMultiplicationColumnWisePartial(T *vector, T scaleThis, T scaleOther,
+                                                unsigned targetColumn, unsigned startRow, unsigned endRow,
+                                                bool operationCondition(unsigned i, unsigned j), unsigned availableThreads) override {
+            T* thisValues = this->_storageData->getValues()->getDataPointer();
+            unsigned numRows = this->_numberOfRows;
+            unsigned numCols = this->_numberOfColumns;
+
+            // Ensure endRow is within bounds
+            endRow = std::min(endRow, numRows);
+
+            auto multiplyJob = [&](unsigned start, unsigned end) -> T {
+                T localSum = 0; // Each thread will have its local sum
+                for (unsigned i = start; i < end && i < endRow; ++i) {
+                    if (operationCondition(i, targetColumn)) {
+                        localSum += scaleThis * thisValues[i * numCols + targetColumn] * scaleOther * vector[i];
+                    }
+                }
+                return localSum; // Return the local sum for the reduction operation
+            };
+            return ThreadingOperations<T>::executeParallelJobWithReduction(multiplyJob, endRow - startRow, availableThreads);
+        }
+
+
         
         
     };

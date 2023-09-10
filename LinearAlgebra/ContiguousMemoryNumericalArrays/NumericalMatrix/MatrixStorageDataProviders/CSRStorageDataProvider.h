@@ -13,8 +13,8 @@ namespace LinearAlgebra {
     template <typename T>
     class CSRStorageDataProvider : public SparseMatrixDataStorageProvider<T>{
     public:
-        explicit CSRStorageDataProvider(unsigned numberOfRows, unsigned numberOfColumns, unsigned numberOfThreads)
-                : SparseMatrixDataStorageProvider<T>(numberOfRows, numberOfColumns, numberOfThreads){
+        explicit CSRStorageDataProvider(unsigned numberOfRows, unsigned numberOfColumns, NumericalMatrixFormType formType, unsigned numberOfThreads)
+                : SparseMatrixDataStorageProvider<T>(numberOfRows, numberOfColumns, formType, numberOfThreads){
             this->_storageType = NumericalMatrixStorageType::CSR;
             this->_values = make_shared<NumericalVector<T>>(0, 0, numberOfThreads);
             _columnIndices = make_shared<NumericalVector<unsigned>>(0, 0, numberOfThreads);

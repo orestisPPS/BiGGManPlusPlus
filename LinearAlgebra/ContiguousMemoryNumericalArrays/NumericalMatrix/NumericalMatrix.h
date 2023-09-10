@@ -6,6 +6,7 @@
 #define UNTITLED_NUMERICALMATRIX_H
 
 #include "../NumericalVector/NumericalVector.h"
+#include "NumericalMatrixEnums.h"
 #include "MatrixStorageDataProviders/CSRStorageDataProvider.h"
 #include "MatrixStorageDataProviders/FullMatrixStorageDataProvider.h"
 #include "NumericalMatrixMathematicalOperations/FullMatrixMathematicalOperationsProvider.h"
@@ -13,8 +14,8 @@
 #include "NumericalMatrixMathematicalOperations/EigendecompositionProvider.h"
 using namespace std;
 
-namespace LinearAlgebra {
-
+namespace LinearAlgebra { 
+    
     /**
      * @brief Represents a numerical matrix.
      * 
@@ -35,9 +36,10 @@ namespace LinearAlgebra {
          * @param initialValue Default value for matrix elements.
          * @param parallelizationMethod Parallelization method to be used for matrix operations.
          */
-        explicit NumericalMatrix(unsigned int rows, unsigned int columns, NumericalMatrixStorageType storageType = FullMatrix,
+        explicit NumericalMatrix(unsigned int rows, unsigned int columns,
+                                 NumericalMatrixStorageType storageType = FullMatrix, NumericalMatrixFormType formType = General,
                                  unsigned availableThreads = 1) :
-                _numberOfRows(rows), _numberOfColumns(columns), _availableThreads(availableThreads){
+                _numberOfRows(rows), _numberOfColumns(columns), _availableThreads(availableThreads), _formType(formType){
             dataStorage = _initializeStorage(storageType);
             _math = _initializeMath();
         }
@@ -55,7 +57,7 @@ namespace LinearAlgebra {
             _numberOfRows = dereference_trait<InputType>::numberOfRows(other);
             _numberOfColumns = dereference_trait<InputType>::numberOfColumns(other);
             _availableThreads = dereference_trait<InputType>::getAvailableThreads(other);
-            
+            _formType = dereference_trait<InputType>::getMatrixFormType(other);
             dataStorage = _initializeStorage(dereference_trait<InputType>::getStorageType(other));
             auto otherStorage = other.storage;
 
@@ -84,9 +86,7 @@ namespace LinearAlgebra {
                 _numberOfColumns(std::move(other._numberOfColumns)),
                 _availableThreads(std::move(other._availableThreads)),
                 dataStorage(std::move(other.dataStorage)),
-                _math(_initializeMath())
-        {
-        }
+                _math(_initializeMath()) {}
 
         
         shared_ptr<NumericalMatrixStorageDataProvider<T>> dataStorage; ///< Storage object for the matrix elements.
@@ -181,8 +181,7 @@ namespace LinearAlgebra {
         unsigned int size() const {
             return _numberOfRows * _numberOfColumns;
         }
-
-
+        
         /**
         * @brief Checks if this vector is empty.
         * @return true if the vector is empty, false otherwise.
@@ -272,7 +271,7 @@ namespace LinearAlgebra {
         * \param scaleInput Scaling factor for the input vector (default is 1).
         */
        template<typename InputMatrixType1, typename InputMatrixType2>
-        void add(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1) {
+        void add(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
 
             _checkInputMatrixDataType(inputMatrix);
             _checkInputMatrixDimensions(inputMatrix);
@@ -284,7 +283,8 @@ namespace LinearAlgebra {
             auto inputStorage = dereference_trait<InputMatrixType1>::getDataStorageNumericalVectors(inputMatrix);
             auto resultStorage = dereference_trait<InputMatrixType2>::getDataStorageNumericalVectors(resultMatrix);
 
-            _math->matrixAddition(inputStorage, resultStorage, scaleThis, scaleInput);
+            unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
+            _math->matrixAddition(inputStorage, resultStorage, scaleThis, scaleInput, availableThreads);
         }
         
         /**
@@ -299,7 +299,7 @@ namespace LinearAlgebra {
         * \param scaleInput Scaling factor for the input vector (default is 1).
         */
         template<typename InputMatrixType1, typename InputMatrixType2>
-        void subtract(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1) {
+        void subtract(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
 
             _checkInputMatrixDataType(inputMatrix);
             _checkInputMatrixDimensions(inputMatrix);
@@ -310,8 +310,8 @@ namespace LinearAlgebra {
             
             auto inputStorage = dereference_trait<InputMatrixType1>::getDataStorageNumericalVectors(inputMatrix);
             auto resultStorage = dereference_trait<InputMatrixType2>::getDataStorageNumericalVectors(resultMatrix);
-            
-            _math->matrixSubtraction(inputStorage, resultStorage, scaleThis, scaleInput);
+            unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
+            _math->matrixSubtraction(inputStorage, resultStorage, scaleThis, scaleInput, availableThreads);
         }
         
         /**
@@ -323,7 +323,7 @@ namespace LinearAlgebra {
          * @param scaleInput Scaling factor for the input vector (default is 1).
          */
         template<typename InputMatrixType1, typename InputMatrixType2>
-        void multiplyMatrix(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1) {
+        void multiplyMatrix(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
             
             _checkInputMatrixDataType(inputMatrix);
             _checkInputMatrixStorageType(inputMatrix);
@@ -336,8 +336,9 @@ namespace LinearAlgebra {
             
             auto inputStorage = dereference_trait<InputMatrixType1>::getDataStorageNumericalVectors(inputMatrix);
             auto resultStorage = dereference_trait<InputMatrixType2>::getDataStorageNumericalVectors(resultMatrix);
-
-            _math->matrixMultiplication(inputStorage, resultStorage, scaleThis, scaleInput);
+            
+            unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
+            _math->matrixMultiplication(inputStorage, resultStorage, scaleThis, scaleInput, availableThreads);
         }
         
         /**
@@ -349,7 +350,7 @@ namespace LinearAlgebra {
          * @param scaleInput Scaling factor for the input vector (default is 1).
          */
         template<typename InputVectorType1, typename InputVectorType2>
-        void multiplyVector(const InputVectorType1 &inputVector, const InputVectorType2 &resultVector, T scaleThis = 1, T scaleInput = 1) {
+        void multiplyVector(const InputVectorType1 &inputVector, const InputVectorType2 &resultVector, T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
             
             _checkInputVectorDataType(inputVector);
             _checkInputVectorDataType(resultVector);
@@ -360,9 +361,44 @@ namespace LinearAlgebra {
             auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
             auto resultVectorData = dereference_trait_vector<InputVectorType2>::dereference(resultVector);
             
-            _math->matrixVectorMultiplication(inputVectorData, resultVectorData, scaleThis, scaleInput);
+            unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
+            _math->vectorMultiplication(inputVectorData, resultVectorData, scaleThis, scaleInput, availableThreads);
         }
-         
+
+        template<typename InputVectorType1>
+        T multiplyVectorRowWisePartial(const InputVectorType1 &inputVector, unsigned targetCo, T scaleThis = 1, T scaleInput = 1,
+                                       unsigned startRow = 0, unsigned endRow = 0, unsigned userDefinedThreads = 0) {
+            _checkInputVectorDataType(inputVector);
+            if (endRow - startRow != dereference_trait_vector<InputVectorType1>::size(inputVector))
+                throw invalid_argument("Input vector must have the same number of input range");
+            if (targetRow >= this->_numberOfRows) {
+                throw std::out_of_range("Target row is out of bounds.");
+            }
+
+            if (startColumn >= this->_numberOfColumns || endColumn > this->_numberOfColumns) {
+                throw std::out_of_range("Start or end column out of bounds.");
+            }
+            auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
+            
+            unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
+            return _math->vectorMultiplicationRowWisePartial(inputVectorData, scaleThis, scaleInput, startRow, endRow, availableThreads);
+        }
+        
+        template<typename InputVectorType1>
+        T multiplyVectorColumnWisePartial(const InputVectorType1 &inputVector, T scaleThis = 1, T scaleInput = 1, unsigned startRow = 0, unsigned endRow = 0, unsigned userDefinedThreads = 0) {
+            
+            _checkInputVectorDataType(inputVector);
+            if (_numberOfColumns != dereference_trait_vector<InputVectorType1>::size(inputVector))
+                throw invalid_argument("Input vector must have the same number of columns as the current matrix.");
+            auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
+            
+            unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
+            return _math->vectorMultiplicationColumnWisePartial(inputVectorData, scaleThis, scaleInput, startRow, endRow, availableThreads);
+        }
+        
+        
+        
+        
 
         
     private:
@@ -372,6 +408,8 @@ namespace LinearAlgebra {
         unsigned int _numberOfColumns; ///< Number of columns in the matrix.
         
         unsigned _availableThreads; ///< Number of available threads for parallelization.
+        
+        NumericalMatrixFormType _formType; ///< Form type of the matrix.
         
         unique_ptr<NumericalMatrixMathematicalOperationsProvider<T>> _math; ///< Mathematical operations provider for the matrix.
 
@@ -412,9 +450,9 @@ namespace LinearAlgebra {
         shared_ptr<NumericalMatrixStorageDataProvider<T>> _initializeStorage(NumericalMatrixStorageType storageType){
             switch (storageType) {
                 case FullMatrix:
-                    return make_shared<FullMatrixStorageDataProvider<T>>(_numberOfRows, _numberOfColumns, _availableThreads);
+                    return make_shared<FullMatrixStorageDataProvider<T>>(_numberOfRows, _numberOfColumns, _formType, _availableThreads);
                 case CSR:
-                    return make_shared<CSRStorageDataProvider<T>>(_numberOfRows, _numberOfColumns, _availableThreads);
+                    return make_shared<CSRStorageDataProvider<T>>(_numberOfRows, _numberOfColumns, _formType, _availableThreads);
                 default:
                     throw std::invalid_argument("Invalid storage type.");
             }
@@ -511,13 +549,23 @@ namespace LinearAlgebra {
             }
             
             /**
+             * @brief Gets the form type of the source.
+             * @param source A pointer to the source object.
+             * @return The form type of the source.
+             */
+            static NumericalMatrixFormType getMatrixFormType(U *source) {
+                if (!source) throw std::runtime_error("Null pointer dereferenced");
+                return source->storage.getFormType();
+            }
+            
+            /**
              * @brief Gets the storage type of the source.
              * @param source A pointer to the source object.
              * @return The storage type of the source.
              */
             static NumericalMatrixStorageType getStorageType(U *source) {
                 if (!source) throw std::runtime_error("Null pointer dereferenced");
-                return source->dataStorage.getStorageType();
+                return source->dataStorage->getStorageType();
             }
         };
 
@@ -572,6 +620,15 @@ namespace LinearAlgebra {
              */
             static shared_ptr<NumericalMatrixStorageDataProvider<T>> getDataStorageNumericalVectors(const NumericalMatrix<U> &source) {
                 return source.dataStorage;
+            }
+            
+            /**
+             * @brief Gets the form type of the source.
+             * @param source A smart pointer to the source object.
+             * @return The form type of the source.
+             */
+            static NumericalMatrixFormType getMatrixFormType(const NumericalMatrix<U> &source) {
+                return source.dataStorage->getFormType();
             }
             
             /**
@@ -652,13 +709,23 @@ namespace LinearAlgebra {
             }
             
             /**
+             * @brief Gets the form type of the source.
+             * @param source A smart pointer to the source object.
+             * @return The form type of the source.
+             */
+            static NumericalMatrixFormType getMatrixFormType(const PtrType<NumericalMatrix<U>> &source) {
+                if (!source) throw std::runtime_error("Null pointer dereferenced");
+                return source->dataStorage->getFormType();
+            }
+            
+            /**
              * @brief Gets the storage type of the source.
              * @param source A smart pointer to the source object.
              * @return The storage type of the source.
              */
             static NumericalMatrixStorageType getStorageType(const PtrType<NumericalMatrix<U>> &source) {
                 if (!source) throw std::runtime_error("Null pointer dereferenced");
-                    return source->dataStorage.getStorageType();
+                    return source->dataStorage->getStorageType();
             }
         };
 

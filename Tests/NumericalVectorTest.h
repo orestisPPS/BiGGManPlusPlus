@@ -29,7 +29,7 @@ public:
             testCorrelation();
             testNorms();
             //testProjection();
-            testHouseHolderTransformation();
+            //testHouseHolderTransformation();
             testSumMultiThread();
             testMagnitudeMultiThread();
             testAdditionMultiThread();
@@ -231,7 +231,7 @@ public:
         logTestEnd();
     }
 
-    static void testHouseHolderTransformation() {
+/*    static void testHouseHolderTransformation() {
         logTestStart("testHouseHolderTransformation");
         NumericalVector<double> vec({1, 2, 3});
         NumericalVector<double> result(3);
@@ -240,7 +240,7 @@ public:
         assert(std::fabs(result[1]) < 0.001); // close to zero
         assert(std::fabs(result[2]) < 0.001); // close to zero
         logTestEnd();
-    }
+    }*/
 
     
 

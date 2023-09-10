@@ -13,8 +13,8 @@ namespace LinearAlgebra {
     template<typename T>
     class SparseMatrixDataStorageProvider : public NumericalMatrixStorageDataProvider<T> {
     public:
-        SparseMatrixDataStorageProvider(unsigned numberOfRows, unsigned numberOfColumns, unsigned availableThreads) :
-                NumericalMatrixStorageDataProvider<T>(numberOfRows, numberOfColumns, availableThreads),
+        SparseMatrixDataStorageProvider(unsigned numberOfRows, unsigned numberOfColumns, NumericalMatrixFormType formType, unsigned availableThreads) :
+                NumericalMatrixStorageDataProvider<T>(numberOfRows, numberOfColumns, formType, availableThreads),
                 _builder(numberOfRows, numberOfColumns),
                 _zero(static_cast<T>(0)) {
             this->_storageType = NumericalMatrixStorageType::CoordinateList;
