@@ -10,7 +10,7 @@ namespace Tests {
     LanczosEigenDecompositionTest::LanczosEigenDecompositionTest() {
         
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 4;
+        numberOfNodes[Direction::One] = 5;
         numberOfNodes[Direction::Two] = 4;
         numberOfNodes[Direction::Three] = 4;
 

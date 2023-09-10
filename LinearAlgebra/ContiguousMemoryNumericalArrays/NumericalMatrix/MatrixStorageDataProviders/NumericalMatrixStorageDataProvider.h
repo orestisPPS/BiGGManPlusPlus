@@ -5,20 +5,22 @@
 #ifndef UNTITLED_NUMERICALMATRIXSTORAGEDATAPROVIDER_H
 #define UNTITLED_NUMERICALMATRIXSTORAGEDATAPROVIDER_H
 #include "../../NumericalVector/NumericalVector.h"
+#include <unordered_map>
 #include <list>
 namespace LinearAlgebra {
-    enum NumericalMatrixStorageType {
-        FullMatrix,
-        CoordinateList,
-        CSR,
-        
-    };
+    
+    
+    
     template <typename T>
     class NumericalMatrixStorageDataProvider {
     public:
-        explicit NumericalMatrixStorageDataProvider(unsigned numberOfRows, unsigned numberOfColumns, unsigned availableThreads) :
-        _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _availableThreads(availableThreads),
-        _elementAssignmentRunning(false), _values(make_shared<NumericalVector<T>>(numberOfRows * numberOfColumns, 0, availableThreads)) {}
+        explicit NumericalMatrixStorageDataProvider(unsigned numberOfRows, unsigned numberOfColumns, NumericalMatrixFormType formType = General,
+                                                    unsigned availableThreads = 1) :
+        _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _availableThreads(availableThreads), _formType(formType),
+        _elementAssignmentRunning(false), _values(nullptr) {
+  /*          elementGetters = unordered_map<NumericalMatrixFormType, T&()>();
+            elementSetters = unordered_map<NumericalMatrixFormType, T&()>();*/
+        }
         
         virtual ~NumericalMatrixStorageDataProvider() = default;
         
@@ -63,6 +65,10 @@ namespace LinearAlgebra {
             return _availableThreads;
         }
         
+        NumericalMatrixFormType getFormType(){
+            return _formType;
+        }
+        
 
     protected:
         
@@ -77,6 +83,12 @@ namespace LinearAlgebra {
         bool _elementAssignmentRunning;
         
         unsigned _availableThreads;
+        
+        NumericalMatrixFormType _formType;
+        
+/*        unordered_map<NumericalMatrixFormType, T&()> elementGetters;
+        
+        unordered_map<NumericalMatrixFormType, T&()> elementSetters;*/
         
         ThreadingOperations<T> _threading;
         

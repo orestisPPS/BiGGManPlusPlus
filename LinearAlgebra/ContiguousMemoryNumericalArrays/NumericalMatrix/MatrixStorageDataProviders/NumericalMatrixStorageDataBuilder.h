@@ -7,12 +7,9 @@
 
 #include <map>
 #include <unordered_map>
+#include "../NumericalMatrixEnums.h"
 namespace LinearAlgebra{
-
-    enum MatrixElementsOrder{
-        RowMajor,
-        ColumnMajor
-    };
+    
     
     /**
     * @class SparseMatrixBuilder
@@ -234,7 +231,7 @@ namespace LinearAlgebra{
         * @throws out_of_range If the row or column index is out of the matrix's range.
          * @throws runtime_error If element assignment is still running.
         */
-        void insertElement(unsigned row, unsigned column, const T &value, MatrixElementsOrder order = RowMajor) {
+        void insertElement(unsigned row, unsigned column, const T &value, MatrixElementsOrder order = RowMajor, NumericalMatrixFormType formType = General) {
             if (!_elementAssignmentRunning){
                 throw runtime_error("Element assignment is not running. Call enableElementAssignment() first.");
             }

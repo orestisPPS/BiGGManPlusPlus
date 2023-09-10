@@ -26,18 +26,31 @@ namespace LinearAlgebra {
                 
         virtual void matrixAddition(shared_ptr<NumericalMatrixStorageDataProvider<T>>& inputMatrix,
                                     shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,
-                                    T scaleThis, T scaleOther) { }
+                                    T scaleThis, T scaleOther, unsigned usedDefinedThreads) { }
                                     
         virtual void matrixSubtraction(shared_ptr<NumericalMatrixStorageDataProvider<T>>& otherMatrix,
                                        shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,
-                                       T scaleThis, T scaleOther) { }
+                                       T scaleThis, T scaleOther, unsigned usedDefinedThreads) { }
                                        
         virtual void matrixMultiplication(shared_ptr<NumericalMatrixStorageDataProvider<T>>& otherMatrix,
                                           shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,
-                                          T scaleThis, T scaleOther) { }
+                                          T scaleThis, T scaleOther, unsigned usedDefinedThreads) { }
                                           
-        virtual void matrixVectorMultiplication(T *vector, T *resultVector, T scaleThis, T scaleOther) { }
+        virtual void vectorMultiplication(T *vector, T *resultVector, T scaleThis, T scaleOther, unsigned usedDefinedThreads) { }
+
+        virtual T vectorMultiplicationRowWisePartial(T *vector, unsigned targetRow, unsigned startColumn, unsigned endColumn,
+                                                     T scaleThis, T scaleInput, unsigned availableThreads) { }
         
+        virtual T vectorMultiplicationRowWisePartial(T *vector, unsigned targetRow, unsigned startColumn, unsigned endColumn,
+                                                     bool operationCondition(unsigned i, unsigned j),
+                                                     T scaleThis, T scaleOther, unsigned availableThreads) { }
+
+        virtual T vectorMultiplicationColumnWisePartial(T *vector, unsigned targetRow, unsigned startColumn, unsigned endColumn,
+                                                     T scaleThis, T scaleInput, unsigned availableThreads) { }
+
+        virtual T vectorMultiplicationColumnWisePartial(T *vector, unsigned targetRow, unsigned startColumn, unsigned endColumn,
+                                                     bool operationCondition(unsigned i, unsigned j),
+                                                     T scaleThis, T scaleOther, unsigned availableThreads) { }
         
         
         virtual void Axpy(T *vector, T *resultVector, T scaleThis, T scaleMultipliedVector, T scaleAddedVector) { }

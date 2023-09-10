@@ -5,19 +5,32 @@
 #ifndef UNTITLED_CSRSTORAGEDATAPROVIDER_H
 #define UNTITLED_CSRSTORAGEDATAPROVIDER_H
 
+#include <utility>
+
 #include "SparseMatrixDataStorageProvider.h"
 
 namespace LinearAlgebra {
     template <typename T>
     class CSRStorageDataProvider : public SparseMatrixDataStorageProvider<T>{
     public:
-        explicit CSRStorageDataProvider(unsigned numberOfRows, unsigned numberOfColumns, unsigned numberOfThreads)
-                : SparseMatrixDataStorageProvider<T>(numberOfRows, numberOfColumns, numberOfThreads){
+        explicit CSRStorageDataProvider(unsigned numberOfRows, unsigned numberOfColumns, NumericalMatrixFormType formType, unsigned numberOfThreads)
+                : SparseMatrixDataStorageProvider<T>(numberOfRows, numberOfColumns, formType, numberOfThreads){
             this->_storageType = NumericalMatrixStorageType::CSR;
             this->_values = make_shared<NumericalVector<T>>(0, 0, numberOfThreads);
             _columnIndices = make_shared<NumericalVector<unsigned>>(0, 0, numberOfThreads);
             _rowOffsets = make_shared<NumericalVector<unsigned>>(numberOfRows + 1, 0, numberOfThreads);
             (*_rowOffsets)[0] = 0;
+        }
+
+        explicit CSRStorageDataProvider(shared_ptr<NumericalVector<T>> values,
+                                        shared_ptr<NumericalVector<unsigned>> columnIndices,
+                                        shared_ptr<NumericalVector<unsigned>> rowOffsets,
+                                        unsigned numberOfRows, unsigned numberOfColumns, unsigned numberOfThreads)
+                : SparseMatrixDataStorageProvider<T>(numberOfRows, numberOfColumns, numberOfThreads) {
+            this->_storageType = NumericalMatrixStorageType::CSR;
+            this->_values = std::move(values);
+            _columnIndices = std::move(columnIndices);
+            _rowOffsets = std::move(rowOffsets);
         }
 
         vector<shared_ptr<NumericalVector<unsigned>>> getSupplementaryVectors() override{

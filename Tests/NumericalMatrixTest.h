@@ -20,10 +20,14 @@ namespace Tests {
             testMatrixSubtraction();
             testMatrixMultiplication();
             testMatrixVectorMultiplication();
+            testMatrixVectorRowWisePartialMultiplication();
+            testMatrixVectorColumnWisePartialMultiplication();
             testMatrixAdditionMultiThread();
             testMatrixSubtractionMultiThread();
             testMatrixMultiplicationMultiThread();
             testMatrixVectorMultiplicationMultiThread();
+            testMatrixVectorRowWisePartialMultiplicationMultiThread();
+            testMatrixVectorColumnWisePartialMultiplicationMultiThread();
             
         }
         
@@ -64,7 +68,7 @@ namespace Tests {
             matrixB.setElement(1, 0, 2);
             matrixB.setElement(1, 1, 1);
 
-            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix);
+            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix, General);
             matrixA.add(matrixB, resultMatrix);
 
             NumericalVector<double> expectedValues = {5, 5, 5, 5};
@@ -145,24 +149,85 @@ namespace Tests {
             logTestEnd();
         }
 
+        static void testMatrixVectorRowWisePartialMultiplication() {
+            logTestStart("testMatrixVectorRowWisePartialMultiplication");
+
+            // matrix = [1 2 3;
+            //           4 5 6;
+            //           7 8 9]
+            NumericalMatrix<double> matrix(3, 3, FullMatrix);
+            matrix.setElement(0, 0, 1);
+            matrix.setElement(0, 1, 2);
+            matrix.setElement(0, 2, 3);
+            matrix.setElement(1, 0, 4);
+            matrix.setElement(1, 1, 5);
+            matrix.setElement(1, 2, 6);
+            matrix.setElement(2, 0, 7);
+            matrix.setElement(2, 1, 8);
+            matrix.setElement(2, 2, 9);
+
+            NumericalVector<double> vector = {1, 2};  // Smaller vector
+
+            // Compute the partial dot product of the second row of the matrix (4 5 6) 
+            // with the vector, but only considering columns 1 and 2 of the matrix (which are 5 and 6).
+            double result = matrix.multiplyVectorRowWisePartial(vector, 1, 1, 2);
+            double expectedValue = 17;  // 1*5 + 2*6
+            assert(expectedValue == result);
+
+            logTestEnd();
+        }
+
+
+        static void testMatrixVectorColumnWisePartialMultiplication() {
+            logTestStart("testMatrixVectorColumnWisePartialMultiplication");
+
+            // matrix = [1 2 3;
+            //           4 5 6;
+            //           7 8 9]
+            NumericalMatrix<double> matrix(3, 3, FullMatrix);
+            matrix.setElement(0, 0, 1);
+            matrix.setElement(0, 1, 2);
+            matrix.setElement(0, 2, 3);
+            matrix.setElement(1, 0, 4);
+            matrix.setElement(1, 1, 5);
+            matrix.setElement(1, 2, 6);
+            matrix.setElement(2, 0, 7);
+            matrix.setElement(2, 1, 8);
+            matrix.setElement(2, 2, 9);
+
+            NumericalVector<double> vector = {2, 3};  // Smaller vector
+
+            // Compute the partial dot product of the second column of the matrix (2 5 8)
+            // with the vector, but only considering rows 1 and 2 of the matrix (which are 5 and 8).
+            double result = matrix.multiplyVectorColumnWisePartial(vector, 1, 1, 2); // Only considering last 2 rows
+
+            double expectedValue = 34;  // 2*5 + 3*8
+
+            assert(expectedValue == result);
+
+            logTestEnd();
+        }
+
+
+
         static void testMatrixAdditionMultiThread() {
             logTestStart("testMatrixAdditionMultiThread");
 
             auto fullGasBaby = std::thread::hardware_concurrency();
             
-            NumericalMatrix<double> matrixA(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> matrixA(2, 2, FullMatrix, General, fullGasBaby);
             matrixA.setElement(0, 0, 1);
             matrixA.setElement(0, 1, 2);
             matrixA.setElement(1, 0, 3);
             matrixA.setElement(1, 1, 4);
 
-            NumericalMatrix<double> matrixB(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> matrixB(2, 2, FullMatrix, General, fullGasBaby);
             matrixB.setElement(0, 0, 4);
             matrixB.setElement(0, 1, 3);
             matrixB.setElement(1, 0, 2);
             matrixB.setElement(1, 1, 1);
 
-            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix, General, fullGasBaby);
             matrixA.add(matrixB, resultMatrix);
 
             NumericalVector<double> expectedValues = {5, 5, 5, 5};
@@ -178,19 +243,19 @@ namespace Tests {
 
             auto fullGasBaby = std::thread::hardware_concurrency();
 
-            NumericalMatrix<double> matrixA(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> matrixA(2, 2, FullMatrix, General, fullGasBaby);
             matrixA.setElement(0, 0, 5);
             matrixA.setElement(0, 1, 4);
             matrixA.setElement(1, 0, 3);
             matrixA.setElement(1, 1, 2);
 
-            NumericalMatrix<double> matrixB(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> matrixB(2, 2, FullMatrix, General, fullGasBaby);
             matrixB.setElement(0, 0, 1);
             matrixB.setElement(0, 1, 2);
             matrixB.setElement(1, 0, 3);
             matrixB.setElement(1, 1, 4);
 
-            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix, General, fullGasBaby);
             matrixA.subtract(matrixB, resultMatrix);
 
             NumericalVector<double> expectedValues = {4, 2, 0, -2};
@@ -206,20 +271,20 @@ namespace Tests {
             
             auto fullGasBaby = std::thread::hardware_concurrency();
             
-            NumericalMatrix<double> matrixA(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> matrixA(2, 2, FullMatrix, General, fullGasBaby);
             matrixA.setElement(0, 0, 1);
             matrixA.setElement(0, 1, 2);
             matrixA.setElement(1, 0, 3);
             matrixA.setElement(1, 1, 4);
             
 
-            NumericalMatrix<double> matrixB(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> matrixB(2, 2, FullMatrix, General, fullGasBaby);
             matrixB.setElement(0, 0, 2);
             matrixB.setElement(0, 1, 0);
             matrixB.setElement(1, 0, 1);
             matrixB.setElement(1, 1, 3);
 
-            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(2, 2, FullMatrix, General, fullGasBaby);
             matrixA.multiplyMatrix(matrixB, resultMatrix);
 
             NumericalVector<double> expectedValues = {4, 6, 10, 12};
@@ -235,7 +300,7 @@ namespace Tests {
 
             auto fullGasBaby = std::thread::hardware_concurrency(); 
             
-            NumericalMatrix<double> matrix(2, 2, FullMatrix, fullGasBaby);
+            NumericalMatrix<double> matrix(2, 2, FullMatrix, General, fullGasBaby);
             matrix.setElement(0, 0, 1);
             matrix.setElement(0, 1, 2);
             matrix.setElement(1, 0, 3);
@@ -250,6 +315,65 @@ namespace Tests {
             NumericalVector<double> expectedValues = {8, 18};
             assert(expectedValues == resultVector);
             assert(matrix.dataStorage->getAvailableThreads() == fullGasBaby);
+            logTestEnd();
+        }
+
+        static void testMatrixVectorRowWisePartialMultiplicationMultiThread() {
+            logTestStart("testMatrixVectorRowWisePartialMultiplicationMultiThread");
+
+            // matrix = [1 2 3;
+            //           4 5 6;
+            //           7 8 9]
+            NumericalMatrix<double> matrix(3, 3, FullMatrix);
+            matrix.setElement(0, 0, 1);
+            matrix.setElement(0, 1, 2);
+            matrix.setElement(0, 2, 3);
+            matrix.setElement(1, 0, 4);
+            matrix.setElement(1, 1, 5);
+            matrix.setElement(1, 2, 6);
+            matrix.setElement(2, 0, 7);
+            matrix.setElement(2, 1, 8);
+            matrix.setElement(2, 2, 9);
+
+            NumericalVector<double> vector = {1, 2, 3};  // Smaller vector
+
+            // Compute the partial dot product of the second row of the matrix (4 5 6) 
+            // with the vector, but only considering columns 1 and 2 of the matrix (which are 5 and 6).
+            double result = matrix.multiplyVectorRowWisePartial(vector, 1, 0, 2, 1.0, 1.0, 2);
+            double expectedValue = 32;// 1*4 + 2*5 + 3*6
+            assert(expectedValue == result);
+
+            logTestEnd();
+        }
+
+
+        static void testMatrixVectorColumnWisePartialMultiplicationMultiThread() {
+            logTestStart("testMatrixVectorColumnWisePartialMultiplicationMultiThread");
+
+            // matrix = [1 2 3;
+            //           4 5 6;
+            //           7 8 9]
+            NumericalMatrix<double> matrix(3, 3, FullMatrix);
+            matrix.setElement(0, 0, 1);
+            matrix.setElement(0, 1, 2);
+            matrix.setElement(0, 2, 3);
+            matrix.setElement(1, 0, 4);
+            matrix.setElement(1, 1, 5);
+            matrix.setElement(1, 2, 6);
+            matrix.setElement(2, 0, 7);
+            matrix.setElement(2, 1, 8);
+            matrix.setElement(2, 2, 9);
+
+            NumericalVector<double> vector = {2, 3};  // Smaller vector
+
+            // Compute the partial dot product of the second column of the matrix (2 5 8)
+            // with the vector, but only considering rows 1 and 2 of the matrix (which are 5 and 8).
+            double result = matrix.multiplyVectorColumnWisePartial(vector, 1, 1, 2, 1.0, 1.0, 2); // Only considering last 2 rows
+
+            double expectedValue = 34;  // 2*5 + 3*8
+
+            assert(expectedValue == result);
+
             logTestEnd();
         }
 
