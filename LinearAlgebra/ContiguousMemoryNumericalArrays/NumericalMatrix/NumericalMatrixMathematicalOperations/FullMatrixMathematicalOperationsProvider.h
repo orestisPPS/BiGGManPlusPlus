@@ -85,67 +85,85 @@ namespace LinearAlgebra {
             
             T* thisValues = this->_storageData->getValues()->getDataPointer();
             
-            unsigned numRows = this->_numberOfRows;
-            unsigned numCols = this->_numberOfColumns;
-            unsigned commonDim = this->_numberOfColumns;
+            unsigned &numRows = this->_numberOfRows;
+            unsigned &numCols = this->_numberOfColumns;
+            unsigned &commonDim = this->_numberOfColumns;
             
             auto multiplyJob = [&](unsigned startRow, unsigned endRow) -> void {
-                for (unsigned i = startRow; i < endRow && i < numRows; ++i) {
+                for (unsigned row = startRow; row < endRow && row < numRows; ++row) {
                     T sum = 0;
                     for (unsigned k = 0; k < commonDim; ++k) {
-                        sum += scaleThis * thisValues[i * commonDim + k] * scaleOther * vector[k];
+                        sum += scaleThis * thisValues[row * commonDim + k] * scaleOther * vector[k];
                     }
-                    resultVector[i] = sum;
+                    resultVector[row] = sum;
                 }
             };
             ThreadingOperations<T>::executeParallelJob(multiplyJob, numRows, availableThreads);
         }
 
-        T vectorMultiplicationRowWisePartial(T *vector, T scaleThis, T scaleOther,
-                                             unsigned targetRow, unsigned startColumn, unsigned endColumn,
-                                             bool operationCondition(unsigned i, unsigned j), unsigned availableThreads) override {
+        T vectorMultiplicationRowWisePartial(T *vector, unsigned targetRow, unsigned startColumn, unsigned endColumn,
+                                                     T scaleThis, T scaleInput, unsigned availableThreads) override {
             T* thisValues = this->_storageData->getValues()->getDataPointer();
-            unsigned numCols = this->_numberOfColumns;
-            T sum = 0;
-            
-            // Ensure endColumn is within bounds
-            endColumn = std::min(endColumn, numCols);
-            
+            const unsigned &numCols = this->_numberOfColumns;
+
+            auto size = endColumn - startColumn + 1;
             auto multiplyJob = [&](unsigned start, unsigned end) -> T {
-                for (unsigned j = startColumn; j < end && j < endColumn; ++j) {
-                    if (operationCondition(targetRow, j)) {
-                        sum += scaleThis * thisValues[targetRow * numCols + j] * scaleOther * vector[j];
-                    }
+                T sum = 0;
+                for (unsigned column = 0; column < size; ++column) {
+                    sum += scaleThis * thisValues[targetRow * numCols + (startColumn + column)] * scaleInput * vector[column];
                 }
                 return sum;
             };
-            return ThreadingOperations<T>::executeParallelJobWithReduction(multiplyJob, endColumn - startColumn, availableThreads);
+            return ThreadingOperations<T>::executeParallelJobWithReduction(multiplyJob, size, availableThreads);
         }
 
-        T vectorMultiplicationColumnWisePartial(T *vector, T scaleThis, T scaleOther,
-                                                unsigned targetColumn, unsigned startRow, unsigned endRow,
-                                                bool operationCondition(unsigned i, unsigned j), unsigned availableThreads) override {
-            T* thisValues = this->_storageData->getValues()->getDataPointer();
-            unsigned numRows = this->_numberOfRows;
-            unsigned numCols = this->_numberOfColumns;
+/*        T vectorMultiplicationRowWisePartial(T *vector, unsigned targetRow, unsigned startColumn, unsigned endColumn,
+                                                     bool operationCondition(unsigned i, unsigned j),
+                                                     T scaleThis, T scaleOther, unsigned availableThreads) override{
+            eThreads);
+        }*/
 
-            // Ensure endRow is within bounds
+        T vectorMultiplicationColumnWisePartial(T *vector, unsigned targetColumn, unsigned startRow, unsigned endRow,
+                                                T scaleThis, T scaleOther, unsigned availableThreads) override {
+            T* thisValues = this->_storageData->getValues()->getDataPointer();
+            unsigned &numRows = this->_numberOfRows;
+            unsigned &numCols = this->_numberOfColumns;
+
+            // Ensure endRow is within bounds of numRows
             endRow = std::min(endRow, numRows);
 
             auto multiplyJob = [&](unsigned start, unsigned end) -> T {
-                T localSum = 0; // Each thread will have its local sum
-                for (unsigned i = start; i < end && i < endRow; ++i) {
-                    if (operationCondition(i, targetColumn)) {
-                        localSum += scaleThis * thisValues[i * numCols + targetColumn] * scaleOther * vector[i];
-                    }
+                T sum = 0;
+                for (unsigned row = 0; row < endRow - startRow + 1; ++row) {
+                    sum += scaleThis * thisValues[(startRow + row) * numCols + targetColumn] * scaleOther * vector[row];
                 }
-                return localSum; // Return the local sum for the reduction operation
+                return sum;
             };
             return ThreadingOperations<T>::executeParallelJobWithReduction(multiplyJob, endRow - startRow, availableThreads);
         }
-
-
         
+        
+
+/*        T vectorMultiplicationColumnWisePartial(T *vector, unsigned targetRow, unsigned startColumn, unsigned endColumn,
+                                                        bool operationCondition(unsigned i, unsigned j),
+                                                        T scaleThis, T scaleOther, unsigned availableThreads) override {
+            T* thisValues = this->_storageData->getValues()->getDataPointer();
+            unsigned &numCols = this->_numberOfColumns;
+            // Ensure endColumn is within bounds
+            endColumn = std::min(endColumn, numCols);
+                                                              
+            auto multiplyJob = [&](unsigned start, unsigned end) -> T {
+                T sum = 0;
+                for (unsigned column = startColumn; column < end && column < endColumn; ++column) {
+                    if (operationCondition(targetRow, column)) {
+                        sum += scaleThis * thisValues[targetRow * numCols + column] * scaleOther * vector[column];
+                    }
+                return sum;
+            };
+            return ThreadingOperations<T>::executeParallelJobWithReduction(multiplyJob, endColumn - startColumn, availableThreads);
+        }*/
+        
+                                                        
         
     };
 

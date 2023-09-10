@@ -366,34 +366,93 @@ namespace LinearAlgebra {
         }
 
         template<typename InputVectorType1>
-        T multiplyVectorRowWisePartial(const InputVectorType1 &inputVector, unsigned targetCo, T scaleThis = 1, T scaleInput = 1,
-                                       unsigned startRow = 0, unsigned endRow = 0, unsigned userDefinedThreads = 0) {
+        T multiplyVectorRowWisePartial(const InputVectorType1 &inputVector, unsigned targetRow, unsigned startColumn, unsigned endColumn,
+                                       T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
             _checkInputVectorDataType(inputVector);
-            if (endRow - startRow != dereference_trait_vector<InputVectorType1>::size(inputVector))
+            if (endColumn - startColumn + 1 != dereference_trait_vector<InputVectorType1>::size(inputVector))
                 throw invalid_argument("Input vector must have the same number of input range");
             if (targetRow >= this->_numberOfRows) {
                 throw std::out_of_range("Target row is out of bounds.");
             }
-
             if (startColumn >= this->_numberOfColumns || endColumn > this->_numberOfColumns) {
                 throw std::out_of_range("Start or end column out of bounds.");
+            }
+            if (startColumn >= endColumn) {
+                throw std::invalid_argument("Start column must be less than end column.");
             }
             auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
             
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
-            return _math->vectorMultiplicationRowWisePartial(inputVectorData, scaleThis, scaleInput, startRow, endRow, availableThreads);
+            return _math->vectorMultiplicationRowWisePartial(inputVectorData, targetRow, startColumn, endColumn, scaleThis, scaleInput, availableThreads);
+            
         }
         
         template<typename InputVectorType1>
-        T multiplyVectorColumnWisePartial(const InputVectorType1 &inputVector, T scaleThis = 1, T scaleInput = 1, unsigned startRow = 0, unsigned endRow = 0, unsigned userDefinedThreads = 0) {
-            
+        T multiplyVectorRowWisePartial(const InputVectorType1 &inputVector, unsigned targetRow, unsigned startColumn, unsigned endColumn,
+                                       bool operationCondition(unsigned i, unsigned j),
+                                       T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
             _checkInputVectorDataType(inputVector);
-            if (_numberOfColumns != dereference_trait_vector<InputVectorType1>::size(inputVector))
-                throw invalid_argument("Input vector must have the same number of columns as the current matrix.");
+            if (endColumn - startColumn != dereference_trait_vector<InputVectorType1>::size(inputVector))
+                throw invalid_argument("Input vector must have the same number of input range");
+            if (targetRow >= this->_numberOfRows) {
+                throw std::out_of_range("Target row is out of bounds.");
+            }
+            if (startColumn >= this->_numberOfColumns || endColumn > this->_numberOfColumns) {
+                throw std::out_of_range("Start or end column out of bounds.");
+            }
+            if (startColumn >= endColumn) {
+                throw std::invalid_argument("Start column must be less than end column.");
+            }
             auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
             
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
-            return _math->vectorMultiplicationColumnWisePartial(inputVectorData, scaleThis, scaleInput, startRow, endRow, availableThreads);
+            return _math->vectorMultiplicationRowWisePartial(inputVectorData, targetRow, startColumn, endColumn, operationCondition, scaleThis, scaleInput, availableThreads);
+            
+        }
+        
+        template<typename InputVectorType1>
+        T multiplyVectorColumnWisePartial(const InputVectorType1 &inputVector, unsigned targetColumn, unsigned startRow, unsigned endRow,
+                                          T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
+            _checkInputVectorDataType(inputVector);
+            if (endRow - startRow + 1 != dereference_trait_vector<InputVectorType1>::size(inputVector))
+                throw invalid_argument("Input vector must have the same number of input range");
+            if (targetColumn >= this->_numberOfColumns) {
+                throw std::out_of_range("Target column is out of bounds.");
+            }
+            if (startRow >= this->_numberOfRows || endRow > this->_numberOfRows) {
+                throw std::out_of_range("Start or end row out of bounds.");
+            }
+            if (startRow >= endRow) {
+                throw std::invalid_argument("Start row must be less than end row.");
+            }
+            auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
+            
+            unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
+            return _math->vectorMultiplicationColumnWisePartial(inputVectorData, targetColumn, startRow, endRow, scaleThis, scaleInput, availableThreads);
+            
+        }
+        
+        template<typename InputVectorType1>
+        T multiplyVectorColumnWisePartial(const InputVectorType1 &inputVector, unsigned targetColumn, unsigned startRow, unsigned endRow,
+                                          bool operationCondition(unsigned i, unsigned j),
+                                          T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
+            _checkInputVectorDataType(inputVector);
+            if (endRow - startRow != dereference_trait_vector<InputVectorType1>::size(inputVector))
+                throw invalid_argument("Input vector must have the same number of input range");
+            if (targetColumn >= this->_numberOfColumns) {
+                throw std::out_of_range("Target column is out of bounds.");
+            }
+            if (startRow >= this->_numberOfRows || endRow > this->_numberOfRows) {
+                throw std::out_of_range("Start or end row out of bounds.");
+            }
+            if (startRow >= endRow) {
+                throw std::invalid_argument("Start row must be less than end row.");
+            }
+            auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
+            
+            unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
+            return _math->vectorMultiplicationColumnWisePartial(inputVectorData, targetColumn, startRow, endRow, operationCondition, scaleThis, scaleInput, availableThreads);
+            
         }
         
         

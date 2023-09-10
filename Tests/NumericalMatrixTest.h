@@ -20,10 +20,14 @@ namespace Tests {
             testMatrixSubtraction();
             testMatrixMultiplication();
             testMatrixVectorMultiplication();
+            testMatrixVectorRowWisePartialMultiplication();
+            testMatrixVectorColumnWisePartialMultiplication();
             testMatrixAdditionMultiThread();
             testMatrixSubtractionMultiThread();
             testMatrixMultiplicationMultiThread();
             testMatrixVectorMultiplicationMultiThread();
+            testMatrixVectorRowWisePartialMultiplicationMultiThread();
+            testMatrixVectorColumnWisePartialMultiplicationMultiThread();
             
         }
         
@@ -145,6 +149,67 @@ namespace Tests {
             logTestEnd();
         }
 
+        static void testMatrixVectorRowWisePartialMultiplication() {
+            logTestStart("testMatrixVectorRowWisePartialMultiplication");
+
+            // matrix = [1 2 3;
+            //           4 5 6;
+            //           7 8 9]
+            NumericalMatrix<double> matrix(3, 3, FullMatrix);
+            matrix.setElement(0, 0, 1);
+            matrix.setElement(0, 1, 2);
+            matrix.setElement(0, 2, 3);
+            matrix.setElement(1, 0, 4);
+            matrix.setElement(1, 1, 5);
+            matrix.setElement(1, 2, 6);
+            matrix.setElement(2, 0, 7);
+            matrix.setElement(2, 1, 8);
+            matrix.setElement(2, 2, 9);
+
+            NumericalVector<double> vector = {1, 2};  // Smaller vector
+
+            // Compute the partial dot product of the second row of the matrix (4 5 6) 
+            // with the vector, but only considering columns 1 and 2 of the matrix (which are 5 and 6).
+            double result = matrix.multiplyVectorRowWisePartial(vector, 1, 1, 2);
+            double expectedValue = 17;  // 1*5 + 2*6
+            assert(expectedValue == result);
+
+            logTestEnd();
+        }
+
+
+        static void testMatrixVectorColumnWisePartialMultiplication() {
+            logTestStart("testMatrixVectorColumnWisePartialMultiplication");
+
+            // matrix = [1 2 3;
+            //           4 5 6;
+            //           7 8 9]
+            NumericalMatrix<double> matrix(3, 3, FullMatrix);
+            matrix.setElement(0, 0, 1);
+            matrix.setElement(0, 1, 2);
+            matrix.setElement(0, 2, 3);
+            matrix.setElement(1, 0, 4);
+            matrix.setElement(1, 1, 5);
+            matrix.setElement(1, 2, 6);
+            matrix.setElement(2, 0, 7);
+            matrix.setElement(2, 1, 8);
+            matrix.setElement(2, 2, 9);
+
+            NumericalVector<double> vector = {2, 3};  // Smaller vector
+
+            // Compute the partial dot product of the second column of the matrix (2 5 8)
+            // with the vector, but only considering rows 1 and 2 of the matrix (which are 5 and 8).
+            double result = matrix.multiplyVectorColumnWisePartial(vector, 1, 1, 2); // Only considering last 2 rows
+
+            double expectedValue = 34;  // 2*5 + 3*8
+
+            assert(expectedValue == result);
+
+            logTestEnd();
+        }
+
+
+
         static void testMatrixAdditionMultiThread() {
             logTestStart("testMatrixAdditionMultiThread");
 
@@ -250,6 +315,65 @@ namespace Tests {
             NumericalVector<double> expectedValues = {8, 18};
             assert(expectedValues == resultVector);
             assert(matrix.dataStorage->getAvailableThreads() == fullGasBaby);
+            logTestEnd();
+        }
+
+        static void testMatrixVectorRowWisePartialMultiplicationMultiThread() {
+            logTestStart("testMatrixVectorRowWisePartialMultiplicationMultiThread");
+
+            // matrix = [1 2 3;
+            //           4 5 6;
+            //           7 8 9]
+            NumericalMatrix<double> matrix(3, 3, FullMatrix);
+            matrix.setElement(0, 0, 1);
+            matrix.setElement(0, 1, 2);
+            matrix.setElement(0, 2, 3);
+            matrix.setElement(1, 0, 4);
+            matrix.setElement(1, 1, 5);
+            matrix.setElement(1, 2, 6);
+            matrix.setElement(2, 0, 7);
+            matrix.setElement(2, 1, 8);
+            matrix.setElement(2, 2, 9);
+
+            NumericalVector<double> vector = {1, 2, 3};  // Smaller vector
+
+            // Compute the partial dot product of the second row of the matrix (4 5 6) 
+            // with the vector, but only considering columns 1 and 2 of the matrix (which are 5 and 6).
+            double result = matrix.multiplyVectorRowWisePartial(vector, 1, 0, 2, 1.0, 1.0, 2);
+            double expectedValue = 32;// 1*4 + 2*5 + 3*6
+            assert(expectedValue == result);
+
+            logTestEnd();
+        }
+
+
+        static void testMatrixVectorColumnWisePartialMultiplicationMultiThread() {
+            logTestStart("testMatrixVectorColumnWisePartialMultiplicationMultiThread");
+
+            // matrix = [1 2 3;
+            //           4 5 6;
+            //           7 8 9]
+            NumericalMatrix<double> matrix(3, 3, FullMatrix);
+            matrix.setElement(0, 0, 1);
+            matrix.setElement(0, 1, 2);
+            matrix.setElement(0, 2, 3);
+            matrix.setElement(1, 0, 4);
+            matrix.setElement(1, 1, 5);
+            matrix.setElement(1, 2, 6);
+            matrix.setElement(2, 0, 7);
+            matrix.setElement(2, 1, 8);
+            matrix.setElement(2, 2, 9);
+
+            NumericalVector<double> vector = {2, 3};  // Smaller vector
+
+            // Compute the partial dot product of the second column of the matrix (2 5 8)
+            // with the vector, but only considering rows 1 and 2 of the matrix (which are 5 and 8).
+            double result = matrix.multiplyVectorColumnWisePartial(vector, 1, 1, 2, 1.0, 1.0, 2); // Only considering last 2 rows
+
+            double expectedValue = 34;  // 2*5 + 3*8
+
+            assert(expectedValue == result);
+
             logTestEnd();
         }
 
