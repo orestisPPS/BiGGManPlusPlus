@@ -25,7 +25,7 @@ namespace LinearAlgebra {
         }
     }
     
-    void DecompositionQR::setMatrix(shared_ptr<Array<double>> &matrix) {
+    void DecompositionQR::setMatrix(shared_ptr<NumericalMatrix<double>> &matrix) {
         if (_storeOnMatrix) {
             _matrix = matrix;
         }
@@ -33,13 +33,13 @@ namespace LinearAlgebra {
             _matrix = matrix;
             
             if (_R == nullptr){
-                _R = make_shared<Array<double>>(matrix->numberOfRows(), matrix->numberOfColumns());
+                _R = make_shared<NumericalMatrix<double>>(matrix->numberOfRows(), matrix->numberOfColumns());
             }
             _deepCopyMatrixIntoR();
         }
         if (_returnQ) {
             if (_Q == nullptr) {
-                _Q = make_shared<Array<double>>(matrix->numberOfRows(), matrix->numberOfRows());
+                _Q = make_shared<NumericalMatrix<double>>(matrix->numberOfRows(), matrix->numberOfRows());
             }
             for (unsigned i = 0; i < matrix->numberOfRows(); i++) {
                 for (unsigned j = 0; j < matrix->numberOfColumns(); j++){
@@ -52,10 +52,10 @@ namespace LinearAlgebra {
         }
     }
 
-    const shared_ptr<Array<double>> &  DecompositionQR::getQ() {
+    const shared_ptr<NumericalMatrix<double>> &  DecompositionQR::getQ() {
     }
 
-    const shared_ptr<Array<double>> &  DecompositionQR::getR() {
+    const shared_ptr<NumericalMatrix<double>> &  DecompositionQR::getR() {
     }
     
     void DecompositionQR::_singleThreadDecomposition() {
@@ -79,7 +79,7 @@ namespace LinearAlgebra {
         }
     }
 
-    void DecompositionQR::getRQ(shared_ptr<Array<double>>& result) {
+    void DecompositionQR::getRQ(shared_ptr<NumericalMatrix<double>>& result) {
         switch (_parallelizationMethod) {
             case SingleThread:
                 _getRQSingleThread(result);
@@ -92,7 +92,7 @@ namespace LinearAlgebra {
         }
     }
 
-    void DecompositionQR::_getRQSingleThread(shared_ptr<Array<double>>& result) {
+    void DecompositionQR::_getRQSingleThread(shared_ptr<NumericalMatrix<double>>& result) {
         // Initialize result to zeros
         for (int i = 0; i < _Q->numberOfRows(); i++) {
             for (int j = 0; j < _R->numberOfColumns(); j++) {
@@ -113,11 +113,11 @@ namespace LinearAlgebra {
 
 
 
-    void DecompositionQR::_getRQMultithread(shared_ptr<Array<double>>& result) {
+    void DecompositionQR::_getRQMultithread(shared_ptr<NumericalMatrix<double>>& result) {
         throw runtime_error("Not implemented");
     }
 
-    void DecompositionQR::_getRQCuda(shared_ptr<Array<double>>& result) {
+    void DecompositionQR::_getRQCuda(shared_ptr<NumericalMatrix<double>>& result) {
         throw runtime_error("Not implemented");
     }
 

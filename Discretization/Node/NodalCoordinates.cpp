@@ -9,7 +9,7 @@
 namespace Discretization {
     
     NodalCoordinates::NodalCoordinates() :
-    _positionVectors(make_shared<map<CoordinateType, shared_ptr<vector<double>>>>()) { }
+    _positionVectors(make_shared<map<CoordinateType, shared_ptr<NumericalVector<double>>>>()) { }
     
     NodalCoordinates::~NodalCoordinates() {
         for (auto &positionVector : *_positionVectors) {
@@ -31,32 +31,27 @@ namespace Discretization {
     }
     
 
-    void NodalCoordinates::addPositionVector(shared_ptr<vector<double>> positionVector, CoordinateType type) {
-        _positionVectors->insert(pair<CoordinateType, shared_ptr<vector<double>>>(type, std::move(positionVector)));
+    void NodalCoordinates::addPositionVector(shared_ptr<NumericalVector<double>> positionVector, CoordinateType type) {
+        _positionVectors->insert(pair<CoordinateType, shared_ptr<NumericalVector<double>>>(type, std::move(positionVector)));
     }
     
     //Adds a Natural coordinate set the node coordinate vector map.
     //Initiated with input vector.
-    void NodalCoordinates::addPositionVector(shared_ptr<vector<double>> positionVector) {
+    void NodalCoordinates::addPositionVector(shared_ptr<NumericalVector<double>> positionVector) {
         if (positionVector->empty() && positionVector->size()<= 3)
-            _positionVectors->insert(pair<CoordinateType, shared_ptr<vector<double>>>(Natural, std::move(positionVector)));
+            _positionVectors->insert(pair<CoordinateType, shared_ptr<NumericalVector<double>>>(Natural, std::move(positionVector)));
         else
-            _positionVectors->insert(pair<CoordinateType, shared_ptr<vector<double>>>(Natural, std::move(positionVector)));    }
-    
-    void NodalCoordinates::addPositionVector(CoordinateType type) {
-        _positionVectors->insert(pair<CoordinateType, shared_ptr<vector<double>>>(type, new vector<double>));
+            _positionVectors->insert(pair<CoordinateType, shared_ptr<NumericalVector<double>>>(Natural, std::move(positionVector)));    }
+            
+    void NodalCoordinates::setPositionVector(shared_ptr<NumericalVector<double>>positionVector, CoordinateType type) {
+        if (positionVector->empty() && positionVector->size()<= 3)
+            _positionVectors->insert(pair<CoordinateType, shared_ptr<NumericalVector<double>>>(type, std::move(positionVector)));
+        else
+            _positionVectors->insert(pair<CoordinateType, shared_ptr<NumericalVector<double>>>(type, std::move(positionVector)));
     }
     
-
-    void NodalCoordinates::setPositionVector(shared_ptr<vector<double>>positionVector, CoordinateType type) {
-        if (positionVector->empty() && positionVector->size()<= 3)
-            _positionVectors->insert(pair<CoordinateType, shared_ptr<vector<double>>>(type, std::move(positionVector)));
-        else
-            _positionVectors->insert(pair<CoordinateType, shared_ptr<vector<double>>>(type, std::move(positionVector)));
-    }
-    
-    void NodalCoordinates::setPositionVector(shared_ptr<vector<double>> positionVector) {
-        _positionVectors->insert(pair<CoordinateType, shared_ptr<vector<double>>>(Natural, std::move(positionVector)));
+    void NodalCoordinates::setPositionVector(shared_ptr<NumericalVector<double>> positionVector) {
+        _positionVectors->insert(pair<CoordinateType, shared_ptr<NumericalVector<double>>>(Natural, std::move(positionVector)));
     }
     
     void NodalCoordinates::removePositionVector(CoordinateType type) {
@@ -64,19 +59,19 @@ namespace Discretization {
         _positionVectors->erase(type);
     }
     
-    const vector<double>& NodalCoordinates::positionVector() {
+    const NumericalVector<double>& NodalCoordinates::positionVector() {
         return *( _positionVectors->at(Natural));
     }
      
-    const vector<double>& NodalCoordinates::positionVector(CoordinateType type) {
+    const NumericalVector<double>& NodalCoordinates::positionVector(CoordinateType type) {
         return *( _positionVectors->at(type));
     }
     
-    const shared_ptr<vector<double>>& NodalCoordinates::positionVectorPtr(CoordinateType type) {
+    const shared_ptr<NumericalVector<double>>& NodalCoordinates::positionVectorPtr(CoordinateType type) {
         return _positionVectors->at(type);
     }
     
-    vector<double> NodalCoordinates::positionVector3D() {
+    NumericalVector<double> NodalCoordinates::positionVector3D() {
 
         auto coords = positionVector();
         switch (coords.size()) {
@@ -92,7 +87,7 @@ namespace Discretization {
         }
     }
     
-    vector<double> NodalCoordinates::positionVector3D(CoordinateType type) {
+    NumericalVector<double> NodalCoordinates::positionVector3D(CoordinateType type) {
         auto coords = positionVector(type);
         switch (coords.size()) {
             case 1:
@@ -107,30 +102,30 @@ namespace Discretization {
         }
     }
     
-    shared_ptr<vector<double>> NodalCoordinates::positionVector3DPtr() {
+    shared_ptr<NumericalVector<double>> NodalCoordinates::positionVector3DPtr() {
         auto coords = positionVector();
         switch (coords.size()) {
             case 1:
-                return shared_ptr<vector<double>>(new vector<double>{coords[0], 0.0, 0.0});
+                return shared_ptr<NumericalVector<double>>(new NumericalVector<double>{coords[0], 0.0, 0.0});
             case 2:
-                return shared_ptr<vector<double>>(new vector<double>{coords[0], coords[1], 0.0});
+                return shared_ptr<NumericalVector<double>>(new NumericalVector<double>{coords[0], coords[1], 0.0});
             case 3:
-                return shared_ptr<vector<double>>(new vector<double>{coords[0], coords[1], coords[2]});
+                return shared_ptr<NumericalVector<double>>(new NumericalVector<double>{coords[0], coords[1], coords[2]});
             default:
                 throw runtime_error("Node coordinate not found!");
             
         }
     }
     
-    shared_ptr<vector<double>> NodalCoordinates::positionVector3DPtr(CoordinateType type) {
+    shared_ptr<NumericalVector<double>> NodalCoordinates::positionVector3DPtr(CoordinateType type) {
         auto coords = positionVector(type);
         switch (coords.size()) {
             case 1:
-                return shared_ptr<vector<double>>(new vector<double>{coords[0], 0.0, 0.0});
+                return shared_ptr<NumericalVector<double>>(new NumericalVector<double>{coords[0], 0.0, 0.0});
             case 2:
-                return shared_ptr<vector<double>>(new vector<double>{coords[0], coords[1], 0.0});
+                return shared_ptr<NumericalVector<double>>(new NumericalVector<double>{coords[0], coords[1], 0.0});
             case 3:
-                return shared_ptr<vector<double>>(new vector<double>{coords[0], coords[1], coords[2]});
+                return shared_ptr<NumericalVector<double>>(new NumericalVector<double>{coords[0], coords[1], coords[2]});
             default:
                 throw runtime_error("Node coordinate not found!");
             

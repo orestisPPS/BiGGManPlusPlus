@@ -40,7 +40,7 @@ namespace NumericalAnalysis {
         
         void applySolutionToDegreesOfFreedom() const;
         
-        vector<double> getSolutionAtNode(vector<double>& nodeCoordinates, double tolerance = 1E-4) const;
+        NumericalVector<double> getSolutionAtNode(NumericalVector<double>& nodeCoordinates, double tolerance = 1E-4) const;
         
     protected:
 

@@ -4,7 +4,7 @@
 #include "SecondOrderLinearPDEProperties.h"
 
 #include <utility>
-#include "../LinearAlgebra/Array/Array.h"
+#include "../LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 #include "iostream"
 #include "vector"
 #include "map"
@@ -61,12 +61,12 @@ namespace PartialDifferentialEquations {
                                                                 double zerothOrderCoefficient, double sourceTerm) {
         if (_type == Isotropic and not _isInitialized){
             auto totalDimensions = this->totalDimensions();
-            _firstDerivativeProperties = make_shared<vector<double> >(totalDimensions);
-            _secondDerivativeProperties = make_shared<Array<double> >(totalDimensions, totalDimensions);
+            _firstDerivativeProperties = make_shared<NumericalVector<double> >(totalDimensions);
+            _secondDerivativeProperties = make_shared<NumericalMatrix<double> >(totalDimensions, totalDimensions);
             for (unsigned short i = 0; i < totalDimensions; i++){
                 _firstDerivativeProperties->at(i) = firstOrderCoefficient;
                 for (int j = 0; j < totalDimensions; ++j) {
-                    _secondDerivativeProperties->at(i,j) = secondOrderCoefficient;
+                    _secondDerivativeProperties->setElement(i, j, secondOrderCoefficient);
                 }
             }
             _zeroDerivativeProperties = make_shared<double>(zerothOrderCoefficient);

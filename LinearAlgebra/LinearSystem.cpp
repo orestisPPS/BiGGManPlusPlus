@@ -8,10 +8,8 @@
 
 namespace LinearAlgebra {
     
-    LinearSystem::LinearSystem(shared_ptr<Array<double>> inputMatrix, shared_ptr<vector<double>> inputRHS) :
-            matrix(std::move(inputMatrix)),
-            rhs(std::move(inputRHS)),
-            solution(nullptr) {}
+    LinearSystem::LinearSystem(shared_ptr<NumericalMatrix<double>> inputMatrix, shared_ptr<NumericalVector<double>> inputRHS) :
+            matrix(std::move(inputMatrix)), rhs(std::move(inputRHS)), solution(nullptr) {}
     
 
 
@@ -24,7 +22,7 @@ namespace LinearAlgebra {
         outputFile << "A = [";
         for (int i = 0; i < matrix->numberOfRows(); i++) {
             for (int j = 0; j < matrix->numberOfColumns(); j++) {
-                outputFile << matrix->at(i, j) << " ";
+                outputFile << matrix->getElement(i, j) << " ";
             }
             if (i < matrix->size() - 1) {
                 outputFile << "; ";

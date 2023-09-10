@@ -8,7 +8,7 @@
 namespace BoundaryConditions {
     
     BoundaryCondition::BoundaryCondition(BoundaryConditionType bcType,
-                                         shared_ptr<map<DOFType, function<double (shared_ptr<vector<double>>)>>> bcForDof) :
+                                         shared_ptr<map<DOFType, function<double (shared_ptr<NumericalVector<double>>)>>> bcForDof) :
             _bcType(bcType), _bcFunctionForDof(std::move(bcForDof)), _bcValueForDof(nullptr) {
     }
     
@@ -21,7 +21,7 @@ namespace BoundaryConditions {
         _bcValueForDof.reset();
     }
     
-    double BoundaryCondition::getBoundaryConditionValueAtCoordinates(DOFType type, const shared_ptr<vector<double>> &coordinates) {
+    double BoundaryCondition::getBoundaryConditionValueAtCoordinates(DOFType type, const shared_ptr<NumericalVector<double>> &coordinates) {
         return _bcFunctionForDof->at(type)(coordinates);
     }
     
@@ -29,10 +29,12 @@ namespace BoundaryConditions {
         return _bcValueForDof->at(type);
     }
 
-    vector<double> BoundaryCondition::getAllBoundaryConditionValuesAtCoordinates(const shared_ptr<vector < double>>&coordinates) {
-        vector<double> result = vector<double>(_bcFunctionForDof->size());
-        for (auto &bc : *_bcFunctionForDof) {
-            result.push_back(bc.second(coordinates));
+    NumericalVector<double> BoundaryCondition::getAllBoundaryConditionValuesAtCoordinates(const shared_ptr<NumericalVector< double>>&coordinates) {
+        NumericalVector<double> result = NumericalVector<double>(_bcFunctionForDof->size());
+        auto i = 0;
+        for (auto &bcFunction : *_bcFunctionForDof) {
+            result[i] = bcFunction.second(coordinates);
+            i++;
         }
         return result;
     }

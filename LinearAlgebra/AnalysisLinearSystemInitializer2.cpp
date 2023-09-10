@@ -19,9 +19,9 @@ namespace LinearAlgebra {
         numberOfFreeDOFs = new unsigned(_analysisDegreesOfFreedom->freeDegreesOfFreedom->size());
         numberOfFixedDOFs = new unsigned(_analysisDegreesOfFreedom->fixedDegreesOfFreedom->size());
         numberOfDOFs = new unsigned(_analysisDegreesOfFreedom->totalDegreesOfFreedomMap->size());
-        _matrix = new Array<double>(*numberOfFreeDOFs, *numberOfFreeDOFs, 1, 0);
-        _fixedFreeMatrix = new Array<double>(*numberOfFixedDOFs, *numberOfDOFs, 1, 0);
-        _freeFreeFreeFixedSubMatrix = new Array<double>(*numberOfDOFs, *numberOfDOFs, 1, 0);
+        _matrix = new NumericalMatrix<double>(*numberOfFreeDOFs, *numberOfFreeDOFs, 1, 0);
+        _fixedFreeMatrix = new NumericalMatrix<double>(*numberOfFixedDOFs, *numberOfDOFs, 1, 0);
+        _freeFreeFreeFixedSubMatrix = new NumericalMatrix<double>(*numberOfDOFs, *numberOfDOFs, 1, 0);
         _parametricCoordToNodeMap = _mesh->createParametricCoordToNodesMap();
         _specs = specs;
     }
@@ -418,8 +418,8 @@ namespace LinearAlgebra {
 
     void AnalysisLinearSystemInitializer2::_createRHS() {
         //Marching through all the free DOFs
-        _rhsVector = new vector<double>(*numberOfDOFs, 0);
-        _rhsVector = new vector<double>(*numberOfFreeDOFs, 0);
+        _rhsVector = new NumericalVector<double>(*numberOfDOFs, 0);
+        _rhsVector = new NumericalVector<double>(*numberOfFreeDOFs, 0);
         for (auto &dof: *_analysisDegreesOfFreedom->freeDegreesOfFreedom) {
             auto node = _mesh->nodeFromID(*dof->parentNode);
 

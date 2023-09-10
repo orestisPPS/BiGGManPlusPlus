@@ -21,7 +21,7 @@ namespace LinearAlgebra {
     }
 
 
-    void Solver::setInitialSolution(shared_ptr<vector<double>> initialValue) {
+    void Solver::setInitialSolution(shared_ptr<NumericalVector<double>> initialValue) {
     }
 
     void Solver::setInitialSolution(double initialValue) {

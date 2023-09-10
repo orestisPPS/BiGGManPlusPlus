@@ -18,9 +18,9 @@ namespace LinearAlgebra {
         void solve() override;
 
     private:
-        shared_ptr<Array<double>> _l;
+        shared_ptr<NumericalMatrix<double>> _l;
 
-        shared_ptr<Array<double>> _lT;
+        shared_ptr<NumericalMatrix<double>> _lT;
     };
 
 } // LinearAlgebra

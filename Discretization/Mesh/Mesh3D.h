@@ -32,11 +32,11 @@ namespace Discretization {
 
         Node* node(unsigned i, unsigned j, unsigned k) override;
 
-        shared_ptr<map<vector<double>, Node*>> createParametricCoordToNodesMap() override;
+        shared_ptr<map<NumericalVector<double>, Node*>> createParametricCoordToNodesMap() override;
         
         void printMesh() override;
         
-        vector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) override;
+        NumericalVector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) override;
         
         void createElements(ElementType elementType, unsigned int nodesPerEdge) override;
 

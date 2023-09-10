@@ -32,7 +32,7 @@ namespace LinearAlgebra {
          * @param throwExceptionOnSingularMatrix (can be excluded) If true, throws an exception when a singular matrix is detected.
          *                                      If false, prints a warning message and continues.
          */
-        explicit DecompositionLUP(const shared_ptr<Array<double>>& matrix, double pivotTolerance = 1e-10, bool throwExceptionOnSingularMatrix = true);
+        explicit DecompositionLUP(const shared_ptr<NumericalMatrix<double>>& matrix, double pivotTolerance = 1e-10, bool throwExceptionOnSingularMatrix = true);
         
 
         /**
@@ -59,7 +59,7 @@ namespace LinearAlgebra {
          *
          * @return The inverse of the matrix
          */
-         shared_ptr<Array<double>> invertMatrix() override;
+         shared_ptr<NumericalMatrix<double>> invertMatrix() override;
 
         /**
          * Returns the determinant of the matrix
@@ -75,7 +75,7 @@ namespace LinearAlgebra {
          *
          * @return A vector with the solution of the linear system
          */
-        shared_ptr<vector<double>> solve(shared_ptr<vector<double>> rhs, shared_ptr<vector<double>> solution) override;
+        shared_ptr<NumericalVector<double>> solve(shared_ptr<NumericalVector<double>> rhs, shared_ptr<NumericalVector<double>> solution) override;
 
     private:
         /**

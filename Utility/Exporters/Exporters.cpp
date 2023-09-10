@@ -6,7 +6,7 @@
 
 namespace Utility {
     //Author: Chat GPT
-    void Exporters::exportLinearSystemToMatlabFile(const shared_ptr<Array<double>>& matrix, const shared_ptr<vector<double>>&vector, const std::string& filePath,
+    void Exporters::exportLinearSystemToMatlabFile(const shared_ptr<NumericalMatrix<double>>& matrix, const shared_ptr<NumericalVector<double>>&vector, const std::string& filePath,
                                                    const std::string& fileName, bool print) {
         ofstream outputFile(filePath + fileName);
 
@@ -54,7 +54,7 @@ namespace Utility {
         outputFile.close();
     }
 
-    void Exporters::exportMatrixToMatlabFile(const shared_ptr<Array<double>> &matrix, const string &filePath,
+    void Exporters::exportMatrixToMatlabFile(const shared_ptr<NumericalMatrix<double>> &matrix, const string &filePath,
                                              const string &fileName, bool print) {
         ofstream outputFile(filePath + fileName);
 

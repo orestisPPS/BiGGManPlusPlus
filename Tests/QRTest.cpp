@@ -9,7 +9,7 @@ using namespace LinearAlgebra;
 
 namespace Tests {
     QRTest::QRTest() {
-        auto matrix1 = make_shared<Array<double>>(4, 4);
+        auto matrix1 = make_shared<NumericalMatrix<double>>(4, 4);
         matrix1->at(0,0) = 4;
         matrix1->at(0,1) = 1;
         matrix1->at(0,2) = 2;
@@ -35,7 +35,7 @@ namespace Tests {
         qr->setMatrix(matrix1);
         qr->calculateEigenvalues();
         
-        auto matrix2 = make_shared<LinearAlgebra::Array<double>>(4, 3);
+        auto matrix2 = make_shared<LinearAlgebra::NumericalMatrix<double>>(4, 3);
         matrix2->at(0,0) = 1;
         matrix2->at(0,1) = -1;
         matrix2->at(0,2) = 4;

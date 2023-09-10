@@ -20,7 +20,7 @@ namespace LinearAlgebra {
         
         virtual shared_ptr<MatrixDecomposition> getDecomposition();
         
-        void setInitialSolution(shared_ptr<vector<double>> initialValue) override;
+        void setInitialSolution(shared_ptr<NumericalVector<double>> initialValue) override;
         
         void setInitialSolution(double initialValue) override;
         

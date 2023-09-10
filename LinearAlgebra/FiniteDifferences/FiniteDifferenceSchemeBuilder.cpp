@@ -270,29 +270,29 @@ namespace LinearAlgebra {
             Direction& direction,
             unsigned short errorOrder,
             unsigned short derivativeOrder) {
-        map<FDSchemeType, Scheme> availableSchemes;
+        map<FDSchemeType, Scheme> availableSchemes = map<FDSchemeType, Scheme>();
         auto positionsToScheme = positionsToSchemeType();
 
         for (auto& qualifiedPositionAndPoint : qualifiedPositionsAndPoints) {
             const vector<Position>& positionVector = qualifiedPositionAndPoint.first;
             FDSchemeType schemeType = positionsToScheme[direction][positionVector];
-            availableSchemes[schemeType] = FiniteDifferenceSchemeWeightsStructuredGrid::getScheme(schemeType, derivativeOrder, errorOrder);
+            availableSchemes.insert(pair<FDSchemeType, Scheme>(schemeType, FiniteDifferenceSchemeWeightsStructuredGrid::getScheme(schemeType, derivativeOrder, errorOrder)));
         }
         
         vector<Position> positionsFromScheme;
-        Scheme weights;
-
+        
+        auto weights = Scheme(0);
         if (availableSchemes.count(Central) != 0) {
             positionsFromScheme = schemeTypeToPositions()[direction][Central];
-            weights = availableSchemes[Central];
+            weights = availableSchemes.at(Central);
         }
         else if (availableSchemes.count(Forward) != 0) {
             positionsFromScheme = schemeTypeToPositions()[direction][Forward];
-            return availableSchemes[Forward];
+            return availableSchemes.at(Forward);
         }
         else if (availableSchemes.count(Backward) != 0) {
             positionsFromScheme = schemeTypeToPositions()[direction][Backward];
-            return availableSchemes[Backward];
+            return availableSchemes.at(Backward);
         }
         else {
             throw invalid_argument("No scheme found for the given positions");

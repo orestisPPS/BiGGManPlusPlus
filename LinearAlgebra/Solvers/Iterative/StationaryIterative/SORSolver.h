@@ -11,14 +11,12 @@ namespace LinearAlgebra{
     class SORSolver : public StationaryIterative {
 
     public:
-        SORSolver(double relaxationParameter, VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4,
-                  bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = SingleThread);
+        explicit SORSolver(double relaxationParameter, double tolerance = 1E-5, unsigned maxIterations = 1E4, VectorNormType normType = L2,
+                           unsigned userDefinedThreads = 0, bool printOutput = true, bool throwExceptionOnMaxFailure = true);
 
     protected:
-        void _singleThreadSolution() override;
-
-        void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows) override;
-    
+        void _performMethodIteration() override;
+        
     private:
         void _threadJobSOR(unsigned start, unsigned end);
 

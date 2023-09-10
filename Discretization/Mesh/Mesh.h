@@ -10,7 +10,6 @@
 #include "GhostPseudoMesh/GhostPseudoMesh.h"
 #include "../../LinearAlgebra/Operations/Transformations.h"
 #include "../Node/IsoparametricNodeGraph.h"
-#include "../../LinearAlgebra/Operations/VectorOperations.h"
 #include "../../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
 #include "../../LinearAlgebra/FiniteDifferences/FDWeightCalculator.h"
 #include "../Elements/Element.h"
@@ -78,7 +77,7 @@ namespace Discretization {
         
         void initialize();
         
-        map<vector<double>, Node*> getCoordinateToNodeMap(CoordinateType coordinateType = Natural) const;
+        map<NumericalVector<double>, Node*> getCoordinateToNodeMap(CoordinateType coordinateType = Natural) const;
         
         unique_ptr<map<Node*, Position>> getBoundaryNodeToPositionMap() const;
         
@@ -100,11 +99,11 @@ namespace Discretization {
         
         virtual Node* node(unsigned i, unsigned j, unsigned k);
         
-        virtual shared_ptr<map<vector<double>, Node*>> createParametricCoordToNodesMap();
+        virtual shared_ptr<map<NumericalVector<double>, Node*>> createParametricCoordToNodesMap();
         
         virtual void printMesh();
         
-        virtual vector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node);
+        virtual NumericalVector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node);
         
         virtual unique_ptr<vector<Node*>> getInternalNodesVector();
         

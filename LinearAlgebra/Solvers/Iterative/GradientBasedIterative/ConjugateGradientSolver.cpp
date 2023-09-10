@@ -14,14 +14,14 @@ namespace LinearAlgebra {
 
     void ConjugateGradientSolver::_initializeVectors() {
         auto n = _linearSystem->matrix->numberOfRows();
-        _xNew = make_shared<vector<double>>(n);
-        _xOld = make_shared<vector<double>>(n);
-        _residualOld = make_shared<vector<double>>(n);
-        _residualNew = make_shared<vector<double>>(n);
-        _directionVectorNew = make_shared<vector<double>>(n);
-        _directionVectorOld = make_shared<vector<double>>(n);
-        _difference = make_shared<vector<double>>(n);
-        _matrixVectorMultiplication = make_shared<vector<double>>(n);
+        _xNew = make_shared<NumericalVector<double>>(n);
+        _xOld = make_shared<NumericalVector<double>>(n);
+        _residualOld = make_shared<NumericalVector<double>>(n);
+        _residualNew = make_shared<NumericalVector<double>>(n);
+        _directionVectorNew = make_shared<NumericalVector<double>>(n);
+        _directionVectorOld = make_shared<NumericalVector<double>>(n);
+        _difference = make_shared<NumericalVector<double>>(n);
+        _matrixVectorMultiplication = make_shared<NumericalVector<double>>(n);
         _vectorsInitialized = true;
     }
     
@@ -30,7 +30,7 @@ namespace LinearAlgebra {
         unsigned n = _linearSystem->matrix->numberOfRows();
         
         if (_parallelization == SingleThread) {
-            _singleThreadSolution();
+            _performMethodIteration();
         }
         if (_parallelization == MultiThread) {
             auto numberOfThreads = std::thread::hardware_concurrency();
@@ -53,8 +53,8 @@ namespace LinearAlgebra {
         IterativeSolver::_cudaSolution();
     }
 
-    void ConjugateGradientSolver::_singleThreadSolution() {
-        _printSingleThreadInitializationText();
+    void ConjugateGradientSolver::_performMethodIteration() {
+        _printInitializationText();
         auto start = std::chrono::high_resolution_clock::now();
         double alpha = 0.0;
         double beta = 0.0;
@@ -71,7 +71,7 @@ namespace LinearAlgebra {
         VectorOperations::deepCopy(_residualOld, _directionVectorOld);
 
         while (_iteration < _maxIterations) {
-            auto matrixTimesDirection = make_shared<vector<double>>(_linearSystem->matrix->numberOfRows(), 0);
+            auto matrixTimesDirection = make_shared<NumericalVector<double>>(_linearSystem->matrix->numberOfRows(), 0);
             VectorOperations::matrixVectorMultiplication(_linearSystem->matrix, _directionVectorOld, matrixTimesDirection);
             //Calculate the step size
             //alpha = (r_old, r_old)/(difference, A * difference)
@@ -135,7 +135,7 @@ namespace LinearAlgebra {
         MultiThreadVectorOperations::deepCopy(_residualOld->data(), _directionVectorOld->data(), n);
 
         while (_iteration < _maxIterations) {
-            auto matrixTimesDirection = make_shared<vector<double>>(_linearSystem->matrix->numberOfRows(), 0);
+            auto matrixTimesDirection = make_shared<NumericalVector<double>>(_linearSystem->matrix->numberOfRows(), 0);
             MultiThreadVectorOperations::matrixVectorMultiplication(_linearSystem->matrix->getArrayPointer(),
                                                                     _directionVectorOld->data(), matrixTimesDirection->data(), n, n);
             //Calculate the step size

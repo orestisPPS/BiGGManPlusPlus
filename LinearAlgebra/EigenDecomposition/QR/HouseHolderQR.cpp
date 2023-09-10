@@ -11,7 +11,7 @@ namespace LinearAlgebra {
     }
 
     void HouseHolderQR::_singleThreadDecomposition() {
-        shared_ptr<Array<double>> matrix;
+        shared_ptr<NumericalMatrix<double>> matrix;
         if (_storeOnMatrix) {
             matrix = _matrix;
         }
@@ -39,9 +39,9 @@ namespace LinearAlgebra {
         }
     }
     
-    shared_ptr<vector<double>> HouseHolderQR::_calculateHouseholdVector(const shared_ptr<vector<double>> &targetVector) {
+    shared_ptr<NumericalVector<double>> HouseHolderQR::_calculateHouseholdVector(const shared_ptr<NumericalVector<double>> &targetVector) {
         
-            auto householdVector = make_shared<vector<double>>(*targetVector);
+            auto householdVector = make_shared<NumericalVector<double>>(*targetVector);
             
             //Calculate the norm of the i-th column of R
             double norm = VectorNorm(targetVector, L2).value();
@@ -55,8 +55,8 @@ namespace LinearAlgebra {
             return householdVector;
     }
     
-    void HouseHolderQR::_applyHouseholderProjectionOnMatrixFromLeft(unsigned column, const shared_ptr<vector<double>> &householderVector,
-                                                                    shared_ptr<Array<double>> &matrix) {
+    void HouseHolderQR::_applyHouseholderProjectionOnMatrixFromLeft(unsigned column, const shared_ptr<NumericalVector<double>> &householderVector,
+                                                                    shared_ptr<NumericalMatrix<double>> &matrix) {
         
         auto n = matrix->numberOfRows();
         auto m = matrix->numberOfColumns();
@@ -78,8 +78,8 @@ namespace LinearAlgebra {
         }
     }
 
-    void HouseHolderQR::_applyHouseholderProjectionOnMatrixFromRight(unsigned column, const shared_ptr<vector<double>> &householderVector,
-                                                                     shared_ptr<Array<double>> &matrix) {
+    void HouseHolderQR::_applyHouseholderProjectionOnMatrixFromRight(unsigned column, const shared_ptr<NumericalVector<double>> &householderVector,
+                                                                     shared_ptr<NumericalMatrix<double>> &matrix) {
 
         auto n = matrix->numberOfRows();
         auto m = matrix->numberOfColumns();
@@ -117,7 +117,7 @@ namespace LinearAlgebra {
         }
     }
 
-    const shared_ptr<Array<double>> &  HouseHolderQR::getQ() {
+    const shared_ptr<NumericalMatrix<double>> &  HouseHolderQR::getQ() {
         if (_returnQ){
             return _Q;
         }
@@ -126,7 +126,7 @@ namespace LinearAlgebra {
         }
     }
 
-    const shared_ptr<Array<double>> &  HouseHolderQR::getR() {
+    const shared_ptr<NumericalMatrix<double>> &  HouseHolderQR::getR() {
         if (_storeOnMatrix){
             return _matrix;
         }

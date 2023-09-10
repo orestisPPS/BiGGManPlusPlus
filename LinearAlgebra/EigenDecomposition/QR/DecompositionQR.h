@@ -5,10 +5,7 @@
 #ifndef UNTITLED_DECOMPOSITIONQR_H
 #define UNTITLED_DECOMPOSITIONQR_H
 
-#include "../../Array/Array.h"
-#include "../../ParallelizationMethods.h"
-#include "../../Operations/VectorOperations.h"
-#include "../../Norms/VectorNorm.h"
+#include "../../ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 #include "../../Operations/MultiThreadVectorOperations.h"
 
 namespace LinearAlgebra {
@@ -23,29 +20,29 @@ namespace LinearAlgebra {
     public:
         explicit DecompositionQR(bool returnQ = true, ParallelizationMethod parallelizationMethod = SingleThread, bool storeOnMatrix = false);
         
-        void setMatrix(shared_ptr<Array<double>>&);
+        void setMatrix(shared_ptr<NumericalMatrix<double>>&);
         
-        virtual const shared_ptr<Array<double>> & getQ();
+        virtual const shared_ptr<NumericalMatrix<double>> & getQ();
 
-        virtual const shared_ptr<Array<double>> &  getR();
+        virtual const shared_ptr<NumericalMatrix<double>> &  getR();
         
-        void getRQ(shared_ptr<Array<double>>& result);
+        void getRQ(shared_ptr<NumericalMatrix<double>>& result);
         
         void decompose();
         
     protected:
 
-        void _getRQSingleThread(shared_ptr<Array<double>>& result);
+        void _getRQSingleThread(shared_ptr<NumericalMatrix<double>>& result);
 
-        void _getRQMultithread(shared_ptr<Array<double>>& result);
+        void _getRQMultithread(shared_ptr<NumericalMatrix<double>>& result);
 
-        void _getRQCuda(shared_ptr<Array<double>>& result);
+        void _getRQCuda(shared_ptr<NumericalMatrix<double>>& result);
         
-        shared_ptr<Array<double>> _matrix;
+        shared_ptr<NumericalMatrix<double>> _matrix;
         
-        shared_ptr<Array<double>> _Q;
+        shared_ptr<NumericalMatrix<double>> _Q;
         
-        shared_ptr<Array<double>> _R;
+        shared_ptr<NumericalMatrix<double>> _R;
         
         DecompositionType _decompositionType;
         

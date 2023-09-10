@@ -9,7 +9,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "../../LinearAlgebra/Array/Array.h"
+#include "../../LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 #include "../../Discretization/Mesh/Mesh.h"
 
 using namespace std;
@@ -67,10 +67,10 @@ namespace Utility {
         
         //static void saveGhostNodesToParaviewFile(GhostPseudoMesh* mesh, const std::string &filePath, const std::string &fileName);
         static void
-        exportLinearSystemToMatlabFile(const shared_ptr<Array<double>>& matrix, const shared_ptr<vector<double>>& vector,
+        exportLinearSystemToMatlabFile(const shared_ptr<NumericalMatrix<double>>& matrix, const shared_ptr<NumericalVector<double>>& vector,
                                        const std::string& filePath, const std::string& fileName, bool print);
 
-        static void exportMatrixToMatlabFile(const shared_ptr<Array<double>>& matrix,
+        static void exportMatrixToMatlabFile(const shared_ptr<NumericalMatrix<double>>& matrix,
         const std::string& filePath, const std::string& fileName, bool print);
 
     };

@@ -9,8 +9,6 @@
 #include <utility>
 #include <algorithm>
 #include <memory>
-#include "../../LinearAlgebra/Operations/VectorOperations.h"
-using namespace LinearAlgebra;
 
 using namespace Discretization;
 
@@ -20,7 +18,7 @@ namespace Discretization {
         
     public:
         
-        IsoParametricNodeGraph(Node* node, unsigned graphDepth, shared_ptr<map<vector<double>, Node*>>nodeMap,
+        IsoParametricNodeGraph(Node* node, unsigned graphDepth, shared_ptr<map<NumericalVector<double>, Node*>>nodeMap,
                                map<Direction, unsigned>& nodesPerDirection, bool includeDiagonalNeighbours = true);
         
         // Returns a map ptr of the input node neighbours graph
@@ -70,12 +68,12 @@ namespace Discretization {
         map<Direction, map<vector<Position>, short unsigned>>
         getColinearPositionsAndPoints(vector<Direction>& availableDirections, map<Position, vector<Node*>>& customNodeGraph) ;
 
-        map<Direction, vector<vector<double>>> getSameColinearNodalCoordinates(CoordinateType coordinateType) const;
+        map<Direction, vector<NumericalVector<double>>> getSameColinearNodalCoordinates(CoordinateType coordinateType) const;
 
-        map<Direction, vector<vector<double>>>
+        map<Direction, vector<NumericalVector<double>>>
         getSameColinearNodalCoordinates(CoordinateType coordinateType, map<Position, vector<Node*>>& customNodeGraph) const;
         
-        map<Direction, vector<vector<double>>> getSameColinearNodalCoordinatesOnBoundary(CoordinateType coordinateType, map<Position, vector<Node*>>& customNodeGraph) const;
+        map<Direction, vector<NumericalVector<double>>> getSameColinearNodalCoordinatesOnBoundary(CoordinateType coordinateType, map<Position, vector<Node*>>& customNodeGraph) const;
         
         map<Direction, vector<DegreeOfFreedom*>> getColinearDOF(DOFType dofType) const;
         
@@ -97,17 +95,17 @@ namespace Discretization {
         
         unsigned int _graphDepth;
         
-        shared_ptr<map<vector<double>, Node*>> _nodeMap;
+        shared_ptr<map<NumericalVector<double>, Node*>> _nodeMap;
         
         map<Direction, unsigned> _nodesPerDirection;
                 
         void _findINeighborhoodRecursively(bool includeDiagonalNeighbours);
         
-        void _findIDepthNeighborhood(unsigned int depth, vector<double>& nodeCoords);
+        void _findIDepthNeighborhood(unsigned int depth, NumericalVector<double>& nodeCoords);
         
-        void _findIDepthNeighborhoodOnlyDiagonals(unsigned int depth, vector<double>& nodeCoords);
+        void _findIDepthNeighborhoodOnlyDiagonals(unsigned int depth, NumericalVector<double>& nodeCoords);
 
-        void _addNeighbourNodeIfParametricCoordsExist(Position position, vector<double> &parametricCoords);
+        void _addNeighbourNodeIfParametricCoordsExist(Position position, NumericalVector<double> &parametricCoords);
         
         static vector<Node*> _mergeAndSortColinearNodes(vector<Node*>& nodesDirection1, vector<Node*>& nodesDirection2, Node* node);
         

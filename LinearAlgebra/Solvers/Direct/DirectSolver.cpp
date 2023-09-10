@@ -29,14 +29,14 @@ namespace LinearAlgebra {
         if (!_isLinearSystemSet)
             throw std::invalid_argument("Linear system must be set before setting the initial solution.");
         if (_linearSystem->solution == nullptr) {
-            _linearSystem->solution = make_shared<vector<double>>(_linearSystem->rhs->size());
+            _linearSystem->solution = make_shared<NumericalVector<double>>(_linearSystem->rhs->size());
         }
         else
             throw runtime_error("Solution vector is already illegally initialized.");
         _vectorsInitialized = true;
     }
 
-    void DirectSolver::setInitialSolution(shared_ptr<vector<double>> initialValue) {
+    void DirectSolver::setInitialSolution(shared_ptr<NumericalVector<double>> initialValue) {
         if (!_vectorsInitialized)
             throw runtime_error("Vectors must be initialized before setting the initial solution.");
         if (initialValue->size() != _linearSystem->solution->size())

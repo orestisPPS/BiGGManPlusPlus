@@ -11,15 +11,13 @@ namespace LinearAlgebra {
     class GaussSeidelSolver : public StationaryIterative{
 
     public:
-        explicit GaussSeidelSolver(VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4,
-                          bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = SingleThread);
+        explicit GaussSeidelSolver(double tolerance = 1E-5, unsigned maxIterations = 1E4, VectorNormType normType = L2,
+                                   unsigned userDefinedThreads = 0, bool printOutput = true, bool throwExceptionOnMaxFailure = true);
 
     protected:
         
-        void _singleThreadSolution() override;
+        void _performMethodIteration() override;
         
-        void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows) override;
-
     private:
         void _threadJobGaussSeidel(unsigned start, unsigned end);
     };  

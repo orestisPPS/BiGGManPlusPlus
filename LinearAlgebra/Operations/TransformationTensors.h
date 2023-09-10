@@ -8,7 +8,7 @@
 #include <vector>
 #include <cmath>
 #include <limits>
-#include "../Array/Array.h"
+#include "../ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 #include "../../PositioningInSpace/DirectionsPositions.h"
 using namespace PositioningInSpace;
 #include "../../Utility/Calculators.h"
@@ -20,8 +20,8 @@ namespace LinearAlgebra {
             //Source1: https://en.wikipedia.org/wiki/Transformation_matrix#/media/File:2D_affine_transformation_matrix.svg
             //Source2 :https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html
             // The transformation matrix that translates a vector in direction one by an input amount
-            static Array<double> translationOneTensor(double translationOne) {
-                Array<double> translationOneTensor(3, 3);
+            static NumericalMatrix<double> translationOneTensor(double translationOne) {
+                NumericalMatrix<double> translationOneTensor(3, 3);
                 translationOneTensor.populateElement(0, 0, 1);
                 translationOneTensor.populateElement(0, 2, translationOne);
                 translationOneTensor.populateElement(1, 1, 1);
@@ -30,8 +30,8 @@ namespace LinearAlgebra {
             }
 
             // The transformation matrix that translates a vector in direction two by an input amount
-            static Array<double> translationTwoTensor(double translationTwo) {
-                Array<double> translationTwoTensor(3, 3);
+            static NumericalMatrix<double> translationTwoTensor(double translationTwo) {
+                NumericalMatrix<double> translationTwoTensor(3, 3);
                 translationTwoTensor.populateElement(0, 0, 1);
                 translationTwoTensor.populateElement(1, 1, 1);
                 translationTwoTensor.populateElement(1, 2, translationTwo);
@@ -40,8 +40,8 @@ namespace LinearAlgebra {
             }
 
             // The transformation matrix that translates a vector in direction three by an input amount
-            static Array<double> translationThreeTensor(double translationThree) {
-                Array<double> translationThreeTensor(3, 3);
+            static NumericalMatrix<double> translationThreeTensor(double translationThree) {
+                NumericalMatrix<double> translationThreeTensor(3, 3);
                 translationThreeTensor.populateElement(0, 0, 1);
                 translationThreeTensor.populateElement(1, 1, 1);
                 translationThreeTensor.populateElement(2, 2, 1);
@@ -50,8 +50,8 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that scales a vector in direction one by an input amount
-            static Array<double> scalingOneTensor(double scalingOne) {
-                Array<double> scalingTensor(3, 3);
+            static NumericalMatrix<double> scalingOneTensor(double scalingOne) {
+                NumericalMatrix<double> scalingTensor(3, 3);
                 scalingTensor.populateElement(0, 0, scalingOne);
                 scalingTensor.populateElement(1, 1, 1);
                 scalingTensor.populateElement(2, 2, 1);
@@ -59,8 +59,8 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that scales a vector in direction two by an input amount
-            static Array<double> scalingTwoTensor(double scalingTwo) {
-                Array<double> scalingTensor(3, 3);
+            static NumericalMatrix<double> scalingTwoTensor(double scalingTwo) {
+                NumericalMatrix<double> scalingTensor(3, 3);
                 scalingTensor.populateElement(0, 0, 1);
                 scalingTensor.populateElement(1, 1, scalingTwo);
                 scalingTensor.populateElement(2, 2, 1);
@@ -68,8 +68,8 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that scales a vector in direction three by an input amount
-            static Array<double> scalingThreeTensor(double scalingThree) {
-                Array<double> scalingTensor(3, 3);
+            static NumericalMatrix<double> scalingThreeTensor(double scalingThree) {
+                NumericalMatrix<double> scalingTensor(3, 3);
                 scalingTensor.populateElement(0, 0, 1);
                 scalingTensor.populateElement(1, 1, 1);
                 scalingTensor.populateElement(2, 2, scalingThree);
@@ -77,9 +77,9 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that rotates a vector around axis 1 in the 2-3 plane by an input angle
-            static Array<double> rotationTensorOne(double angleInDegrees) {
+            static NumericalMatrix<double> rotationTensorOne(double angleInDegrees) {
                 auto angleInRadians = Utility::Calculators::degreesToRadians(angleInDegrees);
-                Array<double> rotationTensorOne(3, 3);
+                NumericalMatrix<double> rotationTensorOne(3, 3);
                 rotationTensorOne.populateElement(0, 0, 1);
                 rotationTensorOne.populateElement(1, 1, cos(angleInRadians));
                 rotationTensorOne.populateElement(1, 2, -sin(angleInRadians));
@@ -89,9 +89,9 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that rotates a vector around axis 2 in the 1-3 plane by an input angle
-            static Array<double> rotationTensorTwo(double angleInDegrees) {
+            static NumericalMatrix<double> rotationTensorTwo(double angleInDegrees) {
                 auto angleInRadians = Utility::Calculators::degreesToRadians(angleInDegrees);
-                Array<double> rotationTensorTwo(3, 3);
+                NumericalMatrix<double> rotationTensorTwo(3, 3);
                 rotationTensorTwo.populateElement(0, 0, cos(angleInRadians));
                 rotationTensorTwo.populateElement(0, 2, sin(angleInRadians));
                 rotationTensorTwo.populateElement(1, 1, 1);
@@ -101,9 +101,9 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that rotates a vector around axis 3 in the 1-2 plane by an input angle
-            static Array<double> rotationTensorThree(double angleInDegrees) {
+            static NumericalMatrix<double> rotationTensorThree(double angleInDegrees) {
                 auto angleInRadians = Utility::Calculators::degreesToRadians(angleInDegrees);
-                Array<double> rotationTensorThree(3, 3);
+                NumericalMatrix<double> rotationTensorThree(3, 3);
                 rotationTensorThree.populateElement(0, 0, cos(angleInRadians));
                 rotationTensorThree.populateElement(0, 1, -sin(angleInRadians));
                 rotationTensorThree.populateElement(1, 0, sin(angleInRadians));
@@ -113,9 +113,9 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that shears a vector in direction 1 in the 1-2 plane by an input angle
-            static Array<double> shearTensorOne_planeOneTwo(double shearAngleInDegrees) {
+            static NumericalMatrix<double> shearTensorOne_planeOneTwo(double shearAngleInDegrees) {
                 auto shearAngleInRadians = Utility::Calculators::degreesToRadians(shearAngleInDegrees);
-                Array<double> shearTensorOne_planeOneTwo(3, 3);
+                NumericalMatrix<double> shearTensorOne_planeOneTwo(3, 3);
                 shearTensorOne_planeOneTwo.populateElement(0, 0, 1);
                 shearTensorOne_planeOneTwo.populateElement(0, 1, ::tan(shearAngleInDegrees));
                 shearTensorOne_planeOneTwo.populateElement(1, 1, 1);
@@ -124,9 +124,9 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that shears a vector in direction 2 in the 1-2 plane by an input angle
-            static Array<double> shearTensorTwo_planeOneTwo(double shearAngleInDegrees) {
+            static NumericalMatrix<double> shearTensorTwo_planeOneTwo(double shearAngleInDegrees) {
                 auto shearAngleInRadians = Utility::Calculators::degreesToRadians(shearAngleInDegrees);
-                Array<double> shearTensorTwo_planeOneTwo(3, 3);
+                NumericalMatrix<double> shearTensorTwo_planeOneTwo(3, 3);
                 shearTensorTwo_planeOneTwo.populateElement(0, 0, 1);
                 shearTensorTwo_planeOneTwo.populateElement(1, 0, ::tan(shearAngleInDegrees));
                 shearTensorTwo_planeOneTwo.populateElement(1, 1, 1);
@@ -135,9 +135,9 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that shears a vector in direction 1 in the 1-3 plane by an input angle
-            static Array<double> shearTensorOne_planeOneThree(double shearAngleInDegrees) {
+            static NumericalMatrix<double> shearTensorOne_planeOneThree(double shearAngleInDegrees) {
                 auto shearAngleInRadians = Utility::Calculators::degreesToRadians(shearAngleInDegrees);
-                Array<double> shearTensorOne_planeOneThree(3, 3);
+                NumericalMatrix<double> shearTensorOne_planeOneThree(3, 3);
                 shearTensorOne_planeOneThree.populateElement(0, 0, 1);
                 shearTensorOne_planeOneThree.populateElement(0, 2, ::tan(shearAngleInDegrees));
                 shearTensorOne_planeOneThree.populateElement(1, 1, 1);
@@ -146,9 +146,9 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that shears a vector in direction 3 in the 1-3 plane by an input angle
-            static Array<double> shearTensorThree_planeOneThree(double shearAngleInDegrees) {
+            static NumericalMatrix<double> shearTensorThree_planeOneThree(double shearAngleInDegrees) {
                 auto shearAngleInRadians = Utility::Calculators::degreesToRadians(shearAngleInDegrees);
-                Array<double> shearTensorThree_planeOneThree(3, 3);
+                NumericalMatrix<double> shearTensorThree_planeOneThree(3, 3);
                 shearTensorThree_planeOneThree.populateElement(0, 0, 1);
                 shearTensorThree_planeOneThree.populateElement(2, 0, ::tan(shearAngleInDegrees));
                 shearTensorThree_planeOneThree.populateElement(1, 1, 1);
@@ -157,9 +157,9 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that shears a vector in direction 2 in the 2-3 plane by an input angle
-            static Array<double> shearTensorTwo_planeTwoThree(double shearAngleInDegrees) {
+            static NumericalMatrix<double> shearTensorTwo_planeTwoThree(double shearAngleInDegrees) {
                 auto shearAngleInRadians = Utility::Calculators::degreesToRadians(shearAngleInDegrees);
-                Array<double> shearTensorTwo_planeTwoThree(3, 3);
+                NumericalMatrix<double> shearTensorTwo_planeTwoThree(3, 3);
                 shearTensorTwo_planeTwoThree.populateElement(0, 0, 1);
                 shearTensorTwo_planeTwoThree.populateElement(1, 1, 1);
                 shearTensorTwo_planeTwoThree.populateElement(1, 2, ::tan(shearAngleInDegrees));
@@ -168,9 +168,9 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that shears a vector in direction 3 in the 2-3 plane by an input angle
-            static static Array<double> shearTensorThree_planeTwoThree(double shearAngleInDegrees) {
+            static static NumericalMatrix<double> shearTensorThree_planeTwoThree(double shearAngleInDegrees) {
                 auto shearAngleInRadians = Utility::Calculators::degreesToRadians(shearAngleInDegrees);
-                Array<double> shearTensorThree_planeTwoThree(3, 3);
+                NumericalMatrix<double> shearTensorThree_planeTwoThree(3, 3);
                 shearTensorThree_planeTwoThree.populateElement(0, 0, 1);
                 shearTensorThree_planeTwoThree.populateElement(1, 1, 1);
                 shearTensorThree_planeTwoThree.populateElement(2, 1, ::tan(shearAngleInDegrees));
@@ -179,8 +179,8 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that reflects about  axis 1  in the 1-2 plane
-            static Array<double> ReflectionTensorOne_planeOneTwo() {
-                Array<double> reflectionTensorOne_planeOneTwo(3, 3);
+            static NumericalMatrix<double> ReflectionTensorOne_planeOneTwo() {
+                NumericalMatrix<double> reflectionTensorOne_planeOneTwo(3, 3);
                 reflectionTensorOne_planeOneTwo.populateElement(0, 0, 1);
                 reflectionTensorOne_planeOneTwo.populateElement(1, 1, -1);
                 reflectionTensorOne_planeOneTwo.populateElement(2, 2, 1);
@@ -188,8 +188,8 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that reflects about  axis 2  in the 1-2 plane
-            static Array<double> ReflectionTensorTwo_planeOneTwo() {
-                Array<double> reflectionTensorTwo_planeOneTwo(3, 3);
+            static NumericalMatrix<double> ReflectionTensorTwo_planeOneTwo() {
+                NumericalMatrix<double> reflectionTensorTwo_planeOneTwo(3, 3);
                 reflectionTensorTwo_planeOneTwo.populateElement(0, 0, -1);
                 reflectionTensorTwo_planeOneTwo.populateElement(1, 1, 1);
                 reflectionTensorTwo_planeOneTwo.populateElement(2, 2, 1);
@@ -197,8 +197,8 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that reflects about  axis 1  in the 1-3 plane
-            static Array<double> ReflectionTensorOne_planeOneThree() {
-                Array<double> reflectionTensorOne_planeOneThree(3, 3);
+            static NumericalMatrix<double> ReflectionTensorOne_planeOneThree() {
+                NumericalMatrix<double> reflectionTensorOne_planeOneThree(3, 3);
                 reflectionTensorOne_planeOneThree.populateElement(0, 0, 1);
                 reflectionTensorOne_planeOneThree.populateElement(1, 1, 1);
                 reflectionTensorOne_planeOneThree.populateElement(2, 2, -1);
@@ -206,8 +206,8 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that reflects about  axis 3  in the 1-3 plane
-            static Array<double> ReflectionTensorThree_planeOneThree() {
-                Array<double> reflectionTensorThree_planeOneThree(3, 3);
+            static NumericalMatrix<double> ReflectionTensorThree_planeOneThree() {
+                NumericalMatrix<double> reflectionTensorThree_planeOneThree(3, 3);
                 reflectionTensorThree_planeOneThree.populateElement(0, 0, -1);
                 reflectionTensorThree_planeOneThree.populateElement(1, 1, 1);
                 reflectionTensorThree_planeOneThree.populateElement(2, 2, 1);
@@ -215,8 +215,8 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that reflects about  axis 2  in the 2-3 plane
-            static Array<double> ReflectionTensorTwo_planeTwoThree() {
-                Array<double> reflectionTensorTwo_planeTwoThree(3, 3);
+            static NumericalMatrix<double> ReflectionTensorTwo_planeTwoThree() {
+                NumericalMatrix<double> reflectionTensorTwo_planeTwoThree(3, 3);
                 reflectionTensorTwo_planeTwoThree.populateElement(0, 0, 1);
                 reflectionTensorTwo_planeTwoThree.populateElement(1, 1, 1);
                 reflectionTensorTwo_planeTwoThree.populateElement(2, 2, -1);
@@ -224,8 +224,8 @@ namespace LinearAlgebra {
             }
 
             // The transformation tensor that reflects about  axis 3  in the 2-3 plane
-            static Array<double> ReflectionTensorThree_planeTwoThree() {
-                Array<double> reflectionTensorThree_planeTwoThree(3, 3);
+            static NumericalMatrix<double> ReflectionTensorThree_planeTwoThree() {
+                NumericalMatrix<double> reflectionTensorThree_planeTwoThree(3, 3);
                 reflectionTensorThree_planeTwoThree.populateElement(0, 0, 1);
                 reflectionTensorThree_planeTwoThree.populateElement(1, 1, -1);
                 reflectionTensorThree_planeTwoThree.populateElement(2, 2, 1);
@@ -261,8 +261,8 @@ namespace LinearAlgebra {
 
 #endif //UNTITLED_TRANSFORMATIONTENSORS_H
 
-/*static vector<double> Shear(vector<double> &array, double shearAngleInDegrees, PositioningInSpace::Direction axis){
-    vector<double> shearedArray;
+/*static NumericalVector<double> Shear(NumericalVector<double> &array, double shearAngleInDegrees, PositioningInSpace::Direction axis){
+    NumericalVector<double> shearedArray;
     shearAngleInDegrees = Utility::Calculators::degreesToRadians(shearAngleInDegrees);
     
     switch (array.size()) {

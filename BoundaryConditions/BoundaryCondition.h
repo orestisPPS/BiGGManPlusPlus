@@ -27,7 +27,7 @@ namespace BoundaryConditions {
     public:
         //Boundary Condition for all degrees of freedom of the problem defined for a single boundary position
         explicit BoundaryCondition(BoundaryConditionType bcType, shared_ptr<map<DOFType,
-                                   function<double (shared_ptr<vector<double>>)>>> bcForDof);
+                                   function<double (shared_ptr<NumericalVector<double>>)>>> bcForDof);
         
         //Only for double bc
         explicit BoundaryCondition(BoundaryConditionType bcType, shared_ptr<map<DOFType, double>> bcValueForDof);
@@ -36,14 +36,14 @@ namespace BoundaryConditions {
         
         //Returns the double value of the boundary condition for the given degree of freedom
         //at the given boundary node coordinates vector pointer.
-        double getBoundaryConditionValueAtCoordinates(DOFType type, const shared_ptr<vector<double>> &coordinates);
+        double getBoundaryConditionValueAtCoordinates(DOFType type, const shared_ptr<NumericalVector<double>> &coordinates);
         
         //Returns the double value of the boundary condition for the given degree of freedom
         double getBoundaryConditionValue(DOFType type);
         
         //Returns the vector value of all boundary conditions for all degrees of freedom 
         //at the given boundary node coordinates vector pointer.
-        vector<double> getAllBoundaryConditionValuesAtCoordinates(const shared_ptr<vector < double>>&coordinates);
+        NumericalVector<double> getAllBoundaryConditionValuesAtCoordinates(const shared_ptr<NumericalVector < double>>&coordinates);
         
         //Returns an BoundaryConditionType enum constant reference of the type of the boundary condition
         const BoundaryConditionType& type() const;
@@ -52,7 +52,7 @@ namespace BoundaryConditions {
     private:
         BoundaryConditionType _bcType;
 
-        shared_ptr<map<DOFType, function<double (shared_ptr<vector<double>>)>>> _bcFunctionForDof;
+        shared_ptr<map<DOFType, function<double (shared_ptr<NumericalVector<double>>)>>> _bcFunctionForDof;
         
         shared_ptr<map<DOFType, double>> _bcValueForDof;
     };

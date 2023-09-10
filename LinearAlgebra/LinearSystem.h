@@ -5,7 +5,7 @@
 #ifndef UNTITLED_LINEARSYSTEM_H
 #define UNTITLED_LINEARSYSTEM_H
 
-#include "Array/Array.h"
+#include "ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 
 namespace LinearAlgebra {
 
@@ -13,14 +13,14 @@ namespace LinearAlgebra {
         
     public:
         
-        LinearSystem(shared_ptr<Array<double>> matrix, shared_ptr<vector<double>> rhs);
+        LinearSystem(shared_ptr<NumericalMatrix<double>> matrix, shared_ptr<NumericalVector<double>> rhs);
         
 
-        shared_ptr<Array<double>> matrix;
+        shared_ptr<NumericalMatrix<double>> matrix;
 
-        shared_ptr<vector<double>> rhs;
+        shared_ptr<NumericalVector<double>> rhs;
 
-        shared_ptr<vector<double>> solution;
+        shared_ptr<NumericalVector<double>> solution;
         
         void exportToMatlabFile(const string& fileName, const string& filePath, bool printSolution ) const;
     };

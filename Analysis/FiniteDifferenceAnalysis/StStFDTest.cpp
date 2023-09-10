@@ -138,8 +138,8 @@ namespace NumericalAnalysis {
         
         analysis->applySolutionToDegreesOfFreedom();
         
-        //auto targetCoords = vector<double>{0.5, 0.5};
-        auto targetCoords = vector<double>{2, 2};
+        //auto targetCoords = NumericalVector<double>{0.5, 0.5};
+        auto targetCoords = NumericalVector<double>{2, 2};
         auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-6);
         
         cout<<"Target Solution: "<< targetSolution[0] << endl;

@@ -72,7 +72,7 @@ namespace Discretization {
                 }   
     }
     
-    vector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
+    NumericalVector<double> getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
         return {};
     }
 
@@ -165,20 +165,20 @@ namespace Discretization {
         for (int k = -static_cast<int>(nn3Ghost); k < static_cast<int>(nn3) + static_cast<int>(nn3Ghost); k++){
             for (int j = -static_cast<int>(nn2Ghost); j < static_cast<int>(nn2) + static_cast<int>(nn2Ghost); j++) {
                 for (int i = -static_cast<int>(nn1Ghost); i < static_cast<int>(nn1) + static_cast<int>(nn1Ghost); ++i) {
-                    auto parametricCoords = vector<double>{static_cast<double>(i), static_cast<double>(j),
+                    auto parametricCoords = NumericalVector<double>{static_cast<double>(i), static_cast<double>(j),
                                                            static_cast<double>(k)};
                     // If node is inside the original mesh add it to the ghost mesh Array
                     if (parametricCoordToNodeMap->find(parametricCoords) == parametricCoordToNodeMap->end()) {
                         auto node = new Node();
-                        node->coordinates.setPositionVector(make_shared<vector<double>>(parametricCoords), Parametric);
-                        vector<double> templateCoord = {static_cast<double>(i) * specs->templateStepOne,
+                        node->coordinates.setPositionVector(make_shared<NumericalVector<double>>(parametricCoords), Parametric);
+                        NumericalVector<double> templateCoord = {static_cast<double>(i) * specs->templateStepOne,
                                                         static_cast<double>(j) * specs->templateStepTwo};
                         // Rotate 
                         Transformations::rotate(templateCoord, specs->templateRotAngleOne);
                         // Shear
                         Transformations::shear(templateCoord, specs->templateShearOne, specs->templateShearTwo);
 
-                        node->coordinates.setPositionVector(make_shared<vector<double>>(templateCoord), Template);
+                        node->coordinates.setPositionVector(make_shared<NumericalVector<double>>(templateCoord), Template);
                         ghostNodesList->push_back(node);
                     }
                     nodeArrayPositionI++;
@@ -192,16 +192,16 @@ namespace Discretization {
         return new GhostPseudoMesh(ghostNodesList, ghostNodesPerDirection, parametricCoordToNodeMap);
     }
     
-    shared_ptr<map<vector<double>, Node*>> Mesh3D::createParametricCoordToNodesMap() {
-        auto parametricCoordToNodeMap = make_shared<map<vector<double>, Node*>>();
+    shared_ptr<map<NumericalVector<double>, Node*>> Mesh3D::createParametricCoordToNodesMap() {
+        auto parametricCoordToNodeMap = make_shared<map<NumericalVector<double>, Node*>>();
         for (auto& node : *totalNodesVector) {
             auto parametricCoords = node->coordinates.positionVector(Parametric);
-            parametricCoordToNodeMap->insert(pair<vector<double>, Node*>(parametricCoords, node));
+            parametricCoordToNodeMap->insert(pair<NumericalVector<double>, Node*>(parametricCoords, node));
         }
         return parametricCoordToNodeMap;
     }
 
-    vector<double> Mesh3D::getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
+    NumericalVector<double> Mesh3D::getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
         map<Position, vector<Direction>> directionsOfBoundaries = {
                 {Top, {One, Two}},
                 {Bottom, {Two, One}},
@@ -215,10 +215,10 @@ namespace Discretization {
             Direction direction1 = directionsOfBoundaries[boundaryPosition][0];
             Direction direction2 = directionsOfBoundaries[boundaryPosition][1];
 
-            vector<double> covariantBaseVector1 = metrics->at(*node->id.global)->covariantBaseVectors->at(direction1);
-            vector<double> covariantBaseVector2 = metrics->at(*node->id.global)->covariantBaseVectors->at(direction2);
+            NumericalVector<double> covariantBaseVector1 = metrics->at(*node->id.global)->covariantBaseVectors->at(direction1);
+            NumericalVector<double> covariantBaseVector2 = metrics->at(*node->id.global)->covariantBaseVectors->at(direction2);
             
-            vector<double> normalUnitVector = VectorOperations::crossProduct(covariantBaseVector1, covariantBaseVector2);
+            NumericalVector<double> normalUnitVector = VectorOperations::crossProduct(covariantBaseVector1, covariantBaseVector2);
             VectorOperations::normalize(normalUnitVector);
             
            /* cout<<*node->id.global<<endl;

@@ -65,13 +65,13 @@ namespace Discretization {
         return nullptr;
     }
 
-    shared_ptr<map<vector<double>, Node *>>Mesh::createParametricCoordToNodesMap() {
+    shared_ptr<map<NumericalVector<double>, Node *>>Mesh::createParametricCoordToNodesMap() {
         return nullptr;
     }
 
     void Mesh::printMesh() {}
 
-    vector<double> Mesh::getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
+    NumericalVector<double> Mesh::getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
         return {};
     }
     
@@ -214,8 +214,8 @@ namespace Discretization {
 
                     auto i = spatialDirectionToUnsigned[directionI];
                     
-                    auto covariantBaseVectorI = vector<double>(directionsVector.size(), 0);
-                    auto contravariantBaseVectorI = vector<double>(directionsVector.size(), 0);
+                    auto covariantBaseVectorI = NumericalVector<double>(directionsVector.size(), 0);
+                    auto contravariantBaseVectorI = NumericalVector<double>(directionsVector.size(), 0);
                     
                     auto covariantWeights = calculateWeightsOfDerivativeOrder(
                             parametricCoords[directionI][i], 1, node->coordinates(Parametric, i));
@@ -230,16 +230,17 @@ namespace Discretization {
                         //g_2 = {dx/dη, dy/dη, dz/dη}
                         //g_3 = {dx/dζ, dy/dζ, dz/dζ}
                         //auto gi = VectorOperations::dotProduct(covariantWeights, templateCoordsMap[directionJ]);
-                        covariantBaseVectorI[j] = VectorOperations::dotProduct(covariantWeights, templateCoords[directionI][j]);
+                        covariantBaseVectorI[j] = covariantWeights.dotProduct(templateCoords[directionI][j]);
 
                         //Contravariant base vectors (dξ_i/dr_i)
                         //g^1 = {dξ/dx, dξ/dy, dξ/dz}
                         //g^2 = {dη/dx, dη/dy, dη/dz}
                         //g^3 = {dζ/dx, dζ/dy, dζ/dz}
-                        contravariantBaseVectorI[j] = VectorOperations::dotProduct(contravariantWeights, parametricCoords[directionI][j]);
+                        contravariantBaseVectorI[j] = contravariantWeights.dotProduct(parametricCoords[directionI][j]);
+                        
                     }
-                    nodeMetrics->covariantBaseVectors->insert(pair<Direction, vector<double>>(directionI, covariantBaseVectorI));
-                    nodeMetrics->contravariantBaseVectors->insert(pair<Direction, vector<double>>(directionI, contravariantBaseVectorI));
+                    nodeMetrics->covariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(directionI, covariantBaseVectorI));
+                    nodeMetrics->contravariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(directionI, contravariantBaseVectorI));
                 }
 
                 nodeMetrics->calculateCovariantTensor();
@@ -258,7 +259,7 @@ namespace Discretization {
 
     void Mesh::_uniformlySpacedMetrics(CoordinateType coordinateSystem, unique_ptr<vector<Discretization::Node *>> nodes, bool areBoundary) {
         
-        using findColinearNodes = map<Direction, vector<vector<double>>> (IsoParametricNodeGraph::*)(CoordinateType, map<Position, vector<Node*>>& ) const;
+        using findColinearNodes = map<Direction, vector<NumericalVector<double>>> (IsoParametricNodeGraph::*)(CoordinateType, map<Position, vector<Node*>>& ) const;
         findColinearNodes colinearNodes;
         
         if (areBoundary)
@@ -288,8 +289,8 @@ namespace Discretization {
             //Loop through all the directions to find g_i = d(x_j)/d(x_i), g^i = d(x_i)/d(x_j)
             for (auto &directionI: directions) {
                 auto i = spatialDirectionToUnsigned[directionI];
-                auto covariantBaseVectorI = vector<double>(directions.size(), 0);
-                auto contravariantBaseVectorI = vector<double>(directions.size(), 0);
+                auto covariantBaseVectorI = NumericalVector<double>(directions.size(), 0);
+                auto contravariantBaseVectorI = NumericalVector<double>(directions.size(), 0);
                 
                 
                 for (auto &directionJ : directions){
@@ -355,17 +356,17 @@ namespace Discretization {
                     //auto gi = VectorOperations::dotProduct(covariantWeights, templateCoordsMap[directionJ]);
                     //auto testCoords = templateCoords[directionI][i];
 
-                    covariantBaseVectorI[i] = VectorOperations::dotProduct(covariantWeights,templateCoords[directionJ][j]);
+                    covariantBaseVectorI[i] = covariantWeights.dotProduct(templateCoords[directionJ][j]);
                     //Contravariant base vectors (dξ_i/dr_i)
                     //g^1 = {dξ/dx, dξ/dy, dξ/dz}
                     //g^2 = {dη/dx, dη/dy, dη/dz}
                     //g^3 = {dζ/dx, dζ/dy, dζ/dz}
-                    contravariantBaseVectorI[i] = VectorOperations::dotProduct(contravariantWeights,parametricCoords[directionJ][j]);
+                    contravariantBaseVectorI[i] = contravariantWeights.dotProduct(parametricCoords[directionJ][j]);
                 }
                 nodeMetrics->covariantBaseVectors->insert(
-                        pair<Direction, vector<double>>(directionI, covariantBaseVectorI));
+                        pair<Direction, NumericalVector<double>>(directionI, covariantBaseVectorI));
                 nodeMetrics->contravariantBaseVectors->insert(
-                        pair<Direction, vector<double>>(directionI, contravariantBaseVectorI));
+                        pair<Direction, NumericalVector<double>>(directionI, contravariantBaseVectorI));
 
                
             }
@@ -405,10 +406,10 @@ namespace Discretization {
         outputFile.close();
     }*/
 
-    map<vector<double>, Node *> Mesh::getCoordinateToNodeMap(CoordinateType coordinateType) const {
-        map<vector<double>, Node *> coordinateToNodeMap;
+    map<NumericalVector<double>, Node *> Mesh::getCoordinateToNodeMap(CoordinateType coordinateType) const {
+        map<NumericalVector<double>, Node *> coordinateToNodeMap;
         for (auto &node: *totalNodesVector) {
-            coordinateToNodeMap.insert(pair<vector<double>, Node *>(node->coordinates.positionVector3D(coordinateType), node));
+            coordinateToNodeMap.insert(pair<NumericalVector<double>, Node *>(node->coordinates.positionVector3D(coordinateType), node));
         }
         return coordinateToNodeMap;
     }

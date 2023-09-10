@@ -6,6 +6,7 @@
 #include <list>
 #include <vector>
 #include <set>
+#include "../LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalVector/NumericalVector.h"
 using namespace std;
 namespace PositioningInSpace {
 
@@ -98,7 +99,7 @@ namespace PositioningInSpace {
         LeftBottomBack,
     };
 
-    static std::map<Position, vector<int>> normalUnitVectorsOfPositions = {
+    static std::map<Position, NumericalVector<int>> normalUnitVectorsOfPositions = {
             {Right,           {1,  0,  0}},
             {Left,            {-1, 0,  0}},
             {Top,             {0,  1,  0}},

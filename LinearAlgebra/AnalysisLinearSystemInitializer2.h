@@ -5,7 +5,7 @@
 #ifndef UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
 #define UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
 
-#include "Array/Array.h"
+#include "ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 #include "../Discretization/Node/IsoparametricNodeGraph.h"
 #include "../Utility/Exporters/Exporters.h"
 #include "LinearSystem.h"
@@ -39,22 +39,22 @@ namespace LinearAlgebra {
 
         shared_ptr<FDSchemeSpecs> _specs;
 
-        shared_ptr<Array<double>>_matrix;
+        shared_ptr<NumericalMatrix<double>>_matrix;
         
-        shared_ptr<Array<double>>_permutationMatrix;
+        shared_ptr<NumericalMatrix<double>>_permutationMatrix;
 
-        shared_ptr<Array<double>>_RHS;
+        shared_ptr<NumericalMatrix<double>>_RHS;
 
         shared_ptr<Mesh> _mesh;
 
         shared_ptr<AnalysisDegreesOfFreedom> _analysisDegreesOfFreedom;
 
-        shared_ptr<Array<double>> _freeDOFMatrix;
+        shared_ptr<NumericalMatrix<double>> _freeDOFMatrix;
 
         // Fixed DOF x Total DOF
-        shared_ptr<Array<double>> _fixedFreeDOFMatrix;
+        shared_ptr<NumericalMatrix<double>> _fixedFreeDOFMatrix;
 
-        shared_ptr<Array<double>> _totalDOFMatrix;
+        shared_ptr<NumericalMatrix<double>> _totalDOFMatrix;
         
         void _createMatrix();
         
@@ -66,7 +66,7 @@ namespace LinearAlgebra {
 
         void _createTotalDOFSubMatrix();
 
-        shared_ptr<map<vector<double>, Node*>> _parametricCoordToNodeMap;
+        shared_ptr<map<NumericalVector<double>, Node*>> _parametricCoordToNodeMap;
 
         static map<short unsigned, map<Direction, map<vector<Position>, short>>>
         _initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions);

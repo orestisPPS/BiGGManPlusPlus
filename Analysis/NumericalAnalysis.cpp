@@ -33,14 +33,14 @@ namespace NumericalAnalysis {
         }
     }
 
-    vector<double> NumericalAnalysis::getSolutionAtNode(vector<double> &nodeCoordinates, double tolerance) const {
+    NumericalVector<double> NumericalAnalysis::getSolutionAtNode(NumericalVector<double> &nodeCoordinates, double tolerance) const {
         switch (nodeCoordinates.size()) {
             case 1:
-                nodeCoordinates.push_back(0.0);
-                nodeCoordinates.push_back(0.0);
+                nodeCoordinates[1] = 0.0;
+                nodeCoordinates[2] = 0.0;
                 break;
             case 2:
-                nodeCoordinates.push_back(0.0);
+                nodeCoordinates[2] = 0.0;
                 break;
             case 3:
                 break;
@@ -55,7 +55,7 @@ namespace NumericalAnalysis {
                 abs(iNodeCoords[2] - nodeCoordinates[2]) < tolerance) {
                 auto node = coord.second;
                 auto nodeDOFs = *node->degreesOfFreedom;
-                vector<double> nodeSolution = vector<double>();
+                NumericalVector<double> nodeSolution = NumericalVector<double>();
                 for (auto &dof : nodeDOFs) {
                     nodeSolution.push_back(dof->value());
                 }

@@ -7,7 +7,6 @@
 #include "Tests/NumericalVectorTest.h"
 #include "Tests/QRTest.h"
 #include "Tests/OperationsCUDA.h"
-#include "Tests/VectorOperationsTest.h"
 #include "Tests/NumericalMatrixTest.h"
 #include "StructuredMeshGeneration/MeshTest2D.h"
 #include "BoundaryConditions/DomainBoundaryConditions.h"

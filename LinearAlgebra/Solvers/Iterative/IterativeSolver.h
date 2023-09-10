@@ -8,17 +8,15 @@
 #include <thread>
 #include "../Solver.h"
 #include "../../AnalysisLinearSystemInitializer.h"
-#include "../../Norms/VectorNorm.h"
-#include "../../Operations/MultiThreadVectorOperations.h"   
-#include "../../ParallelizationMethods.h"
+
 using LinearAlgebra::ParallelizationMethod;
 
 namespace LinearAlgebra {
     
     class IterativeSolver : public Solver {
     public:
-        explicit IterativeSolver(VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4, 
-                                 bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = SingleThread);
+        explicit IterativeSolver(double tolerance = 1E-5, unsigned maxIterations = 1E4, VectorNormType normType = L2,
+                                 unsigned userDefinedThreads = 0, bool printOutput = true, bool throwExceptionOnMaxFailure = true);
         
         ~IterativeSolver();
 
@@ -37,53 +35,48 @@ namespace LinearAlgebra {
         void solve() override;
         
     protected:
-        
+        double _tolerance;
+
+        unsigned _maxIterations;
+
         VectorNormType _normType;
         
-        double _tolerance;
+        unsigned _userDefinedThreads;
         
         unsigned _iteration;
         
-        unsigned _maxIterations;
         
         double _exitNorm;
         
-        shared_ptr<vector<double>> _xNew;
+        shared_ptr<NumericalVector<double>> _xNew;
         
-        shared_ptr<vector<double>> _xOld;
+        shared_ptr<NumericalVector<double>> _xOld;
 
-        shared_ptr<vector<double>> _difference;
+        shared_ptr<NumericalVector<double>> _difference;
         
         bool _throwExceptionOnMaxFailure;
+        
+        bool _printOutput;
         
         shared_ptr<list<double>> _residualNorms;
 
         string _solverName;
-
-        ParallelizationMethod _parallelization;
-
         
-        void setInitialSolution(shared_ptr<vector<double>> initialSolution) override;
+        void setInitialSolution(shared_ptr<NumericalVector<double>> initialSolution) override;
 
         void setInitialSolution(double initialValue) override;
         
         virtual void _iterativeSolution();
         
-        virtual void _singleThreadSolution();
-
-        virtual void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows);
+        virtual void _performMethodIteration();
         
         virtual void _cudaSolution();
         
-        void _printSingleThreadInitializationText();
-        
-        void _printMultiThreadInitializationText(unsigned short numberOfThreads);
+        void _printInitializationText();
         
         void _printCUDAInitializationText();
         
         void _printIterationAndNorm(unsigned displayFrequency = 100) const;
-        
-        double _calculateNorm();
         
         void printAnalysisOutcome(unsigned totalIterations, double exitNorm, std::chrono::high_resolution_clock::time_point startTime,
                                   std::chrono::high_resolution_clock::time_point finishTime) const;

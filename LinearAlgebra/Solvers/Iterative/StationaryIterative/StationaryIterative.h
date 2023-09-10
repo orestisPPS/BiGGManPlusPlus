@@ -16,16 +16,14 @@ namespace LinearAlgebra {
     class StationaryIterative : public IterativeSolver {
 
     public:
-        explicit StationaryIterative(VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4,
-                                     bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = SingleThread);
+        explicit StationaryIterative(double tolerance, unsigned maxIterations, VectorNormType normType,
+                                     unsigned userDefinedThreads, bool printOutput, bool throwExceptionOnMaxFailure);
 
         void _initializeVectors() override;
         
         void _iterativeSolution() override;
         
-        void _singleThreadSolution() override;
-        
-        void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows) override;
+        void _performMethodIteration() override;
         
         void _cudaSolution() override;
         

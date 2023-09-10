@@ -7,7 +7,7 @@
 
 
 #include "../../Node/Node.h"
-#include "../../../LinearAlgebra/Array/Array.h"
+#include "../../../LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 using namespace LinearAlgebra;
 
 namespace Discretization{
@@ -22,15 +22,15 @@ namespace Discretization{
         // change of coordinates and are expressed by the partial derivative of the natural position vector with respect
         // to the parametric coordinate system. They form the components of the covariant metric tensor, which is used
         // to measure distances and angles in the curved space.
-        shared_ptr<map<Direction, vector<double>>> covariantBaseVectors;
+        shared_ptr<map<Direction, NumericalVector<double>>> covariantBaseVectors;
 
-        shared_ptr<map<Direction, vector<double>>> contravariantBaseVectors;
+        shared_ptr<map<Direction, NumericalVector<double>>> contravariantBaseVectors;
         
-        shared_ptr<Array<double>>covariantTensor;
+        shared_ptr<NumericalMatrix<double>>covariantTensor;
 
         void calculateCovariantTensor() const;
 
-        shared_ptr<Array<double>>contravariantTensor;
+        shared_ptr<NumericalMatrix<double>>contravariantTensor;
         
         void calculateContravariantTensor() const;
         

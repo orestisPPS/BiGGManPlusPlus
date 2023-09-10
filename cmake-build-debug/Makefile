@@ -993,30 +993,6 @@ LinearAlgebra/MatrixTest.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/MatrixTest.cpp.s
 .PHONY : LinearAlgebra/MatrixTest.cpp.s
 
-LinearAlgebra/Norms/VectorNorm.o: LinearAlgebra/Norms/VectorNorm.cpp.o
-.PHONY : LinearAlgebra/Norms/VectorNorm.o
-
-# target to build an object file
-LinearAlgebra/Norms/VectorNorm.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Norms/VectorNorm.cpp.o
-.PHONY : LinearAlgebra/Norms/VectorNorm.cpp.o
-
-LinearAlgebra/Norms/VectorNorm.i: LinearAlgebra/Norms/VectorNorm.cpp.i
-.PHONY : LinearAlgebra/Norms/VectorNorm.i
-
-# target to preprocess a source file
-LinearAlgebra/Norms/VectorNorm.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Norms/VectorNorm.cpp.i
-.PHONY : LinearAlgebra/Norms/VectorNorm.cpp.i
-
-LinearAlgebra/Norms/VectorNorm.s: LinearAlgebra/Norms/VectorNorm.cpp.s
-.PHONY : LinearAlgebra/Norms/VectorNorm.s
-
-# target to generate assembly for a file
-LinearAlgebra/Norms/VectorNorm.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Norms/VectorNorm.cpp.s
-.PHONY : LinearAlgebra/Norms/VectorNorm.cpp.s
-
 LinearAlgebra/Norms/VectorNormCuda.o: LinearAlgebra/Norms/VectorNormCuda.cu.o
 .PHONY : LinearAlgebra/Norms/VectorNormCuda.o
 
@@ -1761,30 +1737,6 @@ Tests/SteadyStateDirichlet3D.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyStateDirichlet3D.cpp.s
 .PHONY : Tests/SteadyStateDirichlet3D.cpp.s
 
-Tests/VectorOperationsTest.o: Tests/VectorOperationsTest.cpp.o
-.PHONY : Tests/VectorOperationsTest.o
-
-# target to build an object file
-Tests/VectorOperationsTest.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/VectorOperationsTest.cpp.o
-.PHONY : Tests/VectorOperationsTest.cpp.o
-
-Tests/VectorOperationsTest.i: Tests/VectorOperationsTest.cpp.i
-.PHONY : Tests/VectorOperationsTest.i
-
-# target to preprocess a source file
-Tests/VectorOperationsTest.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/VectorOperationsTest.cpp.i
-.PHONY : Tests/VectorOperationsTest.cpp.i
-
-Tests/VectorOperationsTest.s: Tests/VectorOperationsTest.cpp.s
-.PHONY : Tests/VectorOperationsTest.s
-
-# target to generate assembly for a file
-Tests/VectorOperationsTest.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/VectorOperationsTest.cpp.s
-.PHONY : Tests/VectorOperationsTest.cpp.s
-
 Utility/Exporters/Exporters.o: Utility/Exporters/Exporters.cpp.o
 .PHONY : Utility/Exporters/Exporters.o
 
@@ -1974,9 +1926,6 @@ help:
 	@echo "... LinearAlgebra/MatrixTest.o"
 	@echo "... LinearAlgebra/MatrixTest.i"
 	@echo "... LinearAlgebra/MatrixTest.s"
-	@echo "... LinearAlgebra/Norms/VectorNorm.o"
-	@echo "... LinearAlgebra/Norms/VectorNorm.i"
-	@echo "... LinearAlgebra/Norms/VectorNorm.s"
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.o"
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.i"
 	@echo "... LinearAlgebra/Norms/VectorNormCuda.s"
@@ -2070,9 +2019,6 @@ help:
 	@echo "... Tests/SteadyStateDirichlet3D.o"
 	@echo "... Tests/SteadyStateDirichlet3D.i"
 	@echo "... Tests/SteadyStateDirichlet3D.s"
-	@echo "... Tests/VectorOperationsTest.o"
-	@echo "... Tests/VectorOperationsTest.i"
-	@echo "... Tests/VectorOperationsTest.s"
 	@echo "... Utility/Exporters/Exporters.o"
 	@echo "... Utility/Exporters/Exporters.i"
 	@echo "... Utility/Exporters/Exporters.s"

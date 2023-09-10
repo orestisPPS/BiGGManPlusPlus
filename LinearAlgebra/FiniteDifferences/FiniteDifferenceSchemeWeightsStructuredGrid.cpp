@@ -33,12 +33,13 @@ namespace LinearAlgebra {
     getScheme(FDSchemeType schemeType, unsigned short derivativeOrder, unsigned errorOrder) {
         
         auto schemeMap = _getSchemeFromDerivativeOrder(schemeType, derivativeOrder, errorOrder);
-        auto scheme = Scheme();
+        auto scheme = Scheme(schemeMap.weights.size());
         scheme.power = schemeMap.power;
         scheme.denominatorCoefficient = schemeMap.denominatorCoefficient;
-        scheme.weights = vector<double>();
-        for (auto& weight : schemeMap.weights) {
-            scheme.weights.push_back(weight.second);
+        auto i = 0;
+        for (auto &weight : schemeMap.weights) {
+            scheme.weights[i] = weight.second;
+            i++;
         }
         return scheme;
     }

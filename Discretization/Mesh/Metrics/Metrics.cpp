@@ -3,45 +3,44 @@
 //
 
 #include "Metrics.h"
-#include "../../../LinearAlgebra/Operations/VectorOperations.h"
 
 
 namespace Discretization{
     
         Metrics::Metrics(Node* node, unsigned dimensions) {
             this->node = node;
-            covariantBaseVectors = make_shared<map<Direction, vector<double>>>();
-            contravariantBaseVectors = make_shared<map<Direction, vector<double>>>();
-            covariantTensor = make_shared<Array<double>>(dimensions, dimensions);
-            contravariantTensor = make_shared<Array<double>>(dimensions, dimensions);
+            covariantBaseVectors = make_shared<map<Direction, NumericalVector<double>>>();
+            contravariantBaseVectors = make_shared<map<Direction, NumericalVector<double>>>();
+            covariantTensor = make_shared<NumericalMatrix<double>>(dimensions, dimensions);
+            contravariantTensor = make_shared<NumericalMatrix<double>>(dimensions, dimensions);
 
 /*            switch (dimensions) {
                 case 1:
-                    covariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>()));
-                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>()));
+                    covariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(One, NumericalVector<double>()));
+                    contravariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(One, NumericalVector<double>()));
                     break;
                 case 2:
-                    covariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>()));
-                    covariantBaseVectors->insert(pair<Direction, vector<double>>(Two, vector<double>()));
+                    covariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(One, NumericalVector<double>()));
+                    covariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(Two, NumericalVector<double>()));
                     
-                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>()));
-                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(Two, vector<double>()));
+                    contravariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(One, NumericalVector<double>()));
+                    contravariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(Two, NumericalVector<double>()));
                     break;
                 case 3:
-                    covariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>()));
-                    covariantBaseVectors->insert(pair<Direction, vector<double>>(Two, vector<double>()));
-                    covariantBaseVectors->insert(pair<Direction, vector<double>>(Three, vector<double>()));
+                    covariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(One, NumericalVector<double>()));
+                    covariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(Two, NumericalVector<double>()));
+                    covariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(Three, NumericalVector<double>()));
                     
-                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(One, vector<double>()));
-                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(Two, vector<double>()));
-                    contravariantBaseVectors->insert(pair<Direction, vector<double>>(Three, vector<double>()));
+                    contravariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(One, NumericalVector<double>()));
+                    contravariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(Two, NumericalVector<double>()));
+                    contravariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(Three, NumericalVector<double>()));
                     break;
                 default:
                     throw runtime_error("Invalid number of dimensions! You are getting into Einsteins field->");
             }*/
 
-            covariantTensor = make_shared<Array<double>>(dimensions, dimensions);
-            contravariantTensor = make_shared<Array<double>>(dimensions, dimensions);
+            covariantTensor = make_shared<NumericalMatrix<double>>(dimensions, dimensions);
+            contravariantTensor = make_shared<NumericalMatrix<double>>(dimensions, dimensions);
             jacobian = make_shared<double>();
         }
         
@@ -51,8 +50,8 @@ namespace Discretization{
                 for (auto j = 0; j < n; j++) {
                     auto gi = covariantBaseVectors->at(unsignedToSpatialDirection[i]);
                     auto gj = covariantBaseVectors->at(unsignedToSpatialDirection[j]);
-                    auto gij = VectorOperations::dotProduct(gi, gj);
-                    covariantTensor->at(i, j) = gij;
+                    auto gij = gi.dotProduct(gj);
+                    covariantTensor->setElement(i, j, gij);
                 }
             }
         }
@@ -63,8 +62,8 @@ namespace Discretization{
                 for (auto j = 0; j < n; j++) {
                     auto gi = contravariantBaseVectors->at(unsignedToSpatialDirection[i]);
                     auto gj = contravariantBaseVectors->at(unsignedToSpatialDirection[j]);
-                    auto gij = VectorOperations::dotProduct(gi, gj);
-                    contravariantTensor->at(i, j) = gij;
+                    auto gij = gi.dotProduct(gj);
+                    contravariantTensor->setElement(i, j, gij);
                 }
             }
         }

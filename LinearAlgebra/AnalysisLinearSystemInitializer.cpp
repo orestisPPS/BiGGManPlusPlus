@@ -21,8 +21,8 @@ namespace LinearAlgebra {
                                     _mathematicalProblem(std::move(problem)),
                                     _specs(std::move(specs)),
                                     _coordinateType(coordinateType) {
-        _rhsVector = make_shared<vector<double>>(*_analysisDegreesOfFreedom->numberOfFreeDOF, 0);
-        _matrix = make_shared<Array<double>>(*_analysisDegreesOfFreedom->numberOfFreeDOF, *_analysisDegreesOfFreedom->numberOfFreeDOF, 1);
+        _rhsVector = make_shared<NumericalVector<double>>(*_analysisDegreesOfFreedom->numberOfFreeDOF, 0);
+        _matrix = make_shared<NumericalMatrix<double>>(*_analysisDegreesOfFreedom->numberOfFreeDOF, *_analysisDegreesOfFreedom->numberOfFreeDOF, 1);
         _parametricCoordToNodeMap = _mesh->createParametricCoordToNodesMap();
     }
     
@@ -46,6 +46,7 @@ namespace LinearAlgebra {
         auto maxNeighbours = schemeBuilder.getMaximumNumberOfPointsForArbitrarySchemeType();
 
         //Iterate over all the free degrees of freedom
+        _matrix->dataStorage->initializeElementAssignment();
         for (auto &dof: *_analysisDegreesOfFreedom->internalDegreesOfFreedom) {
 
             //Define the node where the dof belongs
@@ -59,7 +60,7 @@ namespace LinearAlgebra {
             //Derivative order 0
             auto zeroOrderCoefficient = _getPDECoefficient(0, node);
             //Define the position of the dof in the NumericalMatrix
-            _matrix->at(thisDOFPosition, thisDOFPosition) = zeroOrderCoefficient;
+            _matrix->setElement(thisDOFPosition, thisDOFPosition, zeroOrderCoefficient);
 
             //add source term
             _rhsVector->at(thisDOFPosition) += *_mathematicalProblem->pde->properties->getLocalProperties(dof->parentNode()).sourceTerm;
@@ -100,15 +101,19 @@ namespace LinearAlgebra {
                         auto weights2 = calculateWeightsOfDerivativeOrder(
                                 colinearCoordinates[direction][i], 2, node->coordinates.positionVector(_coordinateType)[i]);
                         
-                        vector<double> &schemeWeights = scheme.weights;
+                        NumericalVector<double> &schemeWeights = scheme.weights;
                         for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
                             auto neighbourDOF = colinearDOF[iDof];
                             auto weight = schemeWeights[iDof] * iThDerivativePDECoefficient / denominator;
                             auto weight2 = weights2[iDof]* iThDerivativePDECoefficient;
                             if (neighbourDOF->constraintType() == Free) {
                                 auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOF[iDof]);
-                                _matrix->at(thisDOFPosition, neighbourDOFPosition) += weight2;
-                                        //_matrix->at(thisDOFPosition, neighbourDOFPosition) + schemeWeights[iDof] * iThDerivativePDECoefficient;
+                                //_matrix->at(thisDOFPosition, neighbourDOFPosition) += weight2;
+                                double ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
+                                if (ijElement != 0)
+                                    ijElement += weight2;
+                                else
+                                    _matrix->setElement(thisDOFPosition, neighbourDOFPosition, weight2);
                             }
                             else if(neighbourDOF->constraintType() == Fixed){
                                 auto dirichletContribution = neighbourDOF->value() * weight2;
@@ -173,7 +178,7 @@ namespace LinearAlgebra {
                 auto step = VectorOperations::averageAbsoluteDifference(colinearCoordinates[directionI][i]);
                 //Calculate the denominator (h^p)
                 double denominator = scheme.denominatorCoefficient * pow(step, scheme.power);
-                vector<double> &schemeWeights = scheme.weights;
+                NumericalVector<double> &schemeWeights = scheme.weights;
                 for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
                     auto neighbourDOF = colinearDOF[iDof];
                     auto weight = schemeWeights[iDof] / denominator;
@@ -181,7 +186,12 @@ namespace LinearAlgebra {
 
                     if (neighbourDOF->constraintType() == Free) {
                         auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOF[iDof]);
-                        _matrix->at(thisDOFPosition, neighbourDOFPosition) += weight2 * normalVector[i];
+                        //_matrix->at(thisDOFPosition, neighbourDOFPosition) += weight2 * normalVector[i];
+                        double &ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
+                        if (ijElement != 0)
+                            ijElement += weight2 * normalVector[i];
+                        else
+                            _matrix->setElement(thisDOFPosition, neighbourDOFPosition, weight2 * normalVector[i]);
                     }
                     else if(neighbourDOF->constraintType() == Fixed){
                         auto dirichletContribution = neighbourDOF->value() * weight2 * normalVector[i];
@@ -235,7 +245,7 @@ namespace LinearAlgebra {
             case 1:
                 return properties.firstOrderCoefficients->at(directionIndex);
             case 2:
-                return properties.secondOrderCoefficients->at(directionIndex, directionIndex);
+                return properties.secondOrderCoefficients->getElement(directionIndex, directionIndex);
             default:
                 throw runtime_error("Derivative order should be 0, 1 or 2");
         }

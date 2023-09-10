@@ -6,11 +6,11 @@
 
 namespace PartialDifferentialEquations {
 /*    EnergyTransferEquation::EnergyTransferEquation(double *density, double *specialHeatCapacity,
-                                                   double *thermalConductivity, shared_ptr<Array<double>>flowVelocity,
+                                                   double *thermalConductivity, shared_ptr<NumericalMatrix<double>>flowVelocity,
                                                    double *reaction) {
         _type = EnergyTransfer;
         auto dimensions = flowVelocity->size();
-        auto *thermalConductivityMatrix = new Array<double>(4, 4);
+        auto *thermalConductivityMatrix = new NumericalMatrix<double>(4, 4);
         for (int i = 0; i < 4; ++i) {
             for (int j = 0; j < 4; ++j) {
                 if (i == j && i < dimensions) {

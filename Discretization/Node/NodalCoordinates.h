@@ -52,14 +52,14 @@ namespace Discretization {
         * @param positionVector The pointer to the vector of coordinates to be added.
         * @param type The type of coordinates.
         */
-        void addPositionVector(shared_ptr<vector<double>>positionVector, CoordinateType type);
+        void addPositionVector(shared_ptr<NumericalVector<double>>positionVector, CoordinateType type);
 
         /**
         * @brief Adds a new natural coordinate vector to the map of position vectors.
         * 
         * @param positionVector The pointer to the vector of natural coordinates to be added.
         */
-        void addPositionVector(shared_ptr<vector<double>>positionVector);
+        void addPositionVector(shared_ptr<NumericalVector<double>>positionVector);
 
         /**
         * @brief Adds a new coordinate vector to the map of position vectors with the specified type.
@@ -74,14 +74,14 @@ namespace Discretization {
         * @param positionVector The pointer to the new vector of coordinates.
         * @param type The type of coordinates.
         */
-        void setPositionVector(shared_ptr<vector<double>> positionVector, CoordinateType type);
+        void setPositionVector(shared_ptr<NumericalVector<double>> positionVector, CoordinateType type);
 
         /**
         * @brief Replaces the natural coordinate vector with the new natural coordinate vector.
         * 
         * @param positionVector The pointer to the new vector of natural coordinates.
         */
-        void setPositionVector(shared_ptr<vector<double>> positionVector);
+        void setPositionVector(shared_ptr<NumericalVector<double>> positionVector);
 
         /**
         * @brief Removes the coordinate vector of the specified type from the map of position vectors.
@@ -93,39 +93,39 @@ namespace Discretization {
         /**
         * @brief Returns the vector of natural coordinates.
         * 
-        * @return const vector<double>& The vector of natural coordinates.
+        * @return const NumericalVector<double>& The vector of natural coordinates.
         */
-        const vector<double> &positionVector();
+        const NumericalVector<double> &positionVector();
 
         /**
         * @brief Returns a pointer to the vector of natural coordinates.
         * 
-        * @return shared_ptr<vector<double>> A unique pointer to the vector of natural coordinates.
+        * @return shared_ptr<NumericalVector<double>> A unique pointer to the vector of natural coordinates.
         */
-        shared_ptr<vector<double>> positionVectorPtr();
+        shared_ptr<NumericalVector<double>> positionVectorPtr();
         
         /**
          * @brief Returns the vector of coordinates of the specified type.
          *
          * @param type 
-         * @return const vector<double>& The vector of coordinates of the specified type. 
+         * @return const NumericalVector<double>& The vector of coordinates of the specified type. 
          */
-        const vector<double>& positionVector(CoordinateType type);
+        const NumericalVector<double>& positionVector(CoordinateType type);
         
         /**
         * @brief Returns a pointer to the vector of coordinates of the specified type.
         * 
         * @param type  The type of coordinates.
-        * @return shared_ptr<vector<double>> A shared pointer to the vector of coordinates of the specified type.
+        * @return shared_ptr<NumericalVector<double>> A shared pointer to the vector of coordinates of the specified type.
         */
-        const shared_ptr<vector<double>>& positionVectorPtr(CoordinateType type);
+        const shared_ptr<NumericalVector<double>>& positionVectorPtr(CoordinateType type);
 
         /**
         * @brief Returns a pointer to a vector of natural coordinates in 3D.
         *
-        * @return shared_ptr<vector<double>> A pointer to a vector of natural coordinates in 3D.
+        * @return shared_ptr<NumericalVector<double>> A pointer to a vector of natural coordinates in 3D.
         */
-        vector<double> positionVector3D();
+        NumericalVector<double> positionVector3D();
 
         /**
         * @brief Returns a pointer to a vector of coordinates of the specified type in 3D.
@@ -133,26 +133,26 @@ namespace Discretization {
         * @param type The type of coordinates.
         * @return Copy of a vector of coordinates of the specified type in 3D.
         */
-        vector<double> positionVector3D(CoordinateType type);
+        NumericalVector<double> positionVector3D(CoordinateType type);
 
         /**
         * @brief Returns a shared pointer to a vector a vector of natural coordinates in 3D.
         *
         * @param type The type of coordinates.
-        * @return shared_ptr<vector<double>> A shared pointer to a vector a vector of natural coordinates in 3D.
+        * @return shared_ptr<NumericalVector<double>> A shared pointer to a vector a vector of natural coordinates in 3D.
         */
-        shared_ptr<vector<double>> positionVector3DPtr();
+        shared_ptr<NumericalVector<double>> positionVector3DPtr();
         
         /**
         * @brief Returns a shared pointer to a vector of coordinates of the specified type in 3D.
         *
         * @param type The type of coordinates.
-        * @return shared_ptr<vector<double>> A shared pointer to a vector of coordinates of the specified type in 3D.
+        * @return shared_ptr<NumericalVector<double>> A shared pointer to a vector of coordinates of the specified type in 3D.
         */
-        shared_ptr<vector<double>> positionVector3DPtr(CoordinateType type);
+        shared_ptr<NumericalVector<double>> positionVector3DPtr(CoordinateType type);
         
     private:
-        shared_ptr<map<CoordinateType, shared_ptr<vector<double>>>> _positionVectors; ///< The map of position vectors with the key being the type of coordinates.
+        shared_ptr<map<CoordinateType, shared_ptr<NumericalVector<double>>>> _positionVectors; ///< The map of position vectors with the key being the type of coordinates.
     };
 } // Discretization
 

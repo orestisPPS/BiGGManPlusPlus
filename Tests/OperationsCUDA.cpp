@@ -8,9 +8,9 @@
 namespace Tests{
 
     OperationsCUDA::OperationsCUDA() {
-        vector<double>* h_vector1 = new vector<double>({1, 2, 3});
-        vector<double>* h_vector2 = new vector<double>({1, 2, 3});
-        vector<double>* h_array = new vector<double>({1, 2, 3, 4, 5, 6, 7, 8, 9});
+        NumericalVector<double>* h_vector1 = new NumericalVector<double>({1, 2, 3});
+        NumericalVector<double>* h_vector2 = new NumericalVector<double>({1, 2, 3});
+        NumericalVector<double>* h_array = new NumericalVector<double>({1, 2, 3, 4, 5, 6, 7, 8, 9});
         
         //14
         auto dotProduct = LinearAlgebraCUDA::NumericalOperationsCUDA::dotProduct(h_vector1->data(), h_vector2->data(), 3);

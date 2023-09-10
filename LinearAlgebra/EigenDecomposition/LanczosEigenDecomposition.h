@@ -5,11 +5,8 @@
 #ifndef UNTITLED_LANCZOSEIGENDECOMPOSITION_H
 #define UNTITLED_LANCZOSEIGENDECOMPOSITION_H
 #include <random>
-#include "../Array/Array.h"
-#include "../Norms/VectorNorm.h"
-#include "../Operations/MultiThreadVectorOperations.h"
+#include "../ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 #include "../../Utility/Exporters/Exporters.h"
-#include "../Operations/VectorOperations.h"
 namespace LinearAlgebra {
 
 
@@ -31,15 +28,15 @@ namespace LinearAlgebra {
         
         void calculateEigenvalues();
         
-        void setMatrix(const shared_ptr<Array<double>>& matrix);
+        void setMatrix(const shared_ptr<NumericalMatrix<double>>& matrix);
         
     private:
         
         void _singleThreadSolution();
         
-        void _singleThreadOrthogonalization(shared_ptr<vector<double>> &vectorToOrthogonalize);\
+        void _singleThreadOrthogonalization(shared_ptr<NumericalVector<double>> &vectorToOrthogonalize);\
         
-        void _singleThreadCompleteOrthogonalization(shared_ptr<vector<double>> vectorToOrthogonalize);
+        void _singleThreadCompleteOrthogonalization(shared_ptr<NumericalVector<double>> vectorToOrthogonalize);
         
         void _multiThreadSolution();
         
@@ -47,19 +44,19 @@ namespace LinearAlgebra {
         
         unsigned int _numberOfEigenvalues;
         
-        shared_ptr<Array<double>> _matrix;
+        shared_ptr<NumericalMatrix<double>> _matrix;
         
-        shared_ptr<map<unsigned, shared_ptr<vector<double>>>> _lanczosVectors;
+        shared_ptr<map<unsigned, shared_ptr<NumericalVector<double>>>> _lanczosVectors;
         
-        shared_ptr<vector<double>> _lanczosVectorNew;
+        shared_ptr<NumericalVector<double>> _lanczosVectorNew;
 
-        shared_ptr<vector<double>> _lanczosVectorOld;
+        shared_ptr<NumericalVector<double>> _lanczosVectorOld;
         
-        shared_ptr<vector<double>> _T_diagonal;
+        shared_ptr<NumericalVector<double>> _T_diagonal;
         
-        shared_ptr<vector<double>> _T_subDiagonal;
+        shared_ptr<NumericalVector<double>> _T_subDiagonal;
         
-        shared_ptr<Array<double>> _T_matrix;
+        shared_ptr<NumericalMatrix<double>> _T_matrix;
         
         double _alpha, _beta;
 

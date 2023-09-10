@@ -16,7 +16,7 @@ namespace StructuredMeshGenerator {
 
         auto stepX = lengthX / (nnX - 1.0);
         auto stepY = lengthY / (nnY - 1.0);
-        vector<double> coordinateVector(2, 0);
+        NumericalVector<double> coordinateVector(2, 0);
         auto boundaryConditionsSet = make_shared<map<Position, shared_ptr<map<unsigned, shared_ptr<BoundaryCondition>>>>>();
 
         for (auto &boundary: *_mesh->boundaryNodes) {
@@ -101,7 +101,7 @@ namespace StructuredMeshGenerator {
         auto stepY = lengthY / (nnY - 1.0);
         auto stepZ = lengthZ / (nnZ - 1.0);
         
-        vector<double> coordinateVector(3, 0);
+        NumericalVector<double> coordinateVector(3, 0);
         auto boundaryConditionsSet = make_shared<map<Position, shared_ptr<map<unsigned, shared_ptr<BoundaryCondition>>>>>();
 
         for (auto &boundary: *_mesh->boundaryNodes) {
@@ -421,7 +421,7 @@ namespace StructuredMeshGenerator {
         //double theta = 2.0 * M_PI -  (theta2 - theta1);
         double theta = (theta2 - theta1);
         auto nn1 = nodesPerDirection[One];
-        vector<double> coordinateVector(2, 0.0);
+        NumericalVector<double> coordinateVector(2, 0.0);
         auto boundaryConditionsSet = make_shared<map<Position, shared_ptr<map<unsigned, shared_ptr<BoundaryCondition>>>>>();
         unsigned int boundaryNodeID = 0;
 
@@ -481,7 +481,7 @@ namespace StructuredMeshGenerator {
 
         auto stepX = lengthX / (nnX - 1.0);
         auto stepY = lengthY / (nnY - 1.0);
-        vector<double> coordinateVector(2, 0);
+        NumericalVector<double> coordinateVector(2, 0);
         auto boundaryConditionsSet = make_shared<map<Position, shared_ptr<map<unsigned, shared_ptr<BoundaryCondition>>>>>();
 
         for (auto &boundary: *_mesh->boundaryNodes) {
@@ -558,7 +558,7 @@ namespace StructuredMeshGenerator {
         auto nnY = nodesPerDirection[Two];
 
         auto stepX = lengthX / (nnX - 1.0);
-        vector<double> coordinateVector(2, 0);
+        NumericalVector<double> coordinateVector(2, 0);
         auto boundaryConditionsSet = make_shared<map<Position, shared_ptr<map<unsigned, shared_ptr<BoundaryCondition>>>>>();
 
         for (auto &boundary: *_mesh->boundaryNodes) {
@@ -737,7 +737,7 @@ namespace StructuredMeshGenerator {
         for (unsigned i = 0; i < nn2; i++) {
             for (unsigned j = 0; j < nn1; j++) {
                 auto nodalCoords = mesh2D->node(j, i)->coordinates.positionVector(Natural);
-                vector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], 0};
+                NumericalVector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], 0};
                 auto bottomBCValues = shared_ptr<map<DOFType, double>>(new map<DOFType, double>({
                         {Position1, new3DCoords[0]},
                         {Position2, new3DCoords[1]},
@@ -764,7 +764,7 @@ namespace StructuredMeshGenerator {
         for (unsigned i = 0; i < nn3; i++) {
             for (unsigned j = 0; j < nn2; j++) {
                 auto nodalCoords = leftNodes->at(j)->coordinates.positionVector(Natural);
-                vector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
+                NumericalVector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
                 auto leftBCValues = make_shared<map<DOFType, double>>(map<DOFType, double>({
                         {Position1, new3DCoords[0]},
                         {Position2, new3DCoords[1]},
@@ -792,7 +792,7 @@ namespace StructuredMeshGenerator {
         for (unsigned i = 0; i < nn3; i++) {
             for (unsigned j = 0; j < nn1; j++) {
                 auto nodalCoords = frontNodes->at(j)->coordinates.positionVector(Natural);
-                vector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
+                NumericalVector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
                 auto frontBCValues = make_shared<map<DOFType, double>>();
                 frontBCValues->insert(pair<DOFType, double>(Position1, new3DCoords[0]));
                 frontBCValues->insert(pair<DOFType, double>(Position2, new3DCoords[1]));

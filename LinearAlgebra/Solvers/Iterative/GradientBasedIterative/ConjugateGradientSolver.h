@@ -21,21 +21,19 @@ namespace LinearAlgebra {
         
         void _iterativeSolution() override;
         
-        void _singleThreadSolution() override;
-
-        void _multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows) override;
-
+        void _performMethodIteration() override;
+        
         void _cudaSolution() override;
         
-        shared_ptr<vector<double>> _residualOld;
+        shared_ptr<NumericalVector<double>> _residualOld;
 
-        shared_ptr<vector<double>> _residualNew;
+        shared_ptr<NumericalVector<double>> _residualNew;
 
-        shared_ptr<vector<double>> _directionVectorNew;
+        shared_ptr<NumericalVector<double>> _directionVectorNew;
         
-        shared_ptr<vector<double>> _directionVectorOld;
+        shared_ptr<NumericalVector<double>> _directionVectorOld;
         
-        shared_ptr<vector<double>> _matrixVectorMultiplication;
+        shared_ptr<NumericalVector<double>> _matrixVectorMultiplication;
         
         unique_ptr<double> _alpha;
         

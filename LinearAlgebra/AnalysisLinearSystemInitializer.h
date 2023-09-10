@@ -4,7 +4,7 @@
 
 #ifndef UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
 #define UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
-#include "Array/Array.h"
+#include "ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 #include "../Discretization/Node/IsoparametricNodeGraph.h"
 #include "../Utility/Exporters/Exporters.h"
 #include "LinearSystem.h"
@@ -40,15 +40,15 @@ namespace LinearAlgebra {
         
         CoordinateType _coordinateType;
         
-        shared_ptr<vector<double>> _rhsVector;
+        shared_ptr<NumericalVector<double>> _rhsVector;
         
-        shared_ptr<Array<double>> _matrix;
+        shared_ptr<NumericalMatrix<double>> _matrix;
 
         shared_ptr<Mesh> _mesh;
 
         shared_ptr<AnalysisDegreesOfFreedom> _analysisDegreesOfFreedom;
         
-        shared_ptr<map<vector<double>, Node*>> _parametricCoordToNodeMap;
+        shared_ptr<map<NumericalVector<double>, Node*>> _parametricCoordToNodeMap;
 
         static map<short unsigned, map<Direction, map<vector<Position>, short>>>
         _initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions);

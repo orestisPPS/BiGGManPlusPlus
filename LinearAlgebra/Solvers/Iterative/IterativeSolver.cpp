@@ -9,19 +9,18 @@
 namespace LinearAlgebra {
 
 /*
-    auto x = VectorNorm::_calculateLInfNorm(new vector<double>());
+    auto x = VectorNorm::_calculateLInfNorm(new NumericalVector<double>());
 */
 
-    IterativeSolver::IterativeSolver(VectorNormType normType, double tolerance, unsigned maxIterations,
-                                     bool throwExceptionOnMaxFailure, ParallelizationMethod parallelizationMethod) :
-            Solver(), _normType(normType), _tolerance(tolerance), _maxIterations(maxIterations),
-            _throwExceptionOnMaxFailure(throwExceptionOnMaxFailure), _xNew(nullptr),
-            _xOld(nullptr),
-            _residualNorms(make_shared<list<double>>()) {
+    IterativeSolver::IterativeSolver(double tolerance, unsigned maxIterations, VectorNormType normType,
+                                     unsigned userDefinedThreads, bool printOutput, bool throwExceptionOnMaxFailure) :
+        Solver(),
+        _tolerance(tolerance), _maxIterations(maxIterations), _normType(normType), _userDefinedThreads(userDefinedThreads),
+        _printOutput(printOutput), _throwExceptionOnMaxFailure(throwExceptionOnMaxFailure), _iteration(0), _exitNorm(0.0),
+        _xNew(nullptr), _xOld(nullptr), _residualNorms(make_shared<list<double>>()) {
+        
         _linearSystemInitialized = false;
         _vectorsInitialized = false;
-        _parallelization = parallelizationMethod;
-        _iteration = 0;
     }
 
     IterativeSolver::~IterativeSolver() {
@@ -29,7 +28,7 @@ namespace LinearAlgebra {
         _xOld.reset();
     }
     
-    void IterativeSolver::setInitialSolution(shared_ptr<vector<double>> initialSolution) {
+    void IterativeSolver::setInitialSolution(shared_ptr<NumericalVector<double>> initialSolution) {
         if (!_vectorsInitialized)
             throw runtime_error("Vectors must be initialized before setting initial solution.");
         if (initialSolution->size() != _linearSystem->solution->size())
@@ -83,33 +82,23 @@ namespace LinearAlgebra {
         
     }
     
-    void IterativeSolver::_singleThreadSolution() {
+    void IterativeSolver::_performMethodIteration() {
         
-    }
-
-    void IterativeSolver::_multiThreadSolution(const unsigned short &availableThreads, const unsigned short &numberOfRows) {
-
     }
     
     void IterativeSolver::_cudaSolution() {
         
     }
 
-    void IterativeSolver::_printSingleThreadInitializationText() {
+    void IterativeSolver::_printInitializationText() {
         cout << " " << endl;
         cout << "----------------------------------------" << endl;
-        cout << _solverName << " Solver Single Thread - no vtec yo :(" << endl;
+        cout << _solverName << " Solver Initialized" << endl;
+        unsigned matrixThreads = _linearSystem->matrix->dataStorage->getAvailableThreads();
+        unsigned availableThreads = _userDefinedThreads != 0 ? _userDefinedThreads : matrixThreads;
+        cout << "Threads Assigned for Solution: " << availableThreads << " out of " << thread::hardware_concurrency() << " available." << endl;
     }
-
-    void IterativeSolver::_printMultiThreadInitializationText(unsigned short numberOfThreads) {
-        cout << " " << endl;
-        cout << "----------------------------------------" << endl;
-        cout << _solverName << " Solver Multi Thread - VTEC KICKED IN YO!" << endl;
-        //Find the number of threads available for parallel execution
-        cout << "Total Number of threads available for parallel execution: " << numberOfThreads << endl;
-        cout << "Number of threads involved in parallel solution: " << numberOfThreads << endl;
-    }
-
+    
     void IterativeSolver::_printCUDAInitializationText() {
 
     }
@@ -120,12 +109,6 @@ namespace LinearAlgebra {
 
     }
     
-    double IterativeSolver::_calculateNorm() {
-        double norm = VectorNorm(_difference, _normType).value();
-        _residualNorms->push_back(norm);
-        return norm;
-    }
-
     void IterativeSolver::printAnalysisOutcome(unsigned totalIterations, double exitNorm,  std::chrono::high_resolution_clock::time_point startTime,
                                                    std::chrono::high_resolution_clock::time_point finishTime) const{
         bool isInMicroSeconds = false;

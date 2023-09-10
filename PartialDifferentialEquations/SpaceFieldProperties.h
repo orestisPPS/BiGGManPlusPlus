@@ -4,7 +4,7 @@
 
 #ifndef UNTITLED_SPACEFIELDPROPERTIES_H
 #define UNTITLED_SPACEFIELDPROPERTIES_H
-#include "../LinearAlgebra/Array/Array.h"
+#include "../LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 #include "SecondOrderLinearPDEProperties.h"
 
 namespace PartialDifferentialEquations {
@@ -16,15 +16,15 @@ namespace PartialDifferentialEquations {
     };*/
 
     struct SpaceFieldProperties {
-        shared_ptr<LinearAlgebra::Array<double>> secondOrderCoefficients;
-        shared_ptr<vector<double>> firstOrderCoefficients;
+        shared_ptr<LinearAlgebra::NumericalMatrix<double>> secondOrderCoefficients;
+        shared_ptr<NumericalVector<double>> firstOrderCoefficients;
         shared_ptr<double> zerothOrderCoefficient;
         shared_ptr<double> sourceTerm;
     };
 
     struct TimeFieldProperties {
-        shared_ptr<LinearAlgebra::Array<double>> secondOrderCoefficients;
-        shared_ptr<vector<double>> firstOrderCoefficients;
+        shared_ptr<LinearAlgebra::NumericalMatrix<double>> secondOrderCoefficients;
+        shared_ptr<NumericalVector<double>> firstOrderCoefficients;
         shared_ptr<double> zerothOrderCoefficient;
         shared_ptr<double> sourceTerm;
     };

@@ -55,9 +55,9 @@ namespace PartialDifferentialEquations {
         
         short unsigned _physicalSpaceDimensions;
         
-        shared_ptr<Array<double>> _secondDerivativeProperties;
+        shared_ptr<NumericalMatrix<double>> _secondDerivativeProperties;
         
-        shared_ptr<vector<double>> _firstDerivativeProperties;
+        shared_ptr<NumericalVector<double>> _firstDerivativeProperties;
         
         shared_ptr<double> _zeroDerivativeProperties;
         

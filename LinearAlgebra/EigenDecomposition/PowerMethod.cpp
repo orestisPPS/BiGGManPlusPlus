@@ -67,7 +67,7 @@ namespace LinearAlgebra {
     }
     
 
-    void PowerMethod::setMatrix(const shared_ptr<Array<double>>& matrix) {
+    void PowerMethod::setMatrix(const shared_ptr<NumericalMatrix<double>>& matrix) {
         _matrix = matrix;
         _matrixSet = true;
     }
@@ -76,9 +76,9 @@ namespace LinearAlgebra {
         if (_matrixSet) {
             auto n = _matrix->numberOfRows();
 
-            _vectorNew = make_shared<vector<double>>(n, 0);
-            _vectorOld = make_shared<vector<double>>(n, 0);
-            _difference = make_shared<vector<double>>(n, 0);
+            _vectorNew = make_shared<NumericalVector<double>>(n, 0);
+            _vectorOld = make_shared<NumericalVector<double>>(n, 0);
+            _difference = make_shared<NumericalVector<double>>(n, 0);
             // Random number generation setup using C++'s <random> library
             // Mersenne Twister generator
             std::mt19937 generator;

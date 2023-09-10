@@ -6,14 +6,14 @@
 
 namespace LinearAlgebra {
 
-    JacobiSolver::JacobiSolver(VectorNormType normType, double tolerance, unsigned maxIterations,
-                               bool throwExceptionOnMaxFailure, ParallelizationMethod parallelizationMethod) :
-            StationaryIterative(normType, tolerance, maxIterations, throwExceptionOnMaxFailure, parallelizationMethod) {
+    JacobiSolver::JacobiSolver(double tolerance, unsigned maxIterations, VectorNormType normType,
+                               unsigned userDefinedThreads, bool printOutput, bool throwExceptionOnMaxFailure) :
+            StationaryIterative(tolerance, maxIterations, normType, userDefinedThreads, printOutput, throwExceptionOnMaxFailure) {
         _solverName = "Jacobi";
         _residualNorms = make_shared<list<double>>();
     }
     
-    void JacobiSolver::_singleThreadSolution(){
+    void JacobiSolver::_performMethodIteration(){
         _threadJobJacobi(0, _linearSystem->matrix->numberOfRows());
     }
 

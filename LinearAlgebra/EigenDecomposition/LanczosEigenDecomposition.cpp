@@ -45,7 +45,7 @@ namespace LinearAlgebra {
 
 
         while (_iteration < _maxIterations){
-            auto workingVector = make_shared<vector<double>>(_matrix->numberOfRows());
+            auto workingVector = make_shared<NumericalVector<double>>(_matrix->numberOfRows());
 
             VectorOperations::matrixVectorMultiplication(_matrix, _lanczosVectorOld, workingVector);
             //Calculate α
@@ -57,7 +57,7 @@ namespace LinearAlgebra {
             _beta = VectorNorm(workingVector, L2).value();
             VectorOperations::scale(workingVector, 1.0 / _beta);
             VectorOperations::deepCopy(workingVector, _lanczosVectorNew, 1 / _beta);
-            _lanczosVectors->insert(pair<unsigned, shared_ptr<vector<double>>>(_iteration, std::move(workingVector)));
+            _lanczosVectors->insert(pair<unsigned, shared_ptr<NumericalVector<double>>>(_iteration, std::move(workingVector)));
             
             _T_matrix->at(_iteration, _iteration) = _alpha;
             if (_iteration > 0) {
@@ -79,13 +79,13 @@ namespace LinearAlgebra {
 
     }
 
-    void LanczosEigenDecomposition::_singleThreadOrthogonalization(shared_ptr<vector<double>> &vectorToOrthogonalize) {
+    void LanczosEigenDecomposition::_singleThreadOrthogonalization(shared_ptr<NumericalVector<double>> &vectorToOrthogonalize) {
         for (unsigned i = 0; i < _matrix->numberOfRows(); i++) {
             (*vectorToOrthogonalize)[i] = (*vectorToOrthogonalize)[i] - _alpha * (*_lanczosVectorNew)[i] - _beta * (*_lanczosVectorOld)[i];
         }
     }
 
-    void LanczosEigenDecomposition::_singleThreadCompleteOrthogonalization(shared_ptr<vector<double>> vectorToOrthogonalize) {
+    void LanczosEigenDecomposition::_singleThreadCompleteOrthogonalization(shared_ptr<NumericalVector<double>> vectorToOrthogonalize) {
 
         for (auto i = 0; i < _iteration; i++) {
             auto dot = VectorOperations::dotProduct(_lanczosVectors->at(i), vectorToOrthogonalize);
@@ -95,7 +95,7 @@ namespace LinearAlgebra {
     }
     
     
-    void LanczosEigenDecomposition::setMatrix(const shared_ptr<Array<double>>& matrix) {
+    void LanczosEigenDecomposition::setMatrix(const shared_ptr<NumericalMatrix<double>>& matrix) {
         _matrix = matrix;
         _matrixSet = true;
     }
@@ -103,9 +103,9 @@ namespace LinearAlgebra {
     void LanczosEigenDecomposition::_initializeVectors() {
         if (_matrixSet) {
             auto n = _matrix->numberOfRows();
-            _lanczosVectors = make_shared<map<unsigned, shared_ptr<vector<double>>>>();            
-            _lanczosVectorOld= make_shared<vector<double>>(n,  0);
-            _lanczosVectorNew= make_shared<vector<double>>(n, 0);
+            _lanczosVectors = make_shared<map<unsigned, shared_ptr<NumericalVector<double>>>>();            
+            _lanczosVectorOld= make_shared<NumericalVector<double>>(n,  0);
+            _lanczosVectorNew= make_shared<NumericalVector<double>>(n, 0);
 
             // Random number generation setup using C++'s <random> library
             // Mersenne Twister generator
@@ -124,10 +124,10 @@ namespace LinearAlgebra {
             VectorOperations::normalize(_lanczosVectorOld);
             
             
-            _T_diagonal = make_shared<vector<double>>(_maxIterations, 0);
-            _T_subDiagonal = make_shared<vector<double>>(_maxIterations - 1, 0);
+            _T_diagonal = make_shared<NumericalVector<double>>(_maxIterations, 0);
+            _T_subDiagonal = make_shared<NumericalVector<double>>(_maxIterations - 1, 0);
             
-            _T_matrix = make_shared<Array<double>>(_maxIterations, _maxIterations);
+            _T_matrix = make_shared<NumericalMatrix<double>>(_maxIterations, _maxIterations);
             
             _vectorsInitialized = true;
             

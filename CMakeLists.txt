@@ -91,8 +91,7 @@ add_executable(untitled main.cpp
         Discretization/Mesh/Metrics/Metrics.h
         Discretization/Mesh/Metrics/Metrics.cpp
         LinearAlgebra/Operations/VectorOperations.h
-        LinearAlgebra/Solvers/Solver.h LinearAlgebra/Solvers/Solver.cpp 
-        LinearAlgebra/Norms/VectorNorm.h LinearAlgebra/Norms/VectorNorm.cpp
+        LinearAlgebra/Solvers/Solver.h LinearAlgebra/Solvers/Solver.cpp
         LinearAlgebra/Solvers/Iterative/IterativeSolver.h 
         LinearAlgebra/Solvers/Iterative/IterativeSolver.cpp
         LinearAlgebra/FiniteDifferences/FDSchemeType.h
@@ -129,8 +128,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h 
         LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp
         LinearAlgebra/Operations/MultiThreadVectorOperations.h
-        Tests/VectorOperationsTest.h
-        Tests/VectorOperationsTest.cpp
         Tests/SteadyStateDirichlet3D.h
         Tests/SteadyStateDirichlet3D.cpp
         Tests/Mesh3dTest.h
@@ -157,7 +154,6 @@ add_executable(untitled main.cpp
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalVector/NumericalVector.h
         Tests/NumericalVectorTest.h
         ThreadingOperations/ThreadingOperations.h
-        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalArray.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/NumericalMatrixStorageDataProvider.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/FullMatrixStorageDataProvider.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/CSRStorageDataProvider.h

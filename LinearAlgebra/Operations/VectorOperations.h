@@ -9,7 +9,7 @@
 #include <vector>
 #include <stdexcept>
 #include <valarray>
-#include "../Array/Array.h"
+#include "../ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 using namespace std;
 
 namespace LinearAlgebra {
@@ -621,8 +621,8 @@ namespace LinearAlgebra {
          * \param scale The scale factor to apply to the source vector.
         * @throws invalid_argument If the input vectors are of different sizes.
         */
-        static void deepCopy(const shared_ptr<vector<double>>& sourceVector,
-                             shared_ptr<vector<double>>& destinationVector, double scale = 1.0) {
+        static void deepCopy(const shared_ptr<NumericalVector<double>>& sourceVector,
+                             shared_ptr<NumericalVector<double>>& destinationVector, double scale = 1.0) {
             if (sourceVector->size() != destinationVector->size())
                 throw invalid_argument("Vectors must have the same size");
             // Copy each element

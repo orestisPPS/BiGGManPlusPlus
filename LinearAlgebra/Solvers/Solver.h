@@ -5,8 +5,6 @@
 #ifndef UNTITLED_SOLVER_H
 #define UNTITLED_SOLVER_H
 
-
-#include "../Norms/VectorNorm.h"
 #include "../LinearSystem.h"
 
 namespace LinearAlgebra {
@@ -27,7 +25,7 @@ namespace LinearAlgebra {
 
         virtual void solve();
 
-        virtual void setInitialSolution(shared_ptr<vector<double>> initialValue);
+        virtual void setInitialSolution(shared_ptr<NumericalVector<double>> initialValue);
 
         virtual void setInitialSolution(double initialValue);
         

@@ -8,7 +8,7 @@
 namespace Discretization {
 
     IsoParametricNodeGraph::IsoParametricNodeGraph(Node *node, unsigned graphDepth,
-                                                   shared_ptr<map<vector<double>, Node *>>nodeMap,
+                                                   shared_ptr<map<NumericalVector<double>, Node *>>nodeMap,
                                                    map<Direction, unsigned> &nodesPerDirection,
                                                    bool includeDiagonalNeighbours) :
             _node(node), _graphDepth(graphDepth), _nodesPerDirection(nodesPerDirection),
@@ -102,7 +102,7 @@ namespace Discretization {
 
             for (const auto &position2: nodeGraph) {
                 auto &n2 = normalUnitVectorsOfPositions.at(position2.first);
-                auto n1n2 = VectorOperations::dotProduct(n1, n2);
+                auto n1n2 = n1.dotProduct(n2);
 
                 if (n1n2 == -1) {
                     auto nodes1 = position1.second;
@@ -135,7 +135,7 @@ namespace Discretization {
 
             for (auto& position2 : customNodeGraph) {
                 auto& n2 = normalUnitVectorsOfPositions.at(position2.first);
-                auto n1n2 = VectorOperations::dotProduct(n1, n2);
+                auto n1n2 = n1.dotProduct(n2);
 
                 if (n1n2 == -1) {
                     auto& nodes1 = position1.second;
@@ -167,7 +167,7 @@ namespace Discretization {
 
             for (auto& position2 : customNodeGraph) {
                 auto& n2 = normalUnitVectorsOfPositions.at(position2.first);
-                auto n1n2 = VectorOperations::dotProduct(n1, n2);
+                auto n1n2 = n1.dotProduct(n2);
 
                 if (n1n2 == -1) {
                     auto& nodes1 = position1.second;
@@ -366,18 +366,18 @@ namespace Discretization {
         return nodes;
     }
 
-    map<Direction, vector<vector<double>>> IsoParametricNodeGraph::
+    map<Direction, vector<NumericalVector<double>>> IsoParametricNodeGraph::
     getSameColinearNodalCoordinates(CoordinateType coordinateType) const {
 
-        map<Direction, vector<vector<double>>> coLinearNodalCoordinates;
+        map<Direction, vector<NumericalVector<double>>> coLinearNodalCoordinates;
         auto coLinearNodes = getColinearNodes();
         auto numberOfDirections = coLinearNodes.size();
         for (auto &direction: coLinearNodes) {
             auto directionI = direction.first;
             auto nodeVector = direction.second;
-            coLinearNodalCoordinates.insert({directionI, vector<vector<double>>(numberOfDirections)});
+            coLinearNodalCoordinates.insert({directionI, vector<NumericalVector<double>>(numberOfDirections)});
             for (int i = 0; i < numberOfDirections; ++i) {
-                coLinearNodalCoordinates.at(directionI)[i] = vector<double>(nodeVector.size());
+                coLinearNodalCoordinates.at(directionI)[i] = NumericalVector<double>(nodeVector.size());
                 auto iNode = 0;
                 for (auto &node: nodeVector) {
                     coLinearNodalCoordinates.at(directionI)[i][iNode] = node->coordinates.positionVector(
@@ -388,18 +388,18 @@ namespace Discretization {
         }
         return coLinearNodalCoordinates;
     }
-    map<Direction, vector<vector<double>>> IsoParametricNodeGraph::
+    map<Direction, vector<NumericalVector<double>>> IsoParametricNodeGraph::
     getSameColinearNodalCoordinatesOnBoundary(CoordinateType coordinateType, map<Position, vector<Node*>>& customNodeGraph) const {
 
-        map<Direction, vector<vector<double>>> coLinearNodalCoordinates;
+        map<Direction, vector<NumericalVector<double>>> coLinearNodalCoordinates;
         auto coLinearNodes = getColinearNodesOnBoundary(customNodeGraph);
         auto numberOfDirections = coLinearNodes.size();
         for (auto &direction: coLinearNodes) {
             auto directionI = direction.first;
             auto nodeVector = direction.second;
-            coLinearNodalCoordinates.insert({directionI, vector<vector<double>>(numberOfDirections)});
+            coLinearNodalCoordinates.insert({directionI, vector<NumericalVector<double>>(numberOfDirections)});
             for (int i = 0; i < numberOfDirections; ++i) {
-                coLinearNodalCoordinates.at(directionI)[i] = vector<double>(nodeVector.size());
+                coLinearNodalCoordinates.at(directionI)[i] = NumericalVector<double>(nodeVector.size());
                 auto iNode = 0;
                 for (auto &node: nodeVector) {
                     coLinearNodalCoordinates.at(directionI)[i][iNode] = node->coordinates.positionVector(
@@ -411,18 +411,18 @@ namespace Discretization {
         return coLinearNodalCoordinates;
     }
 
-    map<Direction, vector<vector<double>>> IsoParametricNodeGraph::
+    map<Direction, vector<NumericalVector<double>>> IsoParametricNodeGraph::
     getSameColinearNodalCoordinates(CoordinateType coordinateType, map<Position, vector<Node *>> &customNodeGraph) const {
 
-        map<Direction, vector<vector<double>>> coLinearNodalCoordinates;
+        map<Direction, vector<NumericalVector<double>>> coLinearNodalCoordinates;
         auto coLinearNodes = getColinearNodes(customNodeGraph);
         auto numberOfDirections = coLinearNodes.size();
         for (auto &direction: coLinearNodes) {
             auto directionI = direction.first;
             auto nodeVector = direction.second;
-            coLinearNodalCoordinates.insert({directionI, vector<vector<double>>(numberOfDirections)});
+            coLinearNodalCoordinates.insert({directionI, vector<NumericalVector<double>>(numberOfDirections)});
             for (int i = 0; i < numberOfDirections; ++i) {
-                coLinearNodalCoordinates.at(directionI)[i] = vector<double>(nodeVector.size());
+                coLinearNodalCoordinates.at(directionI)[i] = NumericalVector<double>(nodeVector.size());
                 auto iNode = 0;
                 for (auto &node: nodeVector) {
                     coLinearNodalCoordinates.at(directionI)[i][iNode] = node->coordinates.positionVector(
@@ -518,7 +518,7 @@ namespace Discretization {
         }
     }
 
-    void IsoParametricNodeGraph::_findIDepthNeighborhoodOnlyDiagonals(unsigned int depth, vector<double> &nodeCoords) {
+    void IsoParametricNodeGraph::_findIDepthNeighborhoodOnlyDiagonals(unsigned int depth, NumericalVector<double> &nodeCoords) {
 
         auto nn1 = _nodesPerDirection[One];
         auto nn2 = _nodesPerDirection[Two];
@@ -527,7 +527,7 @@ namespace Discretization {
         auto id = *_node->id.global;
         auto k = id / (nn1 * nn2);
 
-        auto parametricCoords = vector<double>{0, 0, 0};
+        auto parametricCoords = NumericalVector<double>{0, 0, 0};
 
         //Top
         parametricCoords = {nodeCoords[0], nodeCoords[1] + depth, nodeCoords[2]};
@@ -556,7 +556,7 @@ namespace Discretization {
     }
 
 
-    void IsoParametricNodeGraph::_findIDepthNeighborhood(unsigned int depth, vector<double> &nodeCoords) {
+    void IsoParametricNodeGraph::_findIDepthNeighborhood(unsigned int depth, NumericalVector<double> &nodeCoords) {
 
         auto nn1 = _nodesPerDirection[One];
         auto nn2 = _nodesPerDirection[Two];
@@ -565,7 +565,7 @@ namespace Discretization {
         auto id = *_node->id.global;
         auto k = id / (nn1 * nn2);
 
-        auto parametricCoords = vector<double>{0, 0, 0};
+        auto parametricCoords = NumericalVector<double>{0, 0, 0};
         //TopLeft
         parametricCoords = {nodeCoords[0] - depth, nodeCoords[1] + depth, nodeCoords[2]};
         _addNeighbourNodeIfParametricCoordsExist(LeftTop, parametricCoords);
@@ -656,7 +656,7 @@ namespace Discretization {
 
 
     void IsoParametricNodeGraph::_addNeighbourNodeIfParametricCoordsExist(Position position,
-                                                                          vector<double> &parametricCoords) {
+                                                                          NumericalVector<double> &parametricCoords) {
         if (_nodeMap->find(parametricCoords) != _nodeMap->end()) {
             if (nodeGraph.find(position) == nodeGraph.end()) {
                 nodeGraph.insert(pair<Position, vector<Node *>>(position, vector<Node *>()));

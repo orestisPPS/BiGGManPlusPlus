@@ -11,16 +11,16 @@ namespace LinearAlgebra {
         _decompositionType = GramSchmidt;
         if (!_storeOnMatrix){
             unsigned n = _matrix->numberOfColumns();
-            _Q = make_shared<Array<double>>(n,n);
-            //_R = make_shared<Array<double>>(n,n);
+            _Q = make_shared<NumericalMatrix<double>>(n,n);
+            //_R = make_shared<NumericalMatrix<double>>(n,n);
         }
     }
 
     void GramSchmidtQR::_singleThreadDecomposition() {
         unsigned n = _matrix->numberOfRows();
         
-        auto iColumnOfA = make_shared<vector<double>>(n);
-        auto jColumnOfQ = make_shared<vector<double>>(n);
+        auto iColumnOfA = make_shared<NumericalVector<double>>(n);
+        auto jColumnOfQ = make_shared<NumericalVector<double>>(n);
         double norm = 0.0;
         double QjDotAi = 0.0;
         

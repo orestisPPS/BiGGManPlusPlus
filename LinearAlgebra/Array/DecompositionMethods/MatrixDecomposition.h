@@ -13,21 +13,21 @@ namespace LinearAlgebra {
     class MatrixDecomposition {
 
     public:
-        explicit MatrixDecomposition(shared_ptr<Array<double>> matrix);
+        explicit MatrixDecomposition(shared_ptr<NumericalMatrix<double>> matrix);
         
         /**
         * Returns an Array* with the lower triangular matrix L
         *
         * @return The lower triangular matrix L
         */
-        shared_ptr<Array<double>> getL();
+        shared_ptr<NumericalMatrix<double>> getL();
         
         /**
         * Returns an Array* with the upper triangular matrix U
         *
         * @return The upper triangular matrix U
         */
-        shared_ptr<Array<double>> getU();
+        shared_ptr<NumericalMatrix<double>> getU();
         
         
         
@@ -48,7 +48,7 @@ namespace LinearAlgebra {
         *
         * @return The inverse of the matrix
         */
-        virtual shared_ptr<Array<double>> invertMatrix();
+        virtual shared_ptr<NumericalMatrix<double>> invertMatrix();
         
         /**
         * Returns the determinant of the matrix
@@ -64,23 +64,23 @@ namespace LinearAlgebra {
         *
         * @return A vector with the solution of the linear system
         */
-        virtual shared_ptr<vector<double>> solve(shared_ptr<vector<double>> rhs, shared_ptr<vector<double>> solution);
+        virtual shared_ptr<NumericalVector<double>> solve(shared_ptr<NumericalVector<double>> rhs, shared_ptr<NumericalVector<double>> solution);
 
 
     protected:
         /**
         * NumericalMatrix to be decomposed
         */
-        shared_ptr<Array<double>> _matrix;
+        shared_ptr<NumericalMatrix<double>> _matrix;
         /**
         * Lower triangular matrix L
         */
-        shared_ptr<Array<double>> _l;
+        shared_ptr<NumericalMatrix<double>> _l;
 
         /**
         * Upper triangular matrix U
         */
-        shared_ptr<Array<double>> _u;
+        shared_ptr<NumericalMatrix<double>> _u;
 
         bool isStoredOnMatrix();
 

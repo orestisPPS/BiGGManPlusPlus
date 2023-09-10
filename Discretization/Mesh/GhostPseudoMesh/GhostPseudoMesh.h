@@ -20,7 +20,7 @@ namespace Discretization {
         
         GhostPseudoMesh(shared_ptr<list<Node*>> ghostNodesList,
                         const shared_ptr<map<Direction, unsigned>>& ghostNodesPerDirection,
-                        const shared_ptr<map<vector<double>, Node*>>& parametricCoordToNodeMap);
+                        const shared_ptr<map<NumericalVector<double>, Node*>>& parametricCoordToNodeMap);
         
         ~GhostPseudoMesh();
         
@@ -29,7 +29,7 @@ namespace Discretization {
         shared_ptr<map<Direction, unsigned>> ghostNodesPerDirection;
         
         //Contains the parametric coordinates of the nodes in the mesh (real and ghost)
-        shared_ptr<map<vector<double>, Node*>>parametricCoordToNodeMap;
+        shared_ptr<map<NumericalVector<double>, Node*>>parametricCoordToNodeMap;
     };
 
 } // Discretization

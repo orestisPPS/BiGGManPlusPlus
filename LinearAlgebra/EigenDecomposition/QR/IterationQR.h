@@ -18,15 +18,15 @@ namespace LinearAlgebra {
         
         void calculateEigenvalues();
 
-        shared_ptr<vector<double>> getEigenvalues();
+        shared_ptr<NumericalVector<double>> getEigenvalues();
         
-        shared_ptr<vector<double>> getSortedEigenvalues(bool ascending = false);
+        shared_ptr<NumericalVector<double>> getSortedEigenvalues(bool ascending = false);
 
-        void setMatrix(shared_ptr<Array<double>>&);
+        void setMatrix(shared_ptr<NumericalMatrix<double>>&);
         
     private:
 
-        shared_ptr<Array<double>> _matrix;
+        shared_ptr<NumericalMatrix<double>> _matrix;
         
         unsigned _maxIterations;
         
@@ -38,7 +38,7 @@ namespace LinearAlgebra {
 
         ParallelizationMethod _parallelizationMethod;
         
-        shared_ptr<Array<double>> _matrixCopy;
+        shared_ptr<NumericalMatrix<double>> _matrixCopy;
         
         bool _matrixSet;
         

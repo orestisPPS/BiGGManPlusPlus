@@ -4,15 +4,15 @@
 
 #include "SORSolver.h"
 namespace LinearAlgebra{
-    SORSolver::SORSolver(double relaxationParameter, VectorNormType normType, double tolerance, unsigned maxIterations,
-                         bool throwExceptionOnMaxFailure, ParallelizationMethod parallelizationMethod) :
-            StationaryIterative(normType, tolerance, maxIterations, throwExceptionOnMaxFailure, parallelizationMethod) {
+    SORSolver::SORSolver(double relaxationParameter, double tolerance, unsigned maxIterations, VectorNormType normType,
+                         unsigned userDefinedThreads, bool printOutput, bool throwExceptionOnMaxFailure)
+                : StationaryIterative(tolerance, maxIterations, normType, userDefinedThreads, printOutput, throwExceptionOnMaxFailure) {
         _relaxationParameter = relaxationParameter;
         _residualNorms = make_shared<list<double>>();
         _solverName = "SOR";
     }
     
-    void SORSolver::_singleThreadSolution() {
+    void SORSolver::_performMethodIteration() {
         _threadJobSOR(0, _linearSystem->matrix->numberOfRows());
     }
 

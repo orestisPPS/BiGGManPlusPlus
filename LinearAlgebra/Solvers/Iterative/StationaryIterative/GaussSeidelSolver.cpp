@@ -6,14 +6,15 @@
 
 namespace LinearAlgebra {
 
-    GaussSeidelSolver::GaussSeidelSolver(VectorNormType normType, double tolerance, unsigned maxIterations,
-                               bool throwExceptionOnMaxFailure, ParallelizationMethod parallelizationMethod) :
-            StationaryIterative(normType, tolerance, maxIterations, throwExceptionOnMaxFailure, parallelizationMethod) {
+    GaussSeidelSolver::GaussSeidelSolver(double tolerance, unsigned maxIterations, VectorNormType normType,
+                                         unsigned userDefinedThreads, bool printOutput, bool throwExceptionOnMaxFailure)
+            : StationaryIterative(tolerance, maxIterations, normType, userDefinedThreads, printOutput,
+                                  throwExceptionOnMaxFailure) {
         _residualNorms = make_shared<list<double>>();
         _solverName = "Gauss-Seidel";
     }
 
-    void GaussSeidelSolver::_singleThreadSolution() {
+    void GaussSeidelSolver::_performMethodIteration() {
         _threadJobGaussSeidel(0, _linearSystem->matrix->numberOfRows());
     }
 

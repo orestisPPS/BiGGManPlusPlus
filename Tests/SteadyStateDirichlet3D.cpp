@@ -79,11 +79,11 @@ namespace Tests {
             auto fieldType = "Temperature";
             Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
 
-            //auto targetCoords = vector<double>{0.5, 0.5};
-            //auto targetCoords = vector<double>{1.5, 1.5, 1.5};
-            auto targetCoords = vector<double>{2, 2, 2};
-            //auto targetCoords = vector<double>{1.5, 1.5, 3};
-            //auto targetCoords = vector<double>{5, 5, 5};
+            //auto targetCoords = NumericalVector<double>{0.5, 0.5};
+            //auto targetCoords = NumericalVector<double>{1.5, 1.5, 1.5};
+            auto targetCoords = NumericalVector<double>{2, 2, 2};
+            //auto targetCoords = NumericalVector<double>{1.5, 1.5, 3};
+            //auto targetCoords = NumericalVector<double>{5, 5, 5};
             auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-5);
             cout<<"Target Solution: "<< targetSolution[0] << endl;
 

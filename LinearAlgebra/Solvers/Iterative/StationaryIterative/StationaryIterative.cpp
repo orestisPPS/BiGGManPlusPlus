@@ -5,17 +5,18 @@
 #include "StationaryIterative.h"
 
 namespace LinearAlgebra {
-    StationaryIterative::StationaryIterative(VectorNormType normType, double tolerance, unsigned maxIterations, bool throwExceptionOnMaxFailure, ParallelizationMethod parallelizationMethod) :
-            IterativeSolver(normType, tolerance, maxIterations, throwExceptionOnMaxFailure, parallelizationMethod) {
+    StationaryIterative::StationaryIterative(double tolerance, unsigned maxIterations, VectorNormType normType,
+                                             unsigned userDefinedThreads, bool printOutput, bool throwExceptionOnMaxFailure) :
+            IterativeSolver(tolerance, maxIterations, normType, userDefinedThreads, printOutput, throwExceptionOnMaxFailure) {
         _difference = nullptr;
     }
 
 
     
     void StationaryIterative::_initializeVectors() {
-        _xNew = make_shared<vector<double>>(_linearSystem->rhs->size());
-        _xOld = make_shared<vector<double>>(_linearSystem->rhs->size());
-        _difference = make_shared<vector<double>>(_linearSystem->rhs->size());
+        _xNew = make_shared<NumericalVector<double>>(_linearSystem->rhs->size());
+        _xOld = make_shared<NumericalVector<double>>(_linearSystem->rhs->size());
+        _difference = make_shared<NumericalVector<double>>(_linearSystem->rhs->size());
         _vectorsInitialized = true;    
     }
     
@@ -25,30 +26,19 @@ namespace LinearAlgebra {
         auto start = std::chrono::high_resolution_clock::now();
         unsigned n = _linearSystem->matrix->numberOfRows();
         _exitNorm = 1.0;
-        _difference = make_shared<vector<double>>(n);
-        
-        if (_parallelization == SingleThread) {
-            _printSingleThreadInitializationText();
-            while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
-                _singleThreadSolution();
-                _exitNorm = _calculateNorm();
-                _printIterationAndNorm();
-                _iteration++;
-            }
-        }
-        if (_parallelization == MultiThread) {
-            auto numberOfThreads = std::thread::hardware_concurrency();
-            _printMultiThreadInitializationText(numberOfThreads);
-            while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
-                _multiThreadSolution(numberOfThreads, n);
-                _exitNorm = _calculateNorm();
-                _printIterationAndNorm();
-                _iteration++;
-            }
+        _difference = make_shared<NumericalVector<double>>(_linearSystem->rhs->size());
 
+        while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
+            _performMethodIteration();
+            _exitNorm = _xNew->norm(_normType);
+            _printIterationAndNorm();
         }
+            auto end = std::chrono::high_resolution_clock::now();
+            printAnalysisOutcome(_iteration, _exitNorm, start, end);
 
-        else if (_parallelization == CUDA) {
+
+
+/*        else if (_parallelization == CUDA) {
             
             double *d_matrix = _linearSystem->matrix->getArrayPointer();
             double *d_rhs = _linearSystem->rhs->data();
@@ -78,16 +68,12 @@ namespace LinearAlgebra {
             _stationaryIterativeCuda->getSolutionVector(_xNew->data());
             _stationaryIterativeCuda.reset();
 
-        }
+        }*/
 
-        auto end = std::chrono::high_resolution_clock::now();
-        printAnalysisOutcome(_iteration, _exitNorm, start, end);
+
         
     }
-
-    void StationaryIterative::_multiThreadSolution(const unsigned short &availableThreads,
-                                                   const unsigned short &numberOfRows) {
-    }
+    
 
     void StationaryIterative::_cudaSolution() {
     }

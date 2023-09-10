@@ -60,15 +60,15 @@ namespace LinearAlgebra {
         _matrixSet = false;
     }
     
-    shared_ptr<vector<double>> IterationQR::getEigenvalues() {
-        auto eigenValues = make_shared<vector<double>>(_matrix->numberOfRows());
+    shared_ptr<NumericalVector<double>> IterationQR::getEigenvalues() {
+        auto eigenValues = make_shared<NumericalVector<double>>(_matrix->numberOfRows());
         for (unsigned i = 0; i < _matrix->numberOfRows(); i++) {
             eigenValues->at(i) = _matrix->at(i, i);
         }
         return eigenValues;
     }
         
-    shared_ptr<vector<double>> IterationQR::getSortedEigenvalues(bool ascending) {
+    shared_ptr<NumericalVector<double>> IterationQR::getSortedEigenvalues(bool ascending) {
         auto eigenValues = std::move(getEigenvalues());
         sort(eigenValues->begin(), eigenValues->end());
         if (!ascending) {
@@ -77,7 +77,7 @@ namespace LinearAlgebra {
         return eigenValues;
     }
     
-    void IterationQR::setMatrix(shared_ptr<Array<double>>& matrix) {
+    void IterationQR::setMatrix(shared_ptr<NumericalMatrix<double>>& matrix) {
         _matrix = matrix;
         _matrixSet = true;
         if (!_storeOnMatrix) {
@@ -88,7 +88,7 @@ namespace LinearAlgebra {
 
     void IterationQR::_deepCopyMatrix() {
         //R = A TODO : fix this with copy constructor
-        _matrixCopy = make_shared<Array<double>>(_matrix->numberOfRows(), _matrix->numberOfColumns());
+        _matrixCopy = make_shared<NumericalMatrix<double>>(_matrix->numberOfRows(), _matrix->numberOfColumns());
         double* dataA = _matrix->getArrayPointer();
         double* dataACopy = _matrixCopy->getArrayPointer();
         for (unsigned i = 0; i < _matrix->size(); i++){

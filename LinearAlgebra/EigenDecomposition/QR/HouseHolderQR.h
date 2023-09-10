@@ -19,9 +19,9 @@ namespace LinearAlgebra {
         */
         explicit HouseHolderQR(bool returnQ, ParallelizationMethod parallelizationMethod = SingleThread, bool storeOnMatrix = false);
 
-        const shared_ptr<Array<double>> &  getQ() override;
+        const shared_ptr<NumericalMatrix<double>> &  getQ() override;
 
-        const shared_ptr<Array<double>> &  getR() override;
+        const shared_ptr<NumericalMatrix<double>> &  getR() override;
         
     protected:
         /**
@@ -42,13 +42,13 @@ namespace LinearAlgebra {
         
     private:
         
-        static shared_ptr<vector<double>> _calculateHouseholdVector(const shared_ptr<vector<double>>& targetVector);
+        static shared_ptr<NumericalVector<double>> _calculateHouseholdVector(const shared_ptr<NumericalVector<double>>& targetVector);
         
-        void _applyHouseholderProjectionOnMatrixFromLeft(unsigned column, const shared_ptr<vector<double>>& householderVector,
-                                                         shared_ptr<Array<double>>& matrix);
+        void _applyHouseholderProjectionOnMatrixFromLeft(unsigned column, const shared_ptr<NumericalVector<double>>& householderVector,
+                                                         shared_ptr<NumericalMatrix<double>>& matrix);
         
-        void _applyHouseholderProjectionOnMatrixFromRight(unsigned row, const shared_ptr<vector<double>>& householderVector,
-                                                          shared_ptr<Array<double>>& matrix);
+        void _applyHouseholderProjectionOnMatrixFromRight(unsigned row, const shared_ptr<NumericalVector<double>>& householderVector,
+                                                          shared_ptr<NumericalMatrix<double>>& matrix);
         
         
         static int sign(double x);

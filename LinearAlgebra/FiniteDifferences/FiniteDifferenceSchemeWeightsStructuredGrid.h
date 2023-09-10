@@ -7,9 +7,9 @@
 
 #include <map>
 #include <vector>
-#include <tuple>
 #include <stdexcept>
 #include "FDSchemeType.h"
+#include "../ContiguousMemoryNumericalArrays/NumericalVector/NumericalVector.h"
 
 using namespace std;
 
@@ -17,9 +17,10 @@ namespace LinearAlgebra {
 
     struct Scheme{
     public:
+        Scheme(unsigned size) : weights(size) {}
         unsigned short power;
         double denominatorCoefficient;
-        vector<double> weights;
+        NumericalVector<double> weights;
     };
 
     struct SchemeMap {
