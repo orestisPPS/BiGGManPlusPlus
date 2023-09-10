@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="2fd4c6b4-275f-43ee-8b50-455d616e2921" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Array/NumericalMatrix.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Array/NumericalMatrix.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/NumericalVector.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/NumericalVector.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnalysisLinearSystemInitializer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/AnalysisLinearSystemInitializer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Array/Array2.h" beforeDir="false" afterPath="$PROJECT_DIR$/Array/Array2.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Array/DecompositionMethods/DecompositionLUP.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Array/DecompositionMethods/DecompositionLUP.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Array/DecompositionMethods/MatrixDecomposition.h" beforeDir="false" afterPath="$PROJECT_DIR$/Array/DecompositionMethods/MatrixDecomposition.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Array/NumericalArray.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Array/NumericalArray.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EigenDecomposition/LanczosEigenDecomposition.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/EigenDecomposition/LanczosEigenDecomposition.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EigenDecomposition/PowerMethod.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/EigenDecomposition/PowerMethod.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EigenDecomposition/QR/DecompositionQR.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/EigenDecomposition/QR/DecompositionQR.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EigenDecomposition/QR/DecompositionQR.h" beforeDir="false" afterPath="$PROJECT_DIR$/EigenDecomposition/QR/DecompositionQR.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EigenDecomposition/QR/GramSchmidtQR.h" beforeDir="false" afterPath="$PROJECT_DIR$/EigenDecomposition/QR/GramSchmidtQR.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EigenDecomposition/QR/HouseHolderQR.h" beforeDir="false" afterPath="$PROJECT_DIR$/EigenDecomposition/QR/HouseHolderQR.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EigenDecomposition/QR/IterationQR.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/EigenDecomposition/QR/IterationQR.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EigenDecomposition/QR/IterationQR.h" beforeDir="false" afterPath="$PROJECT_DIR$/EigenDecomposition/QR/IterationQR.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/MultiThreadVectorOperations.h" beforeDir="false" afterPath="$PROJECT_DIR$/Operations/MultiThreadVectorOperations.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/VectorOperations.h" beforeDir="false" afterPath="$PROJECT_DIR$/Operations/VectorOperations.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ParallelizationMethods.h" beforeDir="false" afterPath="$PROJECT_DIR$/ParallelizationMethods.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h" beforeDir="false" afterPath="$PROJECT_DIR$/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Solvers/Iterative/IterativeSolver.h" beforeDir="false" afterPath="$PROJECT_DIR$/Solvers/Iterative/IterativeSolver.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.h" beforeDir="false" afterPath="$PROJECT_DIR$/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Solvers/Iterative/StationaryIterative/JacobiSolver.h" beforeDir="false" afterPath="$PROJECT_DIR$/Solvers/Iterative/StationaryIterative/JacobiSolver.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Solvers/Iterative/StationaryIterative/SORSolver.h" beforeDir="false" afterPath="$PROJECT_DIR$/Solvers/Iterative/StationaryIterative/SORSolver.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Solvers/Iterative/StationaryIterative/StationaryIterative.h" beforeDir="false" afterPath="$PROJECT_DIR$/Solvers/Iterative/StationaryIterative/StationaryIterative.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../LinearAlgebraCUDA/NumericalOperationsCUDA.cuh" beforeDir="false" afterPath="$PROJECT_DIR$/../LinearAlgebraCUDA/NumericalOperationsCUDA.cuh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../StructuredMeshGeneration/MeshFactory.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../StructuredMeshGeneration/MeshFactory.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Testing/chatArray/Arrray_part2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../Testing/chatArray/Arrray_part2.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Tests/LanczosEigenDecompositionTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Tests/LanczosEigenDecompositionTest.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Tests/OperationsCUDA.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Tests/OperationsCUDA.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Tests/QRTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Tests/QRTest.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Tests/SteadyState3DNeumann.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Tests/SteadyState3DNeumann.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Tests/VectorOperationsTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Tests/VectorOperationsTest.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-debug/untitled.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-debug/untitled.cbp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2023" />
+    <option name="minorVersion" value="2" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2U5k5VGBmltTq8UxcXE3po6IjPp" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "change-array",
+    "last_opened_file_path": "/home/hal9000/code/BiGGMan++",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2fd4c6b4-275f-43ee-8b50-455d616e2921" name="Changes" comment="" />
+      <created>1692236645882</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1692236645882</updated>
+      <workItem from="1692236646948" duration="5000" />
+      <workItem from="1692236676001" duration="54000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
