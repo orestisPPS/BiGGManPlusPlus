@@ -1,63 +1,50 @@
-//
+/*//
 // Created by hal9000 on 8/4/23.
 //
 
 #ifndef UNTITLED_POWERMETHOD_H
 #define UNTITLED_POWERMETHOD_H
 
-#include <random>
-#include "../Array/Array.h"
-#include "../Norms/VectorNorm.h"
-#include "../Operations/MultiThreadVectorOperations.h"
-#include "../../Utility/Exporters/Exporters.h"
-#include "../Operations/VectorOperations.h"
+#include "IEigenvalueDecomposition.h"
+//#include "../ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
+
 namespace LinearAlgebra {
 
 
-
+    template <typename T>
     class PowerMethod {
     public:
 
-        enum ParallelizationMethod{
-            //Multi-thread solution
-            vTechKickInYoo,
-            //INSSSSSSSSSSSSANE GPU GAINS
-            turboVTechKickInYoo,
-            //:( Single thread 
-            Wank
-        };
+        explicit PowerMethod(shared_ptr<NumericalMatrix<T>> matrix, double tolerance, unsigned maxIterations, VectorNormType normType) :
+                matrix(matrix),
+                _tolerance(tolerance),
+                _maxIterations(maxIterations),
+                _normType(normType) {
+            _iteration = 0;
+            _exitNorm = 10;
+            _vectorNew = make_unique<NumericalVector<double>>(matrix->numberOfRows(), 0, matrix->dataStorage->getAvailableThreads());
+            _vectorOld = make_unique<NumericalVector<double>>(matrix->numberOfRows(), 0, matrix->dataStorage->getAvailableThreads());
+            _vectorOld->fillRandom(0, 1);
+            _vectorOld->normalize();
+        }
 
-        PowerMethod(unsigned short numberOfEigenvalues, unsigned maxIterations, VectorNormType normType = L2,
-                                  double tolerance = 1E-5, ParallelizationMethod parallelizationMethod = Wank );
-
-        void calculateDominantEigenValue();
+        void calculateDominantEigenValue(){
+            matrix->multiplyVector(_vectorOld, _vectorNew);
+            //TOOD: check norm type there are two enums
+            _exitNorm = _vectorNew->norm(L22);
+        }
         
-        void setMatrix(const shared_ptr<Array<double>>& matrix);
-
     private:
 
-        void _singleThreadSolution();
-
-        void _singleThreadOrthogonalization(shared_ptr<vector<double>> &vectorToOrthogonalize);\
-
-        void _singleThreadCompleteOrthogonalization(shared_ptr<vector<double>> vectorToOrthogonalize);
-
-        void _multiThreadSolution();
-
-        void _cudaSolution();
-
-        unsigned int _numberOfEigenvalues;
-
-        shared_ptr<Array<double>> _matrix;
-
-        shared_ptr<map<unsigned, shared_ptr<vector<double>>>> _lanczosVectors;
-
-        shared_ptr<vector<double>> _vectorNew;
-
-        shared_ptr<vector<double>> _vectorOld;
+        void _cpuSolution();
         
-        shared_ptr<vector<double>> _difference;
 
+        shared_ptr<NumericalMatrix<T>> matrix;
+        
+        unique_ptr<NumericalVector<double>> _vectorNew;
+
+        unique_ptr<NumericalVector<double>> _vectorOld;
+        
         VectorNormType _normType;
 
         double _tolerance;
@@ -67,15 +54,7 @@ namespace LinearAlgebra {
         unsigned _maxIterations;
 
         double _exitNorm;
-
-        ParallelizationMethod _parallelizationMethod;
-
-        bool _vectorsInitialized;
-
-        bool _matrixSet;
-
-        void _initializeVectors();
-
+        
         static void _printSingleThreadInitializationText();
 
         static void _printMultiThreadInitializationText(unsigned short numberOfThreads);
@@ -83,13 +62,68 @@ namespace LinearAlgebra {
         void _printCUDAInitializationText();
 
         void _printIterationAndNorm(unsigned displayFrequency = 100) const;
-
-        double _calculateNorm();
-
+        
         void printAnalysisOutcome(unsigned totalIterations, double exitNorm, std::chrono::high_resolution_clock::time_point startTime,
                                   std::chrono::high_resolution_clock::time_point finishTime) const;
     };
 
 } // LinearAlgebra
 
-#endif //UNTITLED_POWERMETHOD_H
+#endif //UNTITLED_POWERMETHOD_H*/
+
+
+/*
+void PowerMethod::_printSingleThreadInitializationText() {
+    cout << " " << endl;
+    cout << "----------------------------------------" << endl;
+    cout << "Power Method" << " Eigen-decomposition Single Thread - no vtec yo :(" << endl;
+}
+
+void PowerMethod::_printMultiThreadInitializationText(unsigned short numberOfThreads) {
+    cout << " " << endl;
+    cout << "----------------------------------------" << endl;
+    cout << "Power Method" << " Eigen-decomposition Multi Thread - VTEC KICKED IN YO!" << endl;
+    //Find the number of threads available for parallel execution
+    cout << "Total Number of threads available for parallel execution: " << numberOfThreads << endl;
+    cout << "Number of threads involved in parallel solution: " << numberOfThreads << endl;
+}
+
+void PowerMethod::_printCUDAInitializationText() {
+
+}
+
+void PowerMethod::_printIterationAndNorm(unsigned displayFrequency) const {
+    if (_iteration % displayFrequency == 0)
+        cout << "Iteration: " << _iteration << " - Norm: " << _exitNorm << endl;
+
+}
+
+
+void PowerMethod::printAnalysisOutcome(unsigned totalIterations, double exitNorm,  std::chrono::high_resolution_clock::time_point startTime,
+                                       std::chrono::high_resolution_clock::time_point finishTime) const{
+    bool isInMicroSeconds = false;
+    auto _elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(finishTime - startTime).count();
+    if (_elapsedTime == 0) {
+        _elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(finishTime - startTime).count();
+        isInMicroSeconds = true;
+    }
+    if (isInMicroSeconds) {
+        if (exitNorm <= _tolerance)
+            cout << "Convergence Achieved!" << endl;
+        else
+            cout << "Convergence Failed!" << endl;
+
+        cout << "Elapsed time: " << _elapsedTime << " μs" << " Iterations : " << totalIterations << " Exit norm : " << exitNorm << endl;
+        cout << "----------------------------------------" << endl;
+    } else {
+
+        if (exitNorm <= _tolerance)
+            cout << "Convergence Achieved!" << endl;
+        else
+            cout << "Convergence Failed!" << endl;
+
+        cout << "Elapsed time: " << _elapsedTime << " ms" << " Iterations : " << totalIterations << " Exit norm : " << exitNorm << endl;
+        cout << "----------------------------------------" << endl;
+    }
+
+}*/

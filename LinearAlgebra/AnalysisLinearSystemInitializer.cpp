@@ -58,7 +58,7 @@ namespace LinearAlgebra {
 
             //Derivative order 0
             auto zeroOrderCoefficient = _getPDECoefficient(0, node);
-            //Define the position of the dof in the Matrix
+            //Define the position of the dof in the NumericalMatrix
             _matrix->at(thisDOFPosition, thisDOFPosition) = zeroOrderCoefficient;
 
             //add source term

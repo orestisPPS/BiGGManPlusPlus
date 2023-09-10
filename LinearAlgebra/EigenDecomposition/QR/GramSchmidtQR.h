@@ -41,7 +41,7 @@ namespace LinearAlgebra {
          * @param parallelizationMethod Enum indicating the method of parallelization to use.
          * @param storeOnMatrix Boolean indicating whether to store the results on the original matrix.
          */
-        explicit GramSchmidtQR(bool returnQ = false, ParallelizationMethod parallelizationMethod = Wank, bool storeOnMatrix = false);
+        explicit GramSchmidtQR(bool returnQ = false, ParallelizationMethod parallelizationMethod = SingleThread, bool storeOnMatrix = false);
 
         /**
          * @brief Performs QR decomposition using the Gram-Schmidt process in a single-threaded manner.

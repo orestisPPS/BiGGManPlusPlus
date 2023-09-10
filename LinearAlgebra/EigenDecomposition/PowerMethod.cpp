@@ -1,3 +1,4 @@
+/*
 //
 // Created by hal9000 on 8/4/23.
 //
@@ -5,8 +6,9 @@
 #include "PowerMethod.h"
 
 namespace LinearAlgebra {
-    PowerMethod::PowerMethod(unsigned short numberOfEigenvalues, unsigned lanczosIterations, VectorNormType normType,
-                                                         double tolerance , ParallelizationMethod parallelizationMethod) {
+    template<typename T>
+    PowerMethod<T>::PowerMethod(shared_ptr<NumericalMatrix<T>> matrix, unsigned maxIterations = 1E4, double tolerance = 1E-5,
+                             VectorNormType normType = L2) {
         _numberOfEigenvalues = numberOfEigenvalues;
         _normType = normType;
         _maxIterations = lanczosIterations;
@@ -41,13 +43,15 @@ namespace LinearAlgebra {
     void PowerMethod::_singleThreadSolution(){
         _printSingleThreadInitializationText();
 
+*/
 /*
         for (unsigned i = 0; i < _matrix->numberOfRows(); i++){
             for (int j = 0; j < _matrix->numberOfRows() ; ++j) {
                 _matrix->at(i,j) = _matrix->at(i,j) * (-1.0);
             }
         }
-*/
+*//*
+
 
         while (_iteration < _maxIterations && _exitNorm > _tolerance){
             VectorOperations::matrixVectorMultiplication(_matrix, _vectorOld, _vectorNew);
@@ -93,7 +97,7 @@ namespace LinearAlgebra {
             _vectorsInitialized = true;
 
         } else {
-            throw runtime_error("Matrix not set");
+            throw runtime_error("NumericalMatrix not set");
         }
     }
 
@@ -152,4 +156,4 @@ namespace LinearAlgebra {
 
     }
 
-} // LinearAlgebra
+} // LinearAlgebra*/

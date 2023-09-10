@@ -1,11 +1,18 @@
 cmake_minimum_required(VERSION 3.23)
-project(untitled LANGUAGES CXX CUDA)
+project(untitled LANGUAGES CXX)
+
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS -fopenmp)
 
+# Attempt to enable CUDA language. If it fails, continue without CUDA.
+include(CheckLanguage)
+check_language(CUDA)
 
-enable_language(CUDA)
-
+if(CMAKE_CUDA_COMPILER)
+    enable_language(CUDA)
+    add_definitions(-DWITH_CUDA)
+else()
+    message(WARNING "CUDA not found: Building without CUDA support")
+endif()
 
 add_executable(untitled main.cpp
         DegreesOfFreedom/DegreeOfFreedom.cpp 
@@ -118,10 +125,9 @@ add_executable(untitled main.cpp
         Discretization/Elements/Element.cpp
         Discretization/Elements/MeshElements.h
         Discretization/Elements/MeshElements.cpp
-        LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cuh
-        LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu
-        LinearAlgebra/Norms/VectorNormCuda.cuh
-        LinearAlgebra/Norms/VectorNormCuda.cu LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cuh LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu LinearAlgebraCUDA/NumericalOperationsCUDA.cuh LinearAlgebraCUDA/NumericalOperationsCUDA.cu LinearAlgebraCUDA/MemoryManagementCUDA.cuh LinearAlgebraCUDA/MemoryManagementCUDA.cu Tests/OperationsCUDA.h Tests/OperationsCUDA.cpp LinearAlgebra/Array/NumericalArray.h LinearAlgebra/Array/NumericalArray.cpp LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp
+        Tests/OperationsCUDA.h Tests/OperationsCUDA.cpp
+        LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h 
+        LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp
         LinearAlgebra/Operations/MultiThreadVectorOperations.h
         Tests/VectorOperationsTest.h
         Tests/VectorOperationsTest.cpp
@@ -146,8 +152,42 @@ add_executable(untitled main.cpp
         Tests/QRTest.cpp
         LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.h
         LinearAlgebra/EigenDecomposition/QR/HouseHolderQR.cpp
+        LinearAlgebra/Array/Array2.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalVector/NumericalVector.h
+        Tests/NumericalVectorTest.h
+        ThreadingOperations/ThreadingOperations.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalArray.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/NumericalMatrixStorageDataProvider.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/FullMatrixStorageDataProvider.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/CSRStorageDataProvider.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/NumericalMatrixStorageDataBuilder.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/SparseMatrixDataStorageProvider.h
+        Tests/NumericalMatrixTest.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixMathematicalOperations/NumericalMatrixMathematicalOperationsProvider.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixMathematicalOperations/CSRMathematicalOperationsProvider.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixMathematicalOperations/FullMatrixMathematicalOperationsProvider.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixMathematicalOperations/EigendecompositionProvider.h
+        LinearAlgebra/EigenDecomposition/IEigenvalueDecomposition.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/NumericalMatrixDataStorageAccessProviders/NumericalMatrixDataStorageAccessProvider.h
+        LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixEnums.h
 )
 
 
-target_link_libraries(untitled cudart)
-
+        # Only add CUDA-specific files if CUDA support is found
+        if(CMAKE_CUDA_COMPILER)
+        target_sources(untitled PRIVATE
+                LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalVectorCUDA.cuh
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cuh
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/StationaryIterativeCuda.cu
+        LinearAlgebra/Norms/VectorNormCuda.cuh
+        LinearAlgebra/Norms/VectorNormCuda.cu
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cuh
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterrativeCuda/JacobiCuda.cu
+        UtilityCUDA/NumericalOperationsCUDA.cuh
+        UtilityCUDA/NumericalOperationsCUDA.cu
+        UtilityCUDA/MemoryManagementCUDA.cuh
+)
+        target_link_libraries(untitled cudart)  # Link against CUDA runtime
+        endif()
+        

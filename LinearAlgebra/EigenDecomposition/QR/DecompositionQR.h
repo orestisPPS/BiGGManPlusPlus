@@ -21,7 +21,7 @@ namespace LinearAlgebra {
     class DecompositionQR {
 
     public:
-        explicit DecompositionQR(bool returnQ = true, ParallelizationMethod parallelizationMethod = Wank, bool storeOnMatrix = false);
+        explicit DecompositionQR(bool returnQ = true, ParallelizationMethod parallelizationMethod = SingleThread, bool storeOnMatrix = false);
         
         void setMatrix(shared_ptr<Array<double>>&);
         

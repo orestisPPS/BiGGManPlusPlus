@@ -48,10 +48,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /snap/clion/248/bin/cmake/linux/x64/bin/cmake
+CMAKE_COMMAND = /snap/clion/249/bin/cmake/linux/x64/bin/cmake
 
 # The command to remove a file.
-RM = /snap/clion/248/bin/cmake/linux/x64/bin/cmake -E rm -f
+RM = /snap/clion/249/bin/cmake/linux/x64/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = /home/hal9000/code/BiGGMan++/cmake-build-debug
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/snap/clion/248/bin/cmake/linux/x64/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/snap/clion/249/bin/cmake/linux/x64/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -78,7 +78,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/snap/clion/248/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/snap/clion/249/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -729,30 +729,6 @@ LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp.s
 .PHONY : LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp.s
 
-LinearAlgebra/Array/NumericalArray.o: LinearAlgebra/Array/NumericalArray.cpp.o
-.PHONY : LinearAlgebra/Array/NumericalArray.o
-
-# target to build an object file
-LinearAlgebra/Array/NumericalArray.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Array/NumericalArray.cpp.o
-.PHONY : LinearAlgebra/Array/NumericalArray.cpp.o
-
-LinearAlgebra/Array/NumericalArray.i: LinearAlgebra/Array/NumericalArray.cpp.i
-.PHONY : LinearAlgebra/Array/NumericalArray.i
-
-# target to preprocess a source file
-LinearAlgebra/Array/NumericalArray.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Array/NumericalArray.cpp.i
-.PHONY : LinearAlgebra/Array/NumericalArray.cpp.i
-
-LinearAlgebra/Array/NumericalArray.s: LinearAlgebra/Array/NumericalArray.cpp.s
-.PHONY : LinearAlgebra/Array/NumericalArray.s
-
-# target to generate assembly for a file
-LinearAlgebra/Array/NumericalArray.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Array/NumericalArray.cpp.s
-.PHONY : LinearAlgebra/Array/NumericalArray.cpp.s
-
 LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.o: LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.cpp.o
 .PHONY : LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.o
 
@@ -1377,54 +1353,6 @@ LinearAlgebra/Solvers/Solver.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Solver.cpp.s
 .PHONY : LinearAlgebra/Solvers/Solver.cpp.s
 
-LinearAlgebraCUDA/MemoryManagementCUDA.o: LinearAlgebraCUDA/MemoryManagementCUDA.cu.o
-.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.o
-
-# target to build an object file
-LinearAlgebraCUDA/MemoryManagementCUDA.cu.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/MemoryManagementCUDA.cu.o
-.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.cu.o
-
-LinearAlgebraCUDA/MemoryManagementCUDA.i: LinearAlgebraCUDA/MemoryManagementCUDA.cu.i
-.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.i
-
-# target to preprocess a source file
-LinearAlgebraCUDA/MemoryManagementCUDA.cu.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/MemoryManagementCUDA.cu.i
-.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.cu.i
-
-LinearAlgebraCUDA/MemoryManagementCUDA.s: LinearAlgebraCUDA/MemoryManagementCUDA.cu.s
-.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.s
-
-# target to generate assembly for a file
-LinearAlgebraCUDA/MemoryManagementCUDA.cu.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/MemoryManagementCUDA.cu.s
-.PHONY : LinearAlgebraCUDA/MemoryManagementCUDA.cu.s
-
-LinearAlgebraCUDA/NumericalOperationsCUDA.o: LinearAlgebraCUDA/NumericalOperationsCUDA.cu.o
-.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.o
-
-# target to build an object file
-LinearAlgebraCUDA/NumericalOperationsCUDA.cu.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/NumericalOperationsCUDA.cu.o
-.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.cu.o
-
-LinearAlgebraCUDA/NumericalOperationsCUDA.i: LinearAlgebraCUDA/NumericalOperationsCUDA.cu.i
-.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.i
-
-# target to preprocess a source file
-LinearAlgebraCUDA/NumericalOperationsCUDA.cu.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/NumericalOperationsCUDA.cu.i
-.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.cu.i
-
-LinearAlgebraCUDA/NumericalOperationsCUDA.s: LinearAlgebraCUDA/NumericalOperationsCUDA.cu.s
-.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.s
-
-# target to generate assembly for a file
-LinearAlgebraCUDA/NumericalOperationsCUDA.cu.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebraCUDA/NumericalOperationsCUDA.cu.s
-.PHONY : LinearAlgebraCUDA/NumericalOperationsCUDA.cu.s
-
 MathematicalProblem/MathematicalProblem.o: MathematicalProblem/MathematicalProblem.cpp.o
 .PHONY : MathematicalProblem/MathematicalProblem.o
 
@@ -1881,6 +1809,30 @@ Utility/Exporters/Exporters.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Utility/Exporters/Exporters.cpp.s
 .PHONY : Utility/Exporters/Exporters.cpp.s
 
+UtilityCUDA/NumericalOperationsCUDA.o: UtilityCUDA/NumericalOperationsCUDA.cu.o
+.PHONY : UtilityCUDA/NumericalOperationsCUDA.o
+
+# target to build an object file
+UtilityCUDA/NumericalOperationsCUDA.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/UtilityCUDA/NumericalOperationsCUDA.cu.o
+.PHONY : UtilityCUDA/NumericalOperationsCUDA.cu.o
+
+UtilityCUDA/NumericalOperationsCUDA.i: UtilityCUDA/NumericalOperationsCUDA.cu.i
+.PHONY : UtilityCUDA/NumericalOperationsCUDA.i
+
+# target to preprocess a source file
+UtilityCUDA/NumericalOperationsCUDA.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/UtilityCUDA/NumericalOperationsCUDA.cu.i
+.PHONY : UtilityCUDA/NumericalOperationsCUDA.cu.i
+
+UtilityCUDA/NumericalOperationsCUDA.s: UtilityCUDA/NumericalOperationsCUDA.cu.s
+.PHONY : UtilityCUDA/NumericalOperationsCUDA.s
+
+# target to generate assembly for a file
+UtilityCUDA/NumericalOperationsCUDA.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/UtilityCUDA/NumericalOperationsCUDA.cu.s
+.PHONY : UtilityCUDA/NumericalOperationsCUDA.cu.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -1989,9 +1941,6 @@ help:
 	@echo "... LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.o"
 	@echo "... LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.i"
 	@echo "... LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.s"
-	@echo "... LinearAlgebra/Array/NumericalArray.o"
-	@echo "... LinearAlgebra/Array/NumericalArray.i"
-	@echo "... LinearAlgebra/Array/NumericalArray.s"
 	@echo "... LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.o"
 	@echo "... LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.i"
 	@echo "... LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.s"
@@ -2070,12 +2019,6 @@ help:
 	@echo "... LinearAlgebra/Solvers/Solver.o"
 	@echo "... LinearAlgebra/Solvers/Solver.i"
 	@echo "... LinearAlgebra/Solvers/Solver.s"
-	@echo "... LinearAlgebraCUDA/MemoryManagementCUDA.o"
-	@echo "... LinearAlgebraCUDA/MemoryManagementCUDA.i"
-	@echo "... LinearAlgebraCUDA/MemoryManagementCUDA.s"
-	@echo "... LinearAlgebraCUDA/NumericalOperationsCUDA.o"
-	@echo "... LinearAlgebraCUDA/NumericalOperationsCUDA.i"
-	@echo "... LinearAlgebraCUDA/NumericalOperationsCUDA.s"
 	@echo "... MathematicalProblem/MathematicalProblem.o"
 	@echo "... MathematicalProblem/MathematicalProblem.i"
 	@echo "... MathematicalProblem/MathematicalProblem.s"
@@ -2133,6 +2076,9 @@ help:
 	@echo "... Utility/Exporters/Exporters.o"
 	@echo "... Utility/Exporters/Exporters.i"
 	@echo "... Utility/Exporters/Exporters.s"
+	@echo "... UtilityCUDA/NumericalOperationsCUDA.o"
+	@echo "... UtilityCUDA/NumericalOperationsCUDA.i"
+	@echo "... UtilityCUDA/NumericalOperationsCUDA.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

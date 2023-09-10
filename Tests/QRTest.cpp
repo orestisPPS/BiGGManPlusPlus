@@ -31,7 +31,7 @@ namespace Tests {
         matrix1->at(3,3) = 5;
         
         //auto qr = make_shared<LinearAlgebra::GramSchmidtQR>(matrix1);
-        auto qr = make_shared<IterationQR>(10, 1E-4, Householder, Wank, true);
+        auto qr = make_shared<IterationQR>(10, 1E-4, Householder, SingleThread, true);
         qr->setMatrix(matrix1);
         qr->calculateEigenvalues();
         

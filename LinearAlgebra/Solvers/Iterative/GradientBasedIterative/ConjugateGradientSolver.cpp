@@ -29,14 +29,14 @@ namespace LinearAlgebra {
         auto start = std::chrono::high_resolution_clock::now();
         unsigned n = _linearSystem->matrix->numberOfRows();
         
-        if (_parallelization == Wank) {
+        if (_parallelization == SingleThread) {
             _singleThreadSolution();
         }
-        if (_parallelization == vTechKickedInYo) {
+        if (_parallelization == MultiThread) {
             auto numberOfThreads = std::thread::hardware_concurrency();
             _multiThreadSolution(numberOfThreads, n);
         }
-        else if (_parallelization == turboVTechKickedInYo) {
+        else if (_parallelization == CUDA) {
 
             double *d_matrix = _linearSystem->matrix->getArrayPointer();
             double *d_rhs = _linearSystem->rhs->data();

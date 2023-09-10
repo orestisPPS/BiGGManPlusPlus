@@ -13,7 +13,7 @@ namespace LinearAlgebra {
         
     public:
         explicit ConjugateGradientSolver(VectorNormType normType, double tolerance = 1E-9, unsigned maxIterations = 1E4,
-                                bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = Wank);
+                                bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = SingleThread);
 
     protected:
         

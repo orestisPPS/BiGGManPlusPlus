@@ -89,7 +89,7 @@ namespace LinearAlgebra {
         static void matrixVectorMultiplication(shared_ptr<Array<T>>& matrix, shared_ptr<std::vector<T>>& vector,
                                                shared_ptr<std::vector<T>>& result) {
             if (matrix->numberOfColumns() != vector->size() || matrix->numberOfRows() != result->size())
-                throw invalid_argument("Matrix and vector must have compatible sizes");
+                throw invalid_argument("NumericalMatrix and vector must have compatible sizes");
             for (auto i = 0; i < matrix->numberOfRows(); i++) {
                 auto sum = 0.0;
                 for (auto j = 0; j < matrix->numberOfColumns(); j++)

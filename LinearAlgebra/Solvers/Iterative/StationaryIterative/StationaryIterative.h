@@ -17,7 +17,7 @@ namespace LinearAlgebra {
 
     public:
         explicit StationaryIterative(VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4,
-                                     bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = Wank);
+                                     bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = SingleThread);
 
         void _initializeVectors() override;
         

@@ -1,0 +1,853 @@
+
+        /**
+        * @brief Constructs a new NumericalVector object.
+        * 
+        * @param size Size of the numerical vector.
+        * @param initialValue Default value for vector elements.
+        * @param parallelizationMethod Parallelization method to be used for vector operations.
+        */
+        explicit NumericalVector(unsigned int size, T initialValue = 0,
+                                 ParallelizationMethod parallelizationMethod = SingleThread) {
+            _values = new vector<T>(size, initialValue);
+            _parallelizationMethod = parallelizationMethod;
+        }
+
+        /**
+        * @brief Destructor for NumericalVector.
+        * 
+        * Cleans up and deallocates the vector.
+        */
+        ~NumericalVector() {
+            _values->clear();
+            delete _values;
+            _values = nullptr;
+        }
+
+        /**
+        * @brief Copy constructor for NumericalVector.
+        * 
+        * Handles copying for raw pointers, smart pointers, and other objects.
+        * 
+        * @param other The vector to be copied from.
+        */
+        NumericalVector(const NumericalVector &other) {
+            _values = copyData(other._values);
+            _parallelizationMethod = other._parallelizationMethod;
+        }
+
+        /**
+         * @brief Versatile copy constructor.
+         * 
+         * Creates a new NumericalVector by deep copying data from another data source, which can be 
+         * a NumericalVector, raw pointer, shared pointer, unique pointer, or a direct std::vector<T>.
+         * 
+         * @param other The data source to copy from.
+         */
+        template<typename U>
+        NumericalVector(const U& other) {
+            const auto& dereferencedOther = dereference_trait<U>::dereference(other);
+            _deepCopy(&dereferencedOther);
+        }
+
+        /**
+         * @brief Versatile copy assignment operator.
+         * 
+         * Performs a deep copy of data from another data source, which can be a NumericalVector, 
+         * raw pointer, shared pointer, unique pointer, or a direct std::vector<T>, to the current object.
+         * 
+         * @param other The data source to copy from.
+         * @return A reference to the current NumericalVector after the copy.
+         */
+        template<typename U>
+        NumericalVector& operator=(const U& other) {
+            const auto& dereferencedOther = dereference_trait<U>::dereference(other);
+            _deepCopy(&dereferencedOther);
+            return *this;
+        }
+
+        /**
+         * @brief Versatile equality operator.
+         * 
+         * Checks if the elements of the current NumericalVector are equal to those of another data source,
+         * which can be a NumericalVector, raw pointer, shared pointer, unique pointer, or a direct std::vector<T>.
+         * 
+         * @param other The data source to compare with.
+         * @return true if the elements are equal, false otherwise.
+         */
+        template<typename U>
+        bool operator==(const U& other) const {
+            const auto& dereferencedOther = dereference_trait<U>::dereference(other);
+            return _areElementsEqual(&dereferencedOther);
+        }
+
+        /**
+         * @brief Versatile inequality operator.
+         * 
+         * Checks if the elements of the current NumericalVector are not equal to those of another data source,
+         * which can be a NumericalVector, raw pointer, shared pointer, unique pointer, or a direct std::vector<T>.
+         * 
+         * @param other The data source to compare with.
+         * @return true if the elements are not equal, false otherwise.
+         */
+        template<typename U>
+        bool operator!=(const U& other) const {
+            return !(*this == other);
+        }
+
+
+        /**
+        * @brief Accesses the element at the specified index.
+        * 
+        * @param index Index of the element to access.
+        * @return T& Reference to the element at the specified index.
+        */
+        T &operator[](unsigned int index) {
+            if (index >= _values->size()) {
+                throw out_of_range("Index out of range.");
+            }
+            return (*_values)[index];
+        }
+
+
+        /**
+        * @brief Accesses the element at the specified index (const version).
+        * 
+        * @param index Index of the element to access.
+        * @return const T& Constant reference to the element at the specified index.
+        */
+        const T &operator[](unsigned int index) const {
+            if (index >= _values->size()) {
+                throw out_of_range("Index out of range.");
+            }
+            return (*_values)[index];
+        }
+
+        /**
+        * @brief Accesses the element at the specified index with bounds checking.
+        * 
+        * Throws std::out_of_range exception if index is out of bounds.
+        * 
+        * @param index Index of the element to access.
+        * @return T& Reference to the element at the specified index.
+        */
+        T &at(unsigned int index) {
+            if (index >= _values->size()) {
+                throw out_of_range("Index out of range.");
+            }
+            return (*_values)[index];
+        }
+
+        /**
+        * @brief Accesses the element at the specified index with bounds checking (const version).
+        * 
+        * Throws std::out_of_range exception if index is out of bounds.
+        * 
+        * @param index Index of the element to access.
+        * @return const T& Constant reference to the element at the specified index.
+        */
+        const T &at(unsigned int index) const {
+            if (index >= _values->size()) {
+                throw out_of_range("Index out of range.");
+            }
+            return (*_values)[index];
+        }
+
+        /**
+        * @brief Returns the size of the vector.
+        * 
+        * @return unsigned int Size of the vector.
+        */
+        unsigned int size() const {
+            return _values->size();
+        }
+
+
+    private:
+        vector <T> *_values;
+
+        LinearAlgebra::ParallelizationMethod _parallelizationMethod; ///< Parallelization method used for matrix operations.
+
+
+
+
+        /**
+        * \brief Executes the provided task in parallel across multiple threads.
+        * 
+        * This method distributes the task across available CPU cores. Each thread operates on a distinct segment
+        * of the data, ensuring parallel processing without race conditions.
+        * 
+        * \tparam ThreadJob A callable object type (function, lambda, functor).
+        *
+        * \param size The size of the data being processed.
+        * \param task The callable object that describes the work each thread should execute.
+         * \param availableThreads The number of threads available for processing.
+        * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
+        */
+        template<typename ThreadJob>
+        static void
+        _executeInParallel(size_t size, ThreadJob task, unsigned availableThreads, unsigned cacheLineSize = 64) {
+
+            // Determine the number of doubles that fit in a cache line.
+            // A cache line is the smallest amount of cache that can be loaded and stored from memory.
+            // By calculating doublesPerCacheLine, we're determining how many double values we can efficiently
+            // load/store at once
+            // This is used to ensure that each thread operates on a distinct cache line.
+            unsigned doublesPerCacheLine = cacheLineSize / sizeof(double);
+            unsigned int numThreads = availableThreads;
+
+            // The size + numThreads - 1 expression is used to round up the division result to ensure that all data is
+            // covered even when size is not a multiple of numThreads
+            unsigned blockSize = (size + numThreads - 1) / numThreads;
+
+            //This is done to ensure that each block of data processed by a thread aligns with the cache lines
+            // This is done to avoid false sharing, which is when two threads are accessing the same cache line
+            // False sharing can cause performance issues because the cache line has to be reloaded/stored
+            blockSize = (blockSize + doublesPerCacheLine - 1) / doublesPerCacheLine * doublesPerCacheLine;
+
+            vector<thread> threads;
+            for (unsigned int i = 0; i < numThreads; ++i) {
+                unsigned start = i * blockSize;
+                unsigned end = start + blockSize;
+                if (start >= size) break;
+                threads.push_back(thread(task, start, end));
+            }
+
+            for (auto &thread: threads) {
+                thread.join();
+            }
+        }
+
+        /**
+        * \brief Executes the provided task in parallel across multiple threads with a reduction step.
+        * 
+        * This method distributes the task across available CPU cores. Each thread operates on a distinct segment
+        * of the data and produces a local result. After all threads have completed their work, a reduction step
+        * combines these local results into a single global result.
+        * 
+        * \tparam T The data type of the result (e.g., double, float).
+        * \tparam ThreadJob A callable object type (function, lambda, functor).
+        *
+        * \param size The size of the data being processed.
+        * \param task The callable object that describes the work each thread should execute and return a local result.
+         * \param availableThreads The number of threads available for processing.
+        * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
+        * 
+        * \return The combined result after the reduction step.
+        */
+        template<typename ThreadJob>
+        static T _executeInParallelWithReduction(size_t size, ThreadJob task, unsigned availableThreads,
+                                                 unsigned cacheLineSize = 64) {
+            unsigned doublesPerCacheLine = cacheLineSize / sizeof(double);
+            unsigned int numThreads = availableThreads;
+
+            unsigned blockSize = (size + numThreads - 1) / numThreads;
+            blockSize = (blockSize + doublesPerCacheLine - 1) / doublesPerCacheLine * doublesPerCacheLine;
+
+            vector<T> localResults(numThreads);
+            vector<thread> threads;
+
+            for (unsigned int i = 0; i < numThreads; ++i) {
+                unsigned start = i * blockSize;
+                unsigned end = start + blockSize;
+                if (start >= size) break;
+                threads.push_back(thread([&](unsigned start, unsigned end, unsigned idx) {
+                    localResults[idx] = task(start, end);
+                }, start, end, i));
+            }
+
+            for (auto &thread: threads) {
+                thread.join();
+            }
+
+            T finalResult = 0;
+            for (T val: localResults) {
+                finalResult += val;
+            }
+            return finalResult;
+        }
+
+
+        /**
+        * @brief Performs a deep copy from the source to the current object.
+        * 
+        * This method uses the dereference_trait to handle various types of sources 
+        * such as raw pointers, unique pointers, shared pointers, and direct objects.
+        * 
+        * @param source The source object to be copied from.
+        */
+        template<typename U>
+        void _deepCopy(const U &source) {
+            const auto &dereferencedSource = dereference_trait<U>::dereference(source);
+
+            if (_values->size() != dereferencedSource.size()) {
+                throw std::invalid_argument("Source vector must be the same size as the destination vector.");
+            }
+
+            auto deepCopyThreadJob = [&](unsigned start, unsigned end) {
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    (*_values)[i] = dereferencedSource[i];
+                }
+            };
+
+            if (_parallelizationMethod == SingleThread) {
+                _executeInParallel(_values->size(), deepCopyThreadJob, 1);
+            } else if (_parallelizationMethod == MultiThread)
+                _executeInParallel(_values->size(), deepCopyThreadJob, thread::hardware_concurrency());
+        }
+
+        /**
+        * @brief Checks if the elements of the current object are equal to those of the provided source.
+        * 
+        * This method uses parallelization to perform the comparison and then reduces the results to determine 
+        * if all elements are equal.
+        * 
+        * @param source The source object to be compared with.
+        * @return true if all elements are equal, false otherwise.
+        */
+        template <typename U>
+        bool _areElementsEqual(const U& source) {
+            const auto &dereferencedSource = dereference_trait<U>::dereference(source);
+
+            if (_values->size() != dereferencedSource.size()) {
+                throw std::invalid_argument("Source vector must be the same size as the destination vector.");
+            }
+
+            auto compareElementsJob = [&](unsigned start, unsigned end) -> bool {
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    if ((*_values)[i] != dereferencedSource[i]) {
+                        return false;
+                    }
+                }
+                return true;
+            };
+
+            // Check elements in parallel and reduce the results
+            if (_parallelizationMethod == SingleThread) {
+                return _executeInParallelWithReduction(_values->size(), compareElementsJob, 1);
+            }
+
+            if (_parallelizationMethod == MultiThread) {
+                return _executeInParallelWithReduction(_values->size(), compareElementsJob,
+                                                       std::thread::hardware_concurrency());
+            }
+        }
+
+
+
+        //=================================================================================================================//
+        //============================================ Dereference Traits =================================================//
+        //=================================================================================================================//
+
+        /**
+        * @brief Trait to standardize dereferencing of various types.
+        *
+        * This trait provides a unified way to dereference types such as raw pointers,
+        * unique pointers, shared pointers, and direct objects.
+        */
+        template<typename U>
+        struct dereference_trait {
+            /**
+             * @brief Dereference the given object.
+             * 
+             * For generic types, this function just returns the object itself.
+             * 
+             * @param source The object to dereference.
+             * @return A reference to the dereferenced object.
+             */
+            static auto dereference(const U &source) -> decltype(source) {
+                return source;
+            }
+        };
+
+        /**
+         * @brief Specialization for std::vector<T>.
+         */
+        template<typename U>
+        struct dereference_trait<std::vector<U>> {
+            /**
+             * @brief Dereference the given vector.
+             * 
+             * @param source The vector to dereference.
+             * @return A reference to the vector.
+             */
+            static const std::vector<T> &dereference(const std::vector<U> &source) {
+                return source;
+            }
+        };
+
+        /**
+         * @brief Specialization for raw pointers pointing to std::vector<U>.
+         */
+        template<typename U>
+        struct dereference_trait<std::vector<U> *> {
+
+            /**
+             * @brief Dereference the given raw pointer.
+             * 
+             * @param source The raw pointer pointing to a vector.
+             * @return A reference to the vector pointed by the raw pointer.
+             */
+            static const std::vector<U> &dereference(const std::vector<U> *source) {
+                return *source;
+            }
+        };
+
+        /**
+         * @brief Specialization for std::unique_ptr pointing to std::vector<U>.
+         */
+        template<typename U>
+        struct dereference_trait<std::unique_ptr<std::vector<U>>> {
+            /**
+             * @brief Dereference the given unique pointer.
+             * 
+             * @param source The unique pointer pointing to a vector.
+             * @return A reference to the vector owned by the unique pointer.
+             */
+            static const std::vector<U> &dereference(const std::unique_ptr<std::vector<U>> &source) {
+                return *source;
+            }
+        };
+
+        /**
+         * @brief Specialization for std::shared_ptr pointing to std::vector<U>.
+         */
+        template<typename U>
+        struct dereference_trait<std::shared_ptr<std::vector<U>>> {
+            /**
+             * @brief Dereference the given shared pointer.
+             * 
+             * @param source The shared pointer pointing to a vector.
+             * @return A reference to the vector shared by the shared pointer.
+             */
+            static const std::vector<U> &dereference(const std::shared_ptr<std::vector<U>> &source) {
+                return *source;
+            }
+        };
+    };
+
+        /**
+        * @brief Constructs a new NumericalVector object.
+        * 
+        * @param size Size of the numerical vector.
+        * @param initialValue Default value for vector elements.
+        * @param parallelizationMethod Parallelization method to be used for vector operations.
+        */
+        explicit NumericalVector(unsigned int size, T initialValue = 0,
+                                 ParallelizationMethod parallelizationMethod = SingleThread) {
+            _values = new vector<T>(size, initialValue);
+            _parallelizationMethod = parallelizationMethod;
+        }
+
+        /**
+        * @brief Destructor for NumericalVector.
+        * 
+        * Cleans up and deallocates the vector.
+        */
+        ~NumericalVector() {
+            _values->clear();
+            delete _values;
+            _values = nullptr;
+        }
+
+        /**
+        * @brief Copy constructor for NumericalVector.
+        * 
+        * Handles copying for raw pointers, smart pointers, and other objects.
+        * 
+        * @param other The vector to be copied from.
+        */
+        NumericalVector(const NumericalVector &other) {
+            _values = copyData(other._values);
+            _parallelizationMethod = other._parallelizationMethod;
+        }
+
+        /**
+         * @brief Versatile copy constructor.
+         * 
+         * Creates a new NumericalVector by deep copying data from another data source, which can be 
+         * a NumericalVector, raw pointer, shared pointer, unique pointer, or a direct std::vector<T>.
+         * 
+         * @param other The data source to copy from.
+         */
+        template<typename U>
+        NumericalVector(const U& other) {
+            const auto& dereferencedOther = dereference_trait<U>::dereference(other);
+            _deepCopy(&dereferencedOther);
+        }
+
+        /**
+         * @brief Versatile copy assignment operator.
+         * 
+         * Performs a deep copy of data from another data source, which can be a NumericalVector, 
+         * raw pointer, shared pointer, unique pointer, or a direct std::vector<T>, to the current object.
+         * 
+         * @param other The data source to copy from.
+         * @return A reference to the current NumericalVector after the copy.
+         */
+        template<typename U>
+        NumericalVector& operator=(const U& other) {
+            const auto& dereferencedOther = dereference_trait<U>::dereference(other);
+            _deepCopy(&dereferencedOther);
+            return *this;
+        }
+
+        /**
+         * @brief Versatile equality operator.
+         * 
+         * Checks if the elements of the current NumericalVector are equal to those of another data source,
+         * which can be a NumericalVector, raw pointer, shared pointer, unique pointer, or a direct std::vector<T>.
+         * 
+         * @param other The data source to compare with.
+         * @return true if the elements are equal, false otherwise.
+         */
+        template<typename U>
+        bool operator==(const U& other) const {
+            const auto& dereferencedOther = dereference_trait<U>::dereference(other);
+            return _areElementsEqual(&dereferencedOther);
+        }
+
+        /**
+         * @brief Versatile inequality operator.
+         * 
+         * Checks if the elements of the current NumericalVector are not equal to those of another data source,
+         * which can be a NumericalVector, raw pointer, shared pointer, unique pointer, or a direct std::vector<T>.
+         * 
+         * @param other The data source to compare with.
+         * @return true if the elements are not equal, false otherwise.
+         */
+        template<typename U>
+        bool operator!=(const U& other) const {
+            return !(*this == other);
+        }
+
+
+        /**
+        * @brief Accesses the element at the specified index.
+        * 
+        * @param index Index of the element to access.
+        * @return T& Reference to the element at the specified index.
+        */
+        T &operator[](unsigned int index) {
+            if (index >= _values->size()) {
+                throw out_of_range("Index out of range.");
+            }
+            return (*_values)[index];
+        }
+
+
+        /**
+        * @brief Accesses the element at the specified index (const version).
+        * 
+        * @param index Index of the element to access.
+        * @return const T& Constant reference to the element at the specified index.
+        */
+        const T &operator[](unsigned int index) const {
+            if (index >= _values->size()) {
+                throw out_of_range("Index out of range.");
+            }
+            return (*_values)[index];
+        }
+
+        /**
+        * @brief Accesses the element at the specified index with bounds checking.
+        * 
+        * Throws std::out_of_range exception if index is out of bounds.
+        * 
+        * @param index Index of the element to access.
+        * @return T& Reference to the element at the specified index.
+        */
+        T &at(unsigned int index) {
+            if (index >= _values->size()) {
+                throw out_of_range("Index out of range.");
+            }
+            return (*_values)[index];
+        }
+
+        /**
+        * @brief Accesses the element at the specified index with bounds checking (const version).
+        * 
+        * Throws std::out_of_range exception if index is out of bounds.
+        * 
+        * @param index Index of the element to access.
+        * @return const T& Constant reference to the element at the specified index.
+        */
+        const T &at(unsigned int index) const {
+            if (index >= _values->size()) {
+                throw out_of_range("Index out of range.");
+            }
+            return (*_values)[index];
+        }
+
+        /**
+        * @brief Returns the size of the vector.
+        * 
+        * @return unsigned int Size of the vector.
+        */
+        unsigned int size() const {
+            return _values->size();
+        }
+
+
+    private:
+        vector <T> *_values;
+
+        LinearAlgebra::ParallelizationMethod _parallelizationMethod; ///< Parallelization method used for matrix operations.
+
+
+
+
+        /**
+        * \brief Executes the provided task in parallel across multiple threads.
+        * 
+        * This method distributes the task across available CPU cores. Each thread operates on a distinct segment
+        * of the data, ensuring parallel processing without race conditions.
+        * 
+        * \tparam ThreadJob A callable object type (function, lambda, functor).
+        *
+        * \param size The size of the data being processed.
+        * \param task The callable object that describes the work each thread should execute.
+         * \param availableThreads The number of threads available for processing.
+        * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
+        */
+        template<typename ThreadJob>
+        static void
+        _executeInParallel(size_t size, ThreadJob task, unsigned availableThreads, unsigned cacheLineSize = 64) {
+
+            // Determine the number of doubles that fit in a cache line.
+            // A cache line is the smallest amount of cache that can be loaded and stored from memory.
+            // By calculating doublesPerCacheLine, we're determining how many double values we can efficiently
+            // load/store at once
+            // This is used to ensure that each thread operates on a distinct cache line.
+            unsigned doublesPerCacheLine = cacheLineSize / sizeof(double);
+            unsigned int numThreads = availableThreads;
+
+            // The size + numThreads - 1 expression is used to round up the division result to ensure that all data is
+            // covered even when size is not a multiple of numThreads
+            unsigned blockSize = (size + numThreads - 1) / numThreads;
+
+            //This is done to ensure that each block of data processed by a thread aligns with the cache lines
+            // This is done to avoid false sharing, which is when two threads are accessing the same cache line
+            // False sharing can cause performance issues because the cache line has to be reloaded/stored
+            blockSize = (blockSize + doublesPerCacheLine - 1) / doublesPerCacheLine * doublesPerCacheLine;
+
+            vector<thread> threads;
+            for (unsigned int i = 0; i < numThreads; ++i) {
+                unsigned start = i * blockSize;
+                unsigned end = start + blockSize;
+                if (start >= size) break;
+                threads.push_back(thread(task, start, end));
+            }
+
+            for (auto &thread: threads) {
+                thread.join();
+            }
+        }
+
+        /**
+        * \brief Executes the provided task in parallel across multiple threads with a reduction step.
+        * 
+        * This method distributes the task across available CPU cores. Each thread operates on a distinct segment
+        * of the data and produces a local result. After all threads have completed their work, a reduction step
+        * combines these local results into a single global result.
+        * 
+        * \tparam T The data type of the result (e.g., double, float).
+        * \tparam ThreadJob A callable object type (function, lambda, functor).
+        *
+        * \param size The size of the data being processed.
+        * \param task The callable object that describes the work each thread should execute and return a local result.
+         * \param availableThreads The number of threads available for processing.
+        * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
+        * 
+        * \return The combined result after the reduction step.
+        */
+        template<typename ThreadJob>
+        static T _executeInParallelWithReduction(size_t size, ThreadJob task, unsigned availableThreads,
+                                                 unsigned cacheLineSize = 64) {
+            unsigned doublesPerCacheLine = cacheLineSize / sizeof(double);
+            unsigned int numThreads = availableThreads;
+
+            unsigned blockSize = (size + numThreads - 1) / numThreads;
+            blockSize = (blockSize + doublesPerCacheLine - 1) / doublesPerCacheLine * doublesPerCacheLine;
+
+            vector<T> localResults(numThreads);
+            vector<thread> threads;
+
+            for (unsigned int i = 0; i < numThreads; ++i) {
+                unsigned start = i * blockSize;
+                unsigned end = start + blockSize;
+                if (start >= size) break;
+                threads.push_back(thread([&](unsigned start, unsigned end, unsigned idx) {
+                    localResults[idx] = task(start, end);
+                }, start, end, i));
+            }
+
+            for (auto &thread: threads) {
+                thread.join();
+            }
+
+            T finalResult = 0;
+            for (T val: localResults) {
+                finalResult += val;
+            }
+            return finalResult;
+        }
+
+
+        /**
+        * @brief Performs a deep copy from the source to the current object.
+        * 
+        * This method uses the dereference_trait to handle various types of sources 
+        * such as raw pointers, unique pointers, shared pointers, and direct objects.
+        * 
+        * @param source The source object to be copied from.
+        */
+        template<typename U>
+        void _deepCopy(const U &source) {
+            const auto &dereferencedSource = dereference_trait<U>::dereference(source);
+
+            if (_values->size() != dereferencedSource.size()) {
+                throw std::invalid_argument("Source vector must be the same size as the destination vector.");
+            }
+
+            auto deepCopyThreadJob = [&](unsigned start, unsigned end) {
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    (*_values)[i] = dereferencedSource[i];
+                }
+            };
+
+            if (_parallelizationMethod == SingleThread) {
+                _executeInParallel(_values->size(), deepCopyThreadJob, 1);
+            } else if (_parallelizationMethod == MultiThread)
+                _executeInParallel(_values->size(), deepCopyThreadJob, thread::hardware_concurrency());
+        }
+
+        /**
+        * @brief Checks if the elements of the current object are equal to those of the provided source.
+        * 
+        * This method uses parallelization to perform the comparison and then reduces the results to determine 
+        * if all elements are equal.
+        * 
+        * @param source The source object to be compared with.
+        * @return true if all elements are equal, false otherwise.
+        */
+        template <typename U>
+        bool _areElementsEqual(const U& source) {
+            const auto &dereferencedSource = dereference_trait<U>::dereference(source);
+
+            if (_values->size() != dereferencedSource.size()) {
+                throw std::invalid_argument("Source vector must be the same size as the destination vector.");
+            }
+
+            auto compareElementsJob = [&](unsigned start, unsigned end) -> bool {
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    if ((*_values)[i] != dereferencedSource[i]) {
+                        return false;
+                    }
+                }
+                return true;
+            };
+
+            // Check elements in parallel and reduce the results
+            if (_parallelizationMethod == SingleThread) {
+                return _executeInParallelWithReduction(_values->size(), compareElementsJob, 1);
+            }
+
+            if (_parallelizationMethod == MultiThread) {
+                return _executeInParallelWithReduction(_values->size(), compareElementsJob,
+                                                       std::thread::hardware_concurrency());
+            }
+        }
+
+
+
+        //=================================================================================================================//
+        //============================================ Dereference Traits =================================================//
+        //=================================================================================================================//
+
+        /**
+        * @brief Trait to standardize dereferencing of various types.
+        *
+        * This trait provides a unified way to dereference types such as raw pointers,
+        * unique pointers, shared pointers, and direct objects.
+        */
+        template<typename U>
+        struct dereference_trait {
+            /**
+             * @brief Dereference the given object.
+             * 
+             * For generic types, this function just returns the object itself.
+             * 
+             * @param source The object to dereference.
+             * @return A reference to the dereferenced object.
+             */
+            static auto dereference(const U &source) -> decltype(source) {
+                return source;
+            }
+        };
+
+        /**
+         * @brief Specialization for std::vector<T>.
+         */
+        template<typename U>
+        struct dereference_trait<std::vector<U>> {
+            /**
+             * @brief Dereference the given vector.
+             * 
+             * @param source The vector to dereference.
+             * @return A reference to the vector.
+             */
+            static const std::vector<T> &dereference(const std::vector<U> &source) {
+                return source;
+            }
+        };
+
+        /**
+         * @brief Specialization for raw pointers pointing to std::vector<U>.
+         */
+        template<typename U>
+        struct dereference_trait<std::vector<U> *> {
+
+            /**
+             * @brief Dereference the given raw pointer.
+             * 
+             * @param source The raw pointer pointing to a vector.
+             * @return A reference to the vector pointed by the raw pointer.
+             */
+            static const std::vector<U> &dereference(const std::vector<U> *source) {
+                return *source;
+            }
+        };
+
+        /**
+         * @brief Specialization for std::unique_ptr pointing to std::vector<U>.
+         */
+        template<typename U>
+        struct dereference_trait<std::unique_ptr<std::vector<U>>> {
+            /**
+             * @brief Dereference the given unique pointer.
+             * 
+             * @param source The unique pointer pointing to a vector.
+             * @return A reference to the vector owned by the unique pointer.
+             */
+            static const std::vector<U> &dereference(const std::unique_ptr<std::vector<U>> &source) {
+                return *source;
+            }
+        };
+
+        /**
+         * @brief Specialization for std::shared_ptr pointing to std::vector<U>.
+         */
+        template<typename U>
+        struct dereference_trait<std::shared_ptr<std::vector<U>>> {
+            /**
+             * @brief Dereference the given shared pointer.
+             * 
+             * @param source The shared pointer pointing to a vector.
+             * @return A reference to the vector shared by the shared pointer.
+             */
+            static const std::vector<U> &dereference(const std::shared_ptr<std::vector<U>> &source) {
+                return *source;
+            }
+        };
+    };
+}

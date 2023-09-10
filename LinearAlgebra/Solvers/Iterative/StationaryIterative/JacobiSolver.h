@@ -14,7 +14,7 @@ namespace LinearAlgebra {
         
     public:
         explicit JacobiSolver(VectorNormType normType, double tolerance = 1E-5, unsigned maxIterations = 1E4,
-                     bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = Wank);
+                     bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = SingleThread);
     protected:
         void _singleThreadSolution() override;
 

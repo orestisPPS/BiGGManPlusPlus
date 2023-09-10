@@ -23,14 +23,14 @@ using namespace std;
 namespace LinearAlgebra {
 
 
-/**
- * A custom matrix class that stores the matrix elements in a one-dimensional heap-allocated array. The elements
- * are stored in row-major order.
- * 
- * @tparam T The type of the elements stored in the matrix.
- */
+    /**
+     * A custom matrix class that stores the matrix elements in a one-dimensional heap-allocated array. The elements
+     * are stored in row-major order.
+     * 
+     * @tparam T The type of the elements stored in the matrix.
+     */
     template<typename T>
-    class Array2 {
+    class NumericalMatrix {
 
     public:
         /**
@@ -40,14 +40,12 @@ namespace LinearAlgebra {
          * @param numberOfColumns The number of columns in the matrix. Defaults to 1.
          * @param numberOfAisles The number of aisles in the matrix. Defaults to 1.
          * @param initialValue The initial value of all the matrix elements. Defaults to 0.
-         * @param isPositiveDefinite Boolean indicating whether the matrix is symmetric and has positive eigenvalues. Defaults to false.
          */
-        explicit Array2(short unsigned numberOfRows, short unsigned numberOfColumns = 1, short unsigned numberOfAisles = 1,
-                       T initialValue = 0, bool isPositiveDefinite = false) :
+        explicit NumericalMatrix(short unsigned numberOfRows, short unsigned numberOfColumns = 1, short unsigned numberOfAisles = 1,
+                                 T initialValue = 0, bool isPositiveDefinite = false) :
                 _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _numberOfAisles(numberOfAisles),
                 //_array(make_shared<vector<T>>(numberOfRows * numberOfColumns * numberOfAisles, initialValue)),
-                _array(new vector<T>(numberOfRows * numberOfColumns * numberOfAisles, initialValue)),
-                _isPositiveDefinite(isPositiveDefinite), _isSquare(false),
+                _array(new vector<T>(numberOfRows * numberOfColumns * numberOfAisles, initialValue)), _isSquare(false),
                 parallelizationThreshold(1E4) {
             if (numberOfRows == numberOfColumns and numberOfColumns == numberOfAisles)
                 _isSquare = true;
@@ -61,7 +59,7 @@ namespace LinearAlgebra {
         Array2(const Array2<T> &array) :
                 _numberOfRows(array._numberOfRows), _numberOfColumns(array._numberOfColumns),
                 _numberOfAisles(array._numberOfAisles),
-                _array(array._array), _isPositiveDefinite(array._isPositiveDefinite), _isSquare(array._isSquare),
+                _array(array._array), _isSquare(array._isSquare),
                 parallelizationThreshold(array.parallelizationThreshold) {}
 
         ~Array2() {
@@ -307,7 +305,6 @@ namespace LinearAlgebra {
                 _numberOfAisles != array._numberOfAisles)
                 throw invalid_argument("The dimensions of the arrays are not the same.");
             _isSquare = array._isSquare;
-            _isPositiveDefinite = array._isPositiveDefinite;
             for (int i = 0; i < array._array->size(); ++i) {
                 _array[i] = array._array[i];
             }
@@ -331,167 +328,12 @@ namespace LinearAlgebra {
             return true;
         }
 
-        /**
-        * Overloads the inequality operator to compare two arrays for inequality.
-        * 
-        * @param array The array to compare with.
-        * @return `true` if the arrays are not equal, `false` otherwise.
-        */
-        bool operator!=(const Array2<T>& array) const {
-            return !(*this == array);
-        }
-
-        Array2<T> add(const Array2<T>& array) const{
-            if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
-                _numberOfAisles != array._numberOfAisles)
-                throw invalid_argument("The dimensions of the arrays are not the same.");
-            Array2<T> result(_numberOfRows, _numberOfColumns, _numberOfAisles);
-            for (int i = 0; i < _array->size(); ++i) {
-                result._array[i] = _array[i] + array._array[i];
-            }
-            return result;
-        }
-
-        void addIntoThis(const Array2<T>& array){
-            if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
-                _numberOfAisles != array._numberOfAisles)
-                throw invalid_argument("The dimensions of the arrays are not the same.");
-            for (int i = 0; i < _array->size(); ++i) {
-                _array[i] += array._array[i];
-            }
-        }
-
-        Array2<T> subtract(const Array2<T>& array) const{
-            if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
-                _numberOfAisles != array._numberOfAisles)
-                throw invalid_argument("The dimensions of the arrays are not the same.");
-            Array2<T> result(_numberOfRows, _numberOfColumns, _numberOfAisles);
-            for (int i = 0; i < _array->size(); ++i) {
-                result._array[i] = _array[i] - array._array[i];
-            }
-            return result;
-        }
-
-        void subtractIntoThis(const Array2<T>& array){
-            if (_numberOfRows != array._numberOfRows or _numberOfColumns != array._numberOfColumns or
-                _numberOfAisles != array._numberOfAisles)
-                throw invalid_argument("The dimensions of the arrays are not the same.");
-            for (int i = 0; i < _array->size(); ++i) {
-                _array[i] -= array._array[i];
-            }
-        }
-
-        Array2<T> multiply(const Array2<T>& array, unsigned minRow, unsigned maxRow, unsigned minCol, unsigned maxCol) const;
-
-        Array2<T> multiply(const Array2<T>& array) const{
-            return multiply(array, 0, _numberOfRows - 1, 0, _numberOfColumns - 1);
-        }
-
-        vector<T> multiplyWithVector(const vector<T>& vector) const {
-            if (_numberOfColumns != vector.size())
-                throw invalid_argument("The dimensions of the array and the vector are not the same.");
-
-            auto result  = std::vector<T>(_numberOfRows);
-
-            for (int i = 0; i < _numberOfRows; ++i) {
-                for (int j = 0; j < _numberOfColumns; ++j) {
-                    result[i] += _array[i * _numberOfColumns + j] * vector[j];
-                }
-            }
-            return result;
-        }
-
-        void scale(T scalar){
-            for (auto& element : *_array) {
-                element *= scalar;
-            }
-        }
-
-
-        Array2<T> transpose() const{
-            if (_numberOfRows != _numberOfColumns)
-                throw invalid_argument("The matrix is not square.");
-
-            Array2<T> transpose(_numberOfColumns, _numberOfRows);
-
-            for (int i = 0; i < _numberOfRows; ++i) {
-                for (int j = i + 1; j < _numberOfColumns; ++j) {
-                    transpose._array[i * _numberOfColumns + j] = _array[j * _numberOfColumns + i];
-                }
-            }
-        }
-
-        void transposeIntoThis() {
-            auto temp_vector = vector<T>(_array->size());
-            auto temp_rows = _numberOfRows;
-            auto temp_columns = _numberOfColumns;
-
-            for (int i = 0; i < _numberOfRows; ++i) {
-                for (int j = 0; j < _numberOfColumns; ++j) {
-                    temp_vector[j * temp_rows + i] = _array[i * _numberOfColumns + j];
-                }
-            }
-
-            _array = temp_vector;
-            _numberOfRows = temp_columns;
-            _numberOfColumns = temp_rows;
-        }
 
         bool isSquare() const {
             return _isSquare;
         }
 
-        bool isSymmetric(double tolerance = 1E-11) const {
-            if (_numberOfRows != _numberOfColumns)
-                throw invalid_argument("The matrix is not square.");
-            auto result = true;
-            for (int i = 0; i < _numberOfRows; ++i) {
-                for (int j = i + 1; j < _numberOfColumns; ++j) {
-
-                    if (abs(_array->at(i * _numberOfColumns + j) - _array->at(j * _numberOfColumns + i)) < tolerance && abs(_array->at(i * _numberOfColumns + j) - _array->at(j * _numberOfColumns + i)) > 0) {
-                        cout << "i: " << i << " j: " << j <<" "<<  _array->at(i * _numberOfColumns + j) - _array->at(j * _numberOfColumns + i) << endl;
-                        result = false;
-                    }
-                }
-            }
-            return result;
-        }
-
-        bool isPositiveDefinite() const {
-            return _isPositiveDefinite;
-        }
-
-        void setPositiveDefinite(bool isPositiveDefinite) {
-            _isPositiveDefinite = isPositiveDefinite;
-        }
-
-        bool isDiagonal() const {
-            for (int i = 0; i < size(); ++i) {
-                for (int j = 0; j < size(); ++j) {
-                    if (i != j and _array[i * _numberOfColumns + j] != 0)
-                        return false;
-                }
-            }
-        }
-
-        bool isDiagonallyDominant() {
-            auto size = _numberOfRows;
-            for (int i = 0; i < size; ++i) {
-                double diagonalElement = _array[i * size + i];
-                double sum = 0.0;
-
-                for (int j = 0; j < size; ++j) {
-                    if (j != i) {
-                        sum += std::abs(_array[i * size + j]);
-                    }
-                }
-
-                if (diagonalElement <= sum) {
-                    return false;
-                }
-            }
-            return true;
-        }
+        
 
         unsigned numberOfRows() const{
             return _numberOfRows;
@@ -774,38 +616,6 @@ namespace LinearAlgebra {
         }
 
 
-        void print(int precision = 1) const {
-            for (int i = 0; i < _numberOfRows; ++i) {
-                for (int j = 0; j < _numberOfColumns; ++j) {
-                    std::cout << std::scientific << std::setprecision(precision) << _array->at(i * _numberOfColumns + j) << " ";
-                }
-                std::cout << std::endl;
-            }
-        }
-
-        void printRow(unsigned row) const {
-            for (int i = 0; i < _numberOfColumns; ++i) {
-                cout << _array[row * _numberOfColumns + i] << " ";
-            }
-            cout << endl;
-        }
-
-        void printColumn(unsigned column) const {
-            for (int i = 0; i < _numberOfRows; ++i) {
-                cout << _array[i * _numberOfColumns + column] << " ";
-            }
-            cout << endl;
-        }
-
-        bool hasZeroInDiagonal(double tolerance = 1E-20){
-            auto size = _numberOfRows * _numberOfColumns;
-            for (int i = 0; i < size; i = i + _numberOfColumns + 1) {
-                if (abs(_array[i]) > tolerance)
-                    return false;
-            }
-            return true;
-        }
-
         double * getArray2Pointer() const {
             return _array->data();
         }
@@ -820,8 +630,6 @@ namespace LinearAlgebra {
         unsigned _numberOfColumns;
         //Number of Aisles. Array2 size : Depth
         unsigned _numberOfAisles;
-        //Boolean that stores if the matrix is symmetric and has positive eigenvalues
-        bool _isPositiveDefinite;
 
         bool _isSquare;
 

@@ -38,23 +38,13 @@ namespace LinearAlgebra {
         * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
         */
         template<typename ThreadJob>
-/**
-        * \brief Execute tasks in parallel.
-        *
-        * Distributes the given task across multiple threads for parallel execution.
-        *
-        * \tparam ThreadJob Type of the callable task.
-        * \param size The size of the data to be processed.
-        * \param task The actual task to be executed in parallel.
-        * \param cacheLineSize Size of the cache line (default is 64 bytes).
-        */
         static void executeInParallel(size_t size, ThreadJob task, unsigned cacheLineSize = 64) {
             
             // Determine the number of doubles that fit in a cache line.
             // A cache line is the smallest amount of cache that can be loaded and stored from memory.
             // By calculating doublesPerCacheLine, we're determining how many double values we can efficiently
             // load/store at once
-            // This is used to ensure that each thread operates on a distinct cache line.
+            // This is used to ensure that each thread operates on a distinct cache line. 
             unsigned doublesPerCacheLine = cacheLineSize / sizeof(double);
             unsigned int numThreads = thread::hardware_concurrency();
             
@@ -95,16 +85,6 @@ namespace LinearAlgebra {
         * \param cacheLineSize An optional parameter to adjust for system's cache line size (default is 64 bytes).
         * 
         * \return The combined result after the reduction step.
-        */
-/**
-        * \brief Execute tasks in parallel with reduction.
-        *
-        * Distributes the given task across multiple threads for parallel execution and then combines the results.
-        *
-        * \tparam T Data type for reduction.
-        * \param size The size of the data to be processed.
-        * \param task The actual task to be executed in parallel.
-        * \param cacheLineSize Size of the cache line (default is 64 bytes).
         */
         template<typename T, typename ThreadJob>
         static T executeInParallelWithReduction(size_t size, ThreadJob task, unsigned cacheLineSize = 64) {

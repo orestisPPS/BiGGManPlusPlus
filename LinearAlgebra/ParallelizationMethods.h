@@ -7,9 +7,9 @@
 
 namespace LinearAlgebra {
     enum ParallelizationMethod {
-        Wank,
-        vTechKickedInYo,
-        turboVTechKickedInYo
+        SingleThread,
+        MultiThread,
+        CUDA
     };
     
     class ParallelizationMethods {

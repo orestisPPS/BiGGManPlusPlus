@@ -8,7 +8,7 @@ namespace LinearAlgebra {
     IterationQR::IterationQR(unsigned maxIterations, double exitError, DecompositionType decompositionType, ParallelizationMethod parallelizationMethod, bool storeOnMatrix) :
     _maxIterations(maxIterations), _exitError(exitError), _decompositionType(decompositionType),
     _parallelizationMethod(parallelizationMethod), _storeOnMatrix(storeOnMatrix) {
-
+        
         switch (_decompositionType) {
             case GramSchmidt:
                 _matrixQRDecomposition = make_shared<GramSchmidtQR>(true, _parallelizationMethod, false);
@@ -22,7 +22,7 @@ namespace LinearAlgebra {
     void IterationQR::calculateEigenvalues() {
         
         if (!_matrixSet) {
-            throw runtime_error("Matrix not set");
+            throw runtime_error("NumericalMatrix not set");
         }
         
         while (_iteration < _maxIterations) {
@@ -33,6 +33,11 @@ namespace LinearAlgebra {
             _matrixQRDecomposition->getRQ(_matrix);
             //auto eigenvalues = getEigenvalues();
             _iteration++;
+            cout<< "Q" << endl;
+            _matrixQRDecomposition->getQ()->print(4);
+            cout<< ""<< endl;
+            cout<< "R" << endl;
+            _matrixQRDecomposition->getR()->print(4);
             
             auto eig = getEigenvalues();
             cout<<"========== Iteration "<<_iteration<<" =========="<<endl;
