@@ -6,12 +6,12 @@
 namespace Tests {
     SteadyState3DNeumann::SteadyState3DNeumann() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 3;
-        numberOfNodes[Direction::Two] = 3;
-        numberOfNodes[Direction::Three] = 3;
+        numberOfNodes[Direction::One] = 5;
+        numberOfNodes[Direction::Two] = 5;
+        numberOfNodes[Direction::Three] = 5;
 
         //auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 1, 1, 0, 0, 0, 0, 0, 0);
-        auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0);
+        auto specs = make_shared<MeshSpecs>(numberOfNodes, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0);
         auto meshFactory = make_shared<MeshFactory>(specs);
         auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
         meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 1, 1, 1));

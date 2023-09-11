@@ -155,7 +155,7 @@ namespace Discretization {
             _uniformlySpacedMetrics(coordinateSystem, getBoundaryNodesVector(), true);
             _uniformlySpacedMetrics(coordinateSystem, getInternalNodesVector(), false);
         } else {
-            _arbitrarilySpacedMeshMetrics(coordinateSystem);
+            //_arbitrarilySpacedMeshMetrics(coordinateSystem);
         }
         
 /*        for (auto &node: *metrics) {
@@ -173,8 +173,8 @@ namespace Discretization {
         return nullptr;
     }*/
     
-    void Mesh::_arbitrarilySpacedMeshMetrics(CoordinateType coordinateSystem) {
-        /*if (isInitialized) {
+/*    void Mesh::_arbitrarilySpacedMeshMetrics(CoordinateType coordinateSystem) {
+        if (isInitialized) {
             //Initialize Mesh Metrics map
             metrics = make_shared<map<unsigned, shared_ptr<Metrics>>>();
 
@@ -256,8 +256,8 @@ namespace Discretization {
             schemeSpecs = nullptr;
         }
         else
-            throw std::runtime_error("Mesh is not initialized");*/
-    }
+            throw std::runtime_error("Mesh is not initialized");
+    }*/
 
     void Mesh::_uniformlySpacedMetrics(CoordinateType coordinateSystem, unique_ptr<vector<Discretization::Node *>> nodes, bool areBoundary) {
         
@@ -290,17 +290,17 @@ namespace Discretization {
             auto nodeMetrics = make_shared<Metrics>(node, dimensions());
             //Loop through all the directions to find g_i = d(x_j)/d(x_i), g^i = d(x_i)/d(x_j)
             for (auto &directionI: directions) {
+                
                 auto indexDirectionI = spatialDirectionToUnsigned[directionI];
                 auto covariantBaseVectorI = NumericalVector<double>(directions.size(), 0);
                 auto contravariantBaseVectorI = NumericalVector<double>(directions.size(), 0);
                 
-                
                 for (auto &directionJ : directions){
                     auto indexDirectionJ = spatialDirectionToUnsigned[directionJ];
-                    
+
                     //Check if the available positions are qualified for the current derivative order
                     auto qualifiedPositions = schemeBuilder.getQualifiedFromAvailable(
-                            availablePositionsAndDepth[directionJ], templatePositionsAndPointsMap[1][directionJ]);
+                            availablePositionsAndDepth[directionI], templatePositionsAndPointsMap[1][directionJ]);
                     auto scheme = FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
                             qualifiedPositions, directionJ, errorOrderDerivative1, 1);
 
@@ -318,7 +318,6 @@ namespace Discretization {
                     //Get the FD scheme weights for the current direction
                     auto covariantWeights = scheme.weights;
                     auto contravariantWeights = covariantWeights;
-
                     
                     //Check if the number of weights and the number of nodes match
                     if (covariantWeights.size() != parametricCoords[directionJ][indexDirectionJ]->size()) {
@@ -338,7 +337,7 @@ namespace Discretization {
                     
                     
                     auto covariantStep = 1.0;
-                    auto contravariantStep = parametricCoords[directionJ][indexDirectionJ]->averageAbsoluteDeviationFromMean();
+                    auto contravariantStep = templateCoords[indexDirectionJ]->averageAbsoluteDeviationFromMean();
                     contravariantStep = pow(contravariantStep, scheme.power) * scheme.denominatorCoefficient;
 
                     for (int weight = 0; weight < covariantWeights.size(); weight++) {
@@ -353,12 +352,12 @@ namespace Discretization {
                     //auto gi = VectorOperations::dotProduct(covariantWeights, templateCoordsMap[directionJ]);
                     //auto testCoords = templateCoords[directionI][i];
                     
-                    covariantBaseVectorI[indexDirectionI] = covariantWeights.dotProduct(templateCoords[directionJ][indexDirectionJ]);
+                    covariantBaseVectorI[indexDirectionI] = covariantWeights.dotProduct(templateCoords[indexDirectionJ]);
                     //Contravariant base vectors (dξ_i/dr_i)
                     //g^1 = {dξ/dx, dξ/dy, dξ/dz}
                     //g^2 = {dη/dx, dη/dy, dη/dz}
                     //g^3 = {dζ/dx, dζ/dy, dζ/dz}
-                    contravariantBaseVectorI[indexDirectionI] = contravariantWeights.dotProduct(parametricCoords[directionJ][indexDirectionJ]);
+                    contravariantBaseVectorI[indexDirectionI] = contravariantWeights.dotProduct(parametricCoords[indexDirectionI]);
                 }
                 nodeMetrics->covariantBaseVectors->insert(
                         pair<Direction, NumericalVector<double>>(directionI, covariantBaseVectorI));
