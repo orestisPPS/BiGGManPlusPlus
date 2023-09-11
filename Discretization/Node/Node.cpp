@@ -18,11 +18,11 @@ namespace Discretization {
 /*        cout << "Natural coordinates [x_1, x_2, x_3] = { " <<(\
              coordinates(Natural, 0)) << ", " << coordinates(Natural, 1) << ", " << coordinates(Natural, 2) << "}" << endl;*/
                      
-        auto parametricCoords = coordinates.positionVector3D(Parametric);
+        auto parametricCoords = coordinates.getPositionVector3D(Parametric);
         cout << "Parametric coordinates [x_1, x_2, x_3] = { " <<(\
              parametricCoords[0]) << ", " << parametricCoords[1] << ", " << parametricCoords[2] << "}" << endl;
                      
-        auto templateCoords = coordinates.positionVector3D(Template);
+        auto templateCoords = coordinates.getPositionVector3D(Template);
         cout << "Template coordinates [x_1, x_2, x_3] = { " <<(\
              templateCoords[0]) << ", " << templateCoords[1] << ", " << templateCoords[2] << "}" << endl;
         cout << "---------------------------------------------------------" << endl;

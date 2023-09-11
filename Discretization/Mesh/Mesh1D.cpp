@@ -102,18 +102,6 @@ namespace Discretization {
         return totalNodes;
     }
     
-    
-    shared_ptr<map<vector<double>, Node*>> Mesh1D::createParametricCoordToNodesMap() {
-        auto parametricCoordToNodeMap = make_shared<map<vector<double>, Node*>>();
-        for (auto& node : *totalNodesVector) {
-            auto parametricCoords = *node->coordinates.positionVector(Parametric).getVectorSharedPtr();
-            parametricCoords[1] = 0;
-            parametricCoords[2] = 0;
-            parametricCoordToNodeMap->insert(pair<vector<double>, Node*>(parametricCoords, node));
-        }
-        return parametricCoordToNodeMap;
-    }
-
     void Mesh1D::createElements(ElementType elementType, unsigned int nodesPerEdge) {
         if (elementType == Line){
             unsigned numberOfElements = nodesPerDirection[Direction::One] - 1;

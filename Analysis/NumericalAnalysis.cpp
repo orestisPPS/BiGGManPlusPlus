@@ -47,8 +47,8 @@ namespace NumericalAnalysis {
             default:
                 throw runtime_error("Target Node coordinates must have size of 1, 2, or 3");
         }
-        auto coordMap = mesh->getCoordinateToNodeMap();
-        for (auto &coord : coordMap) {
+        auto coordMap = mesh->getCoordinatesToNodesMap();
+        for (auto &coord : *coordMap) {
             auto iNodeCoords = coord.first;
             if (abs(iNodeCoords[0] - nodeCoordinates[0]) < tolerance &&
                 abs(iNodeCoords[1] - nodeCoordinates[1]) < tolerance &&

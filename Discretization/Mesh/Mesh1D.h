@@ -29,8 +29,6 @@ namespace Discretization {
         Node* node(unsigned i, unsigned j) override;
         
         Node* node(unsigned i, unsigned j, unsigned k) override;
-
-        shared_ptr<map<vector<double>, Node*>> createParametricCoordToNodesMap() override;
         
         void printMesh() override;
         

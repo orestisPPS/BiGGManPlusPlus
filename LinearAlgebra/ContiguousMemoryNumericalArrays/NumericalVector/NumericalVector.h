@@ -102,9 +102,11 @@ namespace LinearAlgebra {
         * 
         * @param other The source object to be copied from.
         */
-        NumericalVector(const NumericalVector<T> &other){
+        template<typename InputType>
+        explicit NumericalVector(const NumericalVector<T> &other){
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _availableThreads = other._availableThreads;
+            _values = make_shared<vector<T>>(dereference_trait<InputType>::size(other));
             _deepCopy(other);
         }
         

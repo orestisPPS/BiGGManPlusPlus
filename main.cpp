@@ -26,8 +26,8 @@ using namespace DegreesOfFreedom;
 int main() {
 
     auto analysisTest = new NumericalAnalysis::StStFDTest();
-    //auto neumannTest = new Tests::SteadyState3DNeumann();
-    //delete neumannTest;
+    auto neumannTest = new Tests::SteadyState3DNeumann();
+    delete neumannTest;
 
 /*    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();
     delete lanczosTest;*/

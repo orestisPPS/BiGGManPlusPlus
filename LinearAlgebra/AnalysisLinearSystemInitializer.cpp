@@ -24,7 +24,7 @@ namespace LinearAlgebra {
                                     _coordinateType(coordinateType) {
         _rhsVector = make_shared<NumericalVector<double>>(*_analysisDegreesOfFreedom->numberOfFreeDOF, 0);
         _matrix = make_shared<NumericalMatrix<double>>(*_analysisDegreesOfFreedom->numberOfFreeDOF, *_analysisDegreesOfFreedom->numberOfFreeDOF);
-        _parametricCoordToNodeMap = _mesh->createParametricCoordToNodesMap();
+        _parametricCoordToNodeMap = _mesh->getCoordinatesToNodesMap(Parametric);
     }
     
 
@@ -72,18 +72,16 @@ namespace LinearAlgebra {
             for (auto derivativeOrder = 1; derivativeOrder <= maxDerivativeOrder; derivativeOrder++) {
 
                 //Decompose scheme into directional components
-                for (auto &direction: directions) {
-                    int i = spatialDirectionToUnsigned[direction];
-                    double iThDerivativePDECoefficient = _getPDECoefficient(derivativeOrder, node, direction);
+                for (auto &directionI: directions) {
+                    unsigned indexDirectionI = spatialDirectionToUnsigned[directionI];
+                    double iThDerivativePDECoefficient = _getPDECoefficient(derivativeOrder, node, directionI);
                     if (iThDerivativePDECoefficient != 0) {
-                        auto directionIndex = spatialDirectionToUnsigned[direction];
-
+                        
                         //Check if the available positions are qualified for the current derivative order
-                        auto qualifiedPositions = _getQualifiedFromAvailable(availablePositionsAndDepth[direction],
-                                                                             templatePositionsAndPointsMap[derivativeOrder][direction]);
+                        auto qualifiedPositions = schemeBuilder.getQualifiedFromAvailable(
+                                availablePositionsAndDepth[directionI], templatePositionsAndPointsMap[1][directionI]);
                         auto scheme = FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
-                                qualifiedPositions, direction,
-                                _specs->getErrorOrderOfSchemeTypeForDerivative(derivativeOrder), derivativeOrder);
+                                qualifiedPositions, directionI, errorOrderDerivative1, 1);
 
                         auto graphFilter = map<Position, unsigned short>();
                         for (auto &tuple: qualifiedPositions) {
@@ -92,24 +90,16 @@ namespace LinearAlgebra {
                             }
                         }
                         auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
+                        auto colinearCoordinatesNumericalVector = graph.getSameColinearNodalCoordinatesOnBoundary(
+                                _coordinateType, filteredNodeGraph)[directionI][indexDirectionI];
+                        auto colinearDOF = graph.getColinearDOFOnBoundary(dof->type(), directionI, filteredNodeGraph);
+                        double schemeAroundPoint = (*colinearCoordinatesNumericalVector)[0];
+                        auto weights2 = calculateWeightsOfDerivativeOrder(*colinearCoordinatesNumericalVector, 2, schemeAroundPoint);
 
-                        auto colinearCoordinates = graph.getSameColinearNodalCoordinates(_coordinateType,
-                                                                                         filteredNodeGraph);
-                        auto colinearCoordinatesVector = NumericalVector<double>(colinearCoordinates[direction].size());
-                        for (int k = 0; k < colinearCoordinates.size(); ++k) {
-                            colinearCoordinatesVector[k] = colinearCoordinates[direction][directionIndex][k];
-                            auto colinearDOF = graph.getColinearDOF(dof->type(), direction, filteredNodeGraph);
+                        auto step = colinearCoordinatesNumericalVector->averageAbsoluteDeviationFromMean();
 
-                            auto step = colinearCoordinatesVector.averageAbsoluteDeviationFromMean();
-                            //Calculate the denominator (h^p)
-                            double denominator = scheme.denominatorCoefficient * pow(step, scheme.power);
-
-                            denominator = 1 / denominator;
-
-
-                            auto weights2 = calculateWeightsOfDerivativeOrder(
-                                    colinearCoordinates[direction][i], 2,
-                                    node->coordinates.positionVector(_coordinateType)[i]);
+                        //Calculate the denominator (h^p)
+                        double denominator = scheme.denominatorCoefficient * pow(step, scheme.power);
 
                             NumericalVector<double> &schemeWeights = scheme.weights;
                             for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
@@ -132,17 +122,16 @@ namespace LinearAlgebra {
                             }
                         }
                     }
-                }
             }
-            addNeumannBoundaryConditions();
-            //_matrix->print();
-            this->linearSystem = make_shared<LinearSystem>(std::move(_matrix), std::move(_rhsVector));
-
-
-            auto end = std::chrono::steady_clock::now(); // Stop the timer
-            cout << "Linear System Assembled in "
-                 << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
         }
+        addNeumannBoundaryConditions();
+        //_matrix->print();
+        this->linearSystem = make_shared<LinearSystem>(std::move(_matrix), std::move(_rhsVector));
+
+
+        auto end = std::chrono::steady_clock::now(); // Stop the timer
+        cout << "Linear System Assembled in "
+             << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
     }
 
     void AnalysisLinearSystemInitializer::addNeumannBoundaryConditions() {
@@ -150,7 +139,6 @@ namespace LinearAlgebra {
         auto schemeSpecs = make_shared<FDSchemeSpecs>(2, _mesh->directions());
         auto directions = _mesh->directions();
         short unsigned maxDerivativeOrder = 1;
-        auto parametricCoordsMap = _mesh->createParametricCoordToNodesMap();
 
         auto schemeBuilder = FiniteDifferenceSchemeBuilder(schemeSpecs);
         auto errorOrderDerivative1 = 2;
@@ -165,12 +153,13 @@ namespace LinearAlgebra {
             auto node = _mesh->nodeFromID(dof.first->parentNode());
             auto normalVector = _mesh->getNormalUnitVectorOfBoundaryNode(boundaryNodeToPositionMap->at(node), node);
             auto thisDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof.first);
-            auto graph = IsoParametricNodeGraph(node, maxNeighbours, parametricCoordsMap, _mesh->nodesPerDirection,
+            auto graph = IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap, _mesh->nodesPerDirection,
                                                 false);
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
             auto nodeMetrics = make_shared<Metrics>(node, _mesh->dimensions());
             //Loop through all the directions to find g_i = d(x_j)/d(x_i), g^i = d(x_i)/d(x_j)
             for (auto &directionI: directions) {
+                
                 auto i = spatialDirectionToUnsigned[directionI];
                 //Check if the available positions are qualified for the current derivative order
                 auto qualifiedPositions = schemeBuilder.getQualifiedFromAvailable(
@@ -185,16 +174,13 @@ namespace LinearAlgebra {
                     }
                 }
                 auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
-                auto colinearCoordinates = graph.getSameColinearNodalCoordinatesOnBoundary(_coordinateType,
-                                                                                           filteredNodeGraph);
+                auto colinearCoordinatesNumericalVector = graph.getSameColinearNodalCoordinatesOnBoundary(
+                        _coordinateType, filteredNodeGraph)[directionI][i];
                 auto colinearDOF = graph.getColinearDOFOnBoundary(dof.first->type(), directionI, filteredNodeGraph);
-                auto weights2 = calculateWeightsOfDerivativeOrder(
-                        colinearCoordinates[directionI][i], 2, node->coordinates.positionVector(Natural)[i]);
-                auto colinearCoordinatesVector = NumericalVector<double>(colinearCoordinates[directionI].size());
-                for (int k = 0; k < colinearCoordinates.size(); ++k) {
-                    colinearCoordinatesVector[k] = colinearCoordinates[directionI][i][k];
-                }
-                auto step = colinearCoordinatesVector.averageAbsoluteDeviationFromMean();
+                double schemeAroundPoint = (*colinearCoordinatesNumericalVector)[0];
+                auto weights2 = calculateWeightsOfDerivativeOrder(*colinearCoordinatesNumericalVector, 2, schemeAroundPoint);
+   
+                auto step = colinearCoordinatesNumericalVector->averageAbsoluteDeviationFromMean();
 
                 //Calculate the denominator (h^p)
                 double denominator = scheme.denominatorCoefficient * pow(step, scheme.power);

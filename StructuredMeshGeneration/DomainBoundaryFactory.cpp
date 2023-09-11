@@ -27,7 +27,7 @@ namespace StructuredMeshGenerator {
             switch (boundary.first) {
                 case Bottom:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = nodalParametricCoords[0] * stepX;
                         coordinateVector[1] = 0.0;
                         Transformations::rotate(coordinateVector, rotAngle);
@@ -42,7 +42,7 @@ namespace StructuredMeshGenerator {
                     break;
                 case Right:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = lengthX;
                         coordinateVector[1] = nodalParametricCoords[1] * stepY;
                         Transformations::rotate(coordinateVector, rotAngle);
@@ -56,7 +56,7 @@ namespace StructuredMeshGenerator {
                     break;
                 case Top:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = nodalParametricCoords[0] * stepX;
                         coordinateVector[1] = lengthY;
                         Transformations::rotate(coordinateVector, rotAngle);
@@ -70,7 +70,7 @@ namespace StructuredMeshGenerator {
                     break;
                 case Left:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = 0.0;
                         coordinateVector[1] = nodalParametricCoords[1] * stepY;
                         Transformations::rotate(coordinateVector, rotAngle);
@@ -112,7 +112,7 @@ namespace StructuredMeshGenerator {
             switch (boundary.first) {
                 case Bottom:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = nodalParametricCoords[0] * stepX;
                         coordinateVector[1] = nodalParametricCoords[1] * stepY;
                         coordinateVector[2] = 0.0;
@@ -128,7 +128,7 @@ namespace StructuredMeshGenerator {
                     break;
                 case Top:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = nodalParametricCoords[0] * stepX;
                         coordinateVector[1] = nodalParametricCoords[1] * stepY;
                         coordinateVector[2] = lengthZ;
@@ -143,7 +143,7 @@ namespace StructuredMeshGenerator {
                     break;
                 case Right:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = lengthX;
                         coordinateVector[1] = nodalParametricCoords[1] * stepY;
                         coordinateVector[2] = nodalParametricCoords[2] * stepZ;
@@ -159,7 +159,7 @@ namespace StructuredMeshGenerator {
 
                 case Left:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = 0.0;
                         coordinateVector[1] = nodalParametricCoords[1] * stepY;
                         coordinateVector[2] = nodalParametricCoords[2] * stepZ; 
@@ -174,7 +174,7 @@ namespace StructuredMeshGenerator {
                     break;
                 case Front:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = nodalParametricCoords[0] * stepX;
                         coordinateVector[1] = lengthY;
                         coordinateVector[2] = nodalParametricCoords[2] * stepZ;
@@ -189,7 +189,7 @@ namespace StructuredMeshGenerator {
                     break;
                 case Back:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = nodalParametricCoords[0] * stepX;
                         coordinateVector[1] = 0;
                         coordinateVector[2] = nodalParametricCoords[2] * stepZ;
@@ -510,7 +510,7 @@ namespace StructuredMeshGenerator {
 
                 case Right:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = lengthX;
                         coordinateVector[1] = nodalParametricCoords[1] * stepY;
                         auto dofBC = make_shared<map<DOFType, double>>();
@@ -522,7 +522,7 @@ namespace StructuredMeshGenerator {
                     break;
                 case Top:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = nodalParametricCoords[0] * stepX;
                         coordinateVector[1] = lengthY;
                         auto dofBC = make_shared<map<DOFType, double>>();
@@ -534,7 +534,7 @@ namespace StructuredMeshGenerator {
                     break;
                 case Left:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = 0.0;
                         coordinateVector[1] = nodalParametricCoords[1] * stepY;
                         auto dofBC = make_shared<map<DOFType, double>>();
@@ -569,7 +569,7 @@ namespace StructuredMeshGenerator {
             switch (boundary.first) {
                 case Bottom:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = nodalParametricCoords[0] * stepX;
                         coordinateVector[1] = 0.0;
                         auto dofBC = make_shared<map<DOFType, double>>();
@@ -599,7 +599,7 @@ namespace StructuredMeshGenerator {
                 }
                 case Top:
                     for (auto &node: *boundary.second) {
-                        auto nodalParametricCoords = node->coordinates.positionVector(Parametric);
+                        auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = nodalParametricCoords[0] * stepX;
                         coordinateVector[1] = lengthY;
                         auto dofBC = make_shared<map<DOFType, double>>();
@@ -736,9 +736,9 @@ namespace StructuredMeshGenerator {
         //Bottom and Top
         for (unsigned i = 0; i < nn2; i++) {
             for (unsigned j = 0; j < nn1; j++) {
-                auto nodalCoords = mesh2D->node(j, i)->coordinates.positionVector(Natural);
+                auto nodalCoords = *mesh2D->node(j, i)->coordinates.getPositionVector(Natural);
                 NumericalVector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], 0};
-                auto bottomBCValues = shared_ptr<map<DOFType, double>>(new map<DOFType, double>({
+                auto bottomBCValues = make_shared<map<DOFType, double>>(map<DOFType, double>({
                         {Position1, new3DCoords[0]},
                         {Position2, new3DCoords[1]},
                         {Position3, new3DCoords[2]}
@@ -748,7 +748,7 @@ namespace StructuredMeshGenerator {
 
                 
                 new3DCoords = {nodalCoords[0], nodalCoords[1], height};
-                auto topBCValues = shared_ptr<map<DOFType, double>>(new map<DOFType, double>({
+                auto topBCValues = make_shared<map<DOFType, double>>(map<DOFType, double>({
                         {Position1, new3DCoords[0]},
                         {Position2, new3DCoords[1]},
                         {Position3, new3DCoords[2]}
@@ -763,7 +763,7 @@ namespace StructuredMeshGenerator {
         auto rightNodes = mesh2D->boundaryNodes->at(Right);
         for (unsigned i = 0; i < nn3; i++) {
             for (unsigned j = 0; j < nn2; j++) {
-                auto nodalCoords = leftNodes->at(j)->coordinates.positionVector(Natural);
+                auto nodalCoords = *leftNodes->at(j)->coordinates.getPositionVector(Natural);
                 NumericalVector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
                 auto leftBCValues = make_shared<map<DOFType, double>>(map<DOFType, double>({
                         {Position1, new3DCoords[0]},
@@ -773,7 +773,7 @@ namespace StructuredMeshGenerator {
                 auto bcLeft = new BoundaryCondition(Dirichlet, std::move(leftBCValues));
                 boundaryConditionsSet->at(Left)->insert(pair<unsigned, shared_ptr<BoundaryCondition>>(*this->_mesh->node(0, j, i)->id.global, bcLeft));
                 
-                nodalCoords = rightNodes->at(j)->coordinates.positionVector(Natural);
+                nodalCoords = *rightNodes->at(j)->coordinates.getPositionVector(Natural);
                 new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
                 auto rightBCValues = make_shared<map<DOFType, double>>(map<DOFType, double>({
                         {Position1, new3DCoords[0]},
@@ -791,7 +791,7 @@ namespace StructuredMeshGenerator {
         
         for (unsigned i = 0; i < nn3; i++) {
             for (unsigned j = 0; j < nn1; j++) {
-                auto nodalCoords = frontNodes->at(j)->coordinates.positionVector(Natural);
+                auto nodalCoords = *frontNodes->at(j)->coordinates.getPositionVector(Natural);
                 NumericalVector<double> new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
                 auto frontBCValues = make_shared<map<DOFType, double>>();
                 frontBCValues->insert(pair<DOFType, double>(Position1, new3DCoords[0]));
@@ -801,7 +801,7 @@ namespace StructuredMeshGenerator {
                 boundaryConditionsSet->at(Front)->insert(pair<unsigned, shared_ptr<BoundaryCondition>>(
                         *this->_mesh->node(j, nn2 - 1, i)->id.global, bcFront));
 
-                nodalCoords = backNodes->at(j)->coordinates.positionVector(Natural);
+                nodalCoords = *backNodes->at(j)->coordinates.getPositionVector(Natural);
                 new3DCoords = {nodalCoords[0], nodalCoords[1], i * step3};
                 auto backBCValues = make_shared<map<DOFType, double>>();
                 backBCValues->insert(pair<DOFType, double>(Position1, new3DCoords[0]));

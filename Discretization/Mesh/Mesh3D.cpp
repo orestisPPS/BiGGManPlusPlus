@@ -191,15 +191,6 @@ namespace Discretization {
         }
         return new GhostPseudoMesh(ghostNodesList, ghostNodesPerDirection, parametricCoordToNodeMap);
     }*/
-    
-    shared_ptr<map<vector<double>, Node*>> Mesh3D::createParametricCoordToNodesMap() {
-        auto parametricCoordToNodeMap = make_shared<map<vector<double>, Node*>>();
-        for (auto& node : *totalNodesVector) {
-            auto parametricCoords = node->coordinates.positionVector(Parametric);
-            parametricCoordToNodeMap->insert(pair<vector<double>, Node*>(*parametricCoords.getVectorSharedPtr(), node));
-        }
-        return parametricCoordToNodeMap;
-    }
 
     NumericalVector<double> Mesh3D::getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
         map<Position, vector<Direction>> directionsOfBoundaries = {
@@ -303,61 +294,6 @@ namespace Discretization {
         elements = make_unique<MeshElements>(std::move(elementsVector), elementType);
     }
 
-/*    void Mesh3D::storeMeshInVTKFile(const string &filePath, const string &fileName, CoordinateType coordinateType,
-                                    bool StoreOnlyNodes) const {
-        ofstream outputFile(filePath + fileName);
-        outputFile << "# vtk DataFile Version 3.0 \n";
-        outputFile << "vtk output \n";
-        outputFile << "ASCII \n";
-        outputFile << "DATASET UNSTRUCTURED_GRID \n";
-        outputFile << "POINTS " << totalNodesVector->size() << " double\n";
-        for (auto &node: *totalNodesVector) {
-            auto coordinates = node->coordinates.positionVector3D(coordinateType);
-            outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << "\n";
-        }
-
-        if (!StoreOnlyNodes) {
-            if (elements == nullptr) {
-                throw runtime_error("Elements not created yet.");
-            }
-            vector<unsigned int> connectivityList;
-            unsigned int nodesPerElement = 0;
-            switch (elements->elementType()) {
-                case Hexahedron:
-                    connectivityList = {0, 1, 2, 3, 5, 4, 7, 6};
-                    nodesPerElement = 8;
-                    break;
-                case Wedge:
-                    // TODO: Define the connectivity list for the Wedge
-                    break;
-                default:
-                    throw runtime_error("3D geometry only supports Hexahedron and Wedge elements.");
-            }
-
-            unsigned int totalIntsForCells = elements->numberOfElements() * (1 + nodesPerElement);
-            outputFile << "CELLS " << elements->numberOfElements() << " " << totalIntsForCells << "\n";
-
-            for (unsigned int i = 0; i < elements->numberOfElements(); ++i) {
-                outputFile << nodesPerElement << " ";
-                for (auto index: connectivityList) {
-                    outputFile << elements->getElement(i)->nodes()->at(index)->id.global << " ";
-                }
-                outputFile << "\n";
-            }
-
-            // Adding CELL_TYPES section
-            outputFile << "CELL_TYPES " << elements->numberOfElements() << "\n";
-            for (unsigned int i = 0; i < elements->numberOfElements(); ++i) {
-                if (elements->elementType() == Hexahedron) {
-                    outputFile << "12\n"; // VTK's ID for hexahedron
-                } else if (elements->elementType() == Wedge) {
-                    outputFile << "13\n"; // VTK's ID for wedge
-                }
-            }
-        }
-
-        outputFile.close();
-    }*/
 
     void Mesh3D::storeMeshInVTKFile(const string &filePath, const string &fileName, CoordinateType coordinateType,
                                     bool StoreOnlyNodes) const {
@@ -379,7 +315,7 @@ namespace Discretization {
         // Points
         outputFile << "POINTS " << totalNodesVector->size() << " double\n";
         for (auto &node: *totalNodesVector) {
-            auto coordinates = node->coordinates.positionVector3D(coordinateType);
+            auto coordinates = node->coordinates.getPositionVector3D(coordinateType);
             outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << "\n";
         }
 

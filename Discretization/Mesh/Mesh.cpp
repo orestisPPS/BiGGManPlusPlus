@@ -64,11 +64,7 @@ namespace Discretization {
     Node *Mesh::node(unsigned i, unsigned j, unsigned k) {
         return nullptr;
     }
-
-    shared_ptr<map<vector<double>, Node *>> Mesh::createParametricCoordToNodesMap() {
-        return nullptr;
-    }
-
+    
     void Mesh::printMesh() {}
 
     NumericalVector<double> Mesh::getNormalUnitVectorOfBoundaryNode(Position boundaryPosition, Node *node) {
@@ -265,7 +261,7 @@ namespace Discretization {
 
     void Mesh::_uniformlySpacedMetrics(CoordinateType coordinateSystem, unique_ptr<vector<Discretization::Node *>> nodes, bool areBoundary) {
         
-        using findColinearNodes = map<Direction, vector<vector<double>>> (IsoParametricNodeGraph::*)(CoordinateType, map<Position, vector<Node*>>& ) const;
+        using findColinearNodes = map<Direction, vector<shared_ptr<NumericalVector<double>>>> (IsoParametricNodeGraph::*)(CoordinateType, map<Position, vector<Node*>>& ) const;
         findColinearNodes colinearNodes;
         
         if (areBoundary)
@@ -277,7 +273,7 @@ namespace Discretization {
         auto schemeSpecs = make_shared<FDSchemeSpecs>(2, directions());
         auto directions = this->directions();
         short unsigned maxDerivativeOrder = 1;
-        auto parametricCoordsMap = this->createParametricCoordToNodesMap();
+        auto parametricCoordsMap = this->getCoordinatesToNodesMap(Parametric);
 
         auto schemeBuilder = FiniteDifferenceSchemeBuilder(schemeSpecs);
         
@@ -294,13 +290,13 @@ namespace Discretization {
             auto nodeMetrics = make_shared<Metrics>(node, dimensions());
             //Loop through all the directions to find g_i = d(x_j)/d(x_i), g^i = d(x_i)/d(x_j)
             for (auto &directionI: directions) {
-                auto i = spatialDirectionToUnsigned[directionI];
+                auto indexDirectionI = spatialDirectionToUnsigned[directionI];
                 auto covariantBaseVectorI = NumericalVector<double>(directions.size(), 0);
                 auto contravariantBaseVectorI = NumericalVector<double>(directions.size(), 0);
                 
                 
                 for (auto &directionJ : directions){
-                    auto j = spatialDirectionToUnsigned[directionJ];
+                    auto indexDirectionJ = spatialDirectionToUnsigned[directionJ];
                     
                     //Check if the available positions are qualified for the current derivative order
                     auto qualifiedPositions = schemeBuilder.getQualifiedFromAvailable(
@@ -323,39 +319,26 @@ namespace Discretization {
                     auto covariantWeights = scheme.weights;
                     auto contravariantWeights = covariantWeights;
 
-
                     
                     //Check if the number of weights and the number of nodes match
-                    if (covariantWeights.size() != parametricCoords[directionJ][j].size()) {
+                    if (covariantWeights.size() != parametricCoords[directionJ][indexDirectionJ]->size()) {
                         throw std::runtime_error(
                                 "Number of weights and number of template nodal coords do not match"
-                                " for node " + to_string(*node->id.global) +
-                                " in direction " + to_string(directionI) +
+                                " for node " + to_string(*node->id.global) + " in direction " + to_string(directionI) +
                                 " Cannot calculate covariant base vectors");
                     }
 
-                    if (contravariantWeights.size() != templateCoords[directionJ][j].size()) {
+                    if (contravariantWeights.size() != templateCoords[directionJ][indexDirectionJ]->size()) {
                         throw std::runtime_error(
                                 "Number of weights and number of parametric nodal coords do not match"
                                 " for node " + to_string(*node->id.global) +
                                 " in direction " + to_string(directionI) +
                                 " Cannot calculate contravariant base vectors");
                     }
-
-
-                    auto parametricCoordsVector = NumericalVector<double>(parametricCoords[directionJ][j].size());
-                    for (unsigned k = 0; k < parametricCoords.size(); ++k) {
-                        parametricCoordsVector[k] = parametricCoords[directionJ][j][k];
-                    }
-
-                    auto templateCoordsVector = NumericalVector<double>(parametricCoords[directionJ][j].size());
-                    for (unsigned k = 0; k < parametricCoords.size(); ++k) {
-                        parametricCoordsVector[k] = parametricCoords[directionJ][j][k];
-                    }
                     
                     
                     auto covariantStep = 1.0;
-                    auto contravariantStep = parametricCoordsVector.averageAbsoluteDeviationFromMean();
+                    auto contravariantStep = parametricCoords[directionJ][indexDirectionJ]->averageAbsoluteDeviationFromMean();
                     contravariantStep = pow(contravariantStep, scheme.power) * scheme.denominatorCoefficient;
 
                     for (int weight = 0; weight < covariantWeights.size(); weight++) {
@@ -363,10 +346,6 @@ namespace Discretization {
                         contravariantWeights[weight] /= contravariantStep;
                     }
 
-/*                    auto covariantWeights2 = calculateWeightsOfDerivativeOrder(
-                            parametricCoords[directionJ][j], 1, node->coordinates(Parametric, j));
-                    auto contravariantWeights2 = calculateWeightsOfDerivativeOrder(
-                            templateCoords[directionJ][j], 1, node->coordinates(coordinateSystem, j));*/
                     //Covariant base vectors (dr_i/dξ_i)
                     //g_1 = {dx/dξ, dy/dξ, dz/dξ}
                     //g_2 = {dx/dη, dy/dη, dz/dη} 
@@ -374,12 +353,12 @@ namespace Discretization {
                     //auto gi = VectorOperations::dotProduct(covariantWeights, templateCoordsMap[directionJ]);
                     //auto testCoords = templateCoords[directionI][i];
                     
-                    covariantBaseVectorI[i] = covariantWeights.dotProduct(templateCoordsVector);
+                    covariantBaseVectorI[indexDirectionI] = covariantWeights.dotProduct(templateCoords[directionJ][indexDirectionJ]);
                     //Contravariant base vectors (dξ_i/dr_i)
                     //g^1 = {dξ/dx, dξ/dy, dξ/dz}
                     //g^2 = {dη/dx, dη/dy, dη/dz}
                     //g^3 = {dζ/dx, dζ/dy, dζ/dz}
-                    contravariantBaseVectorI[i] = contravariantWeights.dotProduct(parametricCoordsVector);
+                    contravariantBaseVectorI[indexDirectionI] = contravariantWeights.dotProduct(parametricCoords[directionJ][indexDirectionJ]);
                 }
                 nodeMetrics->covariantBaseVectors->insert(
                         pair<Direction, NumericalVector<double>>(directionI, covariantBaseVectorI));
@@ -393,43 +372,15 @@ namespace Discretization {
             metrics->insert(pair<unsigned, shared_ptr<Metrics> >(*node->id.global, nodeMetrics));
         }
     }
-
     
 
-/*    void Mesh::storeMeshInVTKFile(const std::string& filePath, const std::string& fileName, CoordinateType coordinateType) const {
-        ofstream outputFile(filePath + fileName);
-        outputFile << "# vtk DataFile Version 3.0 \n";
-        outputFile << "vtk output \n";
-        outputFile << "ASCII \n";
-        outputFile << "DATASET UNSTRUCTURED_GRID \n";
-        outputFile << "POINTS " << totalNodesVector->size() << " double\n";
-        for (auto &node: *totalNodesVector) {
-            auto coordinates = node->coordinates.positionVector3D(coordinateType);
-            outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << "\n";
+    shared_ptr<map<vector<double>, Node*>> Mesh::getCoordinatesToNodesMap(CoordinateType coordinateType) {
+        auto parametricCoordToNodeMap = make_shared<map<vector<double>, Node*>>();
+        for (auto& node : *totalNodesVector) {
+            auto nodalParametricCoordsSTD = *node->coordinates.getPositionVector3D(coordinateType).getVectorSharedPtr();
+            parametricCoordToNodeMap->insert(pair<vector<double>, Node*>(std::move(nodalParametricCoordsSTD), node));
         }
-
-        // Assume a 2D grid, so each cell is a quadrilateral made of 4 points
-        unsigned int numCells = totalNodesVector->size() - nodesPerDirection.at(One) - 1;
-        outputFile << "CELLS " << numCells << " " << numCells * 5 << "\n";
-        for (unsigned int i = 0; i < totalNodesVector->size() - nodesPerDirection.at(One) - 1; i++) {
-            outputFile << 4 << " " << i << " " << i + 1 << " " << i + nodesPerDirection.at(One) + 1 << " " << i + nodesPerDirection.at(One) << "\n";
-        }
-
-        // Specify cell type. For a 2D grid, cells are quadrilaterals, which have cell type 9 in VTK.
-        outputFile << "CELL_TYPES " << numCells << "\n";
-        for (unsigned int i = 0; i < numCells; i++) {
-            outputFile << 9 << "\n";
-        }
-
-        outputFile.close();
-    }*/
-
-    map<vector<double>, Node *> Mesh::getCoordinateToNodeMap(CoordinateType coordinateType) const {
-        map<vector<double>, Node *> coordinateToNodeMap;
-        for (auto &node: *totalNodesVector) {
-            coordinateToNodeMap.insert(pair<vector<double>, Node *>(*node->coordinates.positionVector3D(coordinateType).getVectorSharedPtr(), node));
-        }
-        return coordinateToNodeMap;
+        return parametricCoordToNodeMap;
     }
 
     unique_ptr<map<Node *, Position>> Mesh::getBoundaryNodeToPositionMap() const {

@@ -76,8 +76,8 @@ namespace Discretization {
         void calculateMeshMetrics(CoordinateType coordinateSystem, bool isUniformMesh);
         
         void initialize();
-        
-        map<vector<double>, Node*> getCoordinateToNodeMap(CoordinateType coordinateType = Natural) const;
+
+        shared_ptr<map<vector<double>, Node*>> getCoordinatesToNodesMap(CoordinateType coordinateType = Natural);
         
         unique_ptr<map<Node*, Position>> getBoundaryNodeToPositionMap() const;
         
@@ -98,8 +98,6 @@ namespace Discretization {
         virtual Node* node(unsigned i, unsigned j);
         
         virtual Node* node(unsigned i, unsigned j, unsigned k);
-        
-        virtual shared_ptr<map<vector<double>, Node*>> createParametricCoordToNodesMap();
         
         virtual void printMesh();
         

@@ -6,15 +6,15 @@
 namespace Tests {
     SteadyState3DNeumann::SteadyState3DNeumann() {
         map<Direction, unsigned> numberOfNodes;
-        numberOfNodes[Direction::One] = 11;
-        numberOfNodes[Direction::Two] = 11;
-        numberOfNodes[Direction::Three] = 11;
+        numberOfNodes[Direction::One] = 3;
+        numberOfNodes[Direction::Two] = 3;
+        numberOfNodes[Direction::Three] = 3;
 
         //auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 1, 1, 0, 0, 0, 0, 0, 0);
-        auto specs = make_shared<MeshSpecs>(numberOfNodes, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0);
+        auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0);
         auto meshFactory = make_shared<MeshFactory>(specs);
         auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
-        meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 8, 8, 8));
+        meshFactory->buildMesh(2, meshBoundaries->parallelepiped(numberOfNodes, 1, 1, 1));
         //meshFactory->buildMesh(2, meshBoundaries->annulus_3D_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 180, 5));
         //meshFactory->mesh->createElements(Hexahedron, 2);
         meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural, false);
@@ -34,7 +34,10 @@ namespace Tests {
                 ({{Temperature, 0}})));
 
         shared_ptr<Mesh> mesh = meshFactory->mesh;
-
+        auto fileNameMesh = "meshRebuilt.vtk";
+        auto filePathMesh = "/home/hal9000/code/BiGGMan++/Testing/";
+        mesh->storeMeshInVTKFile(filePathMesh, fileNameMesh, Natural, false);
+        
         auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(3, false, Isotropic);
         pdeProperties->setIsotropicProperties(10,0,0,0);
 
@@ -75,10 +78,10 @@ namespace Tests {
         
         //auto targetCoords = NumericalVector<double>{0.5, 0.5};
         //auto targetCoords = NumericalVector<double>{1.5, 1.5, 1.5};
-        auto targetCoords = NumericalVector<double>{2, 2, 2};
+        auto targetCoords = NumericalVector<double>{1, 1, 1};
         //auto targetCoords = NumericalVector<double>{1.5, 1.5, 3};
         //auto targetCoords = NumericalVector<double>{5, 5, 5};
-        auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-5);
+        auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-3);
         cout<<"Target Solution: "<< targetSolution[0] << endl;
 
 

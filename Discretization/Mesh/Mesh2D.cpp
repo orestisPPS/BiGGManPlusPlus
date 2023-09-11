@@ -172,17 +172,6 @@ namespace Discretization {
         return new GhostPseudoMesh(ghostNodesList, ghostNodesPerDirection, parametricCoordToNodeMap);
     }*/
 
-    shared_ptr<map<vector<double>, Node*>> Mesh2D::createParametricCoordToNodesMap() {
-        auto parametricCoordToNodeMap = make_shared<map<vector<double>, Node*>>();
-        for (auto& node : *totalNodesVector) {
-            auto parametricCoords = node->coordinates.positionVector(Parametric);
-            parametricCoords[2] = 0;
-            vector<double> parametricCoordsVector = *parametricCoords.getVectorSharedPtr();
-            parametricCoordToNodeMap->insert(pair<vector<double>, Node*>(parametricCoordsVector, node));
-        }
-        return parametricCoordToNodeMap;
-    }
-
     void Mesh2D::createElements(ElementType elementType, unsigned int nodesPerEdge) {
         auto numberOfElements = (nodesPerDirection[One] - 1) * (nodesPerDirection[Two] - 1);
         auto elementsVector = make_unique<vector<Element *>>(numberOfElements);

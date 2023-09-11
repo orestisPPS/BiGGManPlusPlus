@@ -72,7 +72,7 @@ namespace StructuredMeshGenerator{
                 ++i;
             }
             node->degreesOfFreedom->clear();
-            node->coordinates.addPositionVector(coords);
+            node->coordinates.setPositionVector(coords);
         }
         //delete analysis->degreesOfFreedom;
         dofTypes->deallocate();
@@ -126,7 +126,7 @@ namespace StructuredMeshGenerator{
     
     void MeshFactory::_assign1DCoordinates() const {
         for (unsigned i = 0; i < mesh->nodesPerDirection.at(One); ++i) {
-            //mesh->node(i)->coordinates.addPositionVector(Natural);
+            //mesh->node(i)->coordinates.setPositionVector(Natural);
             auto coords = {static_cast<double>(i)};
             mesh->node(i)->coordinates.setPositionVector(
                     make_shared<NumericalVector<double>>(coords), Template);
@@ -142,7 +142,7 @@ namespace StructuredMeshGenerator{
                 
                 // Parametric coordinates
                 NumericalVector<double> parametricCoord = {static_cast<double>(i), static_cast<double>(j)};
-                mesh->node(i, j)->coordinates.addPositionVector(make_shared<NumericalVector<double>>(parametricCoord), Parametric);
+                mesh->node(i, j)->coordinates.setPositionVector(make_shared<NumericalVector<double>>(parametricCoord), Parametric);
                 // Template coordinates
                 NumericalVector<double> templateCoord = {static_cast<double>(i) * _meshSpecs->templateStepOne,
                                                 static_cast<double>(j) * _meshSpecs->templateStepTwo};
@@ -151,7 +151,7 @@ namespace StructuredMeshGenerator{
                 // Shear
                 Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
 
-                mesh->node(i, j)->coordinates.addPositionVector(make_shared<NumericalVector<double>>(templateCoord), Template);
+                mesh->node(i, j)->coordinates.setPositionVector(make_shared<NumericalVector<double>>(templateCoord), Template);
             }
         }
     }
@@ -160,21 +160,25 @@ namespace StructuredMeshGenerator{
         for (unsigned k = 0; k < mesh->nodesPerDirection.at(Three); ++k) {
             for (unsigned j = 0; j < mesh->nodesPerDirection.at(Two); ++j) {
                 for (unsigned i = 0; i < mesh->nodesPerDirection.at(One); ++i) {
-                    // Natural coordinates
-                    //mesh->node(i, j, k)->coordinates.addPositionVector(Natural);
                     // Parametric coordinates
-                    NumericalVector<double> parametricCoord = {static_cast<double>(i), static_cast<double>(j), static_cast<double>(k)};
-                    mesh->node(i, j, k)->coordinates.addPositionVector(make_shared<NumericalVector<double>>(parametricCoord), Parametric);
+                    auto parametricCoords = make_shared<NumericalVector<double>>(3);
+                    (*parametricCoords)[0] = static_cast<double>(i);
+                    (*parametricCoords)[1] = static_cast<double>(j);
+                    (*parametricCoords)[2] = static_cast<double>(k);
+
+                    mesh->node(i, j, k)->coordinates.setPositionVector(parametricCoords, Parametric);
                     // Template coordinates
-                    NumericalVector<double> templateCoord = {static_cast<double>(i) * _meshSpecs->templateStepOne,
-                                                    static_cast<double>(j) * _meshSpecs->templateStepTwo,
-                                                    static_cast<double>(k) * _meshSpecs->templateStepThree};
+                    auto templateCoords = make_shared<NumericalVector<double>>(3);
+                    (*templateCoords)[0] = static_cast<double>(i) * _meshSpecs->templateStepOne;
+                    (*templateCoords)[1] = static_cast<double>(j) * _meshSpecs->templateStepTwo;
+                    (*templateCoords)[2] = static_cast<double>(k) * _meshSpecs->templateStepThree;
+
                     // Rotate 
                     //Transformations::rotate(templateCoord, _meshSpecs->templateRotAngleOne);
                     // Shear
                     //Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
                     
-                    mesh->node(i, j, k)->coordinates.addPositionVector(make_shared<NumericalVector<double>>(templateCoord), Template);
+                    mesh->node(i, j, k)->coordinates.setPositionVector(templateCoords, Template);
                 }
             }
         }

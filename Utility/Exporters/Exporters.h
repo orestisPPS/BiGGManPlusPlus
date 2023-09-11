@@ -23,7 +23,7 @@ namespace Utility {
 
 
         static void exportScalarFieldResultInVTK(const std::string& filePath, const std::string& fileName,
-                                                 const std::string& fieldName, shared_ptr<Mesh> mesh) {
+                                                 const std::string& fieldName, shared_ptr<Mesh>& mesh) {
             ofstream outputFile(filePath + fileName);
 
             // Header
@@ -41,7 +41,7 @@ namespace Utility {
             // Points
             outputFile << "POINTS " << mesh->totalNodesVector->size() << " double\n";
             for (auto &node : *mesh->totalNodesVector) {
-                auto coordinates = node->coordinates.positionVector3D(Natural);
+                auto coordinates = node->coordinates.getPositionVector3D(Natural);
                 outputFile << coordinates[0] << " " << coordinates[1] << " " << coordinates[2] << "\n";
             }
 

@@ -8,152 +8,85 @@
 
 namespace Discretization {
 
+/**
+ * \enum CoordinateType
+ * \brief Enumeration for defining the type of nodal coordinates.
+ */
     enum CoordinateType {
-        Natural, Parametric, Template
+        Natural,      ///< Natural coordinates.
+        Parametric,   ///< Parametric coordinates.
+        Template      ///< Template coordinates.
     };
     
-/**
-* @brief The class that holds the nodal coordinates for each node.
-* 
-* This class holds a map of the nodal coordinates with the key being the type of coordinates (Natural, Parametric, Template).
-* It also provides functions to add, remove and replace coordinate vectors in the map.
-*/
+    /**
+     * \class NodalCoordinates
+     * \brief This class represents a the collection of the coordinates of the node.
+     *
+     * The nodal coordinates can be of different types, i.e., Natural, Parametric, or Template.
+     * This class provides methods for getting, setting, and removing these coordinates.
+     */
     class NodalCoordinates {
     public:
+
         /**
-        * @brief The constructor for the NodalCoordinates class.
-        * 
-        * Initializes the map of position vectors.
-        */
+         * \brief Default constructor.
+         * Initializes the map of position vectors.
+         */
         NodalCoordinates();
-        
+
+        /**
+         * \brief Destructor.
+         * Clears the position vectors.
+         */
         ~NodalCoordinates();
 
         /**
-        * @brief The overloaded operator that returns the natural coordinate at the specified index.
-        * 
-        * @param i The index of the natural coordinate.
-        * @return const double& The natural coordinate at the specified index.
+        * \brief Overloaded assignment operator for the NodalCoordinates class.
+        * \param other The other NodalCoordinates object to assign from.
+        * \return Reference to the updated NodalCoordinates object.
         */
-        const double &operator()(unsigned i) const;
-
-        /**
-        * @brief The overloaded operator that returns the coordinate of the specified type at the specified index.
-        * 
-        * @param type The type of coordinate.
-        * @param i The index of the coordinate.
-        * @return const double& The coordinate of the specified type at the specified index.
-        */
-        const double &operator()(CoordinateType type, unsigned i) const;
-
-        /**
-        * @brief Adds a new coordinate vector to the map of position vectors with the specified type.
-        * 
-        * @param positionVector The pointer to the vector of coordinates to be added.
-        * @param type The type of coordinates.
-        */
-        void addPositionVector(shared_ptr<NumericalVector<double>>positionVector, CoordinateType type);
-
-        /**
-        * @brief Adds a new natural coordinate vector to the map of position vectors.
-        * 
-        * @param positionVector The pointer to the vector of natural coordinates to be added.
-        */
-        void addPositionVector(shared_ptr<NumericalVector<double>>positionVector);
-
-        /**
-        * @brief Adds a new coordinate vector to the map of position vectors with the specified type.
-        * 
-        * @param type The type of coordinates.
-        */
-        void addPositionVector(CoordinateType type);
-
-        /**
-        * @brief Replaces the coordinate vector of the specified type with the new coordinate vector.
-        * 
-        * @param positionVector The pointer to the new vector of coordinates.
-        * @param type The type of coordinates.
-        */
-        void setPositionVector(shared_ptr<NumericalVector<double>> positionVector, CoordinateType type);
-
-        /**
-        * @brief Replaces the natural coordinate vector with the new natural coordinate vector.
-        * 
-        * @param positionVector The pointer to the new vector of natural coordinates.
-        */
-        void setPositionVector(shared_ptr<NumericalVector<double>> positionVector);
-
-        /**
-        * @brief Removes the coordinate vector of the specified type from the map of position vectors.
-        * 
-        * @param type The type of coordinates to be removed.
-        */
-        void removePositionVector(CoordinateType type);
-
-        /**
-        * @brief Returns the vector of natural coordinates.
-        * 
-        * @return const NumericalVector<double>& The vector of natural coordinates.
-        */
-        const NumericalVector<double> &positionVector();
-
-        /**
-        * @brief Returns a pointer to the vector of natural coordinates.
-        * 
-        * @return shared_ptr<NumericalVector<double>> A unique pointer to the vector of natural coordinates.
-        */
-        shared_ptr<NumericalVector<double>> positionVectorPtr();
+        NodalCoordinates& operator=(const NodalCoordinates& other);
         
         /**
-         * @brief Returns the vector of coordinates of the specified type.
-         *
-         * @param type 
-         * @return const NumericalVector<double>& The vector of coordinates of the specified type. 
+         * \brief Access operator for natural coordinates.
+         * \param i Index of the coordinate.
+         * \param type Type of the coordinate (default is Natural).
+         * \return The ith natural coordinate.
          */
-        const NumericalVector<double>& positionVector(CoordinateType type);
-        
-        /**
-        * @brief Returns a pointer to the vector of coordinates of the specified type.
-        * 
-        * @param type  The type of coordinates.
-        * @return shared_ptr<NumericalVector<double>> A shared pointer to the vector of coordinates of the specified type.
-        */
-        const shared_ptr<NumericalVector<double>>& positionVectorPtr(CoordinateType type);
+        const double &operator()(unsigned i, CoordinateType type = Natural) const;
 
         /**
-        * @brief Returns a pointer to a vector of natural coordinates in 3D.
-        *
-        * @return shared_ptr<NumericalVector<double>> A pointer to a vector of natural coordinates in 3D.
-        */
-        NumericalVector<double> positionVector3D();
+         * \brief Gets the position vector of the specified type.
+         * \param type Type of the coordinate (default is Natural).
+         * \return Shared pointer to the position vector of the specified type.
+         */
+        const shared_ptr<NumericalVector<double>> &getPositionVector(CoordinateType type = Natural);
 
         /**
-        * @brief Returns a pointer to a vector of coordinates of the specified type in 3D.
-        *
-        * @param type The type of coordinates.
-        * @return Copy of a vector of coordinates of the specified type in 3D.
-        */
-        NumericalVector<double> positionVector3D(CoordinateType type);
+         * \brief Gets a copy of the elements of the position vector in 3D for the specified type.
+         * If the size of the original vector is less than 3, fills the rest with zeros.
+         * \param type Type of the coordinate (default is Natural).
+         * \return A NumericalVector containing the 3D coordinates.
+         */
+        NumericalVector<double> getPositionVector3D(CoordinateType type = Natural);
 
         /**
-        * @brief Returns a shared pointer to a vector a vector of natural coordinates in 3D.
-        *
-        * @param type The type of coordinates.
-        * @return shared_ptr<NumericalVector<double>> A shared pointer to a vector a vector of natural coordinates in 3D.
-        */
-        shared_ptr<NumericalVector<double>> positionVector3DPtr();
-        
+         * \brief Sets the position vector for the specified type. 
+         * If it exists, it is overwritten. If it does not exist, it is added.
+         * \param positionVector The new position vector.
+         * \param type Type of the coordinate (default is Natural).
+         */
+        void setPositionVector(shared_ptr<NumericalVector<double>> positionVector, CoordinateType type = Natural);
+
         /**
-        * @brief Returns a shared pointer to a vector of coordinates of the specified type in 3D.
-        *
-        * @param type The type of coordinates.
-        * @return shared_ptr<NumericalVector<double>> A shared pointer to a vector of coordinates of the specified type in 3D.
-        */
-        shared_ptr<NumericalVector<double>> positionVector3DPtr(CoordinateType type);
-        
+         * \brief Removes the position vector of the specified type.
+         * \param type Type of the coordinate.
+         */
+        void removePositionVector(CoordinateType type = Natural);
+
     private:
-        shared_ptr<map<CoordinateType, shared_ptr<NumericalVector<double>>>> _positionVectors; ///< The map of position vectors with the key being the type of coordinates.
+        unique_ptr<map<CoordinateType, shared_ptr<NumericalVector<double>>>> _positionVectors; ///< The map of position vectors with the key being the type of coordinates.
     };
-} // Discretization
 
+} // Discretization
 #endif //UNTITLED_NODALCOORDINATES_H
