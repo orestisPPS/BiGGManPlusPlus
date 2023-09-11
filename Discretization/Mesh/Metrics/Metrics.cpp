@@ -46,6 +46,7 @@ namespace Discretization{
         
         void Metrics::calculateCovariantTensor() const {
             auto n = covariantBaseVectors->size();
+            
             for (auto i = 0; i < n; i++) {
                 for (auto j = 0; j < n; j++) {
                     auto gi = covariantBaseVectors->at(unsignedToSpatialDirection[i]);

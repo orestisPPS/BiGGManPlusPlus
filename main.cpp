@@ -25,7 +25,7 @@ using namespace DegreesOfFreedom;
 
 int main() {
 
-    //auto analysisTest = new NumericalAnalysis::StStFDTest();
+    auto analysisTest = new NumericalAnalysis::StStFDTest();
     //auto neumannTest = new Tests::SteadyState3DNeumann();
     //delete neumannTest;
 
@@ -34,10 +34,10 @@ int main() {
 
     auto vectorTest = new NumericalVectorTest();
     vectorTest->runTests();
- Tests::NumericalMatrixTest::runTests();
+    Tests::NumericalMatrixTest::runTests();
 
- 
- 
+
+
     //auto vectorTest = new NumericalVectorTest();
 /*    vectorTest->runTests();
     
@@ -60,19 +60,19 @@ int main() {
     
     auto numericalVector3 = NumericalVector<double>(10, MultiThread);
     numericalVector3 = numericalVector2;*/
-    
-    
-    
-    
+
+
+
+
 
     //auto qrTest = new Tests::QRTest();
-    
+
     //auto dirichletTest = new Tests::SteadyStateDirichlet3D();
     //auto cudaOperations = new Tests::OperationsCUDA();
     //auto singleThreadVectorOperations = new Tests::VectorOperationsTest();
-    
+
     cout << "y000000o" << endl;
-    
+
 }
 
 

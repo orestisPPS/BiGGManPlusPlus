@@ -1,3 +1,4 @@
+/*
 //
 // Created by hal9000 on 4/24/23.
 //
@@ -30,7 +31,7 @@ namespace LinearAlgebra {
     void SolverLUP::solve() {
         _decomposition = new DecompositionLUP(_linearSystem->matrix, _pivotTolerance, _throwExceptionOnSingularMatrix);
         if (_storeDecompositionOnMatrix) {
-            cout<<"Decomposition Initiated..."<<endl;
+            //cout<<"Decomposition Initiated..."<<endl;
             _decomposition->decomposeOnMatrix();
         }
         else
@@ -40,3 +41,4 @@ namespace LinearAlgebra {
         _decomposition->solve(_linearSystem->rhs, _linearSystem->solution);
     }
 } // LinearAlgebra
+*/

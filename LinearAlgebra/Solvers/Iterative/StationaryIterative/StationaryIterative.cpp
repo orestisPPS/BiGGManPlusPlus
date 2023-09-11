@@ -20,7 +20,8 @@ namespace LinearAlgebra {
         _vectorsInitialized = true;    
     }
     
-    
+    void _performMethodIteration(){
+    }
     
     void StationaryIterative::_iterativeSolution() {
         auto start = std::chrono::high_resolution_clock::now();
@@ -30,8 +31,6 @@ namespace LinearAlgebra {
 
         while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
             _performMethodIteration();
-            _exitNorm = _xNew->norm(_normType);
-            _printIterationAndNorm();
         }
             auto end = std::chrono::high_resolution_clock::now();
             printAnalysisOutcome(_iteration, _exitNorm, start, end);
@@ -78,10 +77,8 @@ namespace LinearAlgebra {
     void StationaryIterative::_cudaSolution() {
     }
 
-    void StationaryIterative::_singleThreadSolution() {
+    void StationaryIterative::_performMethodIteration() {
     }
-    
-
 
 }
 // LinearAlgebra

@@ -102,42 +102,14 @@ namespace Discretization {
         return totalNodes;
     }
     
-    GhostPseudoMesh* Mesh1D::_createGhostPseudoMesh(unsigned ghostLayerDepth) {
-        //
-        auto ghostNodesPerDirection = _createNumberOfGhostNodesPerDirectionMap(ghostLayerDepth);
-
-        auto ghostNodesList = make_shared<list<Node*>>();
-
-        // Parametric coordinate 1 of nodes in the new ghost mesh
-        auto nodeArrayPositionI = 0;
-        
-        auto nn1 = nodesPerDirection[One];
-        auto nn1Ghost = ghostNodesPerDirection->at(One);
-
-        //Create parametric coordinates to node map
-        auto parametricCoordToNodeMap =  createParametricCoordToNodesMap();
-        for (int i = -static_cast<int>(nn1Ghost); i < static_cast<int>(nn1) + static_cast<int>(nn1Ghost); i++) {
-                auto parametricCoords = NumericalVector<double>{static_cast<double>(i), 0, 0};
-                // If node is inside the original mesh add it to the ghost mesh Array
-                if (parametricCoordToNodeMap->find(parametricCoords) == parametricCoordToNodeMap->end()) {
-                    auto node = new Node();
-                    node->coordinates.setPositionVector(make_shared<NumericalVector<double>>(parametricCoords), Parametric);
-                    NumericalVector<double> templateCoord = {static_cast<double>(i) * specs->templateStepOne};
-                    node->coordinates.setPositionVector(make_shared<NumericalVector<double>>(templateCoord), Template);
-                    ghostNodesList->push_back(node);
-                }
-                nodeArrayPositionI++;
-        }
-        return new GhostPseudoMesh(ghostNodesList, ghostNodesPerDirection, parametricCoordToNodeMap);
-    }
     
-    shared_ptr<map<NumericalVector<double>, Node*>> Mesh1D::createParametricCoordToNodesMap() {
-        auto parametricCoordToNodeMap = make_shared<map<NumericalVector<double>, Node*>>();
+    shared_ptr<map<vector<double>, Node*>> Mesh1D::createParametricCoordToNodesMap() {
+        auto parametricCoordToNodeMap = make_shared<map<vector<double>, Node*>>();
         for (auto& node : *totalNodesVector) {
-            auto parametricCoords = node->coordinates.positionVector(Parametric);
+            auto parametricCoords = *node->coordinates.positionVector(Parametric).getVectorSharedPtr();
             parametricCoords[1] = 0;
             parametricCoords[2] = 0;
-            parametricCoordToNodeMap->insert(pair<NumericalVector<double>, Node*>(parametricCoords, node));
+            parametricCoordToNodeMap->insert(pair<vector<double>, Node*>(parametricCoords, node));
         }
         return parametricCoordToNodeMap;
     }

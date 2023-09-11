@@ -413,6 +413,10 @@ namespace LinearAlgebra {
             return _values->data();
         }
         
+        shared_ptr<vector<T>> getVectorSharedPtr() const {
+            return _values;
+        }
+        
         /**
          * @brief Returns a shared pointer to the underlying data std vector<T>.
          * @return shared_ptr<vector<T>> Shared pointer to the underlying data.
@@ -803,6 +807,18 @@ namespace LinearAlgebra {
 
             return _threading.executeParallelJobWithReductionForDoubles(varianceJob, size(), _availableThreads) / size();
         }
+        
+        double averageAbsoluteDeviationFromMean(){
+            double averageOfElements = average();
+            auto averageAbsoluteDeviationFromMeanJob = [&](unsigned start, unsigned end) -> double {
+                double sum = 0;
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    sum += abs((*_values)[i] - averageOfElements);
+                }
+                return sum;
+            };
+            return _threading.executeParallelJobWithReductionForDoubles(averageAbsoluteDeviationFromMeanJob, size(), _availableThreads) / size();
+        }
 
         /**
         * @brief Calculates the standard deviation of the elements of this vector.
@@ -1018,7 +1034,32 @@ namespace LinearAlgebra {
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
             return _threading.executeParallelJobWithReduction(dotProductJob, _values->size(), availableThreads);
         }
-        
+        template<typename InputType1, typename InputType2>
+        void crossProduct(const InputType1 &inputVector, InputType2 &result, unsigned userDefinedThreads = 0) {
+            
+            _checkInputType(inputVector);
+            _checkInputType(result);
+            if (size() != dereference_trait<InputType1>::size(inputVector)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+            if (size() != dereference_trait<InputType2>::size(result)) {
+                throw invalid_argument("Vectors must be of the same size.");
+            }
+            const T *otherData = dereference_trait<InputType1>::dereference(inputVector);
+            T *resultData = dereference_trait<InputType2>::dereference(result);
+            switch (size()){
+                case 2:
+                    resultData[0] = (*_values)[0] * otherData[1] - (*_values)[1] * otherData[0];
+                    break;
+                case 3:
+                    resultData[0] = (*_values)[1] * otherData[2] - (*_values)[2] * otherData[1];
+                    resultData[1] = (*_values)[2] * otherData[0] - (*_values)[0] * otherData[2];
+                    resultData[2] = (*_values)[0] * otherData[1] - (*_values)[1] * otherData[0];
+                    break;
+                default:
+                    throw std::runtime_error("Cross product is only defined for 2D and 3D vectors.");
+            }
+        }
 
         /**
         * \brief Performs element-wise addition of two scaled vectors.

@@ -12,14 +12,12 @@ namespace LinearAlgebra {
     class ConjugateGradientSolver : public IterativeSolver {
         
     public:
-        explicit ConjugateGradientSolver(VectorNormType normType, double tolerance = 1E-9, unsigned maxIterations = 1E4,
-                                bool throwExceptionOnMaxFailure = true, ParallelizationMethod parallelizationMethod = SingleThread);
+        explicit ConjugateGradientSolver(double tolerance = 1E-5, unsigned maxIterations = 1E4, VectorNormType normType = L2,
+                                         unsigned userDefinedThreads = 0, bool printOutput = true, bool throwExceptionOnMaxFailure = true);
 
     protected:
         
         void _initializeVectors() override;
-        
-        void _iterativeSolution() override;
         
         void _performMethodIteration() override;
         

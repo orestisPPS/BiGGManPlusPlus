@@ -66,7 +66,7 @@ namespace Tests {
             //auto solver = make_shared<JacobiSolver>(false, VectorNormType::LInf);
             //auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo, VectorNormType::LInf, 1E-9);
             //auto solver = make_shared<GaussSeidelSolver>(VectorNormType::L2, 1E-9, 1E4, turboVTechKickInYoo);
-            auto solver = make_shared<ConjugateGradientSolver>(VectorNormType::L2, 1E-20, 1E4, true);
+            auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2);
             //auto solver = make_shared<SORSolver>(1.8, VectorNormType::L2, 1E-10);
             auto analysis = new SteadyStateFiniteDifferenceAnalysis(problem, mesh, solver, specsFD);
 

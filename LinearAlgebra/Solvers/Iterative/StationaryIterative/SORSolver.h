@@ -18,8 +18,7 @@ namespace LinearAlgebra{
         void _performMethodIteration() override;
         
     private:
-        void _threadJobSOR(unsigned start, unsigned end);
-
+        
         double _relaxationParameter;
     };
 }

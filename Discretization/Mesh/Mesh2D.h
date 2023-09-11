@@ -30,7 +30,7 @@ namespace Discretization {
         
         Node* node(unsigned i, unsigned j, unsigned k) override;
 
-        shared_ptr<map<NumericalVector<double>, Node*>> createParametricCoordToNodesMap() override;
+        shared_ptr<map<vector<double>, Node*>> createParametricCoordToNodesMap() override;
 
         unique_ptr<vector<Node*>> getInternalNodesVector() override;
         
@@ -49,7 +49,7 @@ namespace Discretization {
         
         shared_ptr<vector<Node*>> _addTotalNodesToVector() override;
         
-        GhostPseudoMesh* _createGhostPseudoMesh(unsigned ghostLayerDepth) override;
+        //GhostPseudoMesh* _createGhostPseudoMesh(unsigned ghostLayerDepth) override;
 
     };
 

@@ -1,3 +1,4 @@
+/*
 //
 // Created by hal9000 on 7/24/23.
 //
@@ -16,3 +17,4 @@ namespace LinearAlgebra {
 } // LinearAlgebra
 
 #endif //UNTITLED_JACOBICUDA_CUH
+*/

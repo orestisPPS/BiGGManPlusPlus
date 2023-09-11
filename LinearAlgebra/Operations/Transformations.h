@@ -9,8 +9,6 @@
 #include <cmath>
 #include <limits>
 #include "../ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
-#include "../../PositioningInSpace/DirectionsPositions.h"
-using namespace PositioningInSpace;
 #include "../../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 
 namespace LinearAlgebra {

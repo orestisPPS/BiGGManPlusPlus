@@ -5,7 +5,7 @@
 #ifndef UNTITLED_MATRIXDECOMPOSITION_H
 #define UNTITLED_MATRIXDECOMPOSITION_H
 
-#include "../Array.h"
+#include "../../ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 #include <tuple>
 
 namespace LinearAlgebra {

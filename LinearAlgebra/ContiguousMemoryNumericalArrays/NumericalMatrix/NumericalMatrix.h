@@ -354,8 +354,8 @@ namespace LinearAlgebra {
             
             _checkInputVectorDataType(inputVector);
             _checkInputVectorDataType(resultVector);
-            if (_numberOfColumns != dereference_trait_vector<InputVectorType1>::size(inputVector))
-                throw invalid_argument("Input vector must have the same number of columns as the current matrix.");
+/*            if (_numberOfColumns != dereference_trait_vector<InputVectorType1>::size(inputVector))
+                throw invalid_argument("Input vector must have the same number of columns as the current matrix.");*/
             if (dereference_trait_vector<InputVectorType1>::size(inputVector) != dereference_trait_vector<InputVectorType2>::size(resultVector))
                 throw invalid_argument("Input vector must have the same number of rows as the result vector.");
             auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
@@ -369,13 +369,10 @@ namespace LinearAlgebra {
         T multiplyVectorRowWisePartial(const InputVectorType1 &inputVector, unsigned targetRow, unsigned startColumn, unsigned endColumn,
                                        T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
             _checkInputVectorDataType(inputVector);
-            if (endColumn - startColumn + 1 != dereference_trait_vector<InputVectorType1>::size(inputVector))
-                throw invalid_argument("Input vector must have the same number of input range");
+/*            if (endColumn - startColumn + 1 != dereference_trait_vector<InputVectorType1>::size(inputVector))
+                throw invalid_argument("Input vector must have the same number of input range");*/
             if (targetRow >= this->_numberOfRows) {
                 throw std::out_of_range("Target row is out of bounds.");
-            }
-            if (startColumn >= this->_numberOfColumns || endColumn > this->_numberOfColumns) {
-                throw std::out_of_range("Start or end column out of bounds.");
             }
             if (startColumn >= endColumn) {
                 throw std::invalid_argument("Start column must be less than end column.");
@@ -396,9 +393,6 @@ namespace LinearAlgebra {
                 throw invalid_argument("Input vector must have the same number of input range");
             if (targetRow >= this->_numberOfRows) {
                 throw std::out_of_range("Target row is out of bounds.");
-            }
-            if (startColumn >= this->_numberOfColumns || endColumn > this->_numberOfColumns) {
-                throw std::out_of_range("Start or end column out of bounds.");
             }
             if (startColumn >= endColumn) {
                 throw std::invalid_argument("Start column must be less than end column.");
@@ -902,14 +896,14 @@ namespace LinearAlgebra {
 
         /// Specialization for std::unique_ptr<NumericalVector<U>>.
         template<typename U>
-        struct dereference_trait<std::unique_ptr<NumericalVector<U>>>
-                : public dereference_trait_pointer_base<std::unique_ptr, U> {
+        struct dereference_trait_vector<std::unique_ptr<NumericalVector<U>>>
+                : public dereference_trait_vector_pointer_base<std::unique_ptr, U> {
         };
 
         /// Specialization for std::shared_ptr<NumericalVector<U>>.
         template<typename U>
-        struct dereference_trait<std::shared_ptr<NumericalVector<U>>>
-                : public dereference_trait_pointer_base<std::shared_ptr, U> {
+        struct dereference_trait_vector<std::shared_ptr<NumericalVector<U>>>
+                : public dereference_trait_vector_pointer_base<std::shared_ptr, U> {
         };
     };
 } // LinearAlgebra

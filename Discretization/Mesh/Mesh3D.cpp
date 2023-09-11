@@ -141,7 +141,7 @@ namespace Discretization {
         return totalNodes;      
     }
     
-    GhostPseudoMesh* Mesh3D::_createGhostPseudoMesh(unsigned ghostLayerDepth) {
+/*    GhostPseudoMesh* Mesh3D::_createGhostPseudoMesh(unsigned ghostLayerDepth) {
         auto ghostNodesPerDirection = _createNumberOfGhostNodesPerDirectionMap(ghostLayerDepth);
 
         auto ghostNodesList = make_shared<list <Node*>>(0);
@@ -190,13 +190,13 @@ namespace Discretization {
             nodeArrayPositionK++;
         }
         return new GhostPseudoMesh(ghostNodesList, ghostNodesPerDirection, parametricCoordToNodeMap);
-    }
+    }*/
     
-    shared_ptr<map<NumericalVector<double>, Node*>> Mesh3D::createParametricCoordToNodesMap() {
-        auto parametricCoordToNodeMap = make_shared<map<NumericalVector<double>, Node*>>();
+    shared_ptr<map<vector<double>, Node*>> Mesh3D::createParametricCoordToNodesMap() {
+        auto parametricCoordToNodeMap = make_shared<map<vector<double>, Node*>>();
         for (auto& node : *totalNodesVector) {
             auto parametricCoords = node->coordinates.positionVector(Parametric);
-            parametricCoordToNodeMap->insert(pair<NumericalVector<double>, Node*>(parametricCoords, node));
+            parametricCoordToNodeMap->insert(pair<vector<double>, Node*>(*parametricCoords.getVectorSharedPtr(), node));
         }
         return parametricCoordToNodeMap;
     }
@@ -217,9 +217,9 @@ namespace Discretization {
 
             NumericalVector<double> covariantBaseVector1 = metrics->at(*node->id.global)->covariantBaseVectors->at(direction1);
             NumericalVector<double> covariantBaseVector2 = metrics->at(*node->id.global)->covariantBaseVectors->at(direction2);
-            
-            NumericalVector<double> normalUnitVector = VectorOperations::crossProduct(covariantBaseVector1, covariantBaseVector2);
-            VectorOperations::normalize(normalUnitVector);
+            NumericalVector<double> normalUnitVector = NumericalVector<double>(3);
+            covariantBaseVector1.crossProduct(covariantBaseVector2, normalUnitVector);
+            normalUnitVector.normalize();
             
            /* cout<<*node->id.global<<endl;
             cout<<boundaryPosition<<" "<<normalUnitVector[0]<<" "<<normalUnitVector[1]<<" "<<normalUnitVector[2]<<endl;*/

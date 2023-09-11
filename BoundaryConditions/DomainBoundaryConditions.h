@@ -5,7 +5,6 @@
 #include <exception>
 #include <stdexcept>
 #include "BoundaryCondition.h"
-#include "../PositioningInSpace/DirectionsPositions.h"
 #include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 
 using namespace PositioningInSpace;

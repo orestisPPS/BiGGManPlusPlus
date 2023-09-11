@@ -125,7 +125,7 @@ namespace Discretization {
         //print node id
     }
     
-    GhostPseudoMesh* Mesh2D::_createGhostPseudoMesh(unsigned ghostLayerDepth) {
+/*    GhostPseudoMesh* Mesh2D::_createGhostPseudoMesh(unsigned ghostLayerDepth) {
         //
         auto ghostNodesPerDirection = _createNumberOfGhostNodesPerDirectionMap(ghostLayerDepth);
 
@@ -144,12 +144,13 @@ namespace Discretization {
         auto parametricCoordToNodeMap =  createParametricCoordToNodesMap();
         for (int j = -static_cast<int>(nn2Ghost); j < static_cast<int>(nn2) + static_cast<int>(nn2Ghost); j++) {
             for (int i = -static_cast<int>(nn1Ghost); i < static_cast<int>(nn1) + static_cast<int>(nn1Ghost); i++) {
-                auto parametricCoords = NumericalVector<double>{static_cast<double>(i), static_cast<double>(j), 0};
+                auto parametricCoords = vector<double>{static_cast<double>(i), static_cast<double>(j), 0};
 
                 // If node is inside the original mesh add it to the ghost mesh Array
                 if (parametricCoordToNodeMap->find(parametricCoords) == parametricCoordToNodeMap->end()) {
                     auto node = new Node();
-                    node->coordinates.setPositionVector(make_shared<NumericalVector<double>>(parametricCoords), Parametric);
+                    auto coordsSharedPtr = NumericalVector<double>({static_cast<double>(i), static_cast<double>(j), 0});
+                    node->coordinates.setPositionVector(make_shared<NumericalVector<double>>(coordsSharedPtr), Parametric);
                     NumericalVector<double> templateCoord = {static_cast<double>(i) * specs->templateStepOne,
                                                     static_cast<double>(j) * specs->templateStepTwo};
                     // Rotate 
@@ -169,14 +170,15 @@ namespace Discretization {
             }
         }
         return new GhostPseudoMesh(ghostNodesList, ghostNodesPerDirection, parametricCoordToNodeMap);
-    }
+    }*/
 
-    shared_ptr<map<NumericalVector<double>, Node*>> Mesh2D::createParametricCoordToNodesMap() {
-        auto parametricCoordToNodeMap = make_shared<map<NumericalVector<double>, Node*>>();
+    shared_ptr<map<vector<double>, Node*>> Mesh2D::createParametricCoordToNodesMap() {
+        auto parametricCoordToNodeMap = make_shared<map<vector<double>, Node*>>();
         for (auto& node : *totalNodesVector) {
             auto parametricCoords = node->coordinates.positionVector(Parametric);
             parametricCoords[2] = 0;
-            parametricCoordToNodeMap->insert(pair<NumericalVector<double>, Node*>(parametricCoords, node));
+            vector<double> parametricCoordsVector = *parametricCoords.getVectorSharedPtr();
+            parametricCoordToNodeMap->insert(pair<vector<double>, Node*>(parametricCoordsVector, node));
         }
         return parametricCoordToNodeMap;
     }

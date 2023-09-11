@@ -32,7 +32,7 @@ namespace LinearAlgebra {
     protected:
 
     private:
-        unique_ptr<StationaryIterativeCuda> _stationaryIterativeCuda;
+        //unique_ptr<StationaryIterativeCuda> _stationaryIterativeCuda;
         
     };
 

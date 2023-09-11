@@ -1,3 +1,4 @@
+/*
 #include "VectorNormCuda.cuh"
 
 namespace LinearAlgebra {
@@ -182,3 +183,4 @@ namespace LinearAlgebra {
     // ... rest of your VectorNormCuda class ...
 
 } // LinearAlgebra
+*/

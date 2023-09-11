@@ -14,7 +14,7 @@ namespace Utility {
         outputFile << "A = [";
         for (int i = 0; i < matrix->numberOfRows(); i++) {
             for (int j = 0; j < matrix->numberOfColumns(); j++) {
-                outputFile << matrix->at(i, j) << " ";
+                outputFile << matrix->getElement(i, j) << " ";
             }
             if (i < matrix->size() - 1) {
                 outputFile << "; ";
@@ -62,7 +62,7 @@ namespace Utility {
         outputFile << "A = [";
         for (int i = 0; i < matrix->numberOfRows(); i++) {
             for (int j = 0; j < matrix->numberOfColumns(); j++) {
-                outputFile << matrix->at(i, j) << " ";
+                outputFile << matrix->getElement(i, j) << " ";
             }
             if (i < matrix->size() - 1) {
                 outputFile << "; ";

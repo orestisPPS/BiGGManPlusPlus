@@ -1,3 +1,4 @@
+/*
 //
 // Created by hal9000 on 4/27/23.
 //
@@ -71,4 +72,4 @@ namespace LinearAlgebra {
     shared_ptr<NumericalVector<double>> MatrixDecomposition::solve(shared_ptr<NumericalVector<double>> rhs, shared_ptr<NumericalVector<double>> solution) {
     }
 
-} // LinearAlgebra
+} // LinearAlgebra*/

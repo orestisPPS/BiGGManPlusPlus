@@ -1,3 +1,4 @@
+/*
 //
 // Created by hal9000 on 8/5/23.
 //
@@ -45,18 +46,22 @@ namespace LinearAlgebra {
                 cout<<"Eigenvalue "<<i<<" = "<<eig->at(i)<<endl;
             }
         }
+*/
 /*        cout<<"========== Iteration "<<_iteration<<" =========="<<endl;
         cout<<"========== Q =========="<<endl;
         _matrixQRDecomposition->getQ()->print(6);
         cout<<"========== R =========="<<endl;
         _matrixQRDecomposition->getR()->print(6);
         cout<<"========== A =========="<<endl;
-        _matrix->print(6);*/
+        _matrix->print(6);*//*
+
         
+*/
 /*        auto eig = getEigenvalues();
         for (unsigned i = 0; i < eig->size(); i++) {
             cout<<"Eigenvalue "<<i<<" = "<<eig->at(i)<<endl;
-        }*/
+        }*//*
+
         _matrixSet = false;
     }
     
@@ -97,4 +102,4 @@ namespace LinearAlgebra {
     }
 
 
-} // LinearAlgebra
+} // LinearAlgebra*/

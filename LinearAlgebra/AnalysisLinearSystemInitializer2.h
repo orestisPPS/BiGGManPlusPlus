@@ -66,7 +66,7 @@ namespace LinearAlgebra {
 
         void _createTotalDOFSubMatrix();
 
-        shared_ptr<map<NumericalVector<double>, Node*>> _parametricCoordToNodeMap;
+        shared_ptr<map<vector<double>, Node*>> _parametricCoordToNodeMap;
 
         static map<short unsigned, map<Direction, map<vector<Position>, short>>>
         _initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions);

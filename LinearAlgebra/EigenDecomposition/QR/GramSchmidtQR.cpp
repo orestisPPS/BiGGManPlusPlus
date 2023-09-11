@@ -1,3 +1,4 @@
+/*
 //
 // Created by hal9000 on 8/5/23.
 //
@@ -25,6 +26,7 @@ namespace LinearAlgebra {
         double QjDotAi = 0.0;
         
         //March through each column of A to find the projection of A onto Q
+*/
 /*        for (unsigned i = 0; i < n; i++){
             //Store column i in iColumn
             iColumnOfA = _matrix->getColumn(i);
@@ -44,12 +46,15 @@ namespace LinearAlgebra {
             _R->at(i, i) = norm;
             VectorOperations::normalize(iColumnOfA);
             _Q->setColumn(i, iColumnOfA);
-        }*/
+        }*//*
+
         
+*/
 /*        _Q->print(4);
         cout<< endl;
         _R->print(4);
-        cout << endl;*/
+        cout << endl;*//*
+
 
     }
 
@@ -60,4 +65,4 @@ namespace LinearAlgebra {
     void GramSchmidtQR::_CUDADecomposition() {
         DecompositionQR::_CUDADecomposition();
     }
-} // LinearAlgebra
+} // LinearAlgebra*/

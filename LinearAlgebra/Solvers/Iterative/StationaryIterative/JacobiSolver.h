@@ -18,9 +18,6 @@ namespace LinearAlgebra {
     protected:
         void _performMethodIteration() override;
         
-    private:
-        void _threadJobJacobi(unsigned start, unsigned end);
-        
     };
 
 } // LinearAlgebra

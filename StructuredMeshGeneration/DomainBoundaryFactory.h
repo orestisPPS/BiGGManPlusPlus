@@ -8,6 +8,7 @@
 #include "../BoundaryConditions/DomainBoundaryConditions.h"
 #include "MeshFactory.h"
 #include "../LinearAlgebra/Operations/Transformations.h"
+#include "../Utility/Calculators.h"
 using namespace BoundaryConditions;
 
 namespace StructuredMeshGenerator {

@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <vector>
+#include "../ContiguousMemoryNumericalArrays/NumericalVector/NumericalVector.h"
 
 namespace LinearAlgebra {
 
@@ -86,7 +87,7 @@ namespace LinearAlgebra {
 
     #if __cplusplus > 199711L
         template<typename Real_t, template<typename, typename...> class Cont, typename... Args>
-        Cont<Real_t, Args...> calculateWeightsOfDerivativeOrder(const Cont<Real_t, Args...>& grid, int order, const Real_t around=0){
+        NumericalVector<Real_t> calculateWeightsOfDerivativeOrder(const Cont<Real_t, Args...>& grid, int order, const Real_t around=0){
             // Cont<Real_t, Args...> must have contiguous memory storage (e.g. std::vector)
             const unsigned order_ = (order < 0) ? (grid.size()+1)/2 : order;
             Cont<Real_t, Args...> weights(grid.size()*(order_+1));
@@ -94,7 +95,7 @@ namespace LinearAlgebra {
                 throw std::logic_error("size of grid insufficient");
             }
             calculate_weights<Real_t>(&grid[0], grid.size(), order_, &weights[0], around);
-            auto weightsOfOrder = Cont<Real_t, Args...>(grid.size());
+            auto weightsOfOrder = NumericalVector<Real_t>(grid.size());
             for (unsigned i=0; i<grid.size(); ++i){
                 weightsOfOrder[i] = weights[i + order_*grid.size()];
             }

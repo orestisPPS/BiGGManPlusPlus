@@ -19,7 +19,6 @@ namespace LinearAlgebra {
         void _performMethodIteration() override;
         
     private:
-        void _threadJobGaussSeidel(unsigned start, unsigned end);
     };  
 } // LinearAlgebra
 

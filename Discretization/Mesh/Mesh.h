@@ -77,7 +77,7 @@ namespace Discretization {
         
         void initialize();
         
-        map<NumericalVector<double>, Node*> getCoordinateToNodeMap(CoordinateType coordinateType = Natural) const;
+        map<vector<double>, Node*> getCoordinateToNodeMap(CoordinateType coordinateType = Natural) const;
         
         unique_ptr<map<Node*, Position>> getBoundaryNodeToPositionMap() const;
         
@@ -99,7 +99,7 @@ namespace Discretization {
         
         virtual Node* node(unsigned i, unsigned j, unsigned k);
         
-        virtual shared_ptr<map<NumericalVector<double>, Node*>> createParametricCoordToNodesMap();
+        virtual shared_ptr<map<vector<double>, Node*>> createParametricCoordToNodesMap();
         
         virtual void printMesh();
         
@@ -141,7 +141,7 @@ namespace Discretization {
         
         virtual shared_ptr<vector<Node*>> _addTotalNodesToVector();
         
-        virtual GhostPseudoMesh* _createGhostPseudoMesh(unsigned ghostLayerDepth);
+        //virtual GhostPseudoMesh* _createGhostPseudoMesh(unsigned ghostLayerDepth);
         
         
         private:

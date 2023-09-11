@@ -1,3 +1,4 @@
+/*
 //
 // Created by hal9000 on 7/22/23.
 //
@@ -167,6 +168,7 @@ namespace LinearAlgebra {
     
 
 
+*/
 /*
         __global__ void kernelComputeNorm(const double* diff, double* d_norm, int numRows) {
         extern __shared__ double sdata[];
@@ -184,7 +186,8 @@ namespace LinearAlgebra {
         }
 
         if (tid == 0) atomicAdd(d_norm, sdata[0]);
-    }*/
+    }*//*
+
     
     
     void StationaryIterativeCuda::performGaussSeidelIteration() {
@@ -228,3 +231,4 @@ namespace LinearAlgebra {
 
 
 } // LinearAlgebra
+*/
