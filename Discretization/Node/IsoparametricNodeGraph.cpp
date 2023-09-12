@@ -368,69 +368,62 @@ namespace Discretization {
         return nodes;
     }
 
-    map<Direction, vector<shared_ptr<NumericalVector<double>>>> IsoParametricNodeGraph::
+    map<Direction, shared_ptr<NumericalVector<double>>> IsoParametricNodeGraph::
     getSameColinearNodalCoordinates(CoordinateType coordinateType) const {
 
-        map<Direction, vector<shared_ptr<NumericalVector<double>>>> coLinearNodalCoordinates;
-        auto colinearNodalCoordinates = map<Direction, vector<shared_ptr<NumericalVector<double>>>>();
+        map<Direction, shared_ptr<NumericalVector<double>>> coLinearNodalCoordinates;
+        auto colinearNodalCoordinates = map<Direction, shared_ptr<NumericalVector<double>>>();
         auto coLinearNodes = getColinearNodes();
         auto numberOfDirections = coLinearNodes.size();
         for (auto &direction: coLinearNodes) {
             auto directionI = direction.first;
             auto nodeVector = direction.second;
-            coLinearNodalCoordinates.insert(pair<Direction, vector<shared_ptr<NumericalVector<double>>>>(
-                    directionI, vector<shared_ptr<NumericalVector<double>>>(numberOfDirections)));
-            for (int i = 0; i < numberOfDirections; ++i) {
-                for (auto &node: nodeVector) {
-                    coLinearNodalCoordinates.at(directionI)[i] = node->coordinates.getPositionVector(coordinateType);
-                }
+            coLinearNodalCoordinates.insert(pair<Direction, shared_ptr<NumericalVector<double>>>(
+                                            directionI, make_shared<NumericalVector<double>>(numberOfDirections)));
+            auto directionIndex = spatialDirectionToUnsigned[directionI];
+            for (unsigned iNode = 0; iNode < numberOfDirections; ++iNode) {
+                auto nodalCoords = nodeVector[iNode]->coordinates.getPositionVector(coordinateType);
+                (*coLinearNodalCoordinates.at(directionI))[iNode] = (*nodalCoords)[directionIndex];
             }
         }
         return coLinearNodalCoordinates;
     }
     
-    map<Direction, vector<shared_ptr<NumericalVector<double>>>> IsoParametricNodeGraph::
+    map<Direction, shared_ptr<NumericalVector<double>>> IsoParametricNodeGraph::
     getSameColinearNodalCoordinatesOnBoundary(CoordinateType coordinateType, map<Position, vector<Node*>>& customNodeGraph) const {
 
-        auto coLinearNodalCoordinates = map<Direction, vector<shared_ptr<NumericalVector<double>>>>();
+        auto coLinearNodalCoordinates = map<Direction, shared_ptr<NumericalVector<double>>>();
         auto coLinearNodes = getColinearNodesOnBoundary(customNodeGraph);
         auto numberOfDirections = coLinearNodes.size();
         for (auto &direction: coLinearNodes) {
             auto directionI = direction.first;
             auto nodeVector = direction.second;
-            coLinearNodalCoordinates.insert(pair<Direction, vector<shared_ptr<NumericalVector<double>>>>(
-                directionI, vector<shared_ptr<NumericalVector<double>>>(numberOfDirections)));
-            //Iterate over all the domain directions
-            for (int i = 0; i < numberOfDirections; ++i) {
-                //Iterate over all the colinear nodes in this direction to get their coordinates
-                for (auto &node: nodeVector) {
-                    coLinearNodalCoordinates.at(directionI)[i] = node->coordinates.getPositionVector(coordinateType);
-                }
+            coLinearNodalCoordinates.insert(pair<Direction, shared_ptr<NumericalVector<double>>>(
+                    directionI, make_shared<NumericalVector<double>>(numberOfDirections)));
+            auto directionIndex = spatialDirectionToUnsigned[directionI];
+            for (unsigned iNode = 0; iNode < numberOfDirections; ++iNode) {
+                auto nodalCoords = nodeVector[iNode]->coordinates.getPositionVector(coordinateType);
+                (*coLinearNodalCoordinates.at(directionI))[iNode] = (*nodalCoords)[directionIndex];
             }
         }
         return coLinearNodalCoordinates;
     }
 
-    map<Direction, vector<shared_ptr<NumericalVector<double>>>> IsoParametricNodeGraph::
+    map<Direction, shared_ptr<NumericalVector<double>>> IsoParametricNodeGraph::
     getSameColinearNodalCoordinates(CoordinateType coordinateType, map<Position, vector<Node *>> &customNodeGraph) const {
 
-        auto coLinearNodalCoordinates = map<Direction, vector<shared_ptr<NumericalVector<double>>>>();
+        auto coLinearNodalCoordinates = map<Direction, shared_ptr<NumericalVector<double>>>();
         auto coLinearNodes = getColinearNodes(customNodeGraph);
         auto numberOfDirections = coLinearNodes.size();
         for (auto &direction: coLinearNodes) {
             auto directionI = direction.first;
             auto nodeVector = direction.second;
-            coLinearNodalCoordinates.insert(pair<Direction, vector<shared_ptr<NumericalVector<double>>>>(
-                    directionI, vector<shared_ptr<NumericalVector<double>>>(numberOfDirections)));
-            for (int i = 0; i < numberOfDirections; ++i) {
-                auto colinearCoords = make_shared<NumericalVector<double>>(nodeVector.size());
-                auto iNode = 0;
-                for (auto &node: nodeVector) {
-                    auto nodalCoords = node->coordinates.getPositionVector(coordinateType);
-                    (*colinearCoords)[iNode] = (*nodalCoords)[i];
-                    iNode++;
-                }
-                coLinearNodalCoordinates.at(directionI)[i] = colinearCoords;
+            coLinearNodalCoordinates.insert(pair<Direction, shared_ptr<NumericalVector<double>>>(
+                    directionI, make_shared<NumericalVector<double>>(numberOfDirections)));
+            auto directionIndex = spatialDirectionToUnsigned[directionI];
+            for (unsigned iNode = 0; iNode < numberOfDirections; ++iNode) {
+                (*coLinearNodalCoordinates.at(directionI))[iNode] =
+                    (*nodeVector[iNode]->coordinates.getPositionVector(coordinateType))[directionIndex];
             }
         }
         return coLinearNodalCoordinates;

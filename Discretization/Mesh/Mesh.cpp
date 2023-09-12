@@ -261,7 +261,7 @@ namespace Discretization {
 
     void Mesh::_uniformlySpacedMetrics(CoordinateType coordinateSystem, unique_ptr<vector<Discretization::Node *>> nodes, bool areBoundary) {
 
-        using findColinearNodes = map<Direction, vector<shared_ptr<NumericalVector<double>>>> (IsoParametricNodeGraph::*)(CoordinateType, map<Position, vector<Node*>>& ) const;
+        using findColinearNodes = map<Direction, shared_ptr<NumericalVector<double>>> (IsoParametricNodeGraph::*)(CoordinateType, map<Position, vector<Node*>>& ) const;
         findColinearNodes colinearNodes;
 
         if (areBoundary)
@@ -320,15 +320,15 @@ namespace Discretization {
 
                     auto taylorPointParametric = (*node->coordinates.getPositionVector(Parametric))[i];
                     auto covariantWeights = calculateWeightsOfDerivativeOrder(
-                            *parametricCoords[directionJ][j]->getVectorSharedPtr(), 1, taylorPointParametric);
+                            *parametricCoords[directionJ]->getVectorSharedPtr(), 1, taylorPointParametric);
 
                     auto taylorPointTemplate = (*node->coordinates.getPositionVector(coordinateSystem))[i];
                     auto contravariantWeights = calculateWeightsOfDerivativeOrder(
-                            *templateCoords[directionJ][j]->getVectorSharedPtr(), 1, taylorPointTemplate);
+                            *templateCoords[directionJ]->getVectorSharedPtr(), 1, taylorPointTemplate);
 
                     
                     //Check if the number of weights and the number of nodes match
-                    if (covariantWeights.size() != parametricCoords[directionJ][j]->size()) {
+                    if (covariantWeights.size() != parametricCoords[directionJ]->size()) {
                         throw std::runtime_error(
                                 "Number of weights and number of template nodal coords do not match"
                                 " for node " + to_string(*node->id.global) +
@@ -336,7 +336,7 @@ namespace Discretization {
                                 " Cannot calculate covariant base vectors");
                     }
 
-                    if (contravariantWeights.size() != templateCoords[directionJ][j]->size()) {
+                    if (contravariantWeights.size() != templateCoords[directionJ]->size()) {
                         throw std::runtime_error(
                                 "Number of weights and number of parametric nodal coords do not match"
                                 " for node " + to_string(*node->id.global) +
@@ -357,12 +357,12 @@ namespace Discretization {
                     //g_1 = {dx/dξ, dy/dξ, dz/dξ}
                     //g_2 = {dx/dη, dy/dη, dz/dη} 
                     //g_3 = {dx/dζ, dy/dζ, dz/dζ}
-                    covariantBaseVectorI[i] = covariantWeights.dotProduct(templateCoords[directionJ][j]);
+                    covariantBaseVectorI[i] = covariantWeights.dotProduct(templateCoords[directionJ]);
                     //Contravariant base vectors (dξ_i/dr_i)
                     //g^1 = {dξ/dx, dξ/dy, dξ/dz}
                     //g^2 = {dη/dx, dη/dy, dη/dz}
                     //g^3 = {dζ/dx, dζ/dy, dζ/dz}
-                    contravariantBaseVectorI[i] = contravariantWeights.dotProduct(parametricCoords[directionJ][j]);
+                    contravariantBaseVectorI[i] = contravariantWeights.dotProduct(parametricCoords[directionJ]);
                 }
                 nodeMetrics->covariantBaseVectors->insert(
                         pair<Direction, NumericalVector<double>>(directionI, covariantBaseVectorI));

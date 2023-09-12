@@ -90,11 +90,10 @@ namespace LinearAlgebra {
                             }
                         }
                         auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
-                        auto colinearCoordinates = graph.getSameColinearNodalCoordinates(
-                                _coordinateType, filteredNodeGraph)[directionI];
+                        auto colinearCoordinates = graph.getSameColinearNodalCoordinates(_coordinateType, filteredNodeGraph);
                         auto colinearDOF = graph.getColinearDOFOnBoundary(dof->type(), directionI, filteredNodeGraph);
                         auto taylorPoint = (*node->coordinates.getPositionVector(Parametric))[indexDirectionI];
-                        auto weights = calculateWeightsOfDerivativeOrder(*colinearCoordinates[indexDirectionI], derivativeOrder, taylorPoint);
+                        auto weights = calculateWeightsOfDerivativeOrder(*colinearCoordinates[directionI], derivativeOrder, taylorPoint);
 
                             //NumericalVector<double> &schemeWeights = scheme.weights;
                             for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
@@ -131,7 +130,7 @@ namespace LinearAlgebra {
 
     //TODO : Fix as above
     void AnalysisLinearSystemInitializer::addNeumannBoundaryConditions() {
-        auto start = std::chrono::steady_clock::now(); // Start the timer
+        /*auto start = std::chrono::steady_clock::now(); // Start the timer
         auto schemeSpecs = make_shared<FDSchemeSpecs>(2, _mesh->directions());
         auto directions = _mesh->directions();
         short unsigned maxDerivativeOrder = 1;
@@ -202,7 +201,7 @@ namespace LinearAlgebra {
                 }
             }
             _rhsVector->at(thisDOFPosition) += dof.second;
-        }
+        }*/
     }
 
     map<short unsigned, map<Direction, map<vector<Position>, short>>> AnalysisLinearSystemInitializer::
