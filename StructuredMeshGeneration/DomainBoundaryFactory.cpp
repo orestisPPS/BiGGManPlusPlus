@@ -30,8 +30,8 @@ namespace StructuredMeshGenerator {
                         auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = nodalParametricCoords[0] * stepX;
                         coordinateVector[1] = 0.0;
-                        Transformations::rotate(coordinateVector, rotAngle);
-                        Transformations::shear(coordinateVector, shearX, shearY);
+                        /*Transformations::rotate(coordinateVector, rotAngle);
+                        Transformations::shear(coordinateVector, shearX, shearY);*/
                         auto dofBC = make_shared<map<DOFType, double>>();
                         dofBC->insert(pair<DOFType, double>(DOFType::Position1, coordinateVector[0]));
                         dofBC->insert(pair<DOFType, double>(DOFType::Position2, coordinateVector[1]));
@@ -45,8 +45,8 @@ namespace StructuredMeshGenerator {
                         auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = lengthX;
                         coordinateVector[1] = nodalParametricCoords[1] * stepY;
-                        Transformations::rotate(coordinateVector, rotAngle);
-                        Transformations::shear(coordinateVector, shearX, shearY);
+                        /*Transformations::rotate(coordinateVector, rotAngle);
+                        Transformations::shear(coordinateVector, shearX, shearY);*/
                         auto dofBC = make_shared<map<DOFType, double>>();
                         dofBC->insert(pair<DOFType, double>(DOFType::Position1, coordinateVector[0]));
                         dofBC->insert(pair<DOFType, double>(DOFType::Position2, coordinateVector[1]));
@@ -59,8 +59,8 @@ namespace StructuredMeshGenerator {
                         auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = nodalParametricCoords[0] * stepX;
                         coordinateVector[1] = lengthY;
-                        Transformations::rotate(coordinateVector, rotAngle);
-                        Transformations::shear(coordinateVector, shearX, shearY);
+                        /*Transformations::rotate(coordinateVector, rotAngle);
+                        Transformations::shear(coordinateVector, shearX, shearY);*/
                         auto dofBC = make_shared<map<DOFType, double>>();
                         dofBC->insert(pair<DOFType, double>(DOFType::Position1, coordinateVector[0]));
                         dofBC->insert(pair<DOFType, double>(DOFType::Position2, coordinateVector[1]));
@@ -73,8 +73,8 @@ namespace StructuredMeshGenerator {
                         auto nodalParametricCoords = *node->coordinates.getPositionVector(Parametric);
                         coordinateVector[0] = 0.0;
                         coordinateVector[1] = nodalParametricCoords[1] * stepY;
-                        Transformations::rotate(coordinateVector, rotAngle);
-                        Transformations::shear(coordinateVector, shearX, shearY);
+                        /*Transformations::rotate(coordinateVector, rotAngle);
+                        Transformations::shear(coordinateVector, shearX, shearY);*/
                         auto dofBC = make_shared<map<DOFType, double>>();
                         dofBC->insert(pair<DOFType, double>(DOFType::Position1, coordinateVector[0]));
                         dofBC->insert(pair<DOFType, double>(DOFType::Position2, coordinateVector[1]));

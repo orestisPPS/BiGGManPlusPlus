@@ -167,6 +167,7 @@ add_executable(untitled main.cpp
         LinearAlgebra/EigenDecomposition/IEigenvalueDecomposition.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/NumericalMatrixDataStorageAccessProviders/NumericalMatrixDataStorageAccessProvider.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixEnums.h
+        Tests/SteadyState2DTest.h
 )
 
 

@@ -561,6 +561,9 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/QRTest.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyState2DTest.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyState3DNeumann.cpp">
 			<Option target="untitled"/>
 		</Unit>

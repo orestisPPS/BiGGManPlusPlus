@@ -139,19 +139,23 @@ namespace StructuredMeshGenerator{
     void MeshFactory::_assign2DCoordinates() const {
         for (unsigned j = 0; j < mesh->nodesPerDirection.at(Two); ++j) {
             for (unsigned i = 0; i < mesh->nodesPerDirection.at(One); ++i) {
-                
                 // Parametric coordinates
-                NumericalVector<double> parametricCoord = {static_cast<double>(i), static_cast<double>(j)};
-                mesh->node(i, j)->coordinates.setPositionVector(make_shared<NumericalVector<double>>(parametricCoord), Parametric);
+                auto parametricCoords = make_shared<NumericalVector<double>>(2);
+                (*parametricCoords)[0] = static_cast<double>(i);
+                (*parametricCoords)[1] = static_cast<double>(j);
+                
+                mesh->node(i, j)->coordinates.setPositionVector(parametricCoords, Parametric);
                 // Template coordinates
-                NumericalVector<double> templateCoord = {static_cast<double>(i) * _meshSpecs->templateStepOne,
-                                                static_cast<double>(j) * _meshSpecs->templateStepTwo};
-                // Rotate 
-                Transformations::rotate(templateCoord, _meshSpecs->templateRotAngleOne);
+                auto templateCoords = make_shared<NumericalVector<double>>(2);
+                (*templateCoords)[0] = static_cast<double>(i) * _meshSpecs->templateStepOne;
+                (*templateCoords)[1] = static_cast<double>(j) * _meshSpecs->templateStepTwo;
+                
+                // Rotate
+                //Transformations::rotate(templateCoord, _meshSpecs->templateRotAngleOne);
                 // Shear
-                Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
-
-                mesh->node(i, j)->coordinates.setPositionVector(make_shared<NumericalVector<double>>(templateCoord), Template);
+                //Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
+                
+                mesh->node(i, j)->coordinates.setPositionVector(templateCoords, Template);
             }
         }
     }

@@ -2,6 +2,7 @@
 #include "DegreesOfFreedom/DegreeOfFreedom.h"
 #include "PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
 #include "Tests/SteadyState3DNeumann.h"
+#include "Tests/SteadyState2DTest.h"
 #include "Tests/SteadyStateDirichlet3D.h"
 #include "Tests/LanczosEigenDecompositionTest.h"
 #include "Tests/NumericalVectorTest.h"
@@ -25,44 +26,20 @@ using namespace DegreesOfFreedom;
 
 int main() {
 
-    auto analysisTest = new NumericalAnalysis::StStFDTest();
+    //auto analysisTest = new NumericalAnalysis::StStFDTest();
+/*
     auto neumannTest = new Tests::SteadyState3DNeumann();
     delete neumannTest;
+*/
 
 /*    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();
     delete lanczosTest;*/
 
+    Tests::SteadyState2DTest::runTests();
+
     auto vectorTest = new NumericalVectorTest();
     vectorTest->runTests();
     Tests::NumericalMatrixTest::runTests();
-
-
-
-    //auto vectorTest = new NumericalVectorTest();
-/*    vectorTest->runTests();
-    
-    auto numericalVector = NumericalVector<double>(10, MultiThread);
-    auto numericalVectorRawPtr = new NumericalVector<double>(10, MultiThread);
-    auto numericalVectorSharedPtr = make_shared<NumericalVector<double>>(10, MultiThread);
-    auto numericalVectorUniquePtr = make_unique<NumericalVector<double>>(10, MultiThread);
-    for (unsigned i = 0; i < 10; ++i) {
-        numericalVector[i] = i;
-        (*numericalVectorRawPtr)[i] = i;
-        (*numericalVectorSharedPtr)[i] = i;
-        (*numericalVectorUniquePtr)[i] = i;
-    }
-
-    NumericalVector<double> subtraction = NumericalVector<double>(10);
-    numericalVectorSharedPtr->subtract(numericalVectorSharedPtr, subtraction);
-    
-    auto numericalVector2 = NumericalVector<double>(numericalVectorSharedPtr);
-    auto numericalVector4 = NumericalVector<double>(numericalVector);
-    
-    auto numericalVector3 = NumericalVector<double>(10, MultiThread);
-    numericalVector3 = numericalVector2;*/
-
-
-
 
 
     //auto qrTest = new Tests::QRTest();

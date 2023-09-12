@@ -87,7 +87,7 @@ namespace LinearAlgebra {
 
     #if __cplusplus > 199711L
         template<typename Real_t, template<typename, typename...> class Cont, typename... Args>
-        NumericalVector<Real_t> calculateWeightsOfDerivativeOrder(const Cont<Real_t, Args...>& grid, int order, const Real_t around=0){
+        NumericalVector<Real_t> calculateWeightsOfDerivativeOrder(const Cont<Real_t, Args...>& grid, int order, const Real_t around= 0){
             // Cont<Real_t, Args...> must have contiguous memory storage (e.g. std::vector)
             const unsigned order_ = (order < 0) ? (grid.size()+1)/2 : order;
             Cont<Real_t, Args...> weights(grid.size()*(order_+1));

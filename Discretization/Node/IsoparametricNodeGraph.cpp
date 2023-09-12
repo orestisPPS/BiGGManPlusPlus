@@ -423,9 +423,14 @@ namespace Discretization {
             coLinearNodalCoordinates.insert(pair<Direction, vector<shared_ptr<NumericalVector<double>>>>(
                     directionI, vector<shared_ptr<NumericalVector<double>>>(numberOfDirections)));
             for (int i = 0; i < numberOfDirections; ++i) {
+                auto colinearCoords = make_shared<NumericalVector<double>>(nodeVector.size());
+                auto iNode = 0;
                 for (auto &node: nodeVector) {
-                    coLinearNodalCoordinates.at(directionI)[i] = node->coordinates.getPositionVector(coordinateType);
+                    auto nodalCoords = node->coordinates.getPositionVector(coordinateType);
+                    (*colinearCoords)[iNode] = (*nodalCoords)[i];
+                    iNode++;
                 }
+                coLinearNodalCoordinates.at(directionI)[i] = colinearCoords;
             }
         }
         return coLinearNodalCoordinates;
