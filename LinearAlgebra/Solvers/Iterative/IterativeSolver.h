@@ -61,12 +61,12 @@ namespace LinearAlgebra {
         shared_ptr<list<double>> _residualNorms;
 
         string _solverName;
-        
+
+        void _iterativeSolution();
+
         void setInitialSolution(shared_ptr<NumericalVector<double>> initialSolution) override;
 
         void setInitialSolution(double initialValue) override;
-        
-        virtual void _iterativeSolution();
         
         virtual void _performMethodIteration();
         

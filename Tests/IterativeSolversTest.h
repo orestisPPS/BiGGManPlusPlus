@@ -79,15 +79,17 @@ namespace Tests{
     private:
         
         static void _conjugateGradientTest(shared_ptr<LinearSystem>& linearSystem, shared_ptr<NumericalVector<double>>& solution){
-            auto solver = make_shared<ConjugateGradientSolver>();
+            auto solver = make_shared<ConjugateGradientSolver>(1E-20, 1E4);
             solver->setLinearSystem(linearSystem);
             solver->solve();
 
             auto difference = NumericalVector<double>(solution->size());
             for (auto i = 0; i < solution->size(); ++i){
-                difference[i] = (*solution)[i] - (*linearSystem->solution)[i];
+                difference[i] = std::abs(((*solution)[i] - (*linearSystem->solution)[i]) / (*solution)[i]) * 100;
+                //difference[i] = (*solution)[i] - (*linearSystem->solution)[i];
+                cout <<" CG solution : "<< (*linearSystem->solution)[i] << " Exact solution : "<< (*solution)[i] << " Difference : "<< difference[i] << "%"<< endl;
             }
-            auto norm = difference.norm(LInf);
+            auto norm = difference.norm(L2);
             cout << "Conjugate Gradient Test: " << norm << endl;
         }
         

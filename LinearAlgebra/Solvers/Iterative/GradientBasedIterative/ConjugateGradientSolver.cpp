@@ -47,7 +47,7 @@ namespace LinearAlgebra {
         double normInitial = _residualOld->norm(L2);
         _residualNorms->push_back(normInitial);
         //d_old = r_old
-        _residualOld = _directionVectorOld;
+        _directionVectorOld = _residualOld;
 
         while (_iteration < _maxIterations) {
             auto matrixTimesDirection = make_shared<NumericalVector<double>>(_linearSystem->matrix->numberOfRows(), 0);
@@ -67,7 +67,7 @@ namespace LinearAlgebra {
             //VectorOperations::subtract(_xNew, _xOld, _difference);
             
             //Calculate the norm of the residual
-            _exitNorm = _residualNew->norm(_normType);
+            _exitNorm = _residualNew->norm(_normType) / normInitial;
             //_exitNorm = VectorNorm(_residualNew, _normType).value();
             _residualNorms->push_back(_exitNorm);
             if (_exitNorm > _tolerance){
@@ -77,9 +77,11 @@ namespace LinearAlgebra {
                 //newDirection = r_new + beta * difference
                 _residualNew->add(_directionVectorOld, _directionVectorNew, 1.0, beta);
                 
-                _residualNew = _residualOld;
-                _directionVectorNew = _directionVectorOld;
-                _xNew = _xOld;
+                //Update the old residual and the old difference
+                _residualOld = _residualNew;
+                _directionVectorOld = _directionVectorNew;
+                _xOld = _xNew;
+                _printIterationAndNorm(10) ;
             }
             else {
                 _xNew = _xOld;
