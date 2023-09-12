@@ -38,7 +38,7 @@ namespace Tests {
             // 127.83613628736045
             
             auto bottom = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                      ({{Temperature, 500}})));
+                                                                                                      ({{Temperature, 100}})));
             auto top = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
                                                                                                         ({{Temperature, 100}})));
             auto left = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>

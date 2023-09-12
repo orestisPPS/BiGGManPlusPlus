@@ -301,8 +301,6 @@ namespace Discretization {
                     //Check if the available positions are qualified for the current derivative order
                     auto qualifiedPositions = schemeBuilder.getQualifiedFromAvailable(
                             availablePositionsAndDepth[directionJ], templatePositionsAndPointsMap[1][directionJ]);
-                    auto scheme = FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
-                            qualifiedPositions, directionJ, errorOrderDerivative1, 1);
 
                     auto graphFilter = map<Position, unsigned short>();
                     for (auto &tuple: qualifiedPositions) {
@@ -376,6 +374,8 @@ namespace Discretization {
             nodeMetrics->calculateCovariantTensor();
             nodeMetrics->calculateContravariantTensor();
             metrics->insert(pair<unsigned, shared_ptr<Metrics> >(*node->id.global, nodeMetrics));
+            nodeMetrics->covariantTensor->printFullMatrix("covariant tensor node : " + to_string(*node->id.global));
+            //nodeMetrics->contravariantTensor->printFullMatrix("contravariant tensor node : " + to_string(*node->id.global));
         }
     }
     

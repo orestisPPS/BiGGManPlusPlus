@@ -12,6 +12,7 @@
 #include <type_traits>
 #include <valarray>
 #include <random>
+#include <iostream>
 #include "../../../ThreadingOperations/ThreadingOperations.h"
 using namespace LinearAlgebra;
 using namespace std;
@@ -1196,6 +1197,30 @@ namespace LinearAlgebra {
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
             _threading.executeParallelJob(scaleJob, _values->size(), _availableThreads);
         }
+        
+        void printVertically(const string& name = " "){
+            cout << " name = [ " << endl;
+            for (auto &value: *_values){
+                cout << value << endl;
+            }
+            cout << " ] " << endl;
+        }
+        
+        void printWithIndex(const string& name = " "){
+            cout << " name = [ " << endl;
+            for (unsigned i = 0; i < _values->size(); ++i){
+                cout << i << " : " << (*_values)[i] << endl;
+            }
+            cout << " ] " << endl;
+        }
+        
+        void printHorizontally(const string& name = " "){
+            std::ostream os (std::cout.rdbuf());
+            os << " name = [ ";
+            for (const auto &value: *_values){
+                os << value << " ";
+            }
+        }
 
 
     protected:
@@ -1257,7 +1282,7 @@ namespace LinearAlgebra {
 
             return _threading.executeParallelJobWithReduction(compareElementsJob, _values->size(), _availableThreads);
         }
-
+        
 
 
         //=================================================================================================================//

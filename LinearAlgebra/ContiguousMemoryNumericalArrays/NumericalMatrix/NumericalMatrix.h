@@ -5,6 +5,7 @@
 #ifndef UNTITLED_NUMERICALMATRIX_H
 #define UNTITLED_NUMERICALMATRIX_H
 
+#include <iomanip>
 #include "../NumericalVector/NumericalVector.h"
 #include "NumericalMatrixEnums.h"
 #include "MatrixStorageDataProviders/CSRStorageDataProvider.h"
@@ -448,10 +449,31 @@ namespace LinearAlgebra {
             return _math->vectorMultiplicationColumnWisePartial(inputVectorData, targetColumn, startRow, endRow, operationCondition, scaleThis, scaleInput, availableThreads);
             
         }
-        
-        
-        
-        
+
+        void printFullMatrix(const string& name = "", unsigned precision = 4) const {
+            int width = precision + 4;  // Add some extra width for the integer part and potential minus sign
+            cout << name;
+            if(!name.empty()) cout << " : ";  // Only add the colon if the name is provided
+            cout << " [ " << _numberOfRows << "x" << _numberOfColumns << " ] = " << endl;
+
+            for (unsigned i = 0; i < _numberOfRows; ++i) {
+                if (i == 0)
+                    cout << "  [ ";
+                else
+                    cout << "    ";
+
+                for (unsigned j = 0; j < _numberOfColumns; ++j) {
+                    cout << std::setprecision(precision) << std::setw(width) << std::right << dataStorage->getElement(i, j);
+                    if(j < _numberOfColumns - 1) cout << ", ";  // Comma separator
+                }
+
+                if (i == _numberOfRows - 1)
+                    cout << " ]";
+
+                cout << endl;
+            }
+        }
+
 
         
     private:

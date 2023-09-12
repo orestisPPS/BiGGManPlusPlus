@@ -81,7 +81,7 @@ namespace LinearAlgebra {
                 _residualOld = _residualNew;
                 _directionVectorOld = _directionVectorNew;
                 _xOld = _xNew;
-                _printIterationAndNorm(10) ;
+                //_printIterationAndNorm(10) ;
             }
             else {
                 _xNew = _xOld;
@@ -89,7 +89,7 @@ namespace LinearAlgebra {
             }
             
             //Update the old residual and the old difference
-            _printIterationAndNorm(1) ;
+            //_printIterationAndNorm(1) ;
             _iteration++;
         }
         auto end = std::chrono::high_resolution_clock::now();
