@@ -80,8 +80,8 @@ namespace LinearAlgebra {
                         //Check if the available positions are qualified for the current derivative order
                         auto qualifiedPositions = schemeBuilder.getQualifiedFromAvailable(
                                 availablePositionsAndDepth[directionI], templatePositionsAndPointsMap[1][directionI]);
-                        auto scheme = FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
-                                qualifiedPositions, directionI, errorOrderDerivative1, 1);
+                        //auto scheme = FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
+                                //qualifiedPositions, directionI, errorOrderDerivative1, 1);
 
                         auto graphFilter = map<Position, unsigned short>();
                         for (auto &tuple: qualifiedPositions) {
@@ -90,22 +90,17 @@ namespace LinearAlgebra {
                             }
                         }
                         auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
-                        auto colinearCoordinatesNumericalVector = graph.getSameColinearNodalCoordinatesOnBoundary(
-                                _coordinateType, filteredNodeGraph)[directionI][indexDirectionI];
+                        auto colinearCoordinates = graph.getSameColinearNodalCoordinates(
+                                _coordinateType, filteredNodeGraph)[directionI];
                         auto colinearDOF = graph.getColinearDOFOnBoundary(dof->type(), directionI, filteredNodeGraph);
-                        double schemeAroundPoint = (*colinearCoordinatesNumericalVector)[0];
-                        auto weights2 = calculateWeightsOfDerivativeOrder(*colinearCoordinatesNumericalVector, 2, schemeAroundPoint);
+                        auto taylorPoint = (*node->coordinates.getPositionVector(Parametric))[indexDirectionI];
+                        auto weights = calculateWeightsOfDerivativeOrder(*colinearCoordinates[indexDirectionI], derivativeOrder, taylorPoint);
 
-                        auto step = colinearCoordinatesNumericalVector->averageAbsoluteDeviationFromMean();
-
-                        //Calculate the denominator (h^p)
-                        double denominator = scheme.denominatorCoefficient * pow(step, scheme.power);
-
-                            NumericalVector<double> &schemeWeights = scheme.weights;
+                            //NumericalVector<double> &schemeWeights = scheme.weights;
                             for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
                                 auto neighbourDOF = colinearDOF[iDof];
-                                auto weight = schemeWeights[iDof] * iThDerivativePDECoefficient / denominator;
-                                auto weight2 = weights2[iDof] * iThDerivativePDECoefficient;
+                                //auto weight = schemeWeights[iDof] * iThDerivativePDECoefficient / denominator;
+                                auto weight2 = weights[iDof] * iThDerivativePDECoefficient;
                                 if (neighbourDOF->constraintType() == Free) {
                                     auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(
                                             colinearDOF[iDof]);

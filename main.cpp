@@ -6,6 +6,7 @@
 #include "Tests/SteadyStateDirichlet3D.h"
 #include "Tests/LanczosEigenDecompositionTest.h"
 #include "Tests/NumericalVectorTest.h"
+#include "Tests/IterativeSolversTest.h"
 #include "Tests/QRTest.h"
 #include "Tests/OperationsCUDA.h"
 #include "Tests/NumericalMatrixTest.h"
@@ -35,11 +36,12 @@ int main() {
 /*    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();
     delete lanczosTest;*/
 
-    Tests::SteadyState2DTest::runTests();
+    Tests::IterativeSolversTest::runTests();
+    //Tests::SteadyState2DTest::runTests();
 
-    auto vectorTest = new NumericalVectorTest();
+/*    auto vectorTest = new NumericalVectorTest();
     vectorTest->runTests();
-    Tests::NumericalMatrixTest::runTests();
+    Tests::NumericalMatrixTest::runTests();*/
 
 
     //auto qrTest = new Tests::QRTest();

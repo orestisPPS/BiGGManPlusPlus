@@ -59,7 +59,7 @@ namespace StructuredMeshGenerator{
 
 
         auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specs, Template);
-
+        
         analysis->solve();
         
         analysis->applySolutionToDegreesOfFreedom();

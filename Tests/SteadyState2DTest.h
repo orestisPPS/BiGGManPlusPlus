@@ -87,7 +87,7 @@ namespace Tests {
 
             //auto targetCoords = NumericalVector<double>{0.5, 0.5};
             //auto targetCoords = NumericalVector<double>{1.5, 1.5, 1.5};
-            auto targetCoords = NumericalVector<double>{2, 2, 2};
+            auto targetCoords = NumericalVector<double>{2, 2};
             //auto targetCoords = NumericalVector<double>{1.5, 1.5, 3};
             //auto targetCoords = NumericalVector<double>{5, 5, 5};
             auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-3);
