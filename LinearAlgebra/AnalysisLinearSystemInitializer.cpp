@@ -78,8 +78,8 @@ namespace LinearAlgebra {
                     if (iThDerivativePDECoefficient != 0) {
                         
                         //Check if the available positions are qualified for the current derivative order
-                        auto qualifiedPositions = schemeBuilder.getQualifiedFromAvailable(
-                                availablePositionsAndDepth[directionI], templatePositionsAndPointsMap[1][directionI]);
+                        auto qualifiedPositions = _getQualifiedFromAvailable(
+                                availablePositionsAndDepth[directionI], templatePositionsAndPointsMap[derivativeOrder][directionI]);
                         //auto scheme = FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
                                 //qualifiedPositions, directionI, errorOrderDerivative1, 1);
 
@@ -92,8 +92,10 @@ namespace LinearAlgebra {
                         auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
                         auto colinearCoordinates = graph.getSameColinearNodalCoordinates(_coordinateType, filteredNodeGraph);
                         auto colinearDOF = graph.getColinearDOFOnBoundary(dof->type(), directionI, filteredNodeGraph);
+                        
                         auto taylorPoint = (*node->coordinates.getPositionVector(Parametric))[indexDirectionI];
-                        auto weights = calculateWeightsOfDerivativeOrder(*colinearCoordinates[directionI], derivativeOrder, taylorPoint);
+                        auto weights = calculateWeightsOfDerivativeOrder(*colinearCoordinates[directionI]->getVectorSharedPtr(),
+                                                                         derivativeOrder, taylorPoint);
 
                             //NumericalVector<double> &schemeWeights = scheme.weights;
                             for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
@@ -103,13 +105,17 @@ namespace LinearAlgebra {
                                 if (neighbourDOF->constraintType() == Free) {
                                     auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(
                                             colinearDOF[iDof]);
-                                    //_matrix->at(thisDOFPosition, neighbourDOFPosition) += weight2;
-                                    double ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
+  /*                                  double ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
                                     if (ijElement != 0)
                                         ijElement += weight2;
                                     else
-                                        _matrix->setElement(thisDOFPosition, neighbourDOFPosition, weight2);
-                                } else if (neighbourDOF->constraintType() == Fixed) {
+                                        _matrix->setElement(thisDOFPosition, neighbourDOFPosition, weight2);*/
+                                    double ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
+                                    ijElement += weight2;
+                                    _matrix->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
+
+                                }
+                                else if (neighbourDOF->constraintType() == Fixed) {
                                     auto dirichletContribution = neighbourDOF->value() * weight2;
                                     _rhsVector->at(thisDOFPosition) -= dirichletContribution;
                                 }
@@ -118,8 +124,8 @@ namespace LinearAlgebra {
                     }
             }
         }
-        addNeumannBoundaryConditions();
-        //_matrix->print();
+        //addNeumannBoundaryConditions();
+        
         this->linearSystem = make_shared<LinearSystem>(std::move(_matrix), std::move(_rhsVector));
 
 

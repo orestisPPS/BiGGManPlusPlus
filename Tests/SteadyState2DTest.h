@@ -6,6 +6,8 @@
 #define UNTITLED_STEADYSTATE2DTEST_H
 
 #endif //UNTITLED_STEADYSTATE2DTEST_H
+
+#include <cassert>
 #include "../Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.h"
 #include "../StructuredMeshGeneration/MeshFactory.h"
 #include "../StructuredMeshGeneration/MeshSpecs.h"
@@ -17,11 +19,13 @@ namespace Tests {
     class SteadyState2DTest {
     public:
         static void runTests(){
-            _dirichletTest();
+            _testDiffusionDirichlet2D();
         }
         
     private:
-        static void _dirichletTest(){
+        static void _testDiffusionDirichlet2D(){
+            logTestStart("testDiffusionDirichlet2D");
+
             map<Direction, unsigned> numberOfNodes;
             numberOfNodes[Direction::One] = 5;
             numberOfNodes[Direction::Two] = 5;
@@ -84,18 +88,23 @@ namespace Tests {
             auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
             auto fieldType = "Temperature";
             Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
+            
+            auto targetCoords = NumericalVector<double>{2, 2, 0};
 
-            //auto targetCoords = NumericalVector<double>{0.5, 0.5};
-            //auto targetCoords = NumericalVector<double>{1.5, 1.5, 1.5};
-            auto targetCoords = NumericalVector<double>{2, 2};
-            //auto targetCoords = NumericalVector<double>{1.5, 1.5, 3};
-            //auto targetCoords = NumericalVector<double>{5, 5, 5};
             auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-3);
-            cout<<"Target Solution: "<< targetSolution[0] << endl;
+            
+            auto absoluteRelativeError = abs(targetSolution[0] - 55) / 55;
+
+            assert(absoluteRelativeError - 55 < 1E-12);
+            logTestEnd();
         }
 
-        static void _neumannTest(){
-            
+        static void logTestStart(const std::string& testName) {
+            std::cout << "Running " << testName << "... ";
+        }
+
+        static void logTestEnd() {
+            std::cout << "\033[1;32m[PASSED ]\033[0m\n";  // This adds a green [PASSED] indicator
         }
     };
 

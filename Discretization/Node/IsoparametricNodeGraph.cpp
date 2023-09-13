@@ -374,17 +374,18 @@ namespace Discretization {
         map<Direction, shared_ptr<NumericalVector<double>>> coLinearNodalCoordinates;
         auto colinearNodalCoordinates = map<Direction, shared_ptr<NumericalVector<double>>>();
         auto coLinearNodes = getColinearNodes();
-        auto numberOfDirections = coLinearNodes.size();
         for (auto &direction: coLinearNodes) {
             auto directionI = direction.first;
             auto nodeVector = direction.second;
             coLinearNodalCoordinates.insert(pair<Direction, shared_ptr<NumericalVector<double>>>(
-                                            directionI, make_shared<NumericalVector<double>>(numberOfDirections)));
+                    directionI, make_shared<NumericalVector<double>>(nodeVector.size())));
+            auto colinearCoordinates = make_shared<NumericalVector<double>>(nodeVector.size());
             auto directionIndex = spatialDirectionToUnsigned[directionI];
-            for (unsigned iNode = 0; iNode < numberOfDirections; ++iNode) {
-                auto nodalCoords = nodeVector[iNode]->coordinates.getPositionVector(coordinateType);
-                (*coLinearNodalCoordinates.at(directionI))[iNode] = (*nodalCoords)[directionIndex];
+            for (unsigned iNode = 0; iNode < nodeVector.size(); ++iNode) {
+                (*colinearCoordinates)[iNode] =
+                        (*nodeVector[iNode]->coordinates.getPositionVector(coordinateType))[directionIndex];
             }
+            coLinearNodalCoordinates.at(directionI) = colinearCoordinates;
         }
         return coLinearNodalCoordinates;
     }
@@ -394,17 +395,18 @@ namespace Discretization {
 
         auto coLinearNodalCoordinates = map<Direction, shared_ptr<NumericalVector<double>>>();
         auto coLinearNodes = getColinearNodesOnBoundary(customNodeGraph);
-        auto numberOfDirections = coLinearNodes.size();
         for (auto &direction: coLinearNodes) {
             auto directionI = direction.first;
             auto nodeVector = direction.second;
             coLinearNodalCoordinates.insert(pair<Direction, shared_ptr<NumericalVector<double>>>(
-                    directionI, make_shared<NumericalVector<double>>(numberOfDirections)));
+                    directionI, make_shared<NumericalVector<double>>(nodeVector.size())));
+            auto colinearCoordinates = make_shared<NumericalVector<double>>(nodeVector.size());
             auto directionIndex = spatialDirectionToUnsigned[directionI];
-            for (unsigned iNode = 0; iNode < numberOfDirections; ++iNode) {
-                auto nodalCoords = nodeVector[iNode]->coordinates.getPositionVector(coordinateType);
-                (*coLinearNodalCoordinates.at(directionI))[iNode] = (*nodalCoords)[directionIndex];
+            for (unsigned iNode = 0; iNode < nodeVector.size(); ++iNode) {
+                (*colinearCoordinates)[iNode] =
+                        (*nodeVector[iNode]->coordinates.getPositionVector(coordinateType))[directionIndex];
             }
+            coLinearNodalCoordinates.at(directionI) = colinearCoordinates;
         }
         return coLinearNodalCoordinates;
     }
@@ -414,17 +416,18 @@ namespace Discretization {
 
         auto coLinearNodalCoordinates = map<Direction, shared_ptr<NumericalVector<double>>>();
         auto coLinearNodes = getColinearNodes(customNodeGraph);
-        auto numberOfDirections = coLinearNodes.size();
         for (auto &direction: coLinearNodes) {
             auto directionI = direction.first;
             auto nodeVector = direction.second;
             coLinearNodalCoordinates.insert(pair<Direction, shared_ptr<NumericalVector<double>>>(
-                    directionI, make_shared<NumericalVector<double>>(numberOfDirections)));
+                    directionI, make_shared<NumericalVector<double>>(nodeVector.size())));
+            auto colinearCoordinates = make_shared<NumericalVector<double>>(nodeVector.size());
             auto directionIndex = spatialDirectionToUnsigned[directionI];
-            for (unsigned iNode = 0; iNode < numberOfDirections; ++iNode) {
-                (*coLinearNodalCoordinates.at(directionI))[iNode] =
-                    (*nodeVector[iNode]->coordinates.getPositionVector(coordinateType))[directionIndex];
+            for (unsigned iNode = 0; iNode < nodeVector.size(); ++iNode) {
+                (*colinearCoordinates)[iNode] = 
+                        (*nodeVector[iNode]->coordinates.getPositionVector(coordinateType))[directionIndex];
             }
+            coLinearNodalCoordinates.at(directionI) = colinearCoordinates;
         }
         return coLinearNodalCoordinates;
     }
