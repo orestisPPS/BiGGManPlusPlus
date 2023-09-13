@@ -8,7 +8,7 @@
 
 namespace Discretization {
     
-    Mesh2D::Mesh2D(shared_ptr<Array<Node*>>nodes) : Mesh() {
+    Mesh2D::Mesh2D(shared_ptr<Array<Node*>>nodes) : Mesh(nodes) {
         this->_nodesMatrix = std::move(nodes);
         initialize();
         _nodesMap = _createNodesMap();

@@ -3,15 +3,11 @@
 //
 #pragma once
 #include "MeshSpecs.h"
-#include "../Discretization/Mesh/Mesh.h"
 #include "../Discretization/Mesh/Mesh1D.h"
 #include "../Discretization/Mesh/Mesh2D.h"
 #include "../Discretization/Mesh/Mesh3D.h"
-#include "../LinearAlgebra/Array/Array.h"
-#include "../LinearAlgebra/Operations/Transformations.h"
 #include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 #include "NodeFactory.h"
-#include "MeshSpecs.h"
 #include "DomainBoundaryFactory.h"
 #include "../PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
 #include "../Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.h"

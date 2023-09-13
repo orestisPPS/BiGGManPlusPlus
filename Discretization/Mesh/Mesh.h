@@ -1,14 +1,13 @@
 //
 // Created by hal9000 on 12/17/22.
 //
-#pragma once
-#include<vector>
+#ifndef UNTITLED_MESH_H
+#define UNTITLED_MESH_H
+
 #include "../Node/Node.h"
 #include "../../LinearAlgebra/Array/Array.h"
 #include "../../StructuredMeshGeneration/MeshSpecs.h"
 #include "Metrics/Metrics.h"
-#include "GhostPseudoMesh/GhostPseudoMesh.h"
-#include "../../LinearAlgebra/Operations/Transformations.h"
 #include "../Node/IsoparametricNodeGraph.h"
 #include "../../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
 #include "../../LinearAlgebra/FiniteDifferences/FDWeightCalculator.h"
@@ -27,7 +26,7 @@ namespace Discretization {
     
     public:
         //Mesh(shared_ptr<Array<Node*>>nodes, map<Direction, int> nodesPerDirection);
-        Mesh();
+        explicit Mesh(shared_ptr<Array<Node*>>nodes);
         
         virtual ~Mesh();
         
@@ -155,3 +154,5 @@ namespace Discretization {
     
     };
 }
+
+#endif //UNTITLED_MESH_H

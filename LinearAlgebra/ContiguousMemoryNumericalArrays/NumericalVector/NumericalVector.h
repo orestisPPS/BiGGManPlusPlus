@@ -996,7 +996,7 @@ namespace LinearAlgebra {
                 return sum;
             };
 
-            return pow(_threading.executeParallelJobWithReductionForDoubles(normLpJob, size()), _availableThreads);
+            return pow(_threading.executeParallelJobWithReductionForDoubles(normLpJob, size()), 1.0/p);
         }
 
         //=================================================================================================================//
@@ -1190,12 +1190,12 @@ namespace LinearAlgebra {
          */
         void scale(T scalar, unsigned userDefinedThreads = 0) {
             auto scaleJob = [&](unsigned start, unsigned end) -> void {
-                for (auto &value: *_values) {
-                    value *= scalar;
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    (*_values)[i] *= scalar;
                 }
             };
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
-            _threading.executeParallelJob(scaleJob, _values->size(), _availableThreads);
+            _threading.executeParallelJob(scaleJob, _values->size(), availableThreads);
         }
         
         void printVertically(const string& name = " "){

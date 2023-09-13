@@ -53,7 +53,7 @@ namespace LinearAlgebra {
         static map<short unsigned, map<Direction, map<vector<Position>, short>>>
         _initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions);
 
-        static map<vector<Position>,short> _getQualifiedFromAvailable(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
+        static tuple<vector<Position>,short> _getQualifiedFromAvailable(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
                                                                       map<vector<Position>,short>& templatePositionsAndPoints);
         
         double _getPDECoefficient(unsigned short derivativeOrder, Node* parentNode, Direction direction = None);

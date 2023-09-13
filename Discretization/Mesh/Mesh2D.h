@@ -12,7 +12,7 @@ namespace Discretization {
     class Mesh2D : public Mesh {
         
     public:
-        Mesh2D(shared_ptr<Array<Node*>>nodes);
+        explicit Mesh2D(shared_ptr<Array<Node*>>nodes);
         
         ~Mesh2D();
         

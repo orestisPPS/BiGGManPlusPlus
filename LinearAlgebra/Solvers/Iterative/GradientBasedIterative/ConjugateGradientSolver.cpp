@@ -22,7 +22,7 @@ namespace LinearAlgebra {
         _residualNew = make_shared<NumericalVector<double>>(n);
         _directionVectorNew = make_shared<NumericalVector<double>>(n);
         _directionVectorOld = make_shared<NumericalVector<double>>(n);
-        _difference = make_shared<NumericalVector<double>>(n);
+        _difference = nullptr;
         _matrixVectorMultiplication = make_shared<NumericalVector<double>>(n);
         _vectorsInitialized = true;
     }
@@ -50,6 +50,7 @@ namespace LinearAlgebra {
         *_directionVectorOld = *_residualOld;
 
         while (_iteration < _maxIterations) {
+            _matrixVectorMultiplication->fill(0.0);
             _linearSystem->matrix->multiplyVector(_directionVectorOld, _matrixVectorMultiplication);
             //Calculate the step size
             //alpha = (r_old, r_old)/(difference, A * difference)
@@ -67,7 +68,7 @@ namespace LinearAlgebra {
             //VectorOperations::subtract(_xNew, _xOld, _difference);
             
             //Calculate the norm of the residual
-            _exitNorm = _residualNew->norm(_normType) / normInitial;
+            _exitNorm = _residualNew->norm(_normType);// / normInitial;
             //_exitNorm = VectorNorm(_residualNew, _normType).value();
             _residualNorms->push_back(_exitNorm);
             if (_exitNorm > _tolerance){
@@ -81,7 +82,6 @@ namespace LinearAlgebra {
                 *_residualOld = *_residualNew;
                 *_directionVectorOld = *_directionVectorNew;
                 *_xOld = *_xNew;
-                _matrixVectorMultiplication->fill(0.0);
                 //_printIterationAndNorm(10) ;
             }
             else {

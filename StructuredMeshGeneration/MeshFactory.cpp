@@ -80,6 +80,7 @@ namespace StructuredMeshGenerator{
             }
             for (auto &dof : *node->degreesOfFreedom){
                 delete dof;
+                dof = nullptr;
             }
             node->degreesOfFreedom->clear();
             node->coordinates.setPositionVector(coords);
@@ -216,7 +217,7 @@ namespace StructuredMeshGenerator{
             auto nodeFieldProperties = SpaceFieldProperties();
             nodeFieldProperties.secondOrderCoefficients = mesh->metrics->at(*node->id.global)->contravariantTensor;
             auto firstDerivativeCoefficients = NumericalVector<double>{0, 0, 0};
-            nodeFieldProperties.firstOrderCoefficients = make_shared<NumericalVector<double>>(firstDerivativeCoefficients);
+            nodeFieldProperties.firstOrderCoefficients = make_shared<NumericalVector<double>>(std::move(firstDerivativeCoefficients));
             nodeFieldProperties.zerothOrderCoefficient = make_shared<double>(0);
             nodeFieldProperties.sourceTerm = make_shared<double>(0);
             pdePropertiesFromMetrics->insert(pair<unsigned, SpaceFieldProperties>(*node->id.global, nodeFieldProperties));

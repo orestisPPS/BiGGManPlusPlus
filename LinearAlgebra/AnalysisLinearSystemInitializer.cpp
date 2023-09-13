@@ -57,6 +57,8 @@ namespace LinearAlgebra {
             //Find the node neighbours with a span equal to the maximum number of points needed for the scheme to be consistent
             auto graph = IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap,
                                                 _mesh->nodesPerDirection, false);
+                                                        
+            //This gives correct results
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
 
             //Derivative order 0
@@ -74,20 +76,21 @@ namespace LinearAlgebra {
                 //Decompose scheme into directional components
                 for (auto &directionI: directions) {
                     unsigned indexDirectionI = spatialDirectionToUnsigned[directionI];
+                    
                     double iThDerivativePDECoefficient = _getPDECoefficient(derivativeOrder, node, directionI);
                     if (iThDerivativePDECoefficient != 0) {
                         
                         //Check if the available positions are qualified for the current derivative order
+                        /*auto qualifiedPositions = _getQualifiedFromAvailable(
+                                availablePositionsAndDepth[directionI], templatePositionsAndPointsMap[derivativeOrder][directionI]);*/
                         auto qualifiedPositions = _getQualifiedFromAvailable(
                                 availablePositionsAndDepth[directionI], templatePositionsAndPointsMap[derivativeOrder][directionI]);
                         //auto scheme = FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
                                 //qualifiedPositions, directionI, errorOrderDerivative1, 1);
 
                         auto graphFilter = map<Position, unsigned short>();
-                        for (auto &tuple: qualifiedPositions) {
-                            for (auto &point: tuple.first) {
-                                graphFilter.insert(pair<Position, unsigned short>(point, tuple.second));
-                            }
+                        for (auto &position: get<0>(qualifiedPositions)) {
+                            graphFilter.insert(pair<Position, unsigned short>(position, get<1>(qualifiedPositions)));
                         }
                         auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
                         auto colinearCoordinates = graph.getSameColinearNodalCoordinates(_coordinateType, filteredNodeGraph);
@@ -221,7 +224,7 @@ namespace LinearAlgebra {
         return positionsAndPoints;
     }
 
-    map<vector<Position>,short> AnalysisLinearSystemInitializer::
+    tuple<vector<Position>,short> AnalysisLinearSystemInitializer::
     _getQualifiedFromAvailable(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
                                map<vector<Position>,short>& templatePositionsAndPoints){
         map<vector<Position>,short> qualifiedPositionsAndPoints = map<vector<Position>,short>();
@@ -236,7 +239,20 @@ namespace LinearAlgebra {
                 }
             }
         }
-        return qualifiedPositionsAndPoints;
+        auto result = tuple<vector<Position>,short>();
+        for (auto &qualifiedPositionAndPoints : qualifiedPositionsAndPoints) {
+            auto qualifiedPositions = qualifiedPositionAndPoints.first;
+            if (qualifiedPositions.size() > 1){
+                return {qualifiedPositions, qualifiedPositionAndPoints.second};
+            }
+        }
+        for (auto &qualifiedPositionAndPoints : qualifiedPositionsAndPoints) {
+            auto qualifiedPositions = qualifiedPositionAndPoints.first;
+            if (qualifiedPositions.size() == 1 && qualifiedPositionsAndPoints.size() == 1){
+                return {qualifiedPositions, qualifiedPositionAndPoints.second};
+            }
+            else throw runtime_error("Qualified positions and points not found");
+        }
     }
 
     double AnalysisLinearSystemInitializer::_getPDECoefficient(unsigned short derivativeOrder, Node *parentNode,

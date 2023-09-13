@@ -46,7 +46,7 @@ namespace Discretization{
         
         void Metrics::calculateCovariantTensor() const {
             auto n = covariantBaseVectors->size();
-            
+            covariantTensor->dataStorage->initializeElementAssignment();
             for (auto i = 0; i < n; i++) {
                 for (auto j = 0; j < n; j++) {
                     auto gi = covariantBaseVectors->at(unsignedToSpatialDirection[i]);
@@ -55,10 +55,12 @@ namespace Discretization{
                     covariantTensor->setElement(i, j, gij);
                 }
             }
+            covariantTensor->dataStorage->finalizeElementAssignment();
         }
         
         void Metrics::calculateContravariantTensor() const {
             auto n = contravariantBaseVectors->size();
+            contravariantTensor->dataStorage->initializeElementAssignment();
             for (auto i = 0; i < n; i++) {
                 for (auto j = 0; j < n; j++) {
                     auto gi = contravariantBaseVectors->at(unsignedToSpatialDirection[i]);
@@ -67,6 +69,7 @@ namespace Discretization{
                     contravariantTensor->setElement(i, j, gij);
                 }
             }
+            contravariantTensor->dataStorage->finalizeElementAssignment();
         }
     
     } // Discretization

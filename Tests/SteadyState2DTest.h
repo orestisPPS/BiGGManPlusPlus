@@ -19,8 +19,8 @@ namespace Tests {
     class SteadyState2DTest {
     public:
         static void runTests(){
-            _testDiffusionDirichlet2D();
-            //_testDiffusionDirichlet2D2();
+            //_testDiffusionDirichlet2D();
+            _testDiffusionDirichlet2D2();
             
         }
         
@@ -97,15 +97,16 @@ namespace Tests {
             logTestStart("testDiffusionDirichlet2D");
 
             map<Direction, unsigned> numberOfNodes;
-            numberOfNodes[Direction::One] = 9;
-            numberOfNodes[Direction::Two] = 9;
+            numberOfNodes[Direction::One] = 5;
+            numberOfNodes[Direction::Two] = 11;
+            //numberOfNodes[Direction::Three] = 1;
 
             //auto specs = make_shared<MeshSpecs>(numberOfNodes, 0.1, 0.1, 0, 0, 0);
-            auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 0, 0, 0);
+            auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 1, 0, 0, 0);
             auto meshFactory = make_shared<MeshFactory>(specs);
             auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
-            meshFactory->buildMesh(2, meshBoundaries->parallelogram(numberOfNodes, 1, 1, 0, 0));
-            shared_ptr<Mesh> mesh = meshFactory->mesh;
+            meshFactory->buildMesh(2, meshBoundaries->parallelogram(numberOfNodes, 8, 4, 0, 0));
+            auto mesh = meshFactory->mesh;
 
 /*            auto fileNameMesh = "test_2D_dirichlet.vtk";
             auto filePathMesh = "/home/hal9000/code/BiGGMan++/Testing/";
@@ -123,7 +124,7 @@ namespace Tests {
 
 
 
-            auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(3, false, Isotropic);
+            auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(2, false, Isotropic);
             pdeProperties->setIsotropicProperties(10,0,0,0);
 
             auto heatTransferPDE = make_shared<PartialDifferentialEquation>(pdeProperties, Laplace);
@@ -153,7 +154,8 @@ namespace Tests {
             Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
 
             //auto targetCoords = NumericalVector<double>{5, 5, 0};
-            auto targetCoords = NumericalVector<double>{2, 2, 0};
+            //auto targetCoords = NumericalVector<double>{2, 2, 0};
+            auto targetCoords = NumericalVector<double>{2, 1, 0};
 
             auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-3);
             cout << "Target Solution: " << targetSolution[0] << endl;

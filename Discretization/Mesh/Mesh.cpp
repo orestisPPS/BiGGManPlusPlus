@@ -3,20 +3,19 @@
 //
 
 #include "Mesh.h"
-#include "../../Utility/Exporters/Exporters.h"
 
 using namespace  Discretization;
 
 namespace Discretization {
 
-    Mesh::Mesh() {
+    Mesh::Mesh(shared_ptr<Array<Node*>>nodes) {
+        _nodesMatrix = std::move(nodes);
         isInitialized = false;
         _nodesMatrix = nullptr;
         boundaryNodes = nullptr;
         totalNodesVector = nullptr;
         _nodesMap = nullptr;
         elements = nullptr;
-
     }
 
     Mesh::~Mesh() {
