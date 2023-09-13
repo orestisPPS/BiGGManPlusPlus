@@ -105,15 +105,11 @@ namespace LinearAlgebra {
                                 if (neighbourDOF->constraintType() == Free) {
                                     auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(
                                             colinearDOF[iDof]);
-  /*                                  double ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
-                                    if (ijElement != 0)
-                                        ijElement += weight2;
-                                    else
-                                        _matrix->setElement(thisDOFPosition, neighbourDOFPosition, weight2);*/
-                                    double ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
-                                    ijElement += weight2;
-                                    _matrix->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
-
+/*                                    double ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
+                                    ijElement += weight2;*/
+                                    //_matrix->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
+                                    (*_matrix)(thisDOFPosition, neighbourDOFPosition) = 
+                                            (*_matrix)(thisDOFPosition, neighbourDOFPosition) + weight2;
                                 }
                                 else if (neighbourDOF->constraintType() == Fixed) {
                                     auto dirichletContribution = neighbourDOF->value() * weight2;
@@ -125,7 +121,9 @@ namespace LinearAlgebra {
             }
         }
         //addNeumannBoundaryConditions();
-        
+        _matrix->printFullMatrix();
+        _rhsVector->printVertically("RHS");
+        _matrix->dataStorage->finalizeElementAssignment();
         this->linearSystem = make_shared<LinearSystem>(std::move(_matrix), std::move(_rhsVector));
 
 
