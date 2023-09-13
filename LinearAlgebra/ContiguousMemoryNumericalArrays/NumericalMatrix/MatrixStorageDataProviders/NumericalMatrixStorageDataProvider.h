@@ -65,6 +65,11 @@ namespace LinearAlgebra {
             return _availableThreads;
         }
         
+        void setAvailableThreads(unsigned availableThreads){
+            _availableThreads = availableThreads;
+            
+        }
+        
         NumericalMatrixFormType getFormType(){
             return _formType;
         }

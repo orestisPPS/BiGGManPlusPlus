@@ -19,8 +19,8 @@ namespace Tests {
     class SteadyState2DTest {
     public:
         static void runTests(){
-            //_testDiffusionDirichlet2D();
-            _testDiffusionDirichlet2D2();
+            _testDiffusionDirichlet2D();
+            //_testDiffusionDirichlet2D2();
             
         }
         
@@ -71,7 +71,7 @@ namespace Tests {
             auto boundaryConditions = make_shared<DomainBoundaryConditions>(dummyBCMap);
             auto temperatureDOF = new TemperatureScalar_DOFType();
             auto problem = make_shared<SteadyStateMathematicalProblem>(heatTransferPDE, boundaryConditions, temperatureDOF);
-            auto solver = make_shared<ConjugateGradientSolver>(1E-9, 1E4, L2);
+            auto solver = make_shared<ConjugateGradientSolver>(1E-9, 1E4, L2, 1);
             auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specsFD);
 
             analysis->solve();
@@ -141,7 +141,7 @@ namespace Tests {
             auto boundaryConditions = make_shared<DomainBoundaryConditions>(dummyBCMap);
             auto temperatureDOF = new TemperatureScalar_DOFType();
             auto problem = make_shared<SteadyStateMathematicalProblem>(heatTransferPDE, boundaryConditions, temperatureDOF);
-            auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2, true);
+            auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2, 10);
             auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specsFD);
 
             analysis->solve();

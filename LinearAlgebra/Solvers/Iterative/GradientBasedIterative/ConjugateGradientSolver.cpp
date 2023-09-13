@@ -48,7 +48,7 @@ namespace LinearAlgebra {
         _residualNorms->push_back(normInitial);
         //d_old = r_old
         *_directionVectorOld = *_residualOld;
-
+        
         while (_iteration < _maxIterations) {
             _matrixVectorMultiplication->fill(0.0);
             _linearSystem->matrix->multiplyVector(_directionVectorOld, _matrixVectorMultiplication);
