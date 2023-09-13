@@ -47,22 +47,22 @@ namespace LinearAlgebra {
         double normInitial = _residualOld->norm(L2);
         _residualNorms->push_back(normInitial);
         //d_old = r_old
-        _directionVectorOld = _residualOld;
+        *_directionVectorOld = *_residualOld;
 
         while (_iteration < _maxIterations) {
-            auto matrixTimesDirection = make_shared<NumericalVector<double>>(_linearSystem->matrix->numberOfRows(), 0);
-            _linearSystem->matrix->multiplyVector(_directionVectorOld, matrixTimesDirection);
+            _linearSystem->matrix->multiplyVector(_directionVectorOld, _matrixVectorMultiplication);
             //Calculate the step size
             //alpha = (r_old, r_old)/(difference, A * difference)
             
             double r_oldT_r_old = _residualOld->dotProduct(_residualOld);
-            double direction_oldT_A_direction_old = _directionVectorOld->dotProduct(matrixTimesDirection);
+            double direction_oldT_A_direction_old = _directionVectorOld->dotProduct(_matrixVectorMultiplication);
             alpha = r_oldT_r_old / direction_oldT_A_direction_old;
             
             //x_new = x_old + alpha * difference
+            //_xOld->add(_directionVectorOld, _xNew, 1.0, alpha);
             _xOld->add(_directionVectorOld, _xNew, 1.0, alpha);
             //r_new = r_old - alpha * A * difference
-            _residualOld->subtract(matrixTimesDirection, _residualNew, 1.0, alpha);
+            _residualOld->subtract(_matrixVectorMultiplication, _residualNew, 1.0, alpha);
             
             //VectorOperations::subtract(_xNew, _xOld, _difference);
             
@@ -75,16 +75,17 @@ namespace LinearAlgebra {
                 double r_newT_r_new = _residualNew->dotProduct(_residualNew);
                 beta = r_newT_r_new / r_oldT_r_old;
                 //newDirection = r_new + beta * difference
-                _residualNew->add(_directionVectorOld, _directionVectorNew, 1.0, beta);
+                _residualNew->add(_directionVectorOld, _directionVectorNew , 1.0, beta);
                 
                 //Update the old residual and the old difference
-                _residualOld = _residualNew;
-                _directionVectorOld = _directionVectorNew;
-                _xOld = _xNew;
+                *_residualOld = *_residualNew;
+                *_directionVectorOld = *_directionVectorNew;
+                *_xOld = *_xNew;
+                _matrixVectorMultiplication->fill(0.0);
                 //_printIterationAndNorm(10) ;
             }
             else {
-                _xNew = _xOld;
+                *_xOld = *_xNew;
                 break;
             }
             

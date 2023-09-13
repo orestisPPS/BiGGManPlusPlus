@@ -40,11 +40,6 @@ namespace NumericalAnalysis {
     }
     
     void AnalysisDegreesOfFreedom::_deallocateDegreesOfFreedom() const {
-        for (auto dof : *totalDegreesOfFreedom) {
-            if(dof != nullptr){
-                delete dof;
-                dof = nullptr;
-            }
-        }
+
     }
 } // NumericalAnalysis

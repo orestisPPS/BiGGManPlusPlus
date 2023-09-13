@@ -91,7 +91,7 @@ namespace LinearAlgebra {
                         }
                         auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
                         auto colinearCoordinates = graph.getSameColinearNodalCoordinates(_coordinateType, filteredNodeGraph);
-                        auto colinearDOF = graph.getColinearDOFOnBoundary(dof->type(), directionI, filteredNodeGraph);
+                        auto colinearDOF = graph.getColinearDOF(dof->type(), directionI, filteredNodeGraph);
                         
                         auto taylorPoint = (*node->coordinates.getPositionVector(Parametric))[indexDirectionI];
                         auto weights = calculateWeightsOfDerivativeOrder(*colinearCoordinates[directionI]->getVectorSharedPtr(),
@@ -103,17 +103,16 @@ namespace LinearAlgebra {
                                 //auto weight = schemeWeights[iDof] * iThDerivativePDECoefficient / denominator;
                                 auto weight2 = weights[iDof] * iThDerivativePDECoefficient;
                                 if (neighbourDOF->constraintType() == Free) {
-                                    auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(
-                                            colinearDOF[iDof]);
-/*                                    double ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
-                                    ijElement += weight2;*/
-                                    //_matrix->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
-                                    (*_matrix)(thisDOFPosition, neighbourDOFPosition) = 
-                                            (*_matrix)(thisDOFPosition, neighbourDOFPosition) + weight2;
+                                    auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOF[iDof]);
+                                    double ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
+                                    ijElement += weight2;
+                                    _matrix->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
+/*                                    (*_matrix)(thisDOFPosition, neighbourDOFPosition) = 
+                                            (*_matrix)(thisDOFPosition, neighbourDOFPosition) + weight2;*/
                                 }
                                 else if (neighbourDOF->constraintType() == Fixed) {
                                     auto dirichletContribution = neighbourDOF->value() * weight2;
-                                    _rhsVector->at(thisDOFPosition) -= dirichletContribution;
+                                    _rhsVector->at(thisDOFPosition) = _rhsVector->at(thisDOFPosition) - dirichletContribution;
                                 }
                             }
                         }
@@ -121,8 +120,8 @@ namespace LinearAlgebra {
             }
         }
         //addNeumannBoundaryConditions();
-        _matrix->printFullMatrix();
-        _rhsVector->printVertically("RHS");
+        //_matrix->printFullMatrix();
+        //_rhsVector->printVertically("RHS");
         _matrix->dataStorage->finalizeElementAssignment();
         this->linearSystem = make_shared<LinearSystem>(std::move(_matrix), std::move(_rhsVector));
 
@@ -214,7 +213,7 @@ namespace LinearAlgebra {
         for (short unsigned derivativeOrder = 1; derivativeOrder <= maxDerivativeOrder; derivativeOrder++) {
             positionsAndPoints.insert(pair<short unsigned, map<Direction, map<vector<Position>, short>>>(
                     derivativeOrder, map<Direction, map<vector<Position>, short>>()));
-            for (auto &direction: directions) {
+            for (auto &direction : directions) {
                 positionsAndPoints[derivativeOrder].insert(pair<Direction, map<vector<Position>, short>>(
                         direction, map<vector<Position>, short>()));
             }
@@ -222,13 +221,13 @@ namespace LinearAlgebra {
         return positionsAndPoints;
     }
 
-    map<vector<Position>, short> AnalysisLinearSystemInitializer::
-    _getQualifiedFromAvailable(map<vector<Position>, unsigned short> &availablePositionsAndPoints,
-                               map<vector<Position>, short> &templatePositionsAndPoints) {
-        map<vector<Position>, short> qualifiedPositionsAndPoints = map<vector<Position>, short>();
+    map<vector<Position>,short> AnalysisLinearSystemInitializer::
+    _getQualifiedFromAvailable(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
+                               map<vector<Position>,short>& templatePositionsAndPoints){
+        map<vector<Position>,short> qualifiedPositionsAndPoints = map<vector<Position>,short>();
         //Check if the specifications of the template positions and points are met in the available positions and points
-        for (auto &templatePositionAndPoints: templatePositionsAndPoints) {
-            for (auto &availablePositionAndPoints: availablePositionsAndPoints) {
+        for (auto &templatePositionAndPoints : templatePositionsAndPoints) {
+            for (auto &availablePositionAndPoints : availablePositionsAndPoints) {
                 //Check if the template positions and points are met in the available positions and points
                 if (availablePositionAndPoints.first == templatePositionAndPoints.first &&
                     availablePositionAndPoints.second >= templatePositionAndPoints.second) {

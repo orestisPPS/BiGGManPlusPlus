@@ -19,8 +19,8 @@ namespace Tests {
     class SteadyState2DTest {
     public:
         static void runTests(){
-            //_testDiffusionDirichlet2D();
-            _testDiffusionDirichlet2D2();
+            _testDiffusionDirichlet2D();
+            //_testDiffusionDirichlet2D2();
             
         }
         
@@ -71,7 +71,7 @@ namespace Tests {
             auto boundaryConditions = make_shared<DomainBoundaryConditions>(dummyBCMap);
             auto temperatureDOF = new TemperatureScalar_DOFType();
             auto problem = make_shared<SteadyStateMathematicalProblem>(heatTransferPDE, boundaryConditions, temperatureDOF);
-            auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2);
+            auto solver = make_shared<ConjugateGradientSolver>(1E-9, 1E4, L2);
             auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specsFD);
 
             analysis->solve();
@@ -97,14 +97,14 @@ namespace Tests {
             logTestStart("testDiffusionDirichlet2D");
 
             map<Direction, unsigned> numberOfNodes;
-            numberOfNodes[Direction::One] = 11;
-            numberOfNodes[Direction::Two] = 11;
+            numberOfNodes[Direction::One] = 9;
+            numberOfNodes[Direction::Two] = 9;
 
             //auto specs = make_shared<MeshSpecs>(numberOfNodes, 0.1, 0.1, 0, 0, 0);
             auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 0, 0, 0);
             auto meshFactory = make_shared<MeshFactory>(specs);
             auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
-            meshFactory->buildMesh(2, meshBoundaries->parallelogram(numberOfNodes, 5, 10, 0, 0));
+            meshFactory->buildMesh(2, meshBoundaries->parallelogram(numberOfNodes, 1, 1, 0, 0));
             shared_ptr<Mesh> mesh = meshFactory->mesh;
 
 /*            auto fileNameMesh = "test_2D_dirichlet.vtk";
@@ -140,7 +140,7 @@ namespace Tests {
             auto boundaryConditions = make_shared<DomainBoundaryConditions>(dummyBCMap);
             auto temperatureDOF = new TemperatureScalar_DOFType();
             auto problem = make_shared<SteadyStateMathematicalProblem>(heatTransferPDE, boundaryConditions, temperatureDOF);
-            auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2);
+            auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2, true);
             auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specsFD);
 
             analysis->solve();
@@ -152,7 +152,8 @@ namespace Tests {
             auto fieldType = "Temperature";
             Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
 
-            auto targetCoords = NumericalVector<double>{5, 5, 0};
+            //auto targetCoords = NumericalVector<double>{5, 5, 0};
+            auto targetCoords = NumericalVector<double>{2, 2, 0};
 
             auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-3);
             cout << "Target Solution: " << targetSolution[0] << endl;

@@ -61,6 +61,13 @@ namespace StructuredMeshGenerator{
         auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specs, Template);
         
         analysis->solve();
+
+        //analysis->linearSystem->matrix->printFullMatrix("matrix");
+        cout << endl;
+        //analysis->linearSystem->rhs->printHorizontally("rhs");
+        cout << endl;
+        analysis->linearSystem->solution->printHorizontally("solution");
+
         
         analysis->applySolutionToDegreesOfFreedom();
         
@@ -70,6 +77,9 @@ namespace StructuredMeshGenerator{
             for (auto &dof : *node->degreesOfFreedom){
                 (*coords)[i] = dof->value();
                 ++i;
+            }
+            for (auto &dof : *node->degreesOfFreedom){
+                delete dof;
             }
             node->degreesOfFreedom->clear();
             node->coordinates.setPositionVector(coords);

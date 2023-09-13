@@ -20,22 +20,22 @@ namespace PositioningInSpace {
         Time,
         None
     };
-    
+
     static map<Direction, unsigned> spatialDirectionToUnsigned{
-        {Direction::One,   0},
-        {Direction::Two,   1},
-        {Direction::Three, 2},
-        {Direction::Time,  3},
-        {Direction::None,  4}
+            {Direction::One,   0},
+            {Direction::Two,   1},
+            {Direction::Three, 2},
+            {Direction::Time,  3},
+            {Direction::None,  4}
     };
-        
-    
+
+
     static map<unsigned, Direction> unsignedToSpatialDirection{
-        {0, Direction::One},
-        {1, Direction::Two},
-        {2, Direction::Three},
-        {3, Direction::Time},
-        {4, Direction::None}
+            {0, Direction::One},
+            {1, Direction::Two},
+            {2, Direction::Three},
+            {3, Direction::Time},
+            {4, Direction::None}
     };
 
 
@@ -105,91 +105,32 @@ namespace PositioningInSpace {
         LeftBottomBack,
     };
 
-    static map<Position, NumericalVector<int>> normalUnitVectorsOfPositions() {
-        return  {{Right,           {1,  0,  0}},
-                {Left,            {-1, 0,  0}},
-                {Top,             {0,  1,  0}},
-                {Bottom,          {0,  -1, 0}},
-                {Front,           {0,  0,  1}},
-                {Back,            {0,  0,  -1}},
-                {RightTop,        {1,  1,  0}},
-                {LeftTop,         {-1, 1,  0}},
-                {RightBottom,     {1,  -1, 0}},
-                {LeftBottom,      {-1, -1, 0}},
-                {RightFront,      {1,  0,  1}},
-                {LeftFront,       {-1, 0,  1}},
-                {TopFront,        {0,  1,  1}},
-                {BottomFront,     {0,  -1, 1}},
-                {RightTopFront,   {1,  1,  1}},
-                {LeftTopFront,    {-1, 1,  1}},
-                {LeftBottomFront, {-1, -1, 1}},
-                {RightBack,       {1,  0,  -1}},
-                {LeftBack,        {-1, 0,  -1}},
-                {TopBack,         {0,  1,  -1}},
-                {BottomBack,      {0,  -1, -1}},
-                {RightTopBack,    {1,  1,  -1}},
-                {LeftTopBack,     {-1, 1,  -1}},
-                {RightBottomBack, {1,  -1, -1}},
-                {LeftBottomBack,  {-1, -1, -1}}
-        };
-    }
-    
-/*    static map<Direction, map<Position, short int>> normalPositionSigns() {
-        return {{One,   {{Left,   -1}, {Right, 1}}},
-                {Two,   {{Bottom, -1}, {Top,   1}}},
-                {Three, {{Back,   -1}, {Front, 1}}}};
-    }*/
+    static map<Position, NumericalVector<int>> normalUnitVectorsOfPositions({
+        {{Right, {1, 0, 0}},
+         {Left, {-1, 0, 0}},
+         {Top, {0, 1, 0}},
+         {Bottom, {0, -1, 0}},
+         {Front, {0, 0, 1}},
+         {Back, {0, 0, -1}},
+         {RightTop, {1, 1, 0}},
+         {LeftTop, {-1, 1, 0}},
+         {RightBottom, {1, -1, 0}},
+         {LeftBottom, {-1, -1, 0}},
+         {RightFront, {1, 0, 1}},
+         {LeftFront, {-1, 0, 1}},
+         {TopFront, {0, 1, 1}},
+         {BottomFront, {0, -1, 1}},
+         {RightTopFront, {1, 1, 1}},
+         {LeftTopFront, {-1, 1, 1}},
+         {LeftBottomFront, {-1, -1, 1}},
+         {RightBack, {1, 0, -1}},
+         {LeftBack, {-1, 0, -1}},
+         {TopBack, {0, 1, -1}},
+         {BottomBack, {0, -1, -1}},
+         {RightTopBack, {1, 1, -1}},
+         {LeftTopBack, {-1, 1, -1}},
+         {RightBottomBack, {1, -1, -1}},
+         {LeftBottomBack, {-1, -1, -1}}}});
 
-    // Consider position vectors A, B, C. They are co-linear if and only if
-    // AC x BC = 0
-    static set<pair<Position, Position>> coLinearPositions() {
-        list<list<Position>> coLinearPositions = {
-                {Right,            Left},
-                {Top,              Bottom},
-                {Front,            Back},
-                {RightTop,         LeftBottom},
-                {RightBottom,      LeftTop},
-                {RightFront,       LeftBack},
-                {RightBack,        LeftFront},
-                {TopFront,         BottomBack},
-                {TopBack,          BottomFront},
-                {RightTopFront,    LeftBottomBack},
-                {RightTopBack,     LeftBottomFront},
-                {RightBottomFront, LeftTopBack},
-                {RightBottomBack,  LeftTopFront}
-        };
-        set<pair<Position, Position>> coLinearPositionsSet;
-        for (auto &coLinearPosition : coLinearPositions) {
-            coLinearPositionsSet.insert({coLinearPosition.front(), coLinearPosition.back()});
-        }
-        return coLinearPositionsSet;
-    }
-}
-    
-/*
-    static list<Position> positions = {TopLeft, Top, TopRight,
-                                       Left, Center, Right,
-                                       BottomLeft, Bottom, BottomRight,
-                                       FrontTopLeft, Position::FrontTop, Position::FrontTopRight,
-                                       Position::FrontLeft, Position::Front, Position::FrontRight,
-                                       Position::FrontBottomLeft, Position::FrontBottom, Position::FrontBottomRight,
-                                       Position::BackTopLeft, Position::BackTop, Position::BackTopRight,
-                                       Position::BackLeft, Position::Back, Position::BackRight,
-                                       Position::BackBottomLeft, Position::BackBottom, Position::BackBottomRight};
-    
-*/
 
-    
-/*    struct Directions{
-        static list<Direction> getDirections(){
-            return directions;
-        }
-    };
-    
-    struct Positions{
-        static list<Position> getPositions(){
-            return positions;
-        }
-    };*/
-// PositioningInSpace
-
+} // PositioningInSpace
