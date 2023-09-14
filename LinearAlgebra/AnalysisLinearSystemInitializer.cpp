@@ -122,7 +122,7 @@ namespace LinearAlgebra {
                     }
             }
         }
-        //addNeumannBoundaryConditions();
+        addNeumannBoundaryConditions();
         //_matrix->printFullMatrix();
         //_rhsVector->printVertically("RHS");
         _matrix->dataStorage->finalizeElementAssignment();
@@ -136,7 +136,7 @@ namespace LinearAlgebra {
 
     //TODO : Fix as above
     void AnalysisLinearSystemInitializer::addNeumannBoundaryConditions() {
-        /*auto start = std::chrono::steady_clock::now(); // Start the timer
+        auto start = std::chrono::steady_clock::now(); // Start the timer
         auto schemeSpecs = make_shared<FDSchemeSpecs>(2, _mesh->directions());
         auto directions = _mesh->directions();
         short unsigned maxDerivativeOrder = 1;
@@ -154,60 +154,49 @@ namespace LinearAlgebra {
             auto node = _mesh->nodeFromID(dof.first->parentNode());
             auto normalVector = _mesh->getNormalUnitVectorOfBoundaryNode(boundaryNodeToPositionMap->at(node), node);
             auto thisDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof.first);
-            auto graph = IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap, _mesh->nodesPerDirection,
+            auto graph = IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap,
+                                                _mesh->nodesPerDirection,
                                                 false);
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
-            auto nodeMetrics = make_shared<Metrics>(node, _mesh->dimensions());
-            //Loop through all the directions to find g_i = d(x_j)/d(x_i), g^i = d(x_i)/d(x_j)
+            
             for (auto &directionI: directions) {
-                
-                auto i = spatialDirectionToUnsigned[directionI];
-                //Check if the available positions are qualified for the current derivative order
-                auto qualifiedPositions = schemeBuilder.getQualifiedFromAvailable(
+
+                unsigned indexDirectionI = spatialDirectionToUnsigned[directionI];
+
+                auto qualifiedPositions = _getQualifiedFromAvailable(
                         availablePositionsAndDepth[directionI], templatePositionsAndPointsMap[1][directionI]);
-                auto scheme = FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
-                        qualifiedPositions, directionI, errorOrderDerivative1, 1);
 
                 auto graphFilter = map<Position, unsigned short>();
-                for (auto &tuple: qualifiedPositions) {
-                    for (auto &point: tuple.first) {
-                        graphFilter.insert(pair<Position, unsigned short>(point, tuple.second));
-                    }
+                for (auto &position: get<0>(qualifiedPositions)) {
+                    graphFilter.insert(pair<Position, unsigned short>(position, get<1>(qualifiedPositions)));
                 }
                 auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
-                auto colinearCoordinatesNumericalVector = graph.getSameColinearNodalCoordinatesOnBoundary(
-                        _coordinateType, filteredNodeGraph)[directionI][i];
+                auto colinearCoordinates = graph.getSameColinearNodalCoordinatesOnBoundary(_coordinateType, filteredNodeGraph);
                 auto colinearDOF = graph.getColinearDOFOnBoundary(dof.first->type(), directionI, filteredNodeGraph);
-                double schemeAroundPoint = (*colinearCoordinatesNumericalVector)[0];
-                auto weights2 = calculateWeightsOfDerivativeOrder(*colinearCoordinatesNumericalVector, 2, schemeAroundPoint);
-   
-                auto step = colinearCoordinatesNumericalVector->averageAbsoluteDeviationFromMean();
-
-                //Calculate the denominator (h^p)
-                double denominator = scheme.denominatorCoefficient * pow(step, scheme.power);
-                NumericalVector<double> &schemeWeights = scheme.weights;
+                auto taylorPoint = (*node->coordinates.getPositionVector(Parametric))[indexDirectionI];
+                auto weights = calculateWeightsOfDerivativeOrder(*colinearCoordinates[directionI]->getVectorSharedPtr(),
+                                                                 errorOrderDerivative1, taylorPoint);
+                
                 for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
                     auto neighbourDOF = colinearDOF[iDof];
-                    auto weight = schemeWeights[iDof] / denominator;
-                    auto weight2 = weights2[iDof];
+                    auto weight2 = weights[iDof];
 
                     if (neighbourDOF->constraintType() == Free) {
                         auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(
                                 colinearDOF[iDof]);
                         //_matrix->at(thisDOFPosition, neighbourDOFPosition) += weight2 * normalVector[i];
                         double &ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
-                        if (ijElement != 0)
-                            ijElement += weight2 * normalVector[i];
-                        else
-                            _matrix->setElement(thisDOFPosition, neighbourDOFPosition, weight2 * normalVector[i]);
-                    } else if (neighbourDOF->constraintType() == Fixed) {
-                        auto dirichletContribution = neighbourDOF->value() * weight2 * normalVector[i];
+                        ijElement += weight2 * normalVector[indexDirectionI];
+                        _matrix->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
+                    }
+                    else if (neighbourDOF->constraintType() == Fixed) {
+                        auto dirichletContribution = neighbourDOF->value() * weight2 * normalVector[indexDirectionI];
                         _rhsVector->at(thisDOFPosition) -= dirichletContribution;
                     }
                 }
             }
             _rhsVector->at(thisDOFPosition) += dof.second;
-        }*/
+        }
     }
 
     map<short unsigned, map<Direction, map<vector<Position>, short>>> AnalysisLinearSystemInitializer::

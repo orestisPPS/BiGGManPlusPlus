@@ -140,6 +140,7 @@ namespace LinearAlgebra {
         cout << " " << endl;
         cout << "----------------------------------------" << endl;
         cout << _solverName << " Solver Initialized" << endl;
+        cout << "Total Degrees of Freedom: " << _linearSystem->matrix->numberOfRows() << endl;
         unsigned matrixThreads = _linearSystem->matrix->dataStorage->getAvailableThreads();
         unsigned availableThreads = _userDefinedThreads != 0 ? _userDefinedThreads : matrixThreads;
         cout << "Threads Assigned for Solution: " << availableThreads << " out of " << thread::hardware_concurrency() << " available." << endl;

@@ -531,6 +531,21 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/StructuredMeshGeneration/NodeFactory.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/AnalysisTests/SteadyState2DTest.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/AnalysisTests/SteadyState3DNeumann.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/AnalysisTests/SteadyState3DNeumann.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/AnalysisTests/SteadyStateDirichlet3D.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/AnalysisTests/SteadyStateDirichlet3D.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/IterativeSolversTest.h">
 			<Option target="untitled"/>
 		</Unit>
@@ -562,21 +577,6 @@
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/QRTest.h">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyState2DTest.h">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyState3DNeumann.cpp">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyState3DNeumann.h">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyStateDirichlet3D.cpp">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/SteadyStateDirichlet3D.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/ThreadingOperations/ThreadingOperations.h">

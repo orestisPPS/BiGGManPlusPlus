@@ -118,8 +118,8 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.h 
         LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp 
         LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h 
-        LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp 
-        Tests/SteadyState3DNeumann.h Tests/SteadyState3DNeumann.cpp 
+        LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp
+        Tests/AnalysisTests/SteadyState3DNeumann.h Tests/AnalysisTests/SteadyState3DNeumann.cpp 
         Discretization/Elements/Element.h 
         Discretization/Elements/Element.cpp
         Discretization/Elements/MeshElements.h
@@ -128,8 +128,8 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h 
         LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp
         LinearAlgebra/Operations/MultiThreadVectorOperations.h
-        Tests/SteadyStateDirichlet3D.h
-        Tests/SteadyStateDirichlet3D.cpp
+        Tests/AnalysisTests/SteadyStateDirichlet3D.h
+        Tests/AnalysisTests/SteadyStateDirichlet3D.cpp
         Tests/Mesh3dTest.h
         Tests/Mesh3dTest.cpp
         LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.h
@@ -167,7 +167,7 @@ add_executable(untitled main.cpp
         LinearAlgebra/EigenDecomposition/IEigenvalueDecomposition.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/NumericalMatrixDataStorageAccessProviders/NumericalMatrixDataStorageAccessProvider.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixEnums.h
-        Tests/SteadyState2DTest.h
+        Tests/AnalysisTests/SteadyState2DTest.h
         Tests/IterativeSolversTest.h
 )
 

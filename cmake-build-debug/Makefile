@@ -1593,6 +1593,54 @@ StructuredMeshGeneration/NodeFactory.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/StructuredMeshGeneration/NodeFactory.cpp.s
 .PHONY : StructuredMeshGeneration/NodeFactory.cpp.s
 
+Tests/AnalysisTests/SteadyState3DNeumann.o: Tests/AnalysisTests/SteadyState3DNeumann.cpp.o
+.PHONY : Tests/AnalysisTests/SteadyState3DNeumann.o
+
+# target to build an object file
+Tests/AnalysisTests/SteadyState3DNeumann.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/AnalysisTests/SteadyState3DNeumann.cpp.o
+.PHONY : Tests/AnalysisTests/SteadyState3DNeumann.cpp.o
+
+Tests/AnalysisTests/SteadyState3DNeumann.i: Tests/AnalysisTests/SteadyState3DNeumann.cpp.i
+.PHONY : Tests/AnalysisTests/SteadyState3DNeumann.i
+
+# target to preprocess a source file
+Tests/AnalysisTests/SteadyState3DNeumann.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/AnalysisTests/SteadyState3DNeumann.cpp.i
+.PHONY : Tests/AnalysisTests/SteadyState3DNeumann.cpp.i
+
+Tests/AnalysisTests/SteadyState3DNeumann.s: Tests/AnalysisTests/SteadyState3DNeumann.cpp.s
+.PHONY : Tests/AnalysisTests/SteadyState3DNeumann.s
+
+# target to generate assembly for a file
+Tests/AnalysisTests/SteadyState3DNeumann.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/AnalysisTests/SteadyState3DNeumann.cpp.s
+.PHONY : Tests/AnalysisTests/SteadyState3DNeumann.cpp.s
+
+Tests/AnalysisTests/SteadyStateDirichlet3D.o: Tests/AnalysisTests/SteadyStateDirichlet3D.cpp.o
+.PHONY : Tests/AnalysisTests/SteadyStateDirichlet3D.o
+
+# target to build an object file
+Tests/AnalysisTests/SteadyStateDirichlet3D.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/AnalysisTests/SteadyStateDirichlet3D.cpp.o
+.PHONY : Tests/AnalysisTests/SteadyStateDirichlet3D.cpp.o
+
+Tests/AnalysisTests/SteadyStateDirichlet3D.i: Tests/AnalysisTests/SteadyStateDirichlet3D.cpp.i
+.PHONY : Tests/AnalysisTests/SteadyStateDirichlet3D.i
+
+# target to preprocess a source file
+Tests/AnalysisTests/SteadyStateDirichlet3D.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/AnalysisTests/SteadyStateDirichlet3D.cpp.i
+.PHONY : Tests/AnalysisTests/SteadyStateDirichlet3D.cpp.i
+
+Tests/AnalysisTests/SteadyStateDirichlet3D.s: Tests/AnalysisTests/SteadyStateDirichlet3D.cpp.s
+.PHONY : Tests/AnalysisTests/SteadyStateDirichlet3D.s
+
+# target to generate assembly for a file
+Tests/AnalysisTests/SteadyStateDirichlet3D.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/AnalysisTests/SteadyStateDirichlet3D.cpp.s
+.PHONY : Tests/AnalysisTests/SteadyStateDirichlet3D.cpp.s
+
 Tests/LanczosEigenDecompositionTest.o: Tests/LanczosEigenDecompositionTest.cpp.o
 .PHONY : Tests/LanczosEigenDecompositionTest.o
 
@@ -1688,54 +1736,6 @@ Tests/QRTest.s: Tests/QRTest.cpp.s
 Tests/QRTest.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/QRTest.cpp.s
 .PHONY : Tests/QRTest.cpp.s
-
-Tests/SteadyState3DNeumann.o: Tests/SteadyState3DNeumann.cpp.o
-.PHONY : Tests/SteadyState3DNeumann.o
-
-# target to build an object file
-Tests/SteadyState3DNeumann.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyState3DNeumann.cpp.o
-.PHONY : Tests/SteadyState3DNeumann.cpp.o
-
-Tests/SteadyState3DNeumann.i: Tests/SteadyState3DNeumann.cpp.i
-.PHONY : Tests/SteadyState3DNeumann.i
-
-# target to preprocess a source file
-Tests/SteadyState3DNeumann.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyState3DNeumann.cpp.i
-.PHONY : Tests/SteadyState3DNeumann.cpp.i
-
-Tests/SteadyState3DNeumann.s: Tests/SteadyState3DNeumann.cpp.s
-.PHONY : Tests/SteadyState3DNeumann.s
-
-# target to generate assembly for a file
-Tests/SteadyState3DNeumann.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyState3DNeumann.cpp.s
-.PHONY : Tests/SteadyState3DNeumann.cpp.s
-
-Tests/SteadyStateDirichlet3D.o: Tests/SteadyStateDirichlet3D.cpp.o
-.PHONY : Tests/SteadyStateDirichlet3D.o
-
-# target to build an object file
-Tests/SteadyStateDirichlet3D.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyStateDirichlet3D.cpp.o
-.PHONY : Tests/SteadyStateDirichlet3D.cpp.o
-
-Tests/SteadyStateDirichlet3D.i: Tests/SteadyStateDirichlet3D.cpp.i
-.PHONY : Tests/SteadyStateDirichlet3D.i
-
-# target to preprocess a source file
-Tests/SteadyStateDirichlet3D.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyStateDirichlet3D.cpp.i
-.PHONY : Tests/SteadyStateDirichlet3D.cpp.i
-
-Tests/SteadyStateDirichlet3D.s: Tests/SteadyStateDirichlet3D.cpp.s
-.PHONY : Tests/SteadyStateDirichlet3D.s
-
-# target to generate assembly for a file
-Tests/SteadyStateDirichlet3D.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Tests/SteadyStateDirichlet3D.cpp.s
-.PHONY : Tests/SteadyStateDirichlet3D.cpp.s
 
 Utility/Exporters/Exporters.o: Utility/Exporters/Exporters.cpp.o
 .PHONY : Utility/Exporters/Exporters.o
@@ -2001,6 +2001,12 @@ help:
 	@echo "... StructuredMeshGeneration/NodeFactory.o"
 	@echo "... StructuredMeshGeneration/NodeFactory.i"
 	@echo "... StructuredMeshGeneration/NodeFactory.s"
+	@echo "... Tests/AnalysisTests/SteadyState3DNeumann.o"
+	@echo "... Tests/AnalysisTests/SteadyState3DNeumann.i"
+	@echo "... Tests/AnalysisTests/SteadyState3DNeumann.s"
+	@echo "... Tests/AnalysisTests/SteadyStateDirichlet3D.o"
+	@echo "... Tests/AnalysisTests/SteadyStateDirichlet3D.i"
+	@echo "... Tests/AnalysisTests/SteadyStateDirichlet3D.s"
 	@echo "... Tests/LanczosEigenDecompositionTest.o"
 	@echo "... Tests/LanczosEigenDecompositionTest.i"
 	@echo "... Tests/LanczosEigenDecompositionTest.s"
@@ -2013,12 +2019,6 @@ help:
 	@echo "... Tests/QRTest.o"
 	@echo "... Tests/QRTest.i"
 	@echo "... Tests/QRTest.s"
-	@echo "... Tests/SteadyState3DNeumann.o"
-	@echo "... Tests/SteadyState3DNeumann.i"
-	@echo "... Tests/SteadyState3DNeumann.s"
-	@echo "... Tests/SteadyStateDirichlet3D.o"
-	@echo "... Tests/SteadyStateDirichlet3D.i"
-	@echo "... Tests/SteadyStateDirichlet3D.s"
 	@echo "... Utility/Exporters/Exporters.o"
 	@echo "... Utility/Exporters/Exporters.i"
 	@echo "... Utility/Exporters/Exporters.s"
