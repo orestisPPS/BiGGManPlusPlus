@@ -22,9 +22,10 @@ public:
     
     template<typename ThreadJob>
     static void executeParallelJob(ThreadJob task, size_t size, unsigned availableThreads, unsigned cacheLineSize = 64) {
+        //Determine the number of doubles that fit in a cache line
         unsigned doublesPerCacheLine = cacheLineSize / sizeof(T);
         unsigned int numThreads = std::min(availableThreads, static_cast<unsigned>(size));
-
+        //Determine the block size.
         unsigned blockSize = (size + numThreads - 1) / numThreads;
         blockSize = (blockSize + doublesPerCacheLine - 1) / doublesPerCacheLine * doublesPerCacheLine;
 
@@ -61,9 +62,10 @@ public:
     */
     template<typename ThreadJob>
     static T executeParallelJobWithReduction(ThreadJob task, size_t size, unsigned availableThreads, unsigned cacheLineSize = 64) {
+        //Determine the number of doubles that fit in a cache line
         unsigned doublesPerCacheLine = cacheLineSize / sizeof(T);
         unsigned int numThreads = std::min(availableThreads, static_cast<unsigned>(size));
-
+        //Align block size to cache line size. Each block must be a multiple of the cache line size.
         unsigned blockSize = (size + numThreads - 1) / numThreads;
         blockSize = (blockSize + doublesPerCacheLine - 1) / doublesPerCacheLine * doublesPerCacheLine;
 

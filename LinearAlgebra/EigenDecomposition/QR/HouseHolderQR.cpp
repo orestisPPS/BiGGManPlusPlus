@@ -137,4 +137,5 @@ namespace LinearAlgebra {
     }
 
 
-} // LinearAlgebra*/
+} // LinearAlgebra
+*/

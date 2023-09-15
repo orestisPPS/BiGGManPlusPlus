@@ -52,24 +52,12 @@ namespace LinearAlgebra {
         while (_iteration < _maxIterations) {
             _matrixVectorMultiplication->fill(0.0);
             _linearSystem->matrix->multiplyVector(_directionVectorOld, _matrixVectorMultiplication);
-            //Calculate the step size
-            //alpha = (r_old, r_old)/(difference, A * difference)
-            
-            double r_oldT_r_old = _residualOld->dotProduct(_residualOld);
+            double r_oldT_r_old = _residualOld->dotProduct(_residualOld, _userDefinedThreads);
             double direction_oldT_A_direction_old = _directionVectorOld->dotProduct(_matrixVectorMultiplication);
             alpha = r_oldT_r_old / direction_oldT_A_direction_old;
-            
-            //x_new = x_old + alpha * difference
-            //_xOld->add(_directionVectorOld, _xNew, 1.0, alpha);
-            _xOld->add(_directionVectorOld, _xNew, 1.0, alpha);
-            //r_new = r_old - alpha * A * difference
-            _residualOld->subtract(_matrixVectorMultiplication, _residualNew, 1.0, alpha);
-            
-            //VectorOperations::subtract(_xNew, _xOld, _difference);
-            
-            //Calculate the norm of the residual
-            _exitNorm = _residualNew->norm(_normType);// / normInitial;
-            //_exitNorm = VectorNorm(_residualNew, _normType).value();
+            _xOld->add(_directionVectorOld, _xNew, 1.0, alpha, _userDefinedThreads);
+            _residualOld->subtract(_matrixVectorMultiplication, _residualNew, 1.0, alpha, _userDefinedThreads);
+            _exitNorm = _residualNew->norm(_normType) / normInitial;
             _residualNorms->push_back(_exitNorm);
             if (_exitNorm > _tolerance){
                 //Calculate the new direction

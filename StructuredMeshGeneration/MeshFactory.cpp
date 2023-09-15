@@ -202,15 +202,12 @@ namespace StructuredMeshGenerator{
             auto nodeFieldProperties = SpaceFieldProperties();
             nodeFieldProperties.secondOrderCoefficients = mesh->metrics->at(*node->id.global)->contravariantTensor;
             auto firstDerivativeCoefficients = NumericalVector<double>{0, 0, 0};
-            nodeFieldProperties.firstOrderCoefficients = make_shared<NumericalVector<double>>(std::move(firstDerivativeCoefficients));
+            nodeFieldProperties.firstOrderCoefficients = make_shared<NumericalVector<double>>(
+                                                         std::move(firstDerivativeCoefficients));
             nodeFieldProperties.zerothOrderCoefficient = make_shared<double>(0);
             nodeFieldProperties.sourceTerm = make_shared<double>(0);
             pdePropertiesFromMetrics->insert(pair<unsigned, SpaceFieldProperties>(*node->id.global, nodeFieldProperties));
         }
-/*        for (auto &metrics : *mesh->metrics) {
-            delete metrics.second;
-        }
-        delete mesh->metrics;*/
     }
 
 

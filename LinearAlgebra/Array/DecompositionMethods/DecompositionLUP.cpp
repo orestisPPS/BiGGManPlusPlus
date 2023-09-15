@@ -63,9 +63,11 @@ namespace LinearAlgebra {
             }
             // Calculate the elements of L and U matrices
             for (j = i + 1; j < n; j++) {
-                _l->at(j, i) = _matrix->at(j, i) / _matrix->at(i, i);
+                double lij = _matrix->getElement(j, i) / _matrix->getElement(i, i);
+                _l->setElement(j, i, lij);
                 for (k = i + 1; k < n; k++) {
-                    _matrix->at(j, k) -= _l->at(j, i) * _matrix->at(i, k);
+                    double ajk = _l->getElement(j, i) * _matrix->getElement(i, k);
+                    _matrix->setElement(j, k, _matrix->getElement(j, k) - ajk);
                 }
             }
         }
@@ -231,4 +233,5 @@ namespace LinearAlgebra {
         }
 
     }
-} // LinearAlgebra*/
+} // LinearAlgebra
+*/

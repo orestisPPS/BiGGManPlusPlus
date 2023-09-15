@@ -386,7 +386,8 @@ namespace LinearAlgebra {
             auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
             
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
-            return _math->vectorMultiplicationRowWisePartial(inputVectorData, targetRow, startColumn, endColumn, scaleThis, scaleInput, availableThreads);
+            return _math->vectorMultiplicationRowWisePartial(inputVectorData, targetRow, startColumn, endColumn,
+                                                             scaleThis, scaleInput, availableThreads);
             
         }
         
