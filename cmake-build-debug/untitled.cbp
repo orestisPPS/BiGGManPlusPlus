@@ -561,6 +561,9 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/Mesh3dTest.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/MeshGenerator.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/Tests/NumericalMatrixTest.h">
 			<Option target="untitled"/>
 		</Unit>

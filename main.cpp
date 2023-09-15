@@ -9,6 +9,7 @@
 #include "Tests/IterativeSolversTest.h"
 #include "Tests/QRTest.h"
 #include "Tests/OperationsCUDA.h"
+#include "Tests/MeshGenerator.h"
 #include "Tests/NumericalMatrixTest.h"
 #include "StructuredMeshGeneration/MeshTest2D.h"
 #include "BoundaryConditions/DomainBoundaryConditions.h"
@@ -37,9 +38,9 @@ int main() {
     delete lanczosTest;*/
 
     //Tests::IterativeSolversTest::runTests();
-    //Tests::SteadyState2DTest::runTests();
-    Tests::SteadyState3DNeumann::runTests();
-
+    Tests::SteadyState2DTest::runTests();
+    //Tests::SteadyState3DNeumann::runTests();
+    //Tests::MeshGenerator::buildMesh();
 /*    auto vectorTest = new NumericalVectorTest();
     vectorTest->runTests();
     Tests::NumericalMatrixTest::runTests();*/

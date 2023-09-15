@@ -169,6 +169,7 @@ add_executable(untitled main.cpp
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixEnums.h
         Tests/AnalysisTests/SteadyState2DTest.h
         Tests/IterativeSolversTest.h
+        Tests/MeshGenerator.h
 )
 
 
