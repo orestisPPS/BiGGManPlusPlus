@@ -273,54 +273,6 @@ Analysis/NumericalAnalysis.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/Analysis/NumericalAnalysis.cpp.s
 .PHONY : Analysis/NumericalAnalysis.cpp.s
 
-BoundaryConditions/BoundaryCondition.o: BoundaryConditions/BoundaryCondition.cpp.o
-.PHONY : BoundaryConditions/BoundaryCondition.o
-
-# target to build an object file
-BoundaryConditions/BoundaryCondition.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.o
-.PHONY : BoundaryConditions/BoundaryCondition.cpp.o
-
-BoundaryConditions/BoundaryCondition.i: BoundaryConditions/BoundaryCondition.cpp.i
-.PHONY : BoundaryConditions/BoundaryCondition.i
-
-# target to preprocess a source file
-BoundaryConditions/BoundaryCondition.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.i
-.PHONY : BoundaryConditions/BoundaryCondition.cpp.i
-
-BoundaryConditions/BoundaryCondition.s: BoundaryConditions/BoundaryCondition.cpp.s
-.PHONY : BoundaryConditions/BoundaryCondition.s
-
-# target to generate assembly for a file
-BoundaryConditions/BoundaryCondition.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/BoundaryConditions/BoundaryCondition.cpp.s
-.PHONY : BoundaryConditions/BoundaryCondition.cpp.s
-
-BoundaryConditions/DomainBoundaryConditions.o: BoundaryConditions/DomainBoundaryConditions.cpp.o
-.PHONY : BoundaryConditions/DomainBoundaryConditions.o
-
-# target to build an object file
-BoundaryConditions/DomainBoundaryConditions.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/BoundaryConditions/DomainBoundaryConditions.cpp.o
-.PHONY : BoundaryConditions/DomainBoundaryConditions.cpp.o
-
-BoundaryConditions/DomainBoundaryConditions.i: BoundaryConditions/DomainBoundaryConditions.cpp.i
-.PHONY : BoundaryConditions/DomainBoundaryConditions.i
-
-# target to preprocess a source file
-BoundaryConditions/DomainBoundaryConditions.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/BoundaryConditions/DomainBoundaryConditions.cpp.i
-.PHONY : BoundaryConditions/DomainBoundaryConditions.cpp.i
-
-BoundaryConditions/DomainBoundaryConditions.s: BoundaryConditions/DomainBoundaryConditions.cpp.s
-.PHONY : BoundaryConditions/DomainBoundaryConditions.s
-
-# target to generate assembly for a file
-BoundaryConditions/DomainBoundaryConditions.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/BoundaryConditions/DomainBoundaryConditions.cpp.s
-.PHONY : BoundaryConditions/DomainBoundaryConditions.cpp.s
-
 DegreesOfFreedom/DegreeOfFreedom.o: DegreesOfFreedom/DegreeOfFreedom.cpp.o
 .PHONY : DegreesOfFreedom/DegreeOfFreedom.o
 
@@ -1329,149 +1281,197 @@ LinearAlgebra/Solvers/Solver.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/LinearAlgebra/Solvers/Solver.cpp.s
 .PHONY : LinearAlgebra/Solvers/Solver.cpp.s
 
-MathematicalProblem/MathematicalProblem.o: MathematicalProblem/MathematicalProblem.cpp.o
-.PHONY : MathematicalProblem/MathematicalProblem.o
+MathematicalEntities/BoundaryConditions/BoundaryCondition.o: MathematicalEntities/BoundaryConditions/BoundaryCondition.cpp.o
+.PHONY : MathematicalEntities/BoundaryConditions/BoundaryCondition.o
 
 # target to build an object file
-MathematicalProblem/MathematicalProblem.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalProblem/MathematicalProblem.cpp.o
-.PHONY : MathematicalProblem/MathematicalProblem.cpp.o
+MathematicalEntities/BoundaryConditions/BoundaryCondition.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/BoundaryConditions/BoundaryCondition.cpp.o
+.PHONY : MathematicalEntities/BoundaryConditions/BoundaryCondition.cpp.o
 
-MathematicalProblem/MathematicalProblem.i: MathematicalProblem/MathematicalProblem.cpp.i
-.PHONY : MathematicalProblem/MathematicalProblem.i
+MathematicalEntities/BoundaryConditions/BoundaryCondition.i: MathematicalEntities/BoundaryConditions/BoundaryCondition.cpp.i
+.PHONY : MathematicalEntities/BoundaryConditions/BoundaryCondition.i
 
 # target to preprocess a source file
-MathematicalProblem/MathematicalProblem.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalProblem/MathematicalProblem.cpp.i
-.PHONY : MathematicalProblem/MathematicalProblem.cpp.i
+MathematicalEntities/BoundaryConditions/BoundaryCondition.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/BoundaryConditions/BoundaryCondition.cpp.i
+.PHONY : MathematicalEntities/BoundaryConditions/BoundaryCondition.cpp.i
 
-MathematicalProblem/MathematicalProblem.s: MathematicalProblem/MathematicalProblem.cpp.s
-.PHONY : MathematicalProblem/MathematicalProblem.s
+MathematicalEntities/BoundaryConditions/BoundaryCondition.s: MathematicalEntities/BoundaryConditions/BoundaryCondition.cpp.s
+.PHONY : MathematicalEntities/BoundaryConditions/BoundaryCondition.s
 
 # target to generate assembly for a file
-MathematicalProblem/MathematicalProblem.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalProblem/MathematicalProblem.cpp.s
-.PHONY : MathematicalProblem/MathematicalProblem.cpp.s
+MathematicalEntities/BoundaryConditions/BoundaryCondition.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/BoundaryConditions/BoundaryCondition.cpp.s
+.PHONY : MathematicalEntities/BoundaryConditions/BoundaryCondition.cpp.s
 
-MathematicalProblem/SteadyStateMathematicalProblem.o: MathematicalProblem/SteadyStateMathematicalProblem.cpp.o
-.PHONY : MathematicalProblem/SteadyStateMathematicalProblem.o
+MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.o: MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.cpp.o
+.PHONY : MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.o
 
 # target to build an object file
-MathematicalProblem/SteadyStateMathematicalProblem.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalProblem/SteadyStateMathematicalProblem.cpp.o
-.PHONY : MathematicalProblem/SteadyStateMathematicalProblem.cpp.o
+MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.cpp.o
+.PHONY : MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.cpp.o
 
-MathematicalProblem/SteadyStateMathematicalProblem.i: MathematicalProblem/SteadyStateMathematicalProblem.cpp.i
-.PHONY : MathematicalProblem/SteadyStateMathematicalProblem.i
+MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.i: MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.cpp.i
+.PHONY : MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.i
 
 # target to preprocess a source file
-MathematicalProblem/SteadyStateMathematicalProblem.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalProblem/SteadyStateMathematicalProblem.cpp.i
-.PHONY : MathematicalProblem/SteadyStateMathematicalProblem.cpp.i
+MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.cpp.i
+.PHONY : MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.cpp.i
 
-MathematicalProblem/SteadyStateMathematicalProblem.s: MathematicalProblem/SteadyStateMathematicalProblem.cpp.s
-.PHONY : MathematicalProblem/SteadyStateMathematicalProblem.s
+MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.s: MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.cpp.s
+.PHONY : MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.s
 
 # target to generate assembly for a file
-MathematicalProblem/SteadyStateMathematicalProblem.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalProblem/SteadyStateMathematicalProblem.cpp.s
-.PHONY : MathematicalProblem/SteadyStateMathematicalProblem.cpp.s
+MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.cpp.s
+.PHONY : MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.cpp.s
 
-MathematicalProblem/TransientMathematicalProblem.o: MathematicalProblem/TransientMathematicalProblem.cpp.o
-.PHONY : MathematicalProblem/TransientMathematicalProblem.o
+MathematicalEntities/MathematicalProblem/MathematicalProblem.o: MathematicalEntities/MathematicalProblem/MathematicalProblem.cpp.o
+.PHONY : MathematicalEntities/MathematicalProblem/MathematicalProblem.o
 
 # target to build an object file
-MathematicalProblem/TransientMathematicalProblem.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalProblem/TransientMathematicalProblem.cpp.o
-.PHONY : MathematicalProblem/TransientMathematicalProblem.cpp.o
+MathematicalEntities/MathematicalProblem/MathematicalProblem.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/MathematicalProblem/MathematicalProblem.cpp.o
+.PHONY : MathematicalEntities/MathematicalProblem/MathematicalProblem.cpp.o
 
-MathematicalProblem/TransientMathematicalProblem.i: MathematicalProblem/TransientMathematicalProblem.cpp.i
-.PHONY : MathematicalProblem/TransientMathematicalProblem.i
+MathematicalEntities/MathematicalProblem/MathematicalProblem.i: MathematicalEntities/MathematicalProblem/MathematicalProblem.cpp.i
+.PHONY : MathematicalEntities/MathematicalProblem/MathematicalProblem.i
 
 # target to preprocess a source file
-MathematicalProblem/TransientMathematicalProblem.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalProblem/TransientMathematicalProblem.cpp.i
-.PHONY : MathematicalProblem/TransientMathematicalProblem.cpp.i
+MathematicalEntities/MathematicalProblem/MathematicalProblem.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/MathematicalProblem/MathematicalProblem.cpp.i
+.PHONY : MathematicalEntities/MathematicalProblem/MathematicalProblem.cpp.i
 
-MathematicalProblem/TransientMathematicalProblem.s: MathematicalProblem/TransientMathematicalProblem.cpp.s
-.PHONY : MathematicalProblem/TransientMathematicalProblem.s
+MathematicalEntities/MathematicalProblem/MathematicalProblem.s: MathematicalEntities/MathematicalProblem/MathematicalProblem.cpp.s
+.PHONY : MathematicalEntities/MathematicalProblem/MathematicalProblem.s
 
 # target to generate assembly for a file
-MathematicalProblem/TransientMathematicalProblem.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalProblem/TransientMathematicalProblem.cpp.s
-.PHONY : MathematicalProblem/TransientMathematicalProblem.cpp.s
+MathematicalEntities/MathematicalProblem/MathematicalProblem.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/MathematicalProblem/MathematicalProblem.cpp.s
+.PHONY : MathematicalEntities/MathematicalProblem/MathematicalProblem.cpp.s
 
-PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.o: PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o
-.PHONY : PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.o
+MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.o: MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp.o
+.PHONY : MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.o
 
 # target to build an object file
-PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o
-.PHONY : PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o
+MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp.o
+.PHONY : MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp.o
 
-PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.i: PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.i
-.PHONY : PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.i
+MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.i: MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp.i
+.PHONY : MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.i
 
 # target to preprocess a source file
-PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.i
-.PHONY : PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.i
+MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp.i
+.PHONY : MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp.i
 
-PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.s: PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.s
-.PHONY : PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.s
+MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.s: MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp.s
+.PHONY : MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.s
 
 # target to generate assembly for a file
-PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.s
-.PHONY : PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.s
+MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp.s
+.PHONY : MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp.s
 
-PartialDifferentialEquations/PartialDifferentialEquation.o: PartialDifferentialEquations/PartialDifferentialEquation.cpp.o
-.PHONY : PartialDifferentialEquations/PartialDifferentialEquation.o
+MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.o: MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.cpp.o
+.PHONY : MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.o
 
 # target to build an object file
-PartialDifferentialEquations/PartialDifferentialEquation.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/PartialDifferentialEquations/PartialDifferentialEquation.cpp.o
-.PHONY : PartialDifferentialEquations/PartialDifferentialEquation.cpp.o
+MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.cpp.o
+.PHONY : MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.cpp.o
 
-PartialDifferentialEquations/PartialDifferentialEquation.i: PartialDifferentialEquations/PartialDifferentialEquation.cpp.i
-.PHONY : PartialDifferentialEquations/PartialDifferentialEquation.i
+MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.i: MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.cpp.i
+.PHONY : MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.i
 
 # target to preprocess a source file
-PartialDifferentialEquations/PartialDifferentialEquation.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/PartialDifferentialEquations/PartialDifferentialEquation.cpp.i
-.PHONY : PartialDifferentialEquations/PartialDifferentialEquation.cpp.i
+MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.cpp.i
+.PHONY : MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.cpp.i
 
-PartialDifferentialEquations/PartialDifferentialEquation.s: PartialDifferentialEquations/PartialDifferentialEquation.cpp.s
-.PHONY : PartialDifferentialEquations/PartialDifferentialEquation.s
+MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.s: MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.cpp.s
+.PHONY : MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.s
 
 # target to generate assembly for a file
-PartialDifferentialEquations/PartialDifferentialEquation.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/PartialDifferentialEquations/PartialDifferentialEquation.cpp.s
-.PHONY : PartialDifferentialEquations/PartialDifferentialEquation.cpp.s
+MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.cpp.s
+.PHONY : MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.cpp.s
 
-PartialDifferentialEquations/SecondOrderLinearPDEProperties.o: PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o
-.PHONY : PartialDifferentialEquations/SecondOrderLinearPDEProperties.o
+MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.o: MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o
+.PHONY : MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.o
 
 # target to build an object file
-PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o
-.PHONY : PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o
+MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o
+.PHONY : MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.o
 
-PartialDifferentialEquations/SecondOrderLinearPDEProperties.i: PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.i
-.PHONY : PartialDifferentialEquations/SecondOrderLinearPDEProperties.i
+MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.i: MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.i
+.PHONY : MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.i
 
 # target to preprocess a source file
-PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.i
-.PHONY : PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.i
+MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.i
+.PHONY : MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.i
 
-PartialDifferentialEquations/SecondOrderLinearPDEProperties.s: PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.s
-.PHONY : PartialDifferentialEquations/SecondOrderLinearPDEProperties.s
+MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.s: MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.s
+.PHONY : MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.s
 
 # target to generate assembly for a file
-PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.s
-.PHONY : PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.s
+MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.s
+.PHONY : MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp.s
+
+MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.o: MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp.o
+.PHONY : MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.o
+
+# target to build an object file
+MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp.o
+.PHONY : MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp.o
+
+MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.i: MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp.i
+.PHONY : MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.i
+
+# target to preprocess a source file
+MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp.i
+.PHONY : MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp.i
+
+MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.s: MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp.s
+.PHONY : MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.s
+
+# target to generate assembly for a file
+MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp.s
+.PHONY : MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp.s
+
+MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.o: MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o
+.PHONY : MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.o
+
+# target to build an object file
+MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o
+.PHONY : MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.o
+
+MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.i: MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.i
+.PHONY : MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.i
+
+# target to preprocess a source file
+MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.i
+.PHONY : MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.i
+
+MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.s: MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.s
+.PHONY : MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.s
+
+# target to generate assembly for a file
+MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/untitled.dir/build.make CMakeFiles/untitled.dir/MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.s
+.PHONY : MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp.s
 
 StructuredMeshGeneration/DomainBoundaryFactory.o: StructuredMeshGeneration/DomainBoundaryFactory.cpp.o
 .PHONY : StructuredMeshGeneration/DomainBoundaryFactory.o
@@ -1836,12 +1836,6 @@ help:
 	@echo "... Analysis/NumericalAnalysis.o"
 	@echo "... Analysis/NumericalAnalysis.i"
 	@echo "... Analysis/NumericalAnalysis.s"
-	@echo "... BoundaryConditions/BoundaryCondition.o"
-	@echo "... BoundaryConditions/BoundaryCondition.i"
-	@echo "... BoundaryConditions/BoundaryCondition.s"
-	@echo "... BoundaryConditions/DomainBoundaryConditions.o"
-	@echo "... BoundaryConditions/DomainBoundaryConditions.i"
-	@echo "... BoundaryConditions/DomainBoundaryConditions.s"
 	@echo "... DegreesOfFreedom/DegreeOfFreedom.o"
 	@echo "... DegreesOfFreedom/DegreeOfFreedom.i"
 	@echo "... DegreesOfFreedom/DegreeOfFreedom.s"
@@ -1968,24 +1962,30 @@ help:
 	@echo "... LinearAlgebra/Solvers/Solver.o"
 	@echo "... LinearAlgebra/Solvers/Solver.i"
 	@echo "... LinearAlgebra/Solvers/Solver.s"
-	@echo "... MathematicalProblem/MathematicalProblem.o"
-	@echo "... MathematicalProblem/MathematicalProblem.i"
-	@echo "... MathematicalProblem/MathematicalProblem.s"
-	@echo "... MathematicalProblem/SteadyStateMathematicalProblem.o"
-	@echo "... MathematicalProblem/SteadyStateMathematicalProblem.i"
-	@echo "... MathematicalProblem/SteadyStateMathematicalProblem.s"
-	@echo "... MathematicalProblem/TransientMathematicalProblem.o"
-	@echo "... MathematicalProblem/TransientMathematicalProblem.i"
-	@echo "... MathematicalProblem/TransientMathematicalProblem.s"
-	@echo "... PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.o"
-	@echo "... PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.i"
-	@echo "... PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.s"
-	@echo "... PartialDifferentialEquations/PartialDifferentialEquation.o"
-	@echo "... PartialDifferentialEquations/PartialDifferentialEquation.i"
-	@echo "... PartialDifferentialEquations/PartialDifferentialEquation.s"
-	@echo "... PartialDifferentialEquations/SecondOrderLinearPDEProperties.o"
-	@echo "... PartialDifferentialEquations/SecondOrderLinearPDEProperties.i"
-	@echo "... PartialDifferentialEquations/SecondOrderLinearPDEProperties.s"
+	@echo "... MathematicalEntities/BoundaryConditions/BoundaryCondition.o"
+	@echo "... MathematicalEntities/BoundaryConditions/BoundaryCondition.i"
+	@echo "... MathematicalEntities/BoundaryConditions/BoundaryCondition.s"
+	@echo "... MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.o"
+	@echo "... MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.i"
+	@echo "... MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.s"
+	@echo "... MathematicalEntities/MathematicalProblem/MathematicalProblem.o"
+	@echo "... MathematicalEntities/MathematicalProblem/MathematicalProblem.i"
+	@echo "... MathematicalEntities/MathematicalProblem/MathematicalProblem.s"
+	@echo "... MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.o"
+	@echo "... MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.i"
+	@echo "... MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.s"
+	@echo "... MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.o"
+	@echo "... MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.i"
+	@echo "... MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.s"
+	@echo "... MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.o"
+	@echo "... MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.i"
+	@echo "... MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.s"
+	@echo "... MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.o"
+	@echo "... MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.i"
+	@echo "... MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.s"
+	@echo "... MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.o"
+	@echo "... MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.i"
+	@echo "... MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.s"
 	@echo "... StructuredMeshGeneration/DomainBoundaryFactory.o"
 	@echo "... StructuredMeshGeneration/DomainBoundaryFactory.i"
 	@echo "... StructuredMeshGeneration/DomainBoundaryFactory.s"

@@ -5,13 +5,13 @@
 #ifndef UNTITLED_MATHEMATICALPROBLEM_H
 #define UNTITLED_MATHEMATICALPROBLEM_H
 
-#include "../PartialDifferentialEquations/PartialDifferentialEquation.h"
-#include "../BoundaryConditions/DomainBoundaryConditions.h"
-#include "../DegreesOfFreedom/DegreeOfFreedomTypes.h"
+#include "../../MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.h"
+#include "../../MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.h"
+#include "../../DegreesOfFreedom/DegreeOfFreedomTypes.h"
 using namespace DegreesOfFreedom;
-using namespace BoundaryConditions;
+using namespace MathematicalEntities;
 
-namespace MathematicalProblems {
+namespace MathematicalEntities {
 
     class MathematicalProblem {
         public:
@@ -24,6 +24,6 @@ namespace MathematicalProblems {
         Field_DOFType *degreesOfFreedom;
     };
 
-} // MathematicalProblems
+} // MathematicalEntities
 
 #endif //UNTITLED_MATHEMATICALPROBLEM_H

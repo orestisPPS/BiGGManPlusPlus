@@ -9,7 +9,7 @@
 #include "../NumericalAnalysis.h"
 
 using namespace LinearAlgebra;
-using namespace MathematicalProblems;
+using namespace MathematicalEntities;
 using namespace Discretization;
 
 namespace NumericalAnalysis {

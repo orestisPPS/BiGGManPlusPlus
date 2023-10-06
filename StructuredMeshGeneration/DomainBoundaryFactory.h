@@ -5,11 +5,11 @@
 #ifndef UNTITLED_DOMAINBOUNDARYFACTORY_H
 #define UNTITLED_DOMAINBOUNDARYFACTORY_H
 
-#include "../BoundaryConditions/DomainBoundaryConditions.h"
+#include "../MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.h"
 #include "MeshFactory.h"
 #include "../LinearAlgebra/Operations/Transformations.h"
 #include "../Utility/Calculators.h"
-using namespace BoundaryConditions;
+using namespace MathematicalEntities;
 
 namespace StructuredMeshGenerator {
 

@@ -5,7 +5,7 @@
 #include <utility>
 #include "BoundaryCondition.h"
 
-namespace BoundaryConditions {
+namespace MathematicalEntities {
     
     BoundaryCondition::BoundaryCondition(BoundaryConditionType bcType,
                                          shared_ptr<map<DOFType, function<double (shared_ptr<NumericalVector<double>>)>>> bcForDof) :
@@ -46,4 +46,4 @@ namespace BoundaryConditions {
 
 
 
-} // BoundaryConditions
+} // MathematicalEntities

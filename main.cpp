@@ -1,6 +1,4 @@
 #include <iostream>
-#include "DegreesOfFreedom/DegreeOfFreedom.h"
-#include "PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
 #include "Tests/AnalysisTests/SteadyState3DNeumann.h"
 #include "Tests/AnalysisTests/SteadyState2DTest.h"
 #include "Tests/AnalysisTests/SteadyStateDirichlet3D.h"
@@ -9,18 +7,15 @@
 #include "Tests/IterativeSolversTest.h"
 #include "Tests/QRTest.h"
 #include "Tests/OperationsCUDA.h"
-#include "Tests/MeshGenerator.h"
 #include "Tests/NumericalMatrixTest.h"
 #include "StructuredMeshGeneration/MeshTest2D.h"
-#include "BoundaryConditions/DomainBoundaryConditions.h"
 #include "DegreesOfFreedom/DegreeOfFreedomTypes.h"
 #include "Analysis/FiniteDifferenceAnalysis/StStFDTest.h"
 
-#include "LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.h"
 #include "LinearAlgebra/FiniteDifferences/FDWeightCalculator.h"
 #include <functional>
 #include <list>
-using namespace PartialDifferentialEquations;
+using namespace MathematicalEntities;
 using namespace LinearAlgebra;
 using namespace DegreesOfFreedom;
 

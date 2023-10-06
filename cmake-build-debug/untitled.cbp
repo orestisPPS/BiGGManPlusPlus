@@ -120,18 +120,6 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/Analysis/NumericalAnalysis.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/BoundaryConditions/BoundaryCondition.cpp">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/BoundaryConditions/BoundaryCondition.h">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/BoundaryConditions/DomainBoundaryConditions.cpp">
-			<Option target="untitled"/>
-		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/BoundaryConditions/DomainBoundaryConditions.h">
-			<Option target="untitled"/>
-		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/DegreesOfFreedom/DegreeOfFreedom.cpp">
 			<Option target="untitled"/>
 		</Unit>
@@ -459,43 +447,55 @@
 		<Unit filename="/home/hal9000/code/BiGGMan++/LinearAlgebra/Solvers/Solver.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalProblem/MathematicalProblem.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/BoundaryConditions/BoundaryCondition.cpp">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalProblem/MathematicalProblem.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/BoundaryConditions/BoundaryCondition.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalProblem/SteadyStateMathematicalProblem.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.cpp">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalProblem/SteadyStateMathematicalProblem.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalProblem/TransientMathematicalProblem.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/MathematicalProblem/MathematicalProblem.cpp">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalProblem/TransientMathematicalProblem.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/MathematicalProblem/MathematicalProblem.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/HeatTransfer/EnergyTransferEquation.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/PartialDifferentialEquation.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.cpp">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/PartialDifferentialEquation.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp">
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/PartialDifferentialEquations/HeatTransfer/EnergyTransferEquation.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/SecondOrderLinearPDEProperties.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="/home/hal9000/code/BiGGMan++/PartialDifferentialEquations/SpaceFieldProperties.h">
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/home/hal9000/code/BiGGMan++/MathematicalEntities/PartialDifferentialEquations/SpaceFieldProperties.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="/home/hal9000/code/BiGGMan++/PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h">

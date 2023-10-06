@@ -5,9 +5,9 @@
 #include "DomainBoundaryConditions.h"
 
 #include <utility>
-#include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
+#include "../../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 
-namespace BoundaryConditions {
+namespace MathematicalEntities {
     
         DomainBoundaryConditions::DomainBoundaryConditions(
                 shared_ptr<map<Position, shared_ptr<BoundaryCondition>>> bcAtPosition) :
@@ -37,4 +37,4 @@ namespace BoundaryConditions {
         
     
     
-} // BoundaryConditions
+} // MathematicalEntities

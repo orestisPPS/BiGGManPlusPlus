@@ -40,7 +40,7 @@ namespace Tests {
 
         shared_ptr<Mesh> mesh = meshFactory->mesh;
 
-        auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(3, false, Isotropic);
+        auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(3);
         pdeProperties->setIsotropicProperties(1,0,0,0);
 
         auto heatTransferPDE = make_shared<PartialDifferentialEquation>(pdeProperties, Laplace);

@@ -5,7 +5,7 @@
 #ifndef UNTITLED_DOFINITIALIZER_H
 #define UNTITLED_DOFINITIALIZER_H
 
-#include "../../MathematicalProblem/SteadyStateMathematicalProblem.h"
+#include "../../MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.h"
 #include "../../DegreesOfFreedom/DegreeOfFreedom.h"
 #include "../../Discretization/Mesh/Mesh.h"
 

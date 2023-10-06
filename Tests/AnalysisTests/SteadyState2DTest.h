@@ -28,8 +28,8 @@ namespace Tests {
             logTestStart("testDiffusionDirichlet2D");
 
             map<Direction, unsigned> numberOfNodes;
-            numberOfNodes[Direction::One] = 11;
-            numberOfNodes[Direction::Two] = 11;
+            numberOfNodes[Direction::One] = 5;
+            numberOfNodes[Direction::Two] = 5;
 
             auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 0, 0, 0);
             auto meshFactory = make_shared<MeshFactory>(specs);
@@ -53,8 +53,8 @@ namespace Tests {
 
 
 
-            auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(3, false, Isotropic);
-            pdeProperties->setIsotropicProperties(10,0,0,0);
+            auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(3);
+            pdeProperties->setIsotropicSpatialProperties(10, 0, 0, 0);
 
             auto heatTransferPDE = make_shared<PartialDifferentialEquation>(pdeProperties, Laplace);
 

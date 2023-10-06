@@ -95,7 +95,7 @@ namespace NumericalAnalysis {
 *//*        //--------------------------Valougeorgis examples10 pg. 6 (0 Dirichlet, -1 Source)-----------------------------
         //--------------------------Passes-----------------------------
         auto pdeProperties =
-                new SecondOrderLinearPDEProperties(2, false, Isotropic);
+                new SecondOrderLinearPDEProperties(2);
         pdeProperties->setIsotropicProperties(1,0,0,-1);
         
         auto bottomBC = new BoundaryCondition(Dirichlet, new map<DOFType, double>(
@@ -109,7 +109,7 @@ namespace NumericalAnalysis {
 
         shared_ptr<Mesh> mesh = meshFactory->mesh;
 
-        auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(2, false, Isotropic);
+        auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(2);
         pdeProperties->setIsotropicProperties(1,0,0,0);
 
         auto heatTransferPDE = make_shared<PartialDifferentialEquation>(pdeProperties, Laplace);

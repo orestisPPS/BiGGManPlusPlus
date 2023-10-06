@@ -6,7 +6,7 @@
 #define UNTITLED_ANALYSIS_H
 
 #include "../LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h"
-#include "../MathematicalProblem/MathematicalProblem.h"
+#include "../MathematicalEntities/MathematicalProblem/MathematicalProblem.h"
 #include "../LinearAlgebra/AnalysisLinearSystemInitializer.h"
 #include "AnalysisDOFs/AnalysisDegreesOfFreedom.h"
 #include "../LinearAlgebra/Solvers/Solver.h"
@@ -14,9 +14,9 @@
 
 
 using namespace LinearAlgebra;
-using namespace MathematicalProblems;
+using namespace MathematicalEntities;
 using namespace Discretization;
-using namespace MathematicalProblems;
+using namespace MathematicalEntities;
 
 namespace NumericalAnalysis {
 

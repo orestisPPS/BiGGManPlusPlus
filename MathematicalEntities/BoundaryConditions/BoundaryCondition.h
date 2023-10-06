@@ -9,14 +9,14 @@
 #include <memory>
 #include <map>
 #include <functional>
-#include "../PositioningInSpace/DirectionsPositions.h"
-#include "../DegreesOfFreedom/DegreeOfFreedomTypes.h"
+#include "../../PositioningInSpace/DirectionsPositions.h"
+#include "../../DegreesOfFreedom/DegreeOfFreedomTypes.h"
 
 using namespace PositioningInSpace;
 using namespace DegreesOfFreedom;
 using namespace std;
  
-namespace BoundaryConditions {
+namespace MathematicalEntities {
 
     enum BoundaryConditionType {
         Dirichlet,
@@ -56,6 +56,6 @@ namespace BoundaryConditions {
         
         shared_ptr<map<DOFType, double>> _bcValueForDof;
     };
-} // BoundaryConditions
+} // MathematicalEntities
 
 #endif //UNTITLED_BOUNDARYCONDITION_H

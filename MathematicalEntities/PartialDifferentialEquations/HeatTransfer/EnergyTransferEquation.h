@@ -8,10 +8,10 @@
 
 #include <vector>
 #include "../PartialDifferentialEquation.h"
-using namespace PartialDifferentialEquations;
+using namespace MathematicalEntities;
 
 
-namespace PartialDifferentialEquations {
+namespace MathematicalEntities {
 
     class EnergyTransferEquation : public PartialDifferentialEquation {
     public:

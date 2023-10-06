@@ -10,9 +10,9 @@
 #include "LinearSystem.h"
 #include "../Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.h"
 #include "../Discretization/Mesh/Mesh.h"
-#include "../MathematicalProblem/MathematicalProblem.h"
+#include "../MathematicalEntities/MathematicalProblem/MathematicalProblem.h"
 #include "../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
-using namespace MathematicalProblems;
+using namespace MathematicalEntities;
 
 using namespace NumericalAnalysis;
 

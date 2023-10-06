@@ -23,14 +23,16 @@ add_executable(untitled main.cpp
         Discretization/Node/Node.h
         Discretization/Id/DiscreteEntityId.cpp
         Discretization/Id/DiscreteEntityId.h
-        PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp 
-        PartialDifferentialEquations/SecondOrderLinearPDEProperties.h 
-        PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp
-        PartialDifferentialEquations/HeatTransfer/EnergyTransferEquation.h
-        MathematicalProblem/SteadyStateMathematicalProblem.cpp
-        MathematicalProblem/SteadyStateMathematicalProblem.h
-        MathematicalProblem/TransientMathematicalProblem.cpp
-        MathematicalProblem/TransientMathematicalProblem.h
+        MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp
+        MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.h
+        MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp
+        MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.h
+        MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp
+        MathematicalEntities/PartialDifferentialEquations/HeatTransfer/EnergyTransferEquation.h
+        MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp
+        MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.h
+        MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.cpp
+        MathematicalEntities/MathematicalProblem/TransientMathematicalProblem.h
         StructuredMeshGeneration/MeshFactory.cpp
         StructuredMeshGeneration/MeshFactory.h
         StructuredMeshGeneration/MeshSpecs.cpp
@@ -56,13 +58,13 @@ add_executable(untitled main.cpp
         Discretization/Node/NodalCoordinates.h
         Discretization/Node/NodalCoordinates.cpp
         Analysis/FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.cpp
-        BoundaryConditions/DomainBoundaryConditions.h
-        BoundaryConditions/DomainBoundaryConditions.cpp
-        BoundaryConditions/BoundaryCondition.cpp
+        MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.h
+        MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.cpp
+        MathematicalEntities/BoundaryConditions/BoundaryCondition.cpp
         Analysis/AnalysisDOFs/DOFInitializer.h
         Analysis/AnalysisDOFs/DOFInitializer.cpp
         DegreesOfFreedom/DegreeOfFreedomTypes.h
-        PartialDifferentialEquations/PartialDifferentialEquation.cpp
+        MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp
         Utility/EnumerablesTranformations.h
         Discretization/Mesh/Mesh1D.h
         Discretization/Mesh/Mesh1D.cpp 
@@ -73,8 +75,8 @@ add_executable(untitled main.cpp
         Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.h
         Analysis/AnalysisDOFs/AnalysisDegreesOfFreedom.cpp
         Analysis/NumericalAnalysis.h Analysis/NumericalAnalysis.cpp
-        MathematicalProblem/MathematicalProblem.h
-        MathematicalProblem/MathematicalProblem.cpp
+        MathematicalEntities/MathematicalProblem/MathematicalProblem.h
+        MathematicalEntities/MathematicalProblem/MathematicalProblem.cpp
         Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.h 
         Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.cpp
         Analysis/FiniteDifferenceAnalysis/StStFDTest.h
@@ -105,8 +107,8 @@ add_executable(untitled main.cpp
         LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.h
         LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.cpp
         LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp
-        LinearAlgebra/FiniteDifferences/FDWeightCalculator.h 
-        PartialDifferentialEquations/SpaceFieldProperties.h 
+        LinearAlgebra/FiniteDifferences/FDWeightCalculator.h
+        MathematicalEntities/PartialDifferentialEquations/SpaceFieldProperties.h 
         StructuredMeshGeneration/DomainBoundaryFactory.h
         StructuredMeshGeneration/DomainBoundaryFactory.cpp
         LinearAlgebra/AnalysisLinearSystemInitializer2.h 

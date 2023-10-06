@@ -24,9 +24,9 @@ namespace StructuredMeshGenerator{
         
         auto start = chrono::steady_clock::now();
         
-        auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(2, false, LocallyAnisotropic);
-        
-        pdeProperties->setLocallyAnisotropicProperties(pdePropertiesFromMetrics);
+        auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(2);
+
+        pdeProperties->setLocallyAnisotropicSpatialProperties(pdePropertiesFromMetrics);
 
         auto pde = make_shared<PartialDifferentialEquation>(pdeProperties, Laplace);
         

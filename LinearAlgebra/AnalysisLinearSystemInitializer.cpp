@@ -67,7 +67,7 @@ namespace LinearAlgebra {
             _matrix->setElement(thisDOFPosition, thisDOFPosition, zeroOrderCoefficient);
 
             //add source term
-            _rhsVector->at(thisDOFPosition) += *_mathematicalProblem->pde->properties->getLocalProperties(
+            _rhsVector->at(thisDOFPosition) += *_mathematicalProblem->pde->properties->getLocalSpatialProperties(
                     dof->parentNode()).sourceTerm;
 
             //March through all the non-zero derivative orders 
@@ -247,7 +247,7 @@ namespace LinearAlgebra {
     double AnalysisLinearSystemInitializer::_getPDECoefficient(unsigned short derivativeOrder, Node *parentNode,
                                                                Direction direction) {
         auto directionIndex = spatialDirectionToUnsigned[direction];
-        auto properties = _mathematicalProblem->pde->properties->getLocalProperties(*parentNode->id.global);
+        auto properties = _mathematicalProblem->pde->properties->getLocalSpatialProperties(*parentNode->id.global);
         switch (derivativeOrder) {
             case 0:
                 return *properties.zerothOrderCoefficient;

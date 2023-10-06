@@ -9,14 +9,15 @@
 #include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 #include "NodeFactory.h"
 #include "DomainBoundaryFactory.h"
-#include "../PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
+#include "../MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
+#include "../MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.h"
 #include "../Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.h"
 #include "../LinearAlgebra/Solvers/Direct/SolverLUP.h"
 #include "../LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.h"
 #include "../LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.h"
 
 
-using namespace PartialDifferentialEquations;
+using namespace MathematicalEntities;
 namespace StructuredMeshGenerator {
     
     class MeshFactory {

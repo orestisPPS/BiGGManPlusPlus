@@ -3,7 +3,7 @@
 //
 
 #include "SteadyStateMathematicalProblem.h"
-namespace MathematicalProblems {
+namespace MathematicalEntities {
 
     SteadyStateMathematicalProblem::SteadyStateMathematicalProblem(
             shared_ptr<PartialDifferentialEquation>pde, shared_ptr<DomainBoundaryConditions>bcs, struct Field_DOFType *degreesOfFreedom) :

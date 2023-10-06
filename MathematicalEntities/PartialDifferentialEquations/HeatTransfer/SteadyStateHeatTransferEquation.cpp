@@ -4,7 +4,7 @@
 
 #include "EnergyTransferEquation.h"
 
-namespace PartialDifferentialEquations {
+namespace MathematicalEntities {
 /*    EnergyTransferEquation::EnergyTransferEquation(double *density, double *specialHeatCapacity,
                                                    double *thermalConductivity, shared_ptr<NumericalMatrix<double>>flowVelocity,
                                                    double *reaction) {

@@ -4,10 +4,10 @@
 
 #ifndef UNTITLED_SPACEFIELDPROPERTIES_H
 #define UNTITLED_SPACEFIELDPROPERTIES_H
-#include "../LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
+#include "../../LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 #include "SecondOrderLinearPDEProperties.h"
 
-namespace PartialDifferentialEquations {
+namespace MathematicalEntities {
     
 /*    enum SpaceFieldProperties {
         Scalar,
@@ -16,19 +16,17 @@ namespace PartialDifferentialEquations {
     };*/
 
     struct SpaceFieldProperties {
-        shared_ptr<LinearAlgebra::NumericalMatrix<double>> secondOrderCoefficients;
+        shared_ptr<NumericalMatrix<double>> secondOrderCoefficients;
         shared_ptr<NumericalVector<double>> firstOrderCoefficients;
         shared_ptr<double> zerothOrderCoefficient;
         shared_ptr<double> sourceTerm;
     };
 
     struct TimeFieldProperties {
-        shared_ptr<LinearAlgebra::NumericalMatrix<double>> secondOrderCoefficients;
+        shared_ptr<NumericalMatrix<double>> secondOrderCoefficients;
         shared_ptr<NumericalVector<double>> firstOrderCoefficients;
-        shared_ptr<double> zerothOrderCoefficient;
-        shared_ptr<double> sourceTerm;
     };
     
-} // PartialDifferentialEquations
+} // MathematicalEntities
 
 #endif //UNTITLED_SPACEFIELDPROPERTIES_H

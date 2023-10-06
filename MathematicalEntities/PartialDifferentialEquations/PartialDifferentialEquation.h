@@ -6,9 +6,9 @@
 #define UNTITLED_DIFFERENTIALEQUATION_H
 
 #include "SecondOrderLinearPDEProperties.h"
-using namespace PartialDifferentialEquations;
+using namespace MathematicalEntities;
 
-namespace PartialDifferentialEquations {
+namespace MathematicalEntities {
 
     enum PDEType{
         GeneralizedSecondOrderLinear,
@@ -31,6 +31,6 @@ namespace PartialDifferentialEquations {
         PDEType _type;
     };
 
-} // PartialDifferentialEquations
+} // MathematicalEntities
 
 #endif //UNTITLED_DIFFERENTIALEQUATION_H

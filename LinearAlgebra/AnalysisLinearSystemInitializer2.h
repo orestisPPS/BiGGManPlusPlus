@@ -13,7 +13,7 @@
 #include "../Discretization/Mesh/Mesh.h"
 #include "../MathematicalProblem/MathematicalProblem.h"
 #include "../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
-using namespace MathematicalProblems;
+using namespace MathematicalEntities;
 
 using namespace NumericalAnalysis;
 

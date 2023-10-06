@@ -5,7 +5,7 @@
 #ifndef UNTITLED_ANALYSISDEGREESOFFREEDOM_H
 #define UNTITLED_ANALYSISDEGREESOFFREEDOM_H
 #include <tuple>
-#include "../../MathematicalProblem/SteadyStateMathematicalProblem.h"
+#include "../../MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.h"
 #include "../../DegreesOfFreedom/DegreeOfFreedom.h"
 #include "DOFInitializer.h"
 

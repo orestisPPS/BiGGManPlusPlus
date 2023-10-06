@@ -5,17 +5,17 @@
 #include <exception>
 #include <stdexcept>
 #include "BoundaryCondition.h"
-#include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
+#include "../../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 
 using namespace PositioningInSpace;
 using namespace DegreesOfFreedom;
 using namespace std;
 
 /**
- * @namespace BoundaryConditions
+ * @namespace MathematicalEntities
  * @brief Defines a set of boundary conditions for the domain.
  */
-namespace BoundaryConditions {
+namespace MathematicalEntities {
 
     /**
      * @class DomainBoundaryConditions
@@ -60,6 +60,6 @@ namespace BoundaryConditions {
         shared_ptr<map<Position, shared_ptr<BoundaryCondition>>> _bcAtPosition;  ///< Holds the boundary conditions for each position.
     };
 
-} // BoundaryConditions
+} // MathematicalEntities
 
 #endif //UNTITLED_DOMAINBOUNDARYCONDITIONS_H
