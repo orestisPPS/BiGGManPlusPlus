@@ -9,7 +9,7 @@
 #include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 #include "NodeFactory.h"
 #include "DomainBoundaryFactory.h"
-#include "../MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.h"
+#include "../MathematicalEntities/PartialDifferentialEquations/PDEProperties/SecondOrderLinearPDEProperties.h"
 #include "../MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.h"
 #include "../Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.h"
 #include "../LinearAlgebra/Solvers/Direct/SolverLUP.h"
@@ -26,7 +26,7 @@ namespace StructuredMeshGenerator {
         
         shared_ptr<Mesh> mesh;
 
-        shared_ptr<map<unsigned, SpaceFieldProperties>> pdePropertiesFromMetrics;
+        shared_ptr<map<unsigned, SpatialPDEProperties>> pdePropertiesFromMetrics;
         
         void buildMesh(unsigned short schemeOrder, shared_ptr<DomainBoundaryConditions>) const;
         

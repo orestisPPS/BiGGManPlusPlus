@@ -4,8 +4,6 @@
 
 #include "FiniteDifferenceAnalysis.h"
 
-#include <utility>
-
 namespace NumericalAnalysis {
     
     FiniteDifferenceAnalysis::FiniteDifferenceAnalysis(shared_ptr<MathematicalProblem>problem,

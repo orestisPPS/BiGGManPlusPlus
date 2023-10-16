@@ -25,8 +25,8 @@ add_executable(untitled main.cpp
         Discretization/Id/DiscreteEntityId.h
         MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.cpp
         MathematicalEntities/PartialDifferentialEquations/PartialDifferentialEquation.h
-        MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.cpp
-        MathematicalEntities/PartialDifferentialEquations/SecondOrderLinearPDEProperties.h
+        MathematicalEntities/PartialDifferentialEquations/PDEProperties/SecondOrderLinearPDEProperties.cpp
+        MathematicalEntities/PartialDifferentialEquations/PDEProperties/SecondOrderLinearPDEProperties.h
         MathematicalEntities/PartialDifferentialEquations/HeatTransfer/SteadyStateHeatTransferEquation.cpp
         MathematicalEntities/PartialDifferentialEquations/HeatTransfer/EnergyTransferEquation.h
         MathematicalEntities/MathematicalProblem/SteadyStateMathematicalProblem.cpp
@@ -108,7 +108,7 @@ add_executable(untitled main.cpp
         LinearAlgebra/Array/DecompositionMethods/DecompositionLUP.cpp
         LinearAlgebra/Array/DecompositionMethods/MatrixDecomposition.cpp
         LinearAlgebra/FiniteDifferences/FDWeightCalculator.h
-        MathematicalEntities/PartialDifferentialEquations/SpaceFieldProperties.h 
+        MathematicalEntities/PartialDifferentialEquations/SpatialPDEProperties.h 
         StructuredMeshGeneration/DomainBoundaryFactory.h
         StructuredMeshGeneration/DomainBoundaryFactory.cpp
         LinearAlgebra/AnalysisLinearSystemInitializer2.h 
@@ -172,6 +172,23 @@ add_executable(untitled main.cpp
         Tests/AnalysisTests/SteadyState2DTest.h
         Tests/IterativeSolversTest.h
         Tests/MeshGenerator.h
+        MathematicalEntities/InitialConditions/InitialConditions.cpp
+        MathematicalEntities/InitialConditions/InitialConditions.h
+        MathematicalEntities/InitialConditions/InitialConditions.h
+        MathematicalEntities/InitialConditions/InitialConditions.h
+        Analysis/FiniteDifferenceAnalysis/TransientFiniteDifferenceAnalysis.cpp
+        Analysis/FiniteDifferenceAnalysis/TransientFiniteDifferenceAnalysis.h
+        LinearAlgebra/NumericalIntegrators/NumericalIntegrator.cpp
+        LinearAlgebra/NumericalIntegrators/NumericalIntegrator.h
+        LinearAlgebra/NumericalIntegrators/NumericalIntegrator.h
+        MathematicalEntities/PartialDifferentialEquations/PDEProperties/TransientPDEProperties.cpp
+        MathematicalEntities/PartialDifferentialEquations/PDEProperties/TransientPDEProperties.h
+        MathematicalEntities/PartialDifferentialEquations/PDEProperties/SteadyStatePDEProperties.cpp
+        MathematicalEntities/PartialDifferentialEquations/PDEProperties/SteadyStatePDEProperties.h
+        MathematicalEntities/PartialDifferentialEquations/SteadyStatePartialDifferentialEquation.cpp
+        MathematicalEntities/PartialDifferentialEquations/SteadyStatePartialDifferentialEquation.h
+        MathematicalEntities/PartialDifferentialEquations/TransientPartialDifferentialEquation.cpp
+        MathematicalEntities/PartialDifferentialEquations/TransientPartialDifferentialEquation.h
 )
 
 

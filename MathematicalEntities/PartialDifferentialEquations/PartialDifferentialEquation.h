@@ -5,7 +5,7 @@
 #ifndef UNTITLED_DIFFERENTIALEQUATION_H
 #define UNTITLED_DIFFERENTIALEQUATION_H
 
-#include "SecondOrderLinearPDEProperties.h"
+#include "PDEProperties/SecondOrderLinearPDEProperties.h"
 using namespace MathematicalEntities;
 
 namespace MathematicalEntities {
@@ -25,10 +25,14 @@ namespace MathematicalEntities {
     public:
         PartialDifferentialEquation(shared_ptr<SecondOrderLinearPDEProperties> properties, PDEType type);
         shared_ptr<SecondOrderLinearPDEProperties> properties;
-        PDEType Type();
+        unsigned short maxSpatialDerivativeOrder;
+        unsigned short maxTimeDerivativeOrder;
+        PDEType type();
+
         
     private:
         PDEType _type;
+
     };
 
 } // MathematicalEntities

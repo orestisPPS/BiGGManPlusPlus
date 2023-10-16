@@ -1,42 +1,26 @@
 //
 // Created by hal9000 on 12/17/22.
 //
-#pragma once
+
+#ifndef UNUNTITLED_TRANSIENTMATHEMATICALPROBLEM_H
+#define UNUNTITLED_TRANSIENTMATHEMATICALPROBLEM_H
+
 #include "SteadyStateMathematicalProblem.h"
+#include "../InitialConditions/InitialConditions.h"
 
 namespace MathematicalEntities {
 
-    class TransientMathematicalProblem : public SteadyStateMathematicalProblem{
-        
+    class TransientMathematicalProblem : public MathematicalProblem{
     public:
-
         TransientMathematicalProblem(shared_ptr<PartialDifferentialEquation> pde,
                                      shared_ptr<DomainBoundaryConditions> bcs,
-                                     double initialConditionOrderZero,
-                                     struct Field_DOFType *degreesOfFreedom);
-
-        TransientMathematicalProblem(shared_ptr<PartialDifferentialEquation> pde,
-                                     shared_ptr<DomainBoundaryConditions> bcs,
-                                     double initialConditionOrderZero, double initialConditionOrderOne,
-                                     struct Field_DOFType *degreesOfFreedom);
+                                     unique_ptr<InitialConditions> initialConditions,
+                                     struct Field_DOFType *degreesOfFreedom
+        );
         
-        
-        TransientMathematicalProblem(shared_ptr<PartialDifferentialEquation> pde,
-                                     shared_ptr<DomainBoundaryConditions> bcs,
-                                     shared_ptr<map<unsigned, double>> domainInitialConditionsOrderZero,
-                                     struct Field_DOFType *degreesOfFreedom);
-
-        TransientMathematicalProblem(shared_ptr<PartialDifferentialEquation> pde,
-                                     shared_ptr<DomainBoundaryConditions> bcs,
-                                     shared_ptr<map<unsigned, double>> domainInitialConditionsOrderZero,
-                                        shared_ptr<map<unsigned, double>> domainInitialConditionsOrderOne,
-                                     struct Field_DOFType *degreesOfFreedom);
-        
-        
-        double _initialConditionOrderZero;
-        double _initialConditionOrderOne;
-        shared_ptr<map<unsigned, double>> _domainInitialConditionsOrderZero;
-        shared_ptr<map<unsigned, double>> _domainInitialConditionsOrderOne;
+        unique_ptr<InitialConditions> _initialConditions;
     };
 
 };
+
+#endif //UNUNTITLED_TRANSIENTMATHEMATICALPROBLEM_H

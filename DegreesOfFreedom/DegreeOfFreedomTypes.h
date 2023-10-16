@@ -33,6 +33,7 @@ namespace DegreesOfFreedom {
         UnknownVectorFieldVariableComponent3,
     };
     
+
     struct Field_DOFType{
         public:
             std::vector<DOFType*>* DegreesOfFreedom;

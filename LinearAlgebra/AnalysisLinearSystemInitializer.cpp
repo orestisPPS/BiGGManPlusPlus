@@ -110,21 +110,17 @@ namespace LinearAlgebra {
                                     double ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
                                     ijElement += weight2;
                                     _matrix->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
-/*                                    (*_matrix)(thisDOFPosition, neighbourDOFPosition) = 
-                                            (*_matrix)(thisDOFPosition, neighbourDOFPosition) + weight2;*/
                                 }
                                 else if (neighbourDOF->constraintType() == Fixed) {
                                     auto dirichletContribution = neighbourDOF->value() * weight2;
-                                    _rhsVector->at(thisDOFPosition) = _rhsVector->at(thisDOFPosition) - dirichletContribution;
+                                    _rhsVector->at(thisDOFPosition) -=  dirichletContribution;
                                 }
                             }
                         }
                     }
             }
         }
-        addNeumannBoundaryConditions();
-        //_matrix->printFullMatrix();
-        //_rhsVector->printVertically("RHS");
+        addNeumannBoundaryConditions();;
         _matrix->dataStorage->finalizeElementAssignment();
         this->linearSystem = make_shared<LinearSystem>(std::move(_matrix), std::move(_rhsVector));
 
@@ -247,7 +243,7 @@ namespace LinearAlgebra {
     double AnalysisLinearSystemInitializer::_getPDECoefficient(unsigned short derivativeOrder, Node *parentNode,
                                                                Direction direction) {
         auto directionIndex = spatialDirectionToUnsigned[direction];
-        auto properties = _mathematicalProblem->pde->properties->getLocalSpatialProperties(*parentNode->id.global);
+        auto properties = _mathematicalProblem->pde->properties->getLocalSpatialProperties(parentNode->id.global);
         switch (derivativeOrder) {
             case 0:
                 return *properties.zerothOrderCoefficient;

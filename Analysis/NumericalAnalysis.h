@@ -5,10 +5,8 @@
 #ifndef UNTITLED_ANALYSIS_H
 #define UNTITLED_ANALYSIS_H
 
-#include "../LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h"
 #include "../MathematicalEntities/MathematicalProblem/MathematicalProblem.h"
 #include "../LinearAlgebra/AnalysisLinearSystemInitializer.h"
-#include "AnalysisDOFs/AnalysisDegreesOfFreedom.h"
 #include "../LinearAlgebra/Solvers/Solver.h"
 #include "../Utility/Exporters/Exporters.h"
 
@@ -20,7 +18,7 @@ using namespace MathematicalEntities;
 
 namespace NumericalAnalysis {
 
-    class NumericalAnalysis {
+    class  NumericalAnalysis {
         public:
         NumericalAnalysis(shared_ptr<MathematicalProblem> mathematicalProblem, shared_ptr<Mesh> mesh,
                           shared_ptr<Solver> solver, CoordinateType coordinateSystem = Natural);
@@ -36,13 +34,14 @@ namespace NumericalAnalysis {
         
         shared_ptr<Solver> solver;
 
-        void solve() const;
+        virtual void solve() const;
         
         void applySolutionToDegreesOfFreedom() const;
         
         NumericalVector<double> getSolutionAtNode(NumericalVector<double>& nodeCoordinates, double tolerance = 1E-4) const;
         
     protected:
+        unique_ptr<AnalysisLinearSystemInitializer> _linearSystemInitializer;
 
         shared_ptr<AnalysisDegreesOfFreedom> initiateDegreesOfFreedom() const;
     };

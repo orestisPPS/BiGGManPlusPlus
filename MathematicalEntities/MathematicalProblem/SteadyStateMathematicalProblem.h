@@ -1,7 +1,8 @@
 //
 // Created by hal9000 on 12/17/22.
 //
-#pragma once
+#ifndef UNUNTITLED_STEADYSTATEMATHEMATICALPROBLEM_H
+#define UNUNTITLED_STEADYSTATEMATHEMATICALPROBLEM_H
 #include "MathematicalProblem.h"
 
 namespace MathematicalEntities{
@@ -9,12 +10,9 @@ namespace MathematicalEntities{
     public:
         SteadyStateMathematicalProblem(shared_ptr<PartialDifferentialEquation> pde,
                                        shared_ptr<DomainBoundaryConditions> bcs,
-                                       struct Field_DOFType* degreesOfFreedom) ;
-
-        shared_ptr<PartialDifferentialEquation> pde;
-        shared_ptr<DomainBoundaryConditions> boundaryConditions;
-        Field_DOFType *degreesOfFreedom;
+                                       struct Field_DOFType* degreesOfFreedom);
     };
     
 }
 
+#endif //UNUNTITLED_STEADYSTATEMATHEMATICALPROBLEM_H

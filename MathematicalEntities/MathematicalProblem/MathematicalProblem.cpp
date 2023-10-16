@@ -3,8 +3,6 @@
 //
 
 #include "MathematicalProblem.h"
-
-#include <utility>
 using namespace MathematicalEntities;
 
 namespace MathematicalEntities {

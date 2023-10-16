@@ -11,7 +11,7 @@ namespace MathematicalEntities {
         PartialDifferentialEquation::PartialDifferentialEquation(shared_ptr<SecondOrderLinearPDEProperties> properties, PDEType type) :
         properties(std::move(properties)), _type(type) { }
         
-        PDEType PartialDifferentialEquation::Type() {
+        PDEType PartialDifferentialEquation::type() {
             return _type;
         }
 } // MathematicalEntities

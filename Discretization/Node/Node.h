@@ -23,7 +23,7 @@ namespace Discretization
         //= operator
         Node& operator=(const Node& other);
         
-        Discretization::DiscreteEntityId id;
+        DiscreteEntityId id;
                 
         NodalCoordinates coordinates;
         

@@ -197,16 +197,16 @@ namespace StructuredMeshGenerator{
     }
 
     void MeshFactory::_calculatePDEPropertiesFromMetrics() {
-        pdePropertiesFromMetrics = make_shared<map<unsigned, SpaceFieldProperties>>();
+        pdePropertiesFromMetrics = make_shared<map<unsigned, SpatialPDEProperties>>();
         for (auto &node : *mesh->totalNodesVector) {
-            auto nodeFieldProperties = SpaceFieldProperties();
+            auto nodeFieldProperties = SpatialPDEProperties();
             nodeFieldProperties.secondOrderCoefficients = mesh->metrics->at(*node->id.global)->contravariantTensor;
             auto firstDerivativeCoefficients = NumericalVector<double>{0, 0, 0};
             nodeFieldProperties.firstOrderCoefficients = make_shared<NumericalVector<double>>(
                                                          std::move(firstDerivativeCoefficients));
             nodeFieldProperties.zerothOrderCoefficient = make_shared<double>(0);
             nodeFieldProperties.sourceTerm = make_shared<double>(0);
-            pdePropertiesFromMetrics->insert(pair<unsigned, SpaceFieldProperties>(*node->id.global, nodeFieldProperties));
+            pdePropertiesFromMetrics->insert(pair<unsigned, SpatialPDEProperties>(*node->id.global, nodeFieldProperties));
         }
     }
 

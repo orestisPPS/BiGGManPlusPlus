@@ -16,8 +16,8 @@ namespace NumericalAnalysis {
     }
     
     shared_ptr<AnalysisDegreesOfFreedom> NumericalAnalysis::initiateDegreesOfFreedom() const {
-        return make_shared<AnalysisDegreesOfFreedom>(
-                mesh, mathematicalProblem->boundaryConditions,mathematicalProblem->degreesOfFreedom);
+        return make_shared<AnalysisDegreesOfFreedom>(mesh, mathematicalProblem->boundaryConditions,
+                                                     mathematicalProblem->degreesOfFreedom);
     }
     
     void NumericalAnalysis::solve() const {
