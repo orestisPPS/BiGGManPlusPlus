@@ -23,16 +23,13 @@ namespace MathematicalEntities {
     
     class PartialDifferentialEquation {
     public:
-        PartialDifferentialEquation(shared_ptr<SecondOrderLinearPDEProperties> properties, PDEType type);
+        explicit PartialDifferentialEquation(shared_ptr<SecondOrderLinearPDEProperties> properties, PDEType type);
         shared_ptr<SecondOrderLinearPDEProperties> properties;
-        unsigned short maxSpatialDerivativeOrder;
-        unsigned short maxTimeDerivativeOrder;
         PDEType type();
 
-        
-    private:
-        PDEType _type;
 
+    protected:
+        PDEType _type;
     };
 
 } // MathematicalEntities

@@ -148,7 +148,7 @@ namespace Discretization {
     }
 
     void Mesh::calculateMeshMetrics(CoordinateType coordinateSystem, bool isUniformMesh) {
-        metrics = make_shared<map<unsigned, shared_ptr<Metrics>>>();
+        metrics = make_shared<map<Node*, shared_ptr<Metrics>>>();
 
         if (isUniformMesh) {
             _uniformlySpacedMetrics(coordinateSystem, getBoundaryNodesVector(), true);
@@ -372,7 +372,7 @@ namespace Discretization {
             }
             nodeMetrics->calculateCovariantTensor();
             nodeMetrics->calculateContravariantTensor();
-            metrics->insert(pair<unsigned, shared_ptr<Metrics> >(*node->id.global, nodeMetrics));
+            metrics->insert(pair<Node*, shared_ptr<Metrics> >(node, nodeMetrics));
         }
     }
     

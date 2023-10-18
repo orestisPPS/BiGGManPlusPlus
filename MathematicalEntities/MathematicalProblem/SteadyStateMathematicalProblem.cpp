@@ -7,8 +7,8 @@
 namespace MathematicalEntities {
 
     SteadyStateMathematicalProblem::SteadyStateMathematicalProblem(
-            shared_ptr<PartialDifferentialEquation>pde, shared_ptr<DomainBoundaryConditions>bcs, struct Field_DOFType *degreesOfFreedom) :
-            MathematicalProblem(std::move(pde), std::move(bcs), degreesOfFreedom) {
+            shared_ptr<SteadyStatePartialDifferentialEquation> pde, shared_ptr<DomainBoundaryConditions> bcs, struct Field_DOFType *degreesOfFreedom) :
+            MathematicalProblem(pde, std::move(bcs), degreesOfFreedom), steadyStatePDE(std::move(pde)) {
         
     }
 }

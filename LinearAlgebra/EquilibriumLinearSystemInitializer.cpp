@@ -2,20 +2,20 @@
 // Created by hal9 000 on 3/28/23.
 //
 
-#ifndef UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
-#include "AnalysisLinearSystemInitializer.h"
+#ifndef UNTITLED_EQUILIBRIUMLINEARSYSTEMINITIALIZER_H
+#include "EquilibriumLinearSystemInitializer.h"
 
 #include <memory>
 #include <utility>
 
 namespace LinearAlgebra {
     
-    AnalysisLinearSystemInitializer::
-    AnalysisLinearSystemInitializer(shared_ptr<AnalysisDegreesOfFreedom> analysisDegreesOfFreedom,
-                                    const shared_ptr<Mesh> &mesh,
-                                    shared_ptr<MathematicalProblem> problem,
-                                    shared_ptr<FDSchemeSpecs> specs,
-                                    CoordinateType coordinateType) :
+    EquilibriumLinearSystemInitializer::
+    EquilibriumLinearSystemInitializer(shared_ptr<AnalysisDegreesOfFreedom> analysisDegreesOfFreedom,
+                                       const shared_ptr<Mesh> &mesh,
+                                       shared_ptr<SteadyStateMathematicalProblem> problem,
+                                       shared_ptr<FDSchemeSpecs> specs,
+                                       CoordinateType coordinateType) :
                                     linearSystem(nullptr),
                                     _analysisDegreesOfFreedom(std::move(analysisDegreesOfFreedom)),
                                     _mesh(mesh),
@@ -28,7 +28,7 @@ namespace LinearAlgebra {
     }
     
 
-    void AnalysisLinearSystemInitializer::createLinearSystem() {
+    void EquilibriumLinearSystemInitializer::createLinearSystem() {
         auto start = std::chrono::steady_clock::now(); // Start the timer
 
         auto directions = _mesh->directions();
@@ -62,13 +62,12 @@ namespace LinearAlgebra {
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
 
             //Derivative order 0
-            auto zeroOrderCoefficient = _getPDECoefficient(0, node);
+            auto zeroOrderCoefficient = _mathematicalProblem->steadyStatePDE->spatialProperties->getIndependentVariableTermCoefficient(node->id.global);
             //Define the position of the dof in the NumericalMatrix
             _matrix->setElement(thisDOFPosition, thisDOFPosition, zeroOrderCoefficient);
 
             //add source term
-            _rhsVector->at(thisDOFPosition) += *_mathematicalProblem->pde->properties->getLocalSpatialProperties(
-                    dof->parentNode()).sourceTerm;
+            _rhsVector->at(thisDOFPosition) += _mathematicalProblem->steadyStatePDE->spatialProperties->getIndependentVariableTermCoefficient(node->id.global);
 
             //March through all the non-zero derivative orders 
             for (auto derivativeOrder = 1; derivativeOrder <= maxDerivativeOrder; derivativeOrder++) {
@@ -77,7 +76,7 @@ namespace LinearAlgebra {
                 for (auto &directionI: directions) {
                     unsigned indexDirectionI = spatialDirectionToUnsigned[directionI];
                     
-                    double iThDerivativePDECoefficient = _getPDECoefficient(derivativeOrder, node, directionI);
+                    double iThDerivativePDECoefficient = _mathematicalProblem->steadyStatePDE->spatialProperties->getDependentVariableTermCoefficient(derivativeOrder, node->id.global, directionI);
                     if (iThDerivativePDECoefficient != 0) {
                         
                         //Check if the available positions are qualified for the current derivative order
@@ -100,28 +99,32 @@ namespace LinearAlgebra {
                         auto weights = calculateWeightsOfDerivativeOrder(*colinearCoordinates[directionI]->getVectorSharedPtr(),
                                                                          derivativeOrder, taylorPoint);
 
-                            //NumericalVector<double> &schemeWeights = scheme.weights;
-                            for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
-                                auto neighbourDOF = colinearDOF[iDof];
-                                //auto weight = schemeWeights[iDof] * iThDerivativePDECoefficient / denominator;
-                                auto weight2 = weights[iDof] * iThDerivativePDECoefficient;
-                                if (neighbourDOF->constraintType() == Free) {
-                                    auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOF[iDof]);
-                                    double ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
-                                    ijElement += weight2;
-                                    _matrix->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
-                                }
-                                else if (neighbourDOF->constraintType() == Fixed) {
-                                    auto dirichletContribution = neighbourDOF->value() * weight2;
-                                    _rhsVector->at(thisDOFPosition) -=  dirichletContribution;
-                                }
+                        //NumericalVector<double> &schemeWeights = scheme.weights;
+                        for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
+                            auto neighbourDOF = colinearDOF[iDof];
+                            //auto weight = schemeWeights[iDof] * iThDerivativePDECoefficient / denominator;
+                            auto weight2 = weights[iDof] * iThDerivativePDECoefficient;
+                            if (neighbourDOF->constraintType() == Free) {
+                                auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOF[iDof]);
+                                double ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
+                                ijElement += weight2;
+                                _matrix->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
+                            }
+                            else if (neighbourDOF->constraintType() == Fixed) {
+                                auto dirichletContribution = neighbourDOF->value() * weight2;
+                                _rhsVector->at(thisDOFPosition) -=  dirichletContribution;
                             }
                         }
                     }
+                }
             }
         }
         addNeumannBoundaryConditions();;
         _matrix->dataStorage->finalizeElementAssignment();
+        cout << "Matrix Assembled" << endl;
+        _matrix->printFullMatrix();
+        cout << "RHS Assembled" << endl;
+        _rhsVector->printHorizontally();
         this->linearSystem = make_shared<LinearSystem>(std::move(_matrix), std::move(_rhsVector));
 
 
@@ -131,7 +134,7 @@ namespace LinearAlgebra {
     }
 
     //TODO : Fix as above
-    void AnalysisLinearSystemInitializer::addNeumannBoundaryConditions() {
+    void EquilibriumLinearSystemInitializer::addNeumannBoundaryConditions() {
         auto start = std::chrono::steady_clock::now(); // Start the timer
         auto schemeSpecs = make_shared<FDSchemeSpecs>(2, _mesh->directions());
         auto directions = _mesh->directions();
@@ -195,7 +198,7 @@ namespace LinearAlgebra {
         }
     }
 
-    map<short unsigned, map<Direction, map<vector<Position>, short>>> AnalysisLinearSystemInitializer::
+    map<short unsigned, map<Direction, map<vector<Position>, short>>> EquilibriumLinearSystemInitializer::
     _initiatePositionsAndPointsMap(short unsigned &maxDerivativeOrder, vector<Direction> &directions) {
         map<short unsigned, map<Direction, map<vector<Position>, short>>> positionsAndPoints;
         for (short unsigned derivativeOrder = 1; derivativeOrder <= maxDerivativeOrder; derivativeOrder++) {
@@ -209,7 +212,7 @@ namespace LinearAlgebra {
         return positionsAndPoints;
     }
 
-    tuple<vector<Position>,short> AnalysisLinearSystemInitializer::
+    tuple<vector<Position>,short> EquilibriumLinearSystemInitializer::
     _getQualifiedFromAvailable(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
                                map<vector<Position>,short>& templatePositionsAndPoints){
         map<vector<Position>,short> qualifiedPositionsAndPoints = map<vector<Position>,short>();
@@ -239,22 +242,7 @@ namespace LinearAlgebra {
             else throw runtime_error("Qualified positions and points not found");
         }
     }
-
-    double AnalysisLinearSystemInitializer::_getPDECoefficient(unsigned short derivativeOrder, Node *parentNode,
-                                                               Direction direction) {
-        auto directionIndex = spatialDirectionToUnsigned[direction];
-        auto properties = _mathematicalProblem->pde->properties->getLocalSpatialProperties(parentNode->id.global);
-        switch (derivativeOrder) {
-            case 0:
-                return *properties.zerothOrderCoefficient;
-            case 1:
-                return properties.firstOrderCoefficients->at(directionIndex);
-            case 2:
-                return properties.secondOrderCoefficients->getElement(directionIndex, directionIndex);
-            default:
-                throw runtime_error("Derivative order should be 0, 1 or 2");
-        }
-    }
+    
 
 }; // LinearAlgebra
 

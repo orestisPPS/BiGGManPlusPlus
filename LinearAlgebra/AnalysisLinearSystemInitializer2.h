@@ -2,7 +2,7 @@
 // Created by hal9000 on 6/2/23.
 //
 
-#ifndef UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
+#ifndef UNTITLED_EQUILIBRIUMLINEARSYSTEMINITIALIZER_H
 #define UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
 
 #include "ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"

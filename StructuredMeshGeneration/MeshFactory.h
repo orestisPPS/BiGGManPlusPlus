@@ -9,12 +9,15 @@
 #include "../PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h"
 #include "NodeFactory.h"
 #include "DomainBoundaryFactory.h"
-#include "../MathematicalEntities/PartialDifferentialEquations/PDEProperties/SecondOrderLinearPDEProperties.h"
+#include "../MathematicalEntities/PartialDifferentialEquations/PDEProperties/SpatialPDEProperties.h"
 #include "../MathematicalEntities/BoundaryConditions/DomainBoundaryConditions.h"
 #include "../Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.h"
 #include "../LinearAlgebra/Solvers/Direct/SolverLUP.h"
 #include "../LinearAlgebra/Solvers/Iterative/StationaryIterative/JacobiSolver.h"
 #include "../LinearAlgebra/Solvers/Iterative/StationaryIterative/GaussSeidelSolver.h"
+#include "../LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h"
+#include "../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
+#include "../LinearAlgebra/ParallelizationMethods.h"
 
 
 using namespace MathematicalEntities;
@@ -26,7 +29,7 @@ namespace StructuredMeshGenerator {
         
         shared_ptr<Mesh> mesh;
 
-        shared_ptr<map<unsigned, SpatialPDEProperties>> pdePropertiesFromMetrics;
+        shared_ptr<map<unsigned*, SpatialVectorFieldPDEProperties>> pdePropertiesFromMetrics;
         
         void buildMesh(unsigned short schemeOrder, shared_ptr<DomainBoundaryConditions>) const;
         

@@ -2,8 +2,8 @@
 // Created by hal9000 on 3/28/23.
 //
 
-#ifndef UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
-#define UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
+#ifndef UNTITLED_EQUILIBRIUMLINEARSYSTEMINITIALIZER_H
+#define UNTITLED_EQUILIBRIUMLINEARSYSTEMINITIALIZER_H
 #include "ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 #include "../Discretization/Node/IsoparametricNodeGraph.h"
 #include "../Utility/Exporters/Exporters.h"
@@ -18,11 +18,11 @@ using namespace NumericalAnalysis;
 
 namespace LinearAlgebra {
 
-    class AnalysisLinearSystemInitializer{
+    class EquilibriumLinearSystemInitializer{
 
     public:
-        explicit AnalysisLinearSystemInitializer(shared_ptr<AnalysisDegreesOfFreedom> analysisDegreesOfFreedom, const shared_ptr<Mesh> &mesh,
-                                                 shared_ptr<MathematicalProblem> mathematicalProblem, shared_ptr<FDSchemeSpecs> specs, CoordinateType = Natural);
+        explicit EquilibriumLinearSystemInitializer(shared_ptr<AnalysisDegreesOfFreedom> analysisDegreesOfFreedom, const shared_ptr<Mesh> &mesh,
+                                                    shared_ptr<SteadyStateMathematicalProblem> mathematicalProblem, shared_ptr<FDSchemeSpecs> specs, CoordinateType = Natural);
         
         shared_ptr<LinearSystem> linearSystem;
         
@@ -34,7 +34,7 @@ namespace LinearAlgebra {
 
     private:
 
-        shared_ptr<MathematicalProblem> _mathematicalProblem;
+        shared_ptr<SteadyStateMathematicalProblem> _mathematicalProblem;
 
         shared_ptr<FDSchemeSpecs> _specs;
         
@@ -56,9 +56,8 @@ namespace LinearAlgebra {
         static tuple<vector<Position>,short> _getQualifiedFromAvailable(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
                                                                       map<vector<Position>,short>& templatePositionsAndPoints);
         
-        double _getPDECoefficient(unsigned short derivativeOrder, Node* parentNode, Direction direction = None);
     };
 
 } // LinearAlgebra
 
-#endif //UNTITLED_ANALYSISLINEARSYSTEMINITIALIZER_H
+#endif //UNTITLED_EQUILIBRIUMLINEARSYSTEMINITIALIZER_H

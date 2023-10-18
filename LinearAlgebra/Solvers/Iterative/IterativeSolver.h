@@ -7,7 +7,7 @@
 
 #include <thread>
 #include "../Solver.h"
-#include "../../AnalysisLinearSystemInitializer.h"
+#include "../../EquilibriumLinearSystemInitializer.h"
 
 using LinearAlgebra::ParallelizationMethod;
 

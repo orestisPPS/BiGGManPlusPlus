@@ -22,19 +22,19 @@ namespace Discretization{
         // change of coordinates and are expressed by the partial derivative of the natural position vector with respect
         // to the parametric coordinate system. They form the components of the covariant metric tensor, which is used
         // to measure distances and angles in the curved space.
-        shared_ptr<map<Direction, NumericalVector<double>>> covariantBaseVectors;
+        unique_ptr<map<Direction, NumericalVector<double>>> covariantBaseVectors;
 
-        shared_ptr<map<Direction, NumericalVector<double>>> contravariantBaseVectors;
+        unique_ptr<map<Direction, NumericalVector<double>>> contravariantBaseVectors;
         
-        shared_ptr<NumericalMatrix<double>>covariantTensor;
+        unique_ptr<NumericalMatrix<double>>covariantTensor;
 
         void calculateCovariantTensor() const;
 
-        shared_ptr<NumericalMatrix<double>>contravariantTensor;
+        unique_ptr<NumericalMatrix<double>>contravariantTensor;
         
         void calculateContravariantTensor() const;
         
-        shared_ptr<double> jacobian;
+        unique_ptr<double> jacobian;
         
         //TODO: Implement this
         void calculateJacobian();

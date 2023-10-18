@@ -1,3 +1,4 @@
+/*
 //
 // Created by hal9000 on 10/6/23.
 //
@@ -27,15 +28,18 @@ namespace NumericalAnalysis{
     }
     
     void TransientFiniteDifferenceAnalysis::_assembleC() {
-        auto& properties = mathematicalProblem->pde->properties;
+*/
+/*        auto& properties = mathematicalProblem->pde->properties;
         switch (properties->TimePropertiesDistributionType()) {
             case Isotropic:
                 double coefficient = (*properties->getLocalTimeProperties().firstOrderCoefficients)[0];
         }
-        _C = std::move(_linearSystemInitializer->linearSystem->matrix);
+        _C = std::move(_linearSystemInitializer->linearSystem->matrix);*//*
+
     }
     
     void TransientFiniteDifferenceAnalysis::_assembleM() {
+*/
 /*        auto properties = mathematicalProblem->pde->properties;
         switch (properties->TimePropertiesDistributionType()) {
             case Isotropic:
@@ -50,6 +54,15 @@ namespace NumericalAnalysis{
                 break;
             case Anisotropic:
                 throw runtime_error("Anisotropic Time Properties not yet implemented");
-        }*/
+        }*//*
+
     }
-}
+
+    void TransientFiniteDifferenceAnalysis::_assembleEffectiveMatrix() {
+
+    }
+
+    void TransientFiniteDifferenceAnalysis::_assembleEffectiveRHS() {
+
+    }
+}*/

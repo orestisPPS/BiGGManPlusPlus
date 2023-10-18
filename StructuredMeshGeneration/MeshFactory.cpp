@@ -4,10 +4,6 @@
 
 #include "MeshFactory.h"
 
-#include <utility>
-#include "../LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h"
-#include "../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
-#include "../LinearAlgebra/ParallelizationMethods.h"
 
 
 namespace StructuredMeshGenerator{
@@ -24,11 +20,10 @@ namespace StructuredMeshGenerator{
         
         auto start = chrono::steady_clock::now();
         
-        auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(2);
-
+        auto pdeProperties = make_shared<SpatialPDEProperties>(mesh->dimensions(), VectorField);
         pdeProperties->setLocallyAnisotropicSpatialProperties(pdePropertiesFromMetrics);
 
-        auto pde = make_shared<PartialDifferentialEquation>(pdeProperties, Laplace);
+        auto pde = make_shared<SteadyStatePartialDifferentialEquation>(pdeProperties, Laplace);
         
         auto specs = make_shared<FDSchemeSpecs>(schemeOrder, schemeOrder, mesh->directions());
         
@@ -46,12 +41,13 @@ namespace StructuredMeshGenerator{
                 break;
         }
         
-        auto problem = make_shared<SteadyStateMathematicalProblem>(pde, boundaryConditions, dofTypes);
+        auto problem = make_shared<SteadyStateMathematicalProblem>(std::move(pde), std::move(boundaryConditions), dofTypes);
         
         auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2, 1);
         
         auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specs, Template);
-        
+        analysis->linearSystem->matrix->CSVExport("matrix_2d_diffusion.csv", "../Testing/pythonSolver/");
+        analysis->linearSystem->rhs->CSVExport("matrix_2d_diffusion.csv", "../Testing/pythonSolver/");
         analysis->solve();
         
         analysis->applySolutionToDegreesOfFreedom();
@@ -197,16 +193,27 @@ namespace StructuredMeshGenerator{
     }
 
     void MeshFactory::_calculatePDEPropertiesFromMetrics() {
-        pdePropertiesFromMetrics = make_shared<map<unsigned, SpatialPDEProperties>>();
+        pdePropertiesFromMetrics = make_unique<map<unsigned*, SpatialVectorFieldPDEProperties>>();
+        auto size = mesh->dimensions();
         for (auto &node : *mesh->totalNodesVector) {
-            auto nodeFieldProperties = SpatialPDEProperties();
-            nodeFieldProperties.secondOrderCoefficients = mesh->metrics->at(*node->id.global)->contravariantTensor;
-            auto firstDerivativeCoefficients = NumericalVector<double>{0, 0, 0};
-            nodeFieldProperties.firstOrderCoefficients = make_shared<NumericalVector<double>>(
-                                                         std::move(firstDerivativeCoefficients));
-            nodeFieldProperties.zerothOrderCoefficient = make_shared<double>(0);
-            nodeFieldProperties.sourceTerm = make_shared<double>(0);
-            pdePropertiesFromMetrics->insert(pair<unsigned, SpatialPDEProperties>(*node->id.global, nodeFieldProperties));
+            
+            unsigned* id = node->id.global;
+            
+            auto nodeSpatialProperties = SpatialVectorFieldPDEProperties();
+            //Diffusion
+            nodeSpatialProperties.secondOrderCoefficients = std::move(mesh->metrics->at(node)->contravariantTensor);
+            //Convection
+            auto firstDerivativeCoefficients = make_unique<NumericalMatrix<double>>(mesh->dimensions(), mesh->dimensions());
+            for (unsigned i = 0; i < size; ++i) {
+                Direction direction = unsignedToSpatialDirection[i];
+                firstDerivativeCoefficients->setElement(i, i, (mesh->metrics->at(node)->covariantBaseVectors->at(direction))[i]);
+            }
+            nodeSpatialProperties.firstOrderCoefficients = std::move(firstDerivativeCoefficients);
+            //Dependent variable coefficients
+            nodeSpatialProperties.zerothOrderCoefficient = std::move(make_unique<NumericalVector<double>>(mesh->dimensions()));
+            nodeSpatialProperties.sourceTerm = std::move(make_unique<double>(0));
+
+            pdePropertiesFromMetrics->emplace(id, std::move(nodeSpatialProperties));
         }
     }
 

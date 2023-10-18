@@ -43,7 +43,7 @@ namespace Discretization {
         
         shared_ptr<MeshSpecs> specs;
         
-        shared_ptr<map<unsigned, shared_ptr<Metrics>>> metrics;
+        shared_ptr<map<Node*, shared_ptr<Metrics>>> metrics;
         
         //---------------Implemented parent class methods--------------
         

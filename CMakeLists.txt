@@ -82,8 +82,8 @@ add_executable(untitled main.cpp
         Analysis/FiniteDifferenceAnalysis/StStFDTest.h
         Analysis/FiniteDifferenceAnalysis/StStFDTest.cpp
         DegreesOfFreedom/DegreesOfFreedomCategorization.h
-        LinearAlgebra/AnalysisLinearSystemInitializer.h
-        LinearAlgebra/AnalysisLinearSystemInitializer.cpp
+        LinearAlgebra/EquilibriumLinearSystemInitializer.h
+        LinearAlgebra/EquilibriumLinearSystemInitializer.cpp
         Discretization/Node/IsoparametricNodeGraph.h
         Discretization/Node/IsoparametricNodeGraph.cpp
         Utility/Exporters/Exporters.h Utility/Exporters/Exporters.cpp
@@ -183,8 +183,8 @@ add_executable(untitled main.cpp
         LinearAlgebra/NumericalIntegrators/NumericalIntegrator.h
         MathematicalEntities/PartialDifferentialEquations/PDEProperties/TransientPDEProperties.cpp
         MathematicalEntities/PartialDifferentialEquations/PDEProperties/TransientPDEProperties.h
-        MathematicalEntities/PartialDifferentialEquations/PDEProperties/SteadyStatePDEProperties.cpp
-        MathematicalEntities/PartialDifferentialEquations/PDEProperties/SteadyStatePDEProperties.h
+        MathematicalEntities/PartialDifferentialEquations/PDEProperties/SpatialPDEProperties.cpp
+        MathematicalEntities/PartialDifferentialEquations/PDEProperties/SpatialPDEProperties.h
         MathematicalEntities/PartialDifferentialEquations/SteadyStatePartialDifferentialEquation.cpp
         MathematicalEntities/PartialDifferentialEquations/SteadyStatePartialDifferentialEquation.h
         MathematicalEntities/PartialDifferentialEquations/TransientPartialDifferentialEquation.cpp

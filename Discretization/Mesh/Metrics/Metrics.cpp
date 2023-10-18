@@ -9,10 +9,10 @@ namespace Discretization{
     
         Metrics::Metrics(Node* node, unsigned dimensions) {
             this->node = node;
-            covariantBaseVectors = make_shared<map<Direction, NumericalVector<double>>>();
-            contravariantBaseVectors = make_shared<map<Direction, NumericalVector<double>>>();
-            covariantTensor = make_shared<NumericalMatrix<double>>(dimensions, dimensions);
-            contravariantTensor = make_shared<NumericalMatrix<double>>(dimensions, dimensions);
+            covariantBaseVectors = make_unique<map<Direction, NumericalVector<double>>>();
+            contravariantBaseVectors = make_unique<map<Direction, NumericalVector<double>>>();
+            covariantTensor = make_unique<NumericalMatrix<double>>(dimensions, dimensions);
+            contravariantTensor = make_unique<NumericalMatrix<double>>(dimensions, dimensions);
 
 /*            switch (dimensions) {
                 case 1:
@@ -39,9 +39,9 @@ namespace Discretization{
                     throw runtime_error("Invalid number of dimensions! You are getting into Einsteins field->");
             }*/
 
-            covariantTensor = make_shared<NumericalMatrix<double>>(dimensions, dimensions);
-            contravariantTensor = make_shared<NumericalMatrix<double>>(dimensions, dimensions);
-            jacobian = make_shared<double>();
+            covariantTensor = make_unique<NumericalMatrix<double>>(dimensions, dimensions);
+            contravariantTensor = make_unique<NumericalMatrix<double>>(dimensions, dimensions);
+            jacobian = make_unique<double>();
         }
         
         void Metrics::calculateCovariantTensor() const {

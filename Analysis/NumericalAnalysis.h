@@ -6,7 +6,7 @@
 #define UNTITLED_ANALYSIS_H
 
 #include "../MathematicalEntities/MathematicalProblem/MathematicalProblem.h"
-#include "../LinearAlgebra/AnalysisLinearSystemInitializer.h"
+#include "../LinearAlgebra/EquilibriumLinearSystemInitializer.h"
 #include "../LinearAlgebra/Solvers/Solver.h"
 #include "../Utility/Exporters/Exporters.h"
 
@@ -41,7 +41,7 @@ namespace NumericalAnalysis {
         NumericalVector<double> getSolutionAtNode(NumericalVector<double>& nodeCoordinates, double tolerance = 1E-4) const;
         
     protected:
-        unique_ptr<AnalysisLinearSystemInitializer> _linearSystemInitializer;
+        unique_ptr<EquilibriumLinearSystemInitializer> _linearSystemInitializer;
 
         shared_ptr<AnalysisDegreesOfFreedom> initiateDegreesOfFreedom() const;
     };

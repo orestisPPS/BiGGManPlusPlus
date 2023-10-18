@@ -61,10 +61,10 @@ namespace Tests {
             auto filePathMesh = "/home/hal9000/code/BiGGMan++/Testing/";
             mesh->storeMeshInVTKFile(filePathMesh, fileNameMesh, Natural, false);
 
-            auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(3);
+            auto pdeProperties = make_shared<SpatialPDEProperties>(3, ScalarField);
             pdeProperties->setIsotropicSpatialProperties(10, 0, 0, 0);
 
-            auto heatTransferPDE = make_shared<PartialDifferentialEquation>(pdeProperties, Laplace);
+            auto heatTransferPDE = make_shared<SteadyStatePartialDifferentialEquation>(pdeProperties, Laplace);
 
             auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
 
@@ -152,10 +152,10 @@ namespace Tests {
             auto filePathMesh = "/home/hal9000/code/BiGGMan++/Testing/";
             mesh->storeMeshInVTKFile(filePathMesh, fileNameMesh, Natural, false);
 
-            auto pdeProperties = make_shared<SecondOrderLinearPDEProperties>(3);
+            auto pdeProperties = make_shared<SpatialPDEProperties>(3, ScalarField);
             pdeProperties->setIsotropicSpatialProperties(10, 0, 0, 0);
 
-            auto heatTransferPDE = make_shared<PartialDifferentialEquation>(pdeProperties, Laplace);
+            auto heatTransferPDE = make_shared<SteadyStatePartialDifferentialEquation>(pdeProperties, Laplace);
 
             auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
 

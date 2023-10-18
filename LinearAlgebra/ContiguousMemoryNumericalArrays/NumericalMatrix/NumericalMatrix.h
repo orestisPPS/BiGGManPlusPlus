@@ -6,6 +6,7 @@
 #define UNTITLED_NUMERICALMATRIX_H
 
 #include <iomanip>
+#include <fstream>
 #include "../NumericalVector/NumericalVector.h"
 #include "NumericalMatrixEnums.h"
 #include "MatrixStorageDataProviders/CSRStorageDataProvider.h"
@@ -478,6 +479,24 @@ namespace LinearAlgebra {
 
                 cout << endl;
             }
+        }
+        
+        void CSVExport(const string& fileName, const string& filePath, const string& delimiter = ",") const {
+            ofstream file;
+            file.open(filePath + fileName + ".csv");
+            if (!file.is_open()) {
+                throw std::runtime_error("Could not open file.");
+            }
+            for (unsigned i = 0; i < _numberOfRows; ++i) {
+                for (unsigned j = 0; j < _numberOfColumns; ++j) {
+                    file << dataStorage->getElement(i, j);
+                    if (j < _numberOfColumns - 1) {
+                        file << delimiter;
+                    }
+                }
+                file << endl;
+            }
+            file.close();
         }
 
 

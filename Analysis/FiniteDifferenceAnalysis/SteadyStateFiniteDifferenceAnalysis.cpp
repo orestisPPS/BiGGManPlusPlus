@@ -12,7 +12,7 @@ namespace NumericalAnalysis {
             FiniteDifferenceAnalysis(mathematicalProblem, mesh, solver, schemeSpecs, coordinateSystem) {
         
         auto linearSystemInitializer =
-                make_unique<AnalysisLinearSystemInitializer>(degreesOfFreedom, mesh, mathematicalProblem, schemeSpecs, coordinateSystem);
+                make_unique<EquilibriumLinearSystemInitializer>(degreesOfFreedom, mesh, mathematicalProblem, schemeSpecs, coordinateSystem);
         linearSystemInitializer->createLinearSystem();
         this->linearSystem = linearSystemInitializer->linearSystem;
         solver->setLinearSystem(linearSystem);

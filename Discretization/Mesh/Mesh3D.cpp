@@ -206,8 +206,8 @@ namespace Discretization {
             Direction direction1 = directionsOfBoundaries[boundaryPosition][0];
             Direction direction2 = directionsOfBoundaries[boundaryPosition][1];
 
-            NumericalVector<double> covariantBaseVector1 = metrics->at(*node->id.global)->covariantBaseVectors->at(direction1);
-            NumericalVector<double> covariantBaseVector2 = metrics->at(*node->id.global)->covariantBaseVectors->at(direction2);
+            NumericalVector<double> covariantBaseVector1 = metrics->at(node)->covariantBaseVectors->at(direction1);
+            NumericalVector<double> covariantBaseVector2 = metrics->at(node)->covariantBaseVectors->at(direction2);
             NumericalVector<double> normalUnitVector = NumericalVector<double>(3);
             covariantBaseVector1.crossProduct(covariantBaseVector2, normalUnitVector);
             normalUnitVector.normalize();
