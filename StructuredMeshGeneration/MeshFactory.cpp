@@ -46,9 +46,10 @@ namespace StructuredMeshGenerator{
         auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2, 1);
         
         auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specs, Template);
-        analysis->linearSystem->matrix->CSVExport("matrix_2d_diffusion.csv", "../Testing/pythonSolver/");
-        analysis->linearSystem->rhs->CSVExport("matrix_2d_diffusion.csv", "../Testing/pythonSolver/");
         analysis->solve();
+        
+        analysis->linearSystem->exportToMatlabFile("linearSystemMeshGen.m", "/home/hal9000/code/BiGGMan++/Testing/", true);
+        analysis->linearSystem->solution->printHorizontally();
         
         analysis->applySolutionToDegreesOfFreedom();
         
@@ -205,8 +206,7 @@ namespace StructuredMeshGenerator{
             //Convection
             auto firstDerivativeCoefficients = make_unique<NumericalMatrix<double>>(mesh->dimensions(), mesh->dimensions());
             for (unsigned i = 0; i < size; ++i) {
-                Direction direction = unsignedToSpatialDirection[i];
-                firstDerivativeCoefficients->setElement(i, i, (mesh->metrics->at(node)->covariantBaseVectors->at(direction))[i]);
+                firstDerivativeCoefficients->setElement(i, i, 0);
             }
             nodeSpatialProperties.firstOrderCoefficients = std::move(firstDerivativeCoefficients);
             //Dependent variable coefficients

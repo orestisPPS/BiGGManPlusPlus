@@ -373,6 +373,8 @@ namespace Discretization {
             nodeMetrics->calculateCovariantTensor();
             nodeMetrics->calculateContravariantTensor();
             metrics->insert(pair<Node*, shared_ptr<Metrics> >(node, nodeMetrics));
+            nodeMetrics->contravariantTensor->printFullMatrix("contravariant tensor");
+            nodeMetrics->covariantTensor->printFullMatrix("covariant tensor");
         }
     }
     

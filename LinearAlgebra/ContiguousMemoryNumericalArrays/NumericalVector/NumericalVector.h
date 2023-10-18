@@ -13,7 +13,6 @@
 #include <valarray>
 #include <random>
 #include <iostream>
-#include <fstream>
 #include "../../../ThreadingOperations/ThreadingOperations.h"
 using namespace LinearAlgebra;
 using namespace std;
@@ -1223,9 +1222,11 @@ namespace LinearAlgebra {
             }
         }
 
-        void exportCSV(const string& fileName, const string& filePath, const string& delimiter = ",") const {
-            ofstream file;
-            file.open(filePath + fileName + ".csv");
+/*        void exportCSV(const std::string& fileName, const std::string& filePath, const std::string& delimiter = ",") const {
+            std::ofstream file;
+            std::filesystem::path path = filePath;
+            path /= fileName + ".csv";
+            file.open(path);
             if (!file.is_open()) {
                 throw std::runtime_error("Could not open file.");
             }
@@ -1235,9 +1236,7 @@ namespace LinearAlgebra {
                     file << delimiter;
                 }
             }
-            file.close();
-        }
-
+        }*/
 
     protected:
         shared_ptr<vector<T>> _values; ///< The underlying data.

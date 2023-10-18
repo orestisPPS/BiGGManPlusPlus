@@ -63,8 +63,9 @@ namespace LinearAlgebra {
 
             //Derivative order 0
             auto zeroOrderCoefficient = _mathematicalProblem->steadyStatePDE->spatialProperties->getIndependentVariableTermCoefficient(node->id.global);
+            if (zeroOrderCoefficient != 0)
+                _matrix->setElement(thisDOFPosition, thisDOFPosition, zeroOrderCoefficient);
             //Define the position of the dof in the NumericalMatrix
-            _matrix->setElement(thisDOFPosition, thisDOFPosition, zeroOrderCoefficient);
 
             //add source term
             _rhsVector->at(thisDOFPosition) += _mathematicalProblem->steadyStatePDE->spatialProperties->getIndependentVariableTermCoefficient(node->id.global);

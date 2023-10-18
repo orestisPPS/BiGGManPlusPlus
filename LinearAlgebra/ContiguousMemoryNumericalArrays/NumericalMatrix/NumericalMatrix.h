@@ -5,8 +5,8 @@
 #ifndef UNTITLED_NUMERICALMATRIX_H
 #define UNTITLED_NUMERICALMATRIX_H
 
-#include <iomanip>
 #include <fstream>
+#include <iomanip>
 #include "../NumericalVector/NumericalVector.h"
 #include "NumericalMatrixEnums.h"
 #include "MatrixStorageDataProviders/CSRStorageDataProvider.h"
@@ -39,9 +39,11 @@ namespace LinearAlgebra {
          * @param parallelizationMethod Parallelization method to be used for matrix operations.
          */
         explicit NumericalMatrix(unsigned int rows, unsigned int columns,
-                                 NumericalMatrixStorageType storageType = FullMatrix, NumericalMatrixFormType formType = General,
+                                 NumericalMatrixStorageType storageType = FullMatrix,
+                                 NumericalMatrixFormType formType = General,
                                  unsigned availableThreads = 1) :
-                _numberOfRows(rows), _numberOfColumns(columns), _availableThreads(availableThreads), _formType(formType){
+                _numberOfRows(rows), _numberOfColumns(columns), _availableThreads(availableThreads),
+                _formType(formType) {
             dataStorage = _initializeStorage(storageType);
             _math = _initializeMath();
         }
@@ -54,7 +56,7 @@ namespace LinearAlgebra {
         * @param other The matrix to be copied from.
         */
         template<typename InputType>
-        explicit NumericalMatrix(const InputType& other) {
+        explicit NumericalMatrix(const InputType &other) {
             _checkInputMatrixDataType(other);
             _numberOfRows = dereference_trait<InputType>::numberOfRows(other);
             _numberOfColumns = dereference_trait<InputType>::numberOfColumns(other);
@@ -66,31 +68,31 @@ namespace LinearAlgebra {
             auto thisValues = dataStorage->getValues();
             auto otherValues = otherStorage->getValues();
             (*thisValues) = (*otherValues);
-            
+
             auto thisSupplementaryVectors = dataStorage->getSupplementaryVectors();
             auto otherSupplementaryVectors = otherStorage->getSupplementaryVectors();
-            if (otherSupplementaryVectors.size() > 0){
-                for (unsigned i = 0; i < otherSupplementaryVectors.size(); ++i){
+            if (otherSupplementaryVectors.size() > 0) {
+                for (unsigned i = 0; i < otherSupplementaryVectors.size(); ++i) {
                     thisSupplementaryVectors[i] = otherSupplementaryVectors[i];
                 }
             }
 
             _math = _initializeMath();
         }
-        
+
 
         /**
          * @brief Move constructor for NumericalMatrix.
          * @param other 
          */
-        NumericalMatrix(NumericalMatrix&& other) noexcept :
+        NumericalMatrix(NumericalMatrix &&other) noexcept:
                 _numberOfRows(std::move(other._numberOfRows)),
                 _numberOfColumns(std::move(other._numberOfColumns)),
                 _availableThreads(std::move(other._availableThreads)),
                 dataStorage(std::move(other.dataStorage)),
                 _math(_initializeMath()) {}
 
-        
+
         shared_ptr<NumericalMatrixStorageDataProvider<T>> dataStorage; ///< Storage object for the matrix elements.
 
 
@@ -102,7 +104,7 @@ namespace LinearAlgebra {
         * @param other The matrix to be moved.
         * @return NumericalMatrix& Reference to the current matrix after the move.
         */
-        NumericalMatrix& operator=(NumericalMatrix&& other) noexcept {
+        NumericalMatrix &operator=(NumericalMatrix &&other) noexcept {
             if (this != &other) {
                 //_values = std::move(other._values);
                 _numberOfRows = std::exchange(other._numberOfRows, 0);
@@ -120,14 +122,14 @@ namespace LinearAlgebra {
          * @return bool True if matrices are equal, false otherwise.
          */
         template<typename InputType>
-        bool operator==(const InputType& other) const {
+        bool operator==(const InputType &other) const {
             _checkInputMatrixDataType(other);
             if (numberOfRows() != dereference_trait<InputType>::numberOfRows(other) ||
                 numberOfColumns() != dereference_trait<InputType>::numberOfColumns(other)) {
                 return false;
             }
             const T *otherStorage = dereference_trait<InputType>::getDataStorageNumericalVectors(other);
-            
+
             dataStorage->areElementsEqual(otherStorage);
         }
 
@@ -137,28 +139,28 @@ namespace LinearAlgebra {
         * @param other The matrix to be compared with.
         * @return bool True if matrices are not equal, false otherwise.
         */
-        bool operator!=(const NumericalMatrix& other) const {
-        return !(*this == other);
+        bool operator!=(const NumericalMatrix &other) const {
+            return !(*this == other);
         }
 
-        
-        T& operator()(unsigned row, unsigned column) {
+
+        T &operator()(unsigned row, unsigned column) {
             return (*dataStorage->getValues())[row * _numberOfColumns + column];
         }
-        
+
         //=================================================================================================================//
         //=================================================== Data Access =================================================//
         //=================================================================================================================//
-        
-        T& getElement(unsigned row, unsigned column){
+
+        T &getElement(unsigned row, unsigned column) {
             return dataStorage->getElement(row, column);
         }
-        
-        void setElement(unsigned row, unsigned column, const T &value){
+
+        void setElement(unsigned row, unsigned column, const T &value) {
             dataStorage->setElement(row, column, value);
         }
-        
-        void eraseElement(unsigned row, unsigned column, const T &value){
+
+        void eraseElement(unsigned row, unsigned column, const T &value) {
             dataStorage->eraseElement(row, column, value);
         }
 
@@ -170,7 +172,7 @@ namespace LinearAlgebra {
         unsigned int numberOfRows() const {
             return _numberOfRows;
         }
-        
+
         /**
          * @brief Gets the number of columns in the matrix.
          * 
@@ -179,7 +181,7 @@ namespace LinearAlgebra {
         unsigned int numberOfColumns() const {
             return _numberOfColumns;
         }
-        
+
         /**
          * @brief Gets the size of the matrix.
          * 
@@ -188,7 +190,7 @@ namespace LinearAlgebra {
         unsigned int size() const {
             return _numberOfRows * _numberOfColumns;
         }
-        
+
         /**
         * @brief Checks if this vector is empty.
         * @return true if the vector is empty, false otherwise.
@@ -254,7 +256,7 @@ namespace LinearAlgebra {
         //=================================================================================================================//
         //================================================== Matrix Operations ============================================//
         //=================================================================================================================//
-        
+
         /**
         * @brief Scales all elements of this matrix.
         * Given matrix A = [a1, a2, ..., an] and scalar factor a, the updated matrix is:
@@ -262,7 +264,7 @@ namespace LinearAlgebra {
         * 
         * @param scalar The scaling factor.
         */
-        void scale(T scalar){
+        void scale(T scalar) {
             dataStorage->_values->scale(scalar);
         }
 
@@ -277,8 +279,9 @@ namespace LinearAlgebra {
         * \param scaleThis Scaling factor for the current vector (default is 1).
         * \param scaleInput Scaling factor for the input vector (default is 1).
         */
-       template<typename InputMatrixType1, typename InputMatrixType2>
-        void add(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
+        template<typename InputMatrixType1, typename InputMatrixType2>
+        void add(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1,
+                 unsigned userDefinedThreads = 0) {
 
             _checkInputMatrixDataType(inputMatrix);
             _checkInputMatrixDimensions(inputMatrix);
@@ -286,14 +289,14 @@ namespace LinearAlgebra {
             _checkInputMatrixDataType(resultMatrix);
             _checkInputMatrixDimensions(resultMatrix);
             _checkInputMatrixStorageType(resultMatrix);
-            
+
             auto inputStorage = dereference_trait<InputMatrixType1>::getDataStorageNumericalVectors(inputMatrix);
             auto resultStorage = dereference_trait<InputMatrixType2>::getDataStorageNumericalVectors(resultMatrix);
 
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
             _math->matrixAddition(inputStorage, resultStorage, scaleThis, scaleInput, availableThreads);
         }
-        
+
         /**
         * \brief Performs element-wise subtraction of two scaled matrices.
         * Given two vectors A = [A11, A12, ..., Anm] and B = [B11, B12, ..., Bnm] representing the matrices in row major format,
@@ -306,7 +309,9 @@ namespace LinearAlgebra {
         * \param scaleInput Scaling factor for the input vector (default is 1).
         */
         template<typename InputMatrixType1, typename InputMatrixType2>
-        void subtract(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
+        void
+        subtract(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1,
+                 unsigned userDefinedThreads = 0) {
 
             _checkInputMatrixDataType(inputMatrix);
             _checkInputMatrixDimensions(inputMatrix);
@@ -314,13 +319,13 @@ namespace LinearAlgebra {
             _checkInputMatrixDataType(resultMatrix);
             _checkInputMatrixDimensions(resultMatrix);
             _checkInputMatrixStorageType(resultMatrix);
-            
+
             auto inputStorage = dereference_trait<InputMatrixType1>::getDataStorageNumericalVectors(inputMatrix);
             auto resultStorage = dereference_trait<InputMatrixType2>::getDataStorageNumericalVectors(resultMatrix);
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
             _math->matrixSubtraction(inputStorage, resultStorage, scaleThis, scaleInput, availableThreads);
         }
-        
+
         /**
          * @brief Performs matrix multiplication of two matrices.
          * 
@@ -330,8 +335,9 @@ namespace LinearAlgebra {
          * @param scaleInput Scaling factor for the input vector (default is 1).
          */
         template<typename InputMatrixType1, typename InputMatrixType2>
-        void multiplyMatrix(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
-            
+        void multiplyMatrix(const InputMatrixType1 &inputMatrix, InputMatrixType2 &resultMatrix, T scaleThis = 1,
+                            T scaleInput = 1, unsigned userDefinedThreads = 0) {
+
             _checkInputMatrixDataType(inputMatrix);
             _checkInputMatrixStorageType(inputMatrix);
             _checkInputMatrixDataType(resultMatrix);
@@ -340,14 +346,14 @@ namespace LinearAlgebra {
                 throw invalid_argument("Input matrix must have the same number of columns as the current matrix.");
             if (_numberOfRows != dereference_trait<InputMatrixType1>::numberOfRows(inputMatrix))
                 throw invalid_argument("Input matrix must have the same number of rows as the current matrix.");
-            
+
             auto inputStorage = dereference_trait<InputMatrixType1>::getDataStorageNumericalVectors(inputMatrix);
             auto resultStorage = dereference_trait<InputMatrixType2>::getDataStorageNumericalVectors(resultMatrix);
-            
+
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
             _math->matrixMultiplication(inputStorage, resultStorage, scaleThis, scaleInput, availableThreads);
         }
-        
+
         /**
          * @brief Performs matrix-vector multiplication.
          * 
@@ -357,23 +363,26 @@ namespace LinearAlgebra {
          * @param scaleInput Scaling factor for the input vector (default is 1).
          */
         template<typename InputVectorType1, typename InputVectorType2>
-        void multiplyVector(const InputVectorType1 &inputVector, const InputVectorType2 &resultVector, T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
-            
+        void multiplyVector(const InputVectorType1 &inputVector, const InputVectorType2 &resultVector, T scaleThis = 1,
+                            T scaleInput = 1, unsigned userDefinedThreads = 0) {
+
             _checkInputVectorDataType(inputVector);
             _checkInputVectorDataType(resultVector);
 /*            if (_numberOfColumns != dereference_trait_vector<InputVectorType1>::size(inputVector))
                 throw invalid_argument("Input vector must have the same number of columns as the current matrix.");*/
-            if (dereference_trait_vector<InputVectorType1>::size(inputVector) != dereference_trait_vector<InputVectorType2>::size(resultVector))
+            if (dereference_trait_vector<InputVectorType1>::size(inputVector) !=
+                dereference_trait_vector<InputVectorType2>::size(resultVector))
                 throw invalid_argument("Input vector must have the same number of rows as the result vector.");
             auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
             auto resultVectorData = dereference_trait_vector<InputVectorType2>::dereference(resultVector);
-            
+
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
             _math->vectorMultiplication(inputVectorData, resultVectorData, scaleThis, scaleInput, availableThreads);
         }
 
         template<typename InputVectorType1>
-        T multiplyVectorRowWisePartial(const InputVectorType1 &inputVector, unsigned targetRow, unsigned startColumn, unsigned endColumn,
+        T multiplyVectorRowWisePartial(const InputVectorType1 &inputVector, unsigned targetRow, unsigned startColumn,
+                                       unsigned endColumn,
                                        T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
             _checkInputVectorDataType(inputVector);
 /*            if (endColumn - startColumn + 1 != dereference_trait_vector<InputVectorType1>::size(inputVector))
@@ -385,15 +394,16 @@ namespace LinearAlgebra {
                 throw std::invalid_argument("Start column must be less than end column.");
             }
             auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
-            
+
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
             return _math->vectorMultiplicationRowWisePartial(inputVectorData, targetRow, startColumn, endColumn,
                                                              scaleThis, scaleInput, availableThreads);
-            
+
         }
-        
+
         template<typename InputVectorType1>
-        T multiplyVectorRowWisePartial(const InputVectorType1 &inputVector, unsigned targetRow, unsigned startColumn, unsigned endColumn,
+        T multiplyVectorRowWisePartial(const InputVectorType1 &inputVector, unsigned targetRow, unsigned startColumn,
+                                       unsigned endColumn,
                                        bool operationCondition(unsigned i, unsigned j),
                                        T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
             _checkInputVectorDataType(inputVector);
@@ -406,14 +416,17 @@ namespace LinearAlgebra {
                 throw std::invalid_argument("Start column must be less than end column.");
             }
             auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
-            
+
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
-            return _math->vectorMultiplicationRowWisePartial(inputVectorData, targetRow, startColumn, endColumn, operationCondition, scaleThis, scaleInput, availableThreads);
-            
+            return _math->vectorMultiplicationRowWisePartial(inputVectorData, targetRow, startColumn, endColumn,
+                                                             operationCondition, scaleThis, scaleInput,
+                                                             availableThreads);
+
         }
-        
+
         template<typename InputVectorType1>
-        T multiplyVectorColumnWisePartial(const InputVectorType1 &inputVector, unsigned targetColumn, unsigned startRow, unsigned endRow,
+        T multiplyVectorColumnWisePartial(const InputVectorType1 &inputVector, unsigned targetColumn, unsigned startRow,
+                                          unsigned endRow,
                                           T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
             _checkInputVectorDataType(inputVector);
             if (endRow - startRow + 1 != dereference_trait_vector<InputVectorType1>::size(inputVector))
@@ -428,14 +441,16 @@ namespace LinearAlgebra {
                 throw std::invalid_argument("Start row must be less than end row.");
             }
             auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
-            
+
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
-            return _math->vectorMultiplicationColumnWisePartial(inputVectorData, targetColumn, startRow, endRow, scaleThis, scaleInput, availableThreads);
-            
+            return _math->vectorMultiplicationColumnWisePartial(inputVectorData, targetColumn, startRow, endRow,
+                                                                scaleThis, scaleInput, availableThreads);
+
         }
-        
+
         template<typename InputVectorType1>
-        T multiplyVectorColumnWisePartial(const InputVectorType1 &inputVector, unsigned targetColumn, unsigned startRow, unsigned endRow,
+        T multiplyVectorColumnWisePartial(const InputVectorType1 &inputVector, unsigned targetColumn, unsigned startRow,
+                                          unsigned endRow,
                                           bool operationCondition(unsigned i, unsigned j),
                                           T scaleThis = 1, T scaleInput = 1, unsigned userDefinedThreads = 0) {
             _checkInputVectorDataType(inputVector);
@@ -451,16 +466,18 @@ namespace LinearAlgebra {
                 throw std::invalid_argument("Start row must be less than end row.");
             }
             auto inputVectorData = dereference_trait_vector<InputVectorType1>::dereference(inputVector);
-            
+
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
-            return _math->vectorMultiplicationColumnWisePartial(inputVectorData, targetColumn, startRow, endRow, operationCondition, scaleThis, scaleInput, availableThreads);
-            
+            return _math->vectorMultiplicationColumnWisePartial(inputVectorData, targetColumn, startRow, endRow,
+                                                                operationCondition, scaleThis, scaleInput,
+                                                                availableThreads);
+
         }
 
-        void printFullMatrix(const string& name = "", unsigned precision = 4) const {
+        void printFullMatrix(const string &name = "", unsigned precision = 4) const {
             int width = precision + 4;  // Add some extra width for the integer part and potential minus sign
             cout << name;
-            if(!name.empty()) cout << " : ";  // Only add the colon if the name is provided
+            if (!name.empty()) cout << " : ";  // Only add the colon if the name is provided
             cout << " [ " << _numberOfRows << "x" << _numberOfColumns << " ] = " << endl;
 
             for (unsigned i = 0; i < _numberOfRows; ++i) {
@@ -470,8 +487,9 @@ namespace LinearAlgebra {
                     cout << "    ";
 
                 for (unsigned j = 0; j < _numberOfColumns; ++j) {
-                    cout << std::setprecision(precision) << std::setw(width) << std::right << dataStorage->getElement(i, j);
-                    if(j < _numberOfColumns - 1) cout << ", ";  // Comma separator
+                    cout << std::setprecision(precision) << std::setw(width) << std::right
+                         << dataStorage->getElement(i, j);
+                    if (j < _numberOfColumns - 1) cout << ", ";  // Comma separator
                 }
 
                 if (i == _numberOfRows - 1)
@@ -480,25 +498,6 @@ namespace LinearAlgebra {
                 cout << endl;
             }
         }
-        
-        void CSVExport(const string& fileName, const string& filePath, const string& delimiter = ",") const {
-            ofstream file;
-            file.open(filePath + fileName + ".csv");
-            if (!file.is_open()) {
-                throw std::runtime_error("Could not open file.");
-            }
-            for (unsigned i = 0; i < _numberOfRows; ++i) {
-                for (unsigned j = 0; j < _numberOfColumns; ++j) {
-                    file << dataStorage->getElement(i, j);
-                    if (j < _numberOfColumns - 1) {
-                        file << delimiter;
-                    }
-                }
-                file << endl;
-            }
-            file.close();
-        }
-
 
         
     private:

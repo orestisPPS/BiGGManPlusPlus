@@ -72,6 +72,7 @@ namespace Tests {
             auto problem = make_shared<SteadyStateMathematicalProblem>(heatTransferPDE, boundaryConditions, temperatureDOF);
             auto solver = make_shared<ConjugateGradientSolver>(1E-9, 1E4, L2, 10);
             auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specsFD);
+            analysis->linearSystem->exportToMatlabFile("ststDiffusionLinearSystem.m", "/home/hal9000/code/BiGGMan++/Testing/", true);
 
             analysis->solve();
 

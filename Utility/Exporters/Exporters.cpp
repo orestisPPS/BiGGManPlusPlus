@@ -32,26 +32,6 @@ namespace Utility {
         // Write the command to solve the system
         outputFile << "x = A \\ b;" << endl;
         outputFile <<"eig(A)" << endl;
-        
-        
-
-        if (print){
-            // Write the command to create a grid for evaluating the solution
-            outputFile << "[X,Y] = meshgrid(0:0.1:1, 0:0.1:1);" << endl;
-
-            // Write the command to evaluate the solution at each point on the grid
-            outputFile << "Z = x(1)*X + x(2)*Y + x(3);" << endl;
-
-            // Write the command to plot the solution
-            outputFile << "figure;" << endl;
-            outputFile << "surf(X,Y,Z);" << endl;
-            outputFile << "xlabel('x');" << endl;
-            outputFile << "ylabel('y');" << endl;
-            outputFile << "zlabel('z');" << endl;
-            outputFile << "colorbar;" << endl;
-        }
-        
-        outputFile.close();
     }
 
     void Exporters::exportMatrixToMatlabFile(const shared_ptr<NumericalMatrix<double>> &matrix, const string &filePath,
