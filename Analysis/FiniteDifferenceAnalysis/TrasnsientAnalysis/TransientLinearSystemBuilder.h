@@ -19,17 +19,23 @@ namespace NumericalAnalysis {
         explicit TransientLinearSystemBuilder(const shared_ptr<AnalysisDegreesOfFreedom>& analysisDegreesOfFreedom, const shared_ptr<Mesh> &mesh,
                                               const shared_ptr<TransientMathematicalProblem>& mathematicalProblem, const shared_ptr<FDSchemeSpecs>& specs, CoordinateType = Natural);
 
-
-    shared_ptr<NumericalMatrix<double>> M;
-    
-    shared_ptr<NumericalMatrix<double>> C;
+        
+        shared_ptr<NumericalMatrix<double>> M;
+        
+        shared_ptr<NumericalMatrix<double>> C;
     
     void assembleMatrices();
+    
+    void applyInitialConditions();
     
 
     private:
         
         shared_ptr<TransientMathematicalProblem> _transientMathematicalProblem;
+        
+        shared_ptr<NumericalVector<double>> _initialConditionOrder0;
+        
+        shared_ptr<NumericalVector<double>> _initialConditionOrder1;
         
     };
 

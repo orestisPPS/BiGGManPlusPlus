@@ -33,6 +33,7 @@ namespace DegreesOfFreedom {
         UnknownVectorFieldVariableComponent1,
         UnknownVectorFieldVariableComponent2,
         UnknownVectorFieldVariableComponent3,
+        NoDOFType
     };
     
     static const map<DOFType, Direction> directionOfDof =

@@ -21,6 +21,11 @@ namespace NumericalAnalysis {
         shared_ptr<SteadyStateMathematicalProblem> steadyStateMathematicalProblem;
         
         void solve() override;
+        
+        void applySolutionToDegreesOfFreedom() const override;
+
+        virtual NumericalVector<double> getSolutionAtNode(NumericalVector<double>& nodeCoordinates, double tolerance = 1E-4, DOFType = NoDOFType) const override;
+
     };
 
 } // NumericalAnalysis

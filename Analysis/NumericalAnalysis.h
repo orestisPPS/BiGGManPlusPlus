@@ -38,9 +38,10 @@ namespace NumericalAnalysis {
 
         virtual void solve();
         
-        void applySolutionToDegreesOfFreedom() const;
+        virtual void applySolutionToDegreesOfFreedom() const;
         
-        NumericalVector<double> getSolutionAtNode(NumericalVector<double>& nodeCoordinates, double tolerance = 1E-4) const;
+        virtual NumericalVector<double> getSolutionAtNode(NumericalVector<double>& nodeCoordinates, double tolerance = 1E-4, DOFType dofType = NoDOFType) const; 
+        
         
     protected:
         unique_ptr<EquilibriumLinearSystemBuilder> _linearSystemInitializer;

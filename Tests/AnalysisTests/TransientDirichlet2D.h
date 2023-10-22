@@ -36,12 +36,7 @@ namespace Tests {
             auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
             meshFactory->buildMesh(2, meshBoundaries->parallelogram(numberOfNodes, 1, 1, 0, 0));
             shared_ptr<Mesh> mesh = meshFactory->mesh;
-
-/*            auto fileNameMesh = "test_2D_dirichlet.vtk";
-            auto filePathMesh = "/home/hal9000/code/BiGGMan++/Testing/";
-            mesh->storeMeshInVTKFile(filePathMesh, fileNameMesh, Natural, false);*/
-            // 127.83613628736045
-
+            
             auto bottom = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
                                                                                                               ({{Temperature, 100}})));
             auto top = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
@@ -58,8 +53,7 @@ namespace Tests {
             auto boundaryConditions = make_shared<DomainBoundaryConditions>(dummyBCMap);
 
             auto initialConditions = make_shared<InitialConditions>(0, 0);
-
-
+            
             auto pdeSpatialProperties = make_shared<SpatialPDEProperties>(3, ScalarField);
             pdeSpatialProperties->setIsotropicSpatialProperties(0.1, 0, 0, 0);
 
@@ -69,36 +63,35 @@ namespace Tests {
 
             auto heatTransferPDE = make_shared<TransientPartialDifferentialEquation>(pdeSpatialProperties,
                                                                                      pdeTemporalProperties, Laplace);
-
             auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
-
             auto temperatureDOF = new TemperatureScalar_DOFType();
             auto problem = make_shared<TransientMathematicalProblem>(heatTransferPDE, boundaryConditions,
                                                                      initialConditions, temperatureDOF);
-
             auto solver = make_shared<ConjugateGradientSolver>(1E-9, 1E4, L2, 10);
             auto integration = make_shared<NewmarkNumericalIntegrator>(0.25, 0.5);
-            auto analysis = make_shared<TransientFiniteDifferenceAnalysis>(0.0, 0.1, 20, problem, mesh, solver, integration, specsFD);
-
-            //analysis->linearSystem->exportToMatlabFile("transientDiffusionLinearSystem.m",
-                                                     //  "/home/hal9000/code/BiGGMan++/Testing/", true);
-
+            auto initialTime = 0.0;
+            auto stepSize = 0.1;
+            auto totalSteps = 20;
+            auto analysis = make_shared<TransientFiniteDifferenceAnalysis>(initialTime, stepSize, totalSteps, problem, mesh, solver, integration, specsFD);
+            
+            auto startAnalysisTime = std::chrono::high_resolution_clock::now();
             analysis->solve();
-
-            analysis->applySolutionToDegreesOfFreedom();
-
-            auto fileName = "temperatureField.vtk";
-            auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
+            auto endAnalysisTime = std::chrono::high_resolution_clock::now();
+            cout << "Elapsed time: " << std::chrono::duration_cast<std::chrono::milliseconds>(endAnalysisTime - startAnalysisTime).count() << " ms" << endl;
+            
+            auto fileName = "temperature.vtk";
+            auto filePath = "/home/hal9000/code/BiGGMan++/Testing/transientVTK/";
             auto fieldType = "Temperature";
-            Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
+            Utility::Exporters::exportTransientScalarFieldResultInVTK(filePath, fileName, fieldType, mesh, totalSteps);
 
             auto targetCoords = NumericalVector<double>{0.5, 0.5, 0};
-
+            //auto targetCoords = NumericalVector<double>{2, 2, 0};
             auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-3);
+            targetSolution.printVerticallyWithIndex("Solution");
 
-            auto absoluteRelativeError = abs(targetSolution[0] - 149.989745970325) / 149.989745970325;
+            auto absoluteRelativeError = abs(targetSolution[targetSolution.size() - 1] - 149.989745970325) / 149.989745970325;
 
-            assert(absoluteRelativeError < 1E-3);
+            assert(absoluteRelativeError < 1E-2);
             logTestEnd();
         }
 

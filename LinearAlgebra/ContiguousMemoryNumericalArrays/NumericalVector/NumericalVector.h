@@ -1233,10 +1233,10 @@ namespace LinearAlgebra {
 
         void printVerticallyWithIndex(const string& name = " "){
             cout << name << " = [ " << endl;
-            for (unsigned i = 0; i < _values->size(); ++i){
+            for (unsigned i = 0; i < _values->size() - 1; ++i){
                 cout << i << " : " << (*_values)[i] << endl;
             }
-            cout << " ] " << endl;
+            cout << _values->size() - 1 << " : " << (*_values)[_values->size() - 1] << " ] " << endl;
         }
 
 

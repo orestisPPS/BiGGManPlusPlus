@@ -22,6 +22,10 @@ namespace NumericalAnalysis {
         
         void solve() override;
         
+        void applySolutionToDegreesOfFreedom() const override;
+
+        virtual NumericalVector<double> getSolutionAtNode(NumericalVector<double>& nodeCoordinates, double tolerance = 1E-4, DOFType = NoDOFType) const override;
+        
     private:
         shared_ptr<TransientMathematicalProblem> _transientMathematicalProblem;
         

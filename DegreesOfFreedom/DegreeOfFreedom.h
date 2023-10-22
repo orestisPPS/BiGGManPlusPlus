@@ -41,11 +41,15 @@ namespace DegreesOfFreedom{
         
         ConstraintType const &constraintType() const;
         
-        double const &value() const;
+        double const value() const;
+        
+        double const value(unsigned derivativeOrder, unsigned stepIndex) const;
         
         unsigned int* const &parentNode() const;
         
         void setValue(double value);
+        
+        void setValue(unique_ptr<NumericalVector<double>>, unsigned temporalDerivativeOrder);
         
         void setID(unsigned int ID);
         
@@ -60,6 +64,11 @@ namespace DegreesOfFreedom{
         ConstraintType _constraintType;
         
         double _value;
+        
+        unique_ptr<NumericalVector<double>> _timeDependentValues;
+        unique_ptr<NumericalVector<double>> _firstTemporalDerivativeValues;
+        unique_ptr<NumericalVector<double>> _secondTemporalDerivativeValues;
+        
         
         unsigned int* _parentNode;
     

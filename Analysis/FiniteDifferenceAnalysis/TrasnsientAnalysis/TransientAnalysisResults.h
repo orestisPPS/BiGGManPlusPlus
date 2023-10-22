@@ -16,6 +16,8 @@ namespace NumericalAnalysis {
         void addSolution(unsigned stepIndex, shared_ptr<NumericalVector<double>> solution,
                          const shared_ptr<NumericalVector<double>>& derivative1 = nullptr,
                          const shared_ptr<NumericalVector<double>>& derivative2 = nullptr);
+        
+        unique_ptr<NumericalVector<double>> getSolutionAtDof(unsigned derivativeOrder, unsigned dofID) const;
     private:
         struct TimeStepData{
             double timeValue;
@@ -25,6 +27,7 @@ namespace NumericalAnalysis {
         unique_ptr<vector<TimeStepData>> _solution;
         bool _storeDerivative1;
         bool _storeDerivative2;
+        unsigned _totalSteps;
 
     };
 

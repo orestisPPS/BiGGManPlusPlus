@@ -32,5 +32,9 @@ namespace NumericalAnalysis {
         K->printFullMatrix("K");
         //effectiveRHS = make_shared<NumericalVector<double>>(RHS);
     }
+    
+    void TransientLinearSystemBuilder::applyInitialConditions() {
+        auto ic = _transientMathematicalProblem->initialConditions;
+    }
 
 } // NumericalAnalysis

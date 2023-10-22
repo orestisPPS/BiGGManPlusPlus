@@ -22,10 +22,8 @@ namespace LinearAlgebra {
         _solver->solve();
         _U_new->deepCopy(_currentLinearSystem->solution);
         _calculateHigherOrderDerivatives();
-        //_calculateSecondOrderDerivative();
-        //_calculateFirstOrderDerivative();
-        
-        _U_new->printHorizontallyWithIndex("U_new");
+
+        //_U_new->printHorizontallyWithIndex("U_new");
         //_U_dot_new->printHorizontallyWithIndex("U_dot_new");
         //_U_dot_dot_new->printHorizontallyWithIndex("U_dot_dot_new");
         
@@ -33,7 +31,7 @@ namespace LinearAlgebra {
         _U_dot_old->deepCopy(_U_dot_new);
         _U_dot_dot_old->deepCopy(_U_dot_dot_new);
         
-        results->addSolution(currentTimeStep, _U_new, _U_dot_new, _U_dot_dot_new);
+        results->addSolution(stepIndex, _U_new, _U_dot_new, _U_dot_dot_new);
     }
     
     void NewmarkNumericalIntegrator::solveCurrentTimeStepWithMatrixRebuild() {

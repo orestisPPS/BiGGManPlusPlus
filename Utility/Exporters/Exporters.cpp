@@ -30,8 +30,14 @@ namespace Utility {
         outputFile << "]';" << endl;
 
         // Write the command to solve the system
-        outputFile << "x = A \\ b;" << endl;
-        outputFile <<"eig(A)" << endl;
+        if (print) {
+            outputFile << "x = A \\ b" << endl;
+            outputFile << "eig(A)" << endl;
+        }
+        else{
+            outputFile << "x = A \\ b;" << endl;
+            outputFile << "eig(A);" << endl;
+        }
     }
 
     void Exporters::exportMatrixToMatlabFile(const shared_ptr<NumericalMatrix<double>> &matrix, const string &filePath,

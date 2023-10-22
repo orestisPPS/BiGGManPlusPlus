@@ -19,7 +19,7 @@ namespace MathematicalEntities {
                                      struct Field_DOFType *degreesOfFreedom
         );
         shared_ptr<TransientPartialDifferentialEquation> transientPDE;
-        shared_ptr<InitialConditions> _initialConditions;
+        shared_ptr<InitialConditions> initialConditions;
     };
 
 };

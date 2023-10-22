@@ -10,6 +10,7 @@
 #include "../../ThreadingOperations/ThreadingOperations.h"
 #include "../../Discretization/Time/TimeEntity.h"
 #include "../../Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientAnalysisResults.h"
+using namespace NumericalAnalysis;
 namespace LinearAlgebra {
 
     class NumericalIntegrator {
@@ -28,7 +29,7 @@ namespace LinearAlgebra {
 
         shared_ptr<LinearSystem> assembleEffectiveLinearSystem();
         
-        unique_ptr<NumericalAnalysis::TransientAnalysisResults> results;
+        shared_ptr<TransientAnalysisResults> results;
 
         virtual void assembleEffectiveMatrix();
 
