@@ -13,13 +13,19 @@ namespace NumericalAnalysis {
     public:
         TransientAnalysisResults(double initialTime, unsigned int totalSteps, double stepSize, unsigned numberOfDof, bool storeDerivative1 = false, bool storeDerivative2 = false);
         
-        void addSolution(unsigned time, shared_ptr<NumericalVector<double>> solution, shared_ptr<NumericalVector<double>> derivative1 = nullptr,
-                                                                                    shared_ptr<NumericalVector<double>> derivative2 = nullptr);
+        void addSolution(unsigned stepIndex, shared_ptr<NumericalVector<double>> solution,
+                         const shared_ptr<NumericalVector<double>>& derivative1 = nullptr,
+                         const shared_ptr<NumericalVector<double>>& derivative2 = nullptr);
     private:
-        unique_ptr<NumericalVector<double>> _timeStamps;
-        unique_ptr<map<unsigned, map<unsigned, shared_ptr<NumericalVector<double>>>>> _solution;
+        struct TimeStepData{
+            double timeValue;
+            vector<shared_ptr<NumericalVector<double>>> solution;
+        };
+        
+        unique_ptr<vector<TimeStepData>> _solution;
         bool _storeDerivative1;
         bool _storeDerivative2;
+
     };
 
 } // NumericalAnalysis

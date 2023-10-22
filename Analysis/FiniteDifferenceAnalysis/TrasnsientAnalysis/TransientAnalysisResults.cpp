@@ -8,41 +8,39 @@ namespace NumericalAnalysis {
     TransientAnalysisResults::TransientAnalysisResults(double initialTime, unsigned int totalSteps, double stepSize, unsigned numberOfDof, bool storeDerivative1, bool storeDerivative2) {
         _storeDerivative1 = storeDerivative1;
         _storeDerivative2 = storeDerivative2;
-        _solution = make_unique<map<unsigned , map<unsigned, shared_ptr<NumericalVector<double>>>>>();
+        _solution = make_unique<vector<TimeStepData>>(totalSteps);
         double currentTime = initialTime;
         
-        
-        
-        
         for (unsigned int i = 0; i < totalSteps; ++i) {
-            _solution->insert(make_pair(i, map<unsigned, shared_ptr<NumericalVector<double>>>()));
-            _solution->at(i).insert(make_pair(0, make_shared<NumericalVector<double>>(numberOfDof)));
-            if (storeDerivative1){
-                _solution->at(i).insert(make_pair(1, make_shared<NumericalVector<double>>(numberOfDof)));
-            }
-            if (storeDerivative2){
-                _solution->at(i).insert(make_pair(2, make_shared<NumericalVector<double>>(numberOfDof)));
+
+            (*_solution)[i].timeValue = currentTime;
+            (*_solution)[i].solution = vector<shared_ptr<NumericalVector<double>>>(3);
+            for (auto & vector : (*_solution)[i].solution){
+                vector = make_shared<NumericalVector<double>>(numberOfDof);
             }
             currentTime += stepSize;
         }
     }
 
-    void TransientAnalysisResults::addSolution(unsigned time, shared_ptr<NumericalVector<double>> solution,
-                                               shared_ptr<NumericalVector<double>> derivative1,
-                                               shared_ptr<NumericalVector<double>> derivative2) {
-        _solution->at(time).at(0)->deepCopy(solution);
-
-        if (_storeDerivative1 && derivative1 != nullptr){
-            _solution->at(time).at(1)->deepCopy(derivative1);
+    void TransientAnalysisResults::addSolution(unsigned stepIndex, shared_ptr<NumericalVector<double>> solution,
+                                               const shared_ptr<NumericalVector<double>>& derivative1,
+                                               const shared_ptr<NumericalVector<double>>& derivative2) {
+        (*_solution)[stepIndex].solution[0]->deepCopy(solution);
+        if (_storeDerivative1 and not _storeDerivative2){
+            (*_solution)[stepIndex].solution[1]->deepCopy(derivative1);
+            (*_solution)[stepIndex].solution[2] = nullptr;
         }
-        if (_storeDerivative1 && derivative1 == nullptr){
-            throw runtime_error("TransientAnalysisResults::addSolution - Expected non-null derivative1 as _storeDerivative1 is true, but received nullptr.");
+        if (_storeDerivative1 and _storeDerivative2){
+            (*_solution)[stepIndex].solution[1]->deepCopy(derivative1);
+            (*_solution)[stepIndex].solution[2]->deepCopy(derivative2);
         }
-        if (_storeDerivative2 && derivative2 != nullptr){
-            _solution->at(time).at(2)->deepCopy(derivative2);
+        if (not _storeDerivative1 and _storeDerivative2){
+            (*_solution)[stepIndex].solution[1] = nullptr;
+            (*_solution)[stepIndex].solution[2]->deepCopy(derivative2);
         }
-        if (_storeDerivative2 && derivative2 == nullptr){
-            throw runtime_error("TransientAnalysisResults::addSolution - Expected non-null derivative2 as _storeDerivative2 is true, but received nullptr.");
+        if (not _storeDerivative1 and not _storeDerivative2){
+            (*_solution)[stepIndex].solution[1] = nullptr;
+            (*_solution)[stepIndex].solution[2] = nullptr;
         }
     }
 

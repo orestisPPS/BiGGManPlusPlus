@@ -13,7 +13,7 @@ namespace LinearAlgebra {
         _checkTimeParameters();
         _checkSolver();
         
-        if (currentTimeStep == 0)
+        if (stepIndex == 0)
             assembleEffectiveMatrix();
         
         assembleEffectiveRHS();
@@ -25,9 +25,9 @@ namespace LinearAlgebra {
         //_calculateSecondOrderDerivative();
         //_calculateFirstOrderDerivative();
         
-/*        _U_new->printHorizontallyWithIndex("U_new");
-        _U_dot_new->printHorizontallyWithIndex("U_dot_new");
-        _U_dot_dot_new->printHorizontallyWithIndex("U_dot_dot_new");*/
+        _U_new->printHorizontallyWithIndex("U_new");
+        //_U_dot_new->printHorizontallyWithIndex("U_dot_new");
+        //_U_dot_dot_new->printHorizontallyWithIndex("U_dot_dot_new");
         
         _U_old->deepCopy(_U_new);
         _U_dot_old->deepCopy(_U_dot_new);
