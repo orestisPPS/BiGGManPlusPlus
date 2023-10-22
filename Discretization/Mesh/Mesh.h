@@ -60,7 +60,7 @@ namespace Discretization {
         /// \brief Retrieves a node given its ID
         /// \param ID  (unsigned int) The ID of the node to retrieve
         /// \return Pointer to the Node object if the mesh is initialized, nullptr otherwise
-        Node* nodeFromID(unsigned ID);
+        Node* nodeFromID(unsigned* ID);
 
         /// \brief This method iterates over all boundary nodes in the mesh, adds them to a list if they are not already present,
         /// and finally returns a unique pointer to a vector containing all these nodes.
@@ -114,10 +114,10 @@ namespace Discretization {
         
         shared_ptr<Array<Node*>>_nodesMatrix;
         
-        map<unsigned, Node*>* _nodesMap;
+        map<unsigned*, Node*>* _nodesMap;
         
         
-        map<unsigned, Node*>* _createNodesMap() const;
+        map<unsigned*, Node*>* _createNodesMap() const;
         
         
         /// @brief Adds all  nodes at the _totalNodesVector and the boundary nodes to the _boundaryNodes map with respect to

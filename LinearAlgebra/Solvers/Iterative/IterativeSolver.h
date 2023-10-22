@@ -7,7 +7,7 @@
 
 #include <thread>
 #include "../Solver.h"
-#include "../../EquilibriumLinearSystemInitializer.h"
+#include "../../../Analysis/FiniteDifferenceAnalysis/EquilibriumLinearSystemBuilder.h"
 
 using LinearAlgebra::ParallelizationMethod;
 

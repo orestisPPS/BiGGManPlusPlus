@@ -82,8 +82,8 @@ add_executable(untitled main.cpp
         Analysis/FiniteDifferenceAnalysis/StStFDTest.h
         Analysis/FiniteDifferenceAnalysis/StStFDTest.cpp
         DegreesOfFreedom/DegreesOfFreedomCategorization.h
-        LinearAlgebra/EquilibriumLinearSystemInitializer.h
-        LinearAlgebra/EquilibriumLinearSystemInitializer.cpp
+        Analysis/FiniteDifferenceAnalysis/EquilibriumLinearSystemBuilder.h
+        Analysis/FiniteDifferenceAnalysis/EquilibriumLinearSystemBuilder.cpp
         Discretization/Node/IsoparametricNodeGraph.h
         Discretization/Node/IsoparametricNodeGraph.cpp
         Utility/Exporters/Exporters.h Utility/Exporters/Exporters.cpp
@@ -169,15 +169,15 @@ add_executable(untitled main.cpp
         LinearAlgebra/EigenDecomposition/IEigenvalueDecomposition.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/NumericalMatrixDataStorageAccessProviders/NumericalMatrixDataStorageAccessProvider.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixEnums.h
-        Tests/AnalysisTests/SteadyState2DTest.h
+        Tests/AnalysisTests/SteadyStateDirichlet2D.h
         Tests/IterativeSolversTest.h
         Tests/MeshGenerator.h
         MathematicalEntities/InitialConditions/InitialConditions.cpp
         MathematicalEntities/InitialConditions/InitialConditions.h
         MathematicalEntities/InitialConditions/InitialConditions.h
         MathematicalEntities/InitialConditions/InitialConditions.h
-        Analysis/FiniteDifferenceAnalysis/TransientFiniteDifferenceAnalysis.cpp
-        Analysis/FiniteDifferenceAnalysis/TransientFiniteDifferenceAnalysis.h
+        Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientFiniteDifferenceAnalysis.cpp
+        Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientFiniteDifferenceAnalysis.h
         LinearAlgebra/NumericalIntegrators/NumericalIntegrator.cpp
         LinearAlgebra/NumericalIntegrators/NumericalIntegrator.h
         LinearAlgebra/NumericalIntegrators/NumericalIntegrator.h
@@ -189,6 +189,15 @@ add_executable(untitled main.cpp
         MathematicalEntities/PartialDifferentialEquations/SteadyStatePartialDifferentialEquation.h
         MathematicalEntities/PartialDifferentialEquations/TransientPartialDifferentialEquation.cpp
         MathematicalEntities/PartialDifferentialEquations/TransientPartialDifferentialEquation.h
+        Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientLinearSystemBuilder.cpp
+        Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientLinearSystemBuilder.h
+        Tests/AnalysisTests/TransientDirichlet2D.h
+        LinearAlgebra/NumericalIntegrators/NewmarkNumericalIntegrator.cpp
+        LinearAlgebra/NumericalIntegrators/NewmarkNumericalIntegrator.h
+        Discretization/Time/TimeEntity.cpp
+        Discretization/Time/TimeEntity.h
+        Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientAnalysisResults.cpp
+        Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientAnalysisResults.h
 )
 
 

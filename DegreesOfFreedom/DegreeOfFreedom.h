@@ -26,7 +26,7 @@ namespace DegreesOfFreedom{
     public:
         //Use this constructor for all DOFType (fixed, free). Degree of freedom is initialized with 0 value.
         //value is initialized with NaN
-        DegreeOfFreedom(DOFType* dofType, unsigned parentNode, bool isConstrained, double value = numeric_limits<double>::quiet_NaN());
+        DegreeOfFreedom(DOFType* dofType, unsigned* parentNode, bool isConstrained, double value = numeric_limits<double>::quiet_NaN());
         
         bool operator == (const DegreeOfFreedom& dof);
         
@@ -43,7 +43,7 @@ namespace DegreesOfFreedom{
         
         double const &value() const;
         
-        unsigned int const &parentNode() const;
+        unsigned int* const &parentNode() const;
         
         void setValue(double value);
         
@@ -61,7 +61,7 @@ namespace DegreesOfFreedom{
         
         double _value;
         
-        unsigned int _parentNode;
+        unsigned int* _parentNode;
     
     };
 }

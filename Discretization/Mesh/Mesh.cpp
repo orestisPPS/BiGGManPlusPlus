@@ -35,7 +35,7 @@ namespace Discretization {
         return numberOfTotalNodes() - numberOfInternalNodes();
     }
     
-    Node *Mesh::nodeFromID(unsigned ID) {
+    Node *Mesh::nodeFromID(unsigned* ID) {
         if (isInitialized)
             return _nodesMap->at(ID);
         else
@@ -115,12 +115,12 @@ namespace Discretization {
             throw std::runtime_error("Mesh has not been initialized");
     }
 
-    map<unsigned, Node *> *Mesh::_createNodesMap() const {
+    map<unsigned*, Node *> *Mesh::_createNodesMap() const {
         if (isInitialized) {
-            auto nodesMap = new map<unsigned, Node *>();
+            auto nodesMap = new map<unsigned*, Node *>();
             for (auto &node: *totalNodesVector) {
 
-                nodesMap->insert(pair<unsigned, Node *>(*node->id.global, node));
+                nodesMap->insert(pair<unsigned*, Node *>(node->id.global, node));
             }
             return nodesMap;
         } else
@@ -343,15 +343,6 @@ namespace Discretization {
                                 " Cannot calculate contravariant base vectors");
                     }
 
-/*                    auto covariantStep = 1.0;
-                    auto contravariantStep = templateCoords[directionJ][j]->averageAbsoluteDeviationFromMean();
-                    contravariantStep = pow(contravariantStep, scheme.power) * scheme.denominatorCoefficient;
-
-                    for (int weight = 0; weight < covariantWeights.size(); weight++) {
-                        covariantWeights[weight] /= covariantStep;
-                        contravariantWeights[weight] /= contravariantStep;
-                    }*/
-
                     //Covariant base vectors (dr_i/dξ_i)
                     //g_1 = {dx/dξ, dy/dξ, dz/dξ}
                     //g_2 = {dx/dη, dy/dη, dz/dη} 
@@ -373,8 +364,8 @@ namespace Discretization {
             nodeMetrics->calculateCovariantTensor();
             nodeMetrics->calculateContravariantTensor();
             metrics->insert(pair<Node*, shared_ptr<Metrics> >(node, nodeMetrics));
-            nodeMetrics->contravariantTensor->printFullMatrix("contravariant tensor");
-            nodeMetrics->covariantTensor->printFullMatrix("covariant tensor");
+            //nodeMetrics->contravariantTensor->printFullMatrix("contravariant tensor");
+            //nodeMetrics->covariantTensor->printFullMatrix("covariant tensor");
         }
     }
     

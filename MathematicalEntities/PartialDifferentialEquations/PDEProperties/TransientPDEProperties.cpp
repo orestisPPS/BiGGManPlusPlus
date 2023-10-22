@@ -5,16 +5,18 @@
 #include "TransientPDEProperties.h"
 
 namespace MathematicalEntities {
-    MathematicalEntities::TransientPDEProperties::TransientPDEProperties(unsigned short physicalSpaceDimensions,
+    TransientPDEProperties::TransientPDEProperties(unsigned short physicalSpaceDimensions,
                                                                          MathematicalEntities::FieldType fieldType)
-            : SecondOrderLinearPDEProperties(physicalSpaceDimensions, fieldType) {
+            : SpatialPDEProperties(physicalSpaceDimensions, fieldType) {
 
     }
 
     void MathematicalEntities::TransientPDEProperties::setIsotropicTemporalProperties(double secondOrderCoefficient,
                                                                                       double firstOrderCoefficient) {
         if (_fieldType == FieldType::ScalarField) {
+           // _scalarFieldGlobalTemporalProperties.secondOrderCoefficient = make_unique<double>(secondOrderCoefficient / 9);
             _scalarFieldGlobalTemporalProperties.secondOrderCoefficient = make_unique<double>(secondOrderCoefficient);
+            //_scalarFieldGlobalTemporalProperties.firstOrderCoefficient = make_unique<double>(firstOrderCoefficient /9);
             _scalarFieldGlobalTemporalProperties.firstOrderCoefficient = make_unique<double>(firstOrderCoefficient);
         }
         else if (_fieldType == FieldType::VectorField) {
@@ -112,16 +114,22 @@ namespace MathematicalEntities {
         }
     }
 
-    double TransientPDEProperties::getTemporalCoefficient(unsigned int derivativeOrder, unsigned int *nodeId,
-                                                          Direction direction) {
+    double TransientPDEProperties::getTemporalCoefficient(unsigned int derivativeOrder, unsigned int *nodeId, Direction direction) {
        
         if (_fieldType == ScalarField) {
             if (_locallyAnisotropicScalarFieldTemporalProperties == nullptr)
-                throw invalid_argument("TransientPDEProperties::getTemporalCoefficient:"
-                                       " No temporal properties set.");
+                switch (derivativeOrder) {
+                    case 2:
+                        return *_scalarFieldGlobalTemporalProperties.secondOrderCoefficient;
+                    case 1:
+                        return *_scalarFieldGlobalTemporalProperties.firstOrderCoefficient;
+                    default:
+                        throw invalid_argument("TransientPDEProperties::getTemporalCoefficient:"
+                                               " Invalid derivative order.");
+                }
             else {
                 switch (derivativeOrder) {
-                    case 0:
+                    case 2:
                         return *_locallyAnisotropicScalarFieldTemporalProperties->at(
                                 nodeId).secondOrderCoefficient;
                     case 1:
@@ -133,12 +141,11 @@ namespace MathematicalEntities {
             }
         } else if (_fieldType == VectorField) {
             if (_locallyAnisotropicVectorFieldTemporalProperties == nullptr)
-                throw invalid_argument("TransientPDEProperties::getTemporalCoefficient:"
-                                       " No temporal properties set.");
+                return getTemporalCoefficient(derivativeOrder, direction);
             else {
                 auto i = spatialDirectionToUnsigned[direction];
                 switch (derivativeOrder) {
-                    case 0:
+                    case 2:
                         return (*_locallyAnisotropicVectorFieldTemporalProperties->at(
                                 nodeId).secondOrderCoefficients)[i];
                     case 1:

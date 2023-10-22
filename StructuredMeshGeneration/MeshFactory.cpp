@@ -49,7 +49,7 @@ namespace StructuredMeshGenerator{
         analysis->solve();
         
         analysis->linearSystem->exportToMatlabFile("linearSystemMeshGen.m", "/home/hal9000/code/BiGGMan++/Testing/", true);
-        analysis->linearSystem->solution->printHorizontally();
+        //analysis->linearSystem->solution->printHorizontally();
         
         analysis->applySolutionToDegreesOfFreedom();
         
@@ -157,24 +157,20 @@ namespace StructuredMeshGenerator{
         for (unsigned k = 0; k < mesh->nodesPerDirection.at(Three); ++k) {
             for (unsigned j = 0; j < mesh->nodesPerDirection.at(Two); ++j) {
                 for (unsigned i = 0; i < mesh->nodesPerDirection.at(One); ++i) {
-                    // Parametric coordinates
                     auto parametricCoords = make_shared<NumericalVector<double>>(3);
                     (*parametricCoords)[0] = static_cast<double>(i);
                     (*parametricCoords)[1] = static_cast<double>(j);
                     (*parametricCoords)[2] = static_cast<double>(k);
-
                     mesh->node(i, j, k)->coordinates.setPositionVector(parametricCoords, Parametric);
-                    // Template coordinates
+                    
                     auto templateCoords = make_shared<NumericalVector<double>>(3);
                     (*templateCoords)[0] = static_cast<double>(i) * _meshSpecs->templateStepOne;
                     (*templateCoords)[1] = static_cast<double>(j) * _meshSpecs->templateStepTwo;
                     (*templateCoords)[2] = static_cast<double>(k) * _meshSpecs->templateStepThree;
-
                     // Rotate 
                     //Transformations::rotate(templateCoord, _meshSpecs->templateRotAngleOne);
                     // Shear
                     //Transformations::shear(templateCoord, _meshSpecs->templateShearOne,_meshSpecs->templateShearTwo);
-                    
                     mesh->node(i, j, k)->coordinates.setPositionVector(templateCoords, Template);
                 }
             }

@@ -6,6 +6,8 @@
 #define UNTITLED_DEGREEOFFREEDOMTYPES_H
 
 #include <vector>
+#include "../PositioningInSpace/DirectionsPositions.h"
+using namespace PositioningInSpace;
 
 
 namespace DegreesOfFreedom {
@@ -33,6 +35,27 @@ namespace DegreesOfFreedom {
         UnknownVectorFieldVariableComponent3,
     };
     
+    static const map<DOFType, Direction> directionOfDof =
+        {{Position1, One},
+         {Position2, Two},
+         {Position3, Three},
+         {Temperature, None},
+         {Pressure1, One},
+         {Pressure2, Two},
+         {Pressure3, Three},
+         {Displacement1, One},
+         {Displacement2, Two},
+         {Displacement3, Three},
+         {Rotation1, One},
+         {Rotation2, Two},
+         {Rotation3, Three},
+         {Velocity1, One},
+         {Velocity2, Two},
+         {Velocity3, Three},
+         {UnknownScalarVariable, None},
+         {UnknownVectorFieldVariableComponent1, One},
+         {UnknownVectorFieldVariableComponent2, Two},
+         {UnknownVectorFieldVariableComponent3, Three}};
 
     struct Field_DOFType{
         public:
@@ -50,24 +73,24 @@ namespace DegreesOfFreedom {
     struct nodalPositionVectorField1D_DOFType : public Field_DOFType {
         nodalPositionVectorField1D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(1);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::Position1);
+            DegreesOfFreedom->at(0) =new DOFType(Position1);
         }
     };
     
     struct nodalPositionVectorField2D_DOFType : public Field_DOFType {
         nodalPositionVectorField2D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(2);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::Position1);
-            DegreesOfFreedom->at(1) =new DOFType(DOFType::Position2);
+            DegreesOfFreedom->at(0) =new DOFType(Position1);
+            DegreesOfFreedom->at(1) =new DOFType(Position2);
         }
     };
     
     struct nodalPositionVectorField3D_DOFType : public Field_DOFType {
         nodalPositionVectorField3D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(3);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::Position1);
-            DegreesOfFreedom->at(1) =new DOFType(DOFType::Position2);
-            DegreesOfFreedom->at(2) =new DOFType(DOFType::Position3);
+            DegreesOfFreedom->at(0) =new DOFType(Position1);
+            DegreesOfFreedom->at(1) =new DOFType(Position2);
+            DegreesOfFreedom->at(2) =new DOFType(Position3);
         }
     };
     
@@ -75,7 +98,7 @@ namespace DegreesOfFreedom {
     struct DisplacementVectorField1D_DOFType : public Field_DOFType {
         DisplacementVectorField1D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(1);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::Displacement1);
+            DegreesOfFreedom->at(0) =new DOFType(Displacement1);
         }
     };
 
@@ -84,9 +107,9 @@ namespace DegreesOfFreedom {
     struct DisplacementVectorField2D_DOFType : public Field_DOFType {
         DisplacementVectorField2D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(3);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::Displacement1);
-            DegreesOfFreedom->at(1) =new DOFType(DOFType::Displacement2);
-            DegreesOfFreedom->at(2) =new DOFType(DOFType::Rotation1);
+            DegreesOfFreedom->at(0) =new DOFType(Displacement1);
+            DegreesOfFreedom->at(1) =new DOFType(Displacement2);
+            DegreesOfFreedom->at(2) =new DOFType(Rotation1);
         }
     };
 
@@ -95,12 +118,12 @@ namespace DegreesOfFreedom {
     struct DisplacementVectorField3D_DOFType : public Field_DOFType {
         DisplacementVectorField3D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(6);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::Displacement1);
-            DegreesOfFreedom->at(1) =new DOFType(DOFType::Displacement2);
-            DegreesOfFreedom->at(2) =new DOFType(DOFType::Displacement3);
-            DegreesOfFreedom->at(3) =new DOFType(DOFType::Rotation1);
-            DegreesOfFreedom->at(4) =new DOFType(DOFType::Rotation2);
-            DegreesOfFreedom->at(5) =new DOFType(DOFType::Rotation3);
+            DegreesOfFreedom->at(0) =new DOFType(Displacement1);
+            DegreesOfFreedom->at(1) =new DOFType(Displacement2);
+            DegreesOfFreedom->at(2) =new DOFType(Displacement3);
+            DegreesOfFreedom->at(3) =new DOFType(Rotation1);
+            DegreesOfFreedom->at(4) =new DOFType(Rotation2);
+            DegreesOfFreedom->at(5) =new DOFType(Rotation3);
         }
     };
     
@@ -109,7 +132,7 @@ namespace DegreesOfFreedom {
     struct TemperatureScalar_DOFType : public Field_DOFType {
         TemperatureScalar_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(1);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::Temperature);
+            DegreesOfFreedom->at(0) =new DOFType(Temperature);
         }
     };
 
@@ -117,7 +140,7 @@ namespace DegreesOfFreedom {
     struct VelocityVectorField1D_DOFType : public Field_DOFType {
         VelocityVectorField1D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(1);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::Velocity1);
+            DegreesOfFreedom->at(0) =new DOFType(Velocity1);
         }
     };
 
@@ -125,8 +148,8 @@ namespace DegreesOfFreedom {
     struct VelocityVectorField2D_DOFType : public Field_DOFType {
         VelocityVectorField2D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(2);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::Velocity1);
-            DegreesOfFreedom->at(1) =new DOFType(DOFType::Velocity2);
+            DegreesOfFreedom->at(0) =new DOFType(Velocity1);
+            DegreesOfFreedom->at(1) =new DOFType(Velocity2);
         }
     };
     
@@ -134,9 +157,9 @@ namespace DegreesOfFreedom {
     struct VelocityVectorField3D_DOFType : public Field_DOFType {
         VelocityVectorField3D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(3);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::Velocity1);
-            DegreesOfFreedom->at(1) =new DOFType(DOFType::Velocity2);
-            DegreesOfFreedom->at(2) =new DOFType(DOFType::Velocity3);
+            DegreesOfFreedom->at(0) =new DOFType(Velocity1);
+            DegreesOfFreedom->at(1) =new DOFType(Velocity2);
+            DegreesOfFreedom->at(2) =new DOFType(Velocity3);
         }
     };
 
@@ -145,7 +168,7 @@ namespace DegreesOfFreedom {
     struct PressureVectorField1D_DOFType : public Field_DOFType {
         PressureVectorField1D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(1);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::Pressure1);
+            DegreesOfFreedom->at(0) =new DOFType(Pressure1);
         }
     };
 
@@ -153,8 +176,8 @@ namespace DegreesOfFreedom {
     struct PressureVectorField2D_DOFType : public Field_DOFType {
         PressureVectorField2D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(2);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::Pressure1);
-            DegreesOfFreedom->at(1) =new DOFType(DOFType::Pressure2);
+            DegreesOfFreedom->at(0) =new DOFType(Pressure1);
+            DegreesOfFreedom->at(1) =new DOFType(Pressure2);
         }
     };
 
@@ -162,9 +185,9 @@ namespace DegreesOfFreedom {
     struct PressureVectorField3D_DOFType : public Field_DOFType {
         PressureVectorField3D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(3);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::Pressure1);
-            DegreesOfFreedom->at(1) =new DOFType(DOFType::Pressure2);
-            DegreesOfFreedom->at(2) =new DOFType(DOFType::Pressure3);
+            DegreesOfFreedom->at(0) =new DOFType(Pressure1);
+            DegreesOfFreedom->at(1) =new DOFType(Pressure2);
+            DegreesOfFreedom->at(2) =new DOFType(Pressure3);
         }
     };
 
@@ -172,7 +195,7 @@ namespace DegreesOfFreedom {
     struct UnknownScalar_DOFType : public Field_DOFType {
         UnknownScalar_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(1);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::UnknownScalarVariable);
+            DegreesOfFreedom->at(0) =new DOFType(UnknownScalarVariable);
         }
     };
 
@@ -180,7 +203,7 @@ namespace DegreesOfFreedom {
     struct UnknownVectorField1D_DOFType : public Field_DOFType {
         UnknownVectorField1D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(1);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::UnknownVectorFieldVariableComponent1);
+            DegreesOfFreedom->at(0) =new DOFType(UnknownVectorFieldVariableComponent1);
         }
     };
 
@@ -188,8 +211,8 @@ namespace DegreesOfFreedom {
     struct UnknownVectorField2D_DOFType : public Field_DOFType {
         UnknownVectorField2D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(2);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::UnknownVectorFieldVariableComponent1);
-            DegreesOfFreedom->at(1) =new DOFType(DOFType::UnknownVectorFieldVariableComponent2);
+            DegreesOfFreedom->at(0) =new DOFType(UnknownVectorFieldVariableComponent1);
+            DegreesOfFreedom->at(1) =new DOFType(UnknownVectorFieldVariableComponent2);
         }
     };
 
@@ -197,9 +220,9 @@ namespace DegreesOfFreedom {
     struct UnknownVectorField3D_DOFType : public Field_DOFType {
         UnknownVectorField3D_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(3);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::UnknownVectorFieldVariableComponent1);
-            DegreesOfFreedom->at(1) =new DOFType(DOFType::UnknownVectorFieldVariableComponent2);
-            DegreesOfFreedom->at(2) =new DOFType(DOFType::UnknownVectorFieldVariableComponent3);
+            DegreesOfFreedom->at(0) =new DOFType(UnknownVectorFieldVariableComponent1);
+            DegreesOfFreedom->at(1) =new DOFType(UnknownVectorFieldVariableComponent2);
+            DegreesOfFreedom->at(2) =new DOFType(UnknownVectorFieldVariableComponent3);
         }
     };
     // Coupled thermo-mechanical field
@@ -209,13 +232,13 @@ namespace DegreesOfFreedom {
     struct DisplacementVectorField3DTemperature_DOFType : public Field_DOFType {
         DisplacementVectorField3DTemperature_DOFType() : Field_DOFType{} {
             DegreesOfFreedom = new std::vector<DOFType*>(7);
-            DegreesOfFreedom->at(0) =new DOFType(DOFType::Displacement1);
-            DegreesOfFreedom->at(1) =new DOFType(DOFType::Displacement2);
-            DegreesOfFreedom->at(2) =new DOFType(DOFType::Displacement3);
-            DegreesOfFreedom->at(3) =new DOFType(DOFType::Rotation1);
-            DegreesOfFreedom->at(4) =new DOFType(DOFType::Rotation2);
-            DegreesOfFreedom->at(5) =new DOFType(DOFType::Rotation3);
-            DegreesOfFreedom->at(6) =new DOFType(DOFType::Temperature);
+            DegreesOfFreedom->at(0) =new DOFType(Displacement1);
+            DegreesOfFreedom->at(1) =new DOFType(Displacement2);
+            DegreesOfFreedom->at(2) =new DOFType(Displacement3);
+            DegreesOfFreedom->at(3) =new DOFType(Rotation1);
+            DegreesOfFreedom->at(4) =new DOFType(Rotation2);
+            DegreesOfFreedom->at(5) =new DOFType(Rotation3);
+            DegreesOfFreedom->at(6) =new DOFType(Temperature);
         }
     };
     

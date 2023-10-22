@@ -7,7 +7,7 @@
 
 namespace DegreesOfFreedom{
 
-    DegreeOfFreedom::DegreeOfFreedom(DOFType* dofType, unsigned parentNode, bool isConstrained, double value) :
+    DegreeOfFreedom::DegreeOfFreedom(DOFType* dofType, unsigned* parentNode, bool isConstrained, double value) :
        _dofType(dofType), _parentNode(parentNode), _value(value), _id(numeric_limits<unsigned int>::quiet_NaN()) {
         if (isConstrained)
             _constraintType = Fixed;
@@ -37,7 +37,7 @@ namespace DegreesOfFreedom{
         return _constraintType;
     }
 
-    unsigned int const &DegreeOfFreedom::parentNode() const {
+    unsigned int* const &DegreeOfFreedom::parentNode() const {
         return _parentNode;
     }
     

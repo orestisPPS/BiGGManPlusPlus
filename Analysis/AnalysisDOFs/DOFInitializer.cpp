@@ -41,7 +41,7 @@ namespace NumericalAnalysis {
         //March through the mesh nodes
         for (auto & internalNode : *internalNodesVector){
             for (auto & DOFType : *degreesOfFreedom->DegreesOfFreedom){
-                auto dof = new DegreeOfFreedom(DOFType, *internalNode->id.global, false);
+                auto dof = new DegreeOfFreedom(DOFType, internalNode->id.global, false);
                 internalNode->degreesOfFreedom->push_back(dof);
                 _internalDegreesOfFreedomList->push_back(dof);
                 _freeDegreesOfFreedomList->push_back(dof);
@@ -83,7 +83,7 @@ namespace NumericalAnalysis {
                                 delete dof;
                             }   
                             if (!isDuplicate){
-                                auto dirichletDOF = new DegreeOfFreedom(dofType, *node->id.global, true, dofValue);
+                                auto dirichletDOF = new DegreeOfFreedom(dofType, node->id.global, true, dofValue);
                                 node->degreesOfFreedom->push_back(dirichletDOF);
                                 _fixedDegreesOfFreedomList->push_back(dirichletDOF);
                             }
@@ -98,7 +98,7 @@ namespace NumericalAnalysis {
                                     isDuplicate = true;
                             }
                             if (!isDuplicate){
-                                auto neumannDOF = new DegreeOfFreedom(dofType, *node->id.global, false);
+                                auto neumannDOF = new DegreeOfFreedom(dofType, node->id.global, false);
                                 node->degreesOfFreedom->push_back(neumannDOF);
                                 fluxDegreesOfFreedom->insert(pair<DegreeOfFreedom*, double>(neumannDOF, dofValue));
                                 _freeDegreesOfFreedomList->push_back(neumannDOF);

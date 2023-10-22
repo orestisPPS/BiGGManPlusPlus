@@ -2,33 +2,29 @@
 // Created by hal9 000 on 3/28/23.
 //
 
-#ifndef UNTITLED_EQUILIBRIUMLINEARSYSTEMINITIALIZER_H
-#include "EquilibriumLinearSystemInitializer.h"
+#ifndef UNTITLED_EQUILIBRIUMLINEARSYSTEMBUILDER_H
+#include "EquilibriumLinearSystemBuilder.h"
 
 #include <memory>
 #include <utility>
 
-namespace LinearAlgebra {
+namespace NumericalAnalysis {
     
-    EquilibriumLinearSystemInitializer::
-    EquilibriumLinearSystemInitializer(shared_ptr<AnalysisDegreesOfFreedom> analysisDegreesOfFreedom,
-                                       const shared_ptr<Mesh> &mesh,
-                                       shared_ptr<SteadyStateMathematicalProblem> problem,
-                                       shared_ptr<FDSchemeSpecs> specs,
-                                       CoordinateType coordinateType) :
-                                    linearSystem(nullptr),
-                                    _analysisDegreesOfFreedom(std::move(analysisDegreesOfFreedom)),
-                                    _mesh(mesh),
-                                    _mathematicalProblem(std::move(problem)),
-                                    _specs(std::move(specs)),
-                                    _coordinateType(coordinateType) {
-        _rhsVector = make_shared<NumericalVector<double>>(*_analysisDegreesOfFreedom->numberOfFreeDOF, 0);
-        _matrix = make_shared<NumericalMatrix<double>>(*_analysisDegreesOfFreedom->numberOfFreeDOF, *_analysisDegreesOfFreedom->numberOfFreeDOF);
+    EquilibriumLinearSystemBuilder::
+    EquilibriumLinearSystemBuilder(const shared_ptr<AnalysisDegreesOfFreedom>& analysisDegreesOfFreedom, const shared_ptr<Mesh> &mesh,
+                                   const shared_ptr<SteadyStateMathematicalProblem>& mathematicalProblem, const shared_ptr<FDSchemeSpecs>& specs,
+                                   CoordinateType coordinateSystem) :
+            linearSystem(nullptr), _analysisDegreesOfFreedom(analysisDegreesOfFreedom), _mesh(mesh),
+            _steadyStateMathematicalProblem(mathematicalProblem), _specs(specs) {
+        
+        _coordinateType = coordinateSystem;
+        RHS = make_shared<NumericalVector<double>>(*_analysisDegreesOfFreedom->numberOfFreeDOF, 0);
+        K = make_shared<NumericalMatrix<double>>(*_analysisDegreesOfFreedom->numberOfFreeDOF, *_analysisDegreesOfFreedom->numberOfFreeDOF);
         _parametricCoordToNodeMap = _mesh->getCoordinatesToNodesMap(Parametric);
     }
     
 
-    void EquilibriumLinearSystemInitializer::createLinearSystem() {
+    void EquilibriumLinearSystemBuilder::assembleSteadyStateLinearSystem() {
         auto start = std::chrono::steady_clock::now(); // Start the timer
 
         auto directions = _mesh->directions();
@@ -47,7 +43,7 @@ namespace LinearAlgebra {
         auto maxNeighbours = schemeBuilder.getMaximumNumberOfPointsForArbitrarySchemeType();
 
         //Iterate over all the free degrees of freedom
-        _matrix->dataStorage->initializeElementAssignment();
+        K->dataStorage->initializeElementAssignment();
         for (auto &dof: *_analysisDegreesOfFreedom->internalDegreesOfFreedom) {
 
             //Define the node where the dof belongs
@@ -62,13 +58,13 @@ namespace LinearAlgebra {
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
 
             //Derivative order 0
-            auto zeroOrderCoefficient = _mathematicalProblem->steadyStatePDE->spatialProperties->getIndependentVariableTermCoefficient(node->id.global);
+            auto zeroOrderCoefficient = _steadyStateMathematicalProblem->steadyStatePDE->spatialProperties->getIndependentVariableTermCoefficient(node->id.global);
             if (zeroOrderCoefficient != 0)
-                _matrix->setElement(thisDOFPosition, thisDOFPosition, zeroOrderCoefficient);
+                K->setElement(thisDOFPosition, thisDOFPosition, zeroOrderCoefficient);
             //Define the position of the dof in the NumericalMatrix
 
             //add source term
-            _rhsVector->at(thisDOFPosition) += _mathematicalProblem->steadyStatePDE->spatialProperties->getIndependentVariableTermCoefficient(node->id.global);
+            RHS->at(thisDOFPosition) += _steadyStateMathematicalProblem->steadyStatePDE->spatialProperties->getIndependentVariableTermCoefficient(node->id.global);
 
             //March through all the non-zero derivative orders 
             for (auto derivativeOrder = 1; derivativeOrder <= maxDerivativeOrder; derivativeOrder++) {
@@ -77,7 +73,7 @@ namespace LinearAlgebra {
                 for (auto &directionI: directions) {
                     unsigned indexDirectionI = spatialDirectionToUnsigned[directionI];
                     
-                    double iThDerivativePDECoefficient = _mathematicalProblem->steadyStatePDE->spatialProperties->getDependentVariableTermCoefficient(derivativeOrder, node->id.global, directionI);
+                    double iThDerivativePDECoefficient = _steadyStateMathematicalProblem->steadyStatePDE->spatialProperties->getDependentVariableTermCoefficient(derivativeOrder, node->id.global, directionI);
                     if (iThDerivativePDECoefficient != 0) {
                         
                         //Check if the available positions are qualified for the current derivative order
@@ -107,26 +103,26 @@ namespace LinearAlgebra {
                             auto weight2 = weights[iDof] * iThDerivativePDECoefficient;
                             if (neighbourDOF->constraintType() == Free) {
                                 auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOF[iDof]);
-                                double ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
+                                double ijElement = K->getElement(thisDOFPosition, neighbourDOFPosition);
                                 ijElement += weight2;
-                                _matrix->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
+                                K->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
                             }
                             else if (neighbourDOF->constraintType() == Fixed) {
                                 auto dirichletContribution = neighbourDOF->value() * weight2;
-                                _rhsVector->at(thisDOFPosition) -=  dirichletContribution;
+                                RHS->at(thisDOFPosition) -=  dirichletContribution;
                             }
                         }
                     }
                 }
             }
         }
-        addNeumannBoundaryConditions();;
-        _matrix->dataStorage->finalizeElementAssignment();
-        cout << "Matrix Assembled" << endl;
-        _matrix->printFullMatrix();
+        _addNeumannBoundaryConditions();;
+        K->dataStorage->finalizeElementAssignment();
+/*        cout << "Matrix Assembled" << endl;
+        K->printFullMatrix();
         cout << "RHS Assembled" << endl;
-        _rhsVector->printHorizontally();
-        this->linearSystem = make_shared<LinearSystem>(std::move(_matrix), std::move(_rhsVector));
+        RHS->printHorizontally();*/
+        //this->linearSystem = make_shared<LinearSystem>(std::move(K), std::move(RHS));
 
 
         auto end = std::chrono::steady_clock::now(); // Stop the timer
@@ -135,7 +131,7 @@ namespace LinearAlgebra {
     }
 
     //TODO : Fix as above
-    void EquilibriumLinearSystemInitializer::addNeumannBoundaryConditions() {
+    void EquilibriumLinearSystemBuilder::_addNeumannBoundaryConditions() {
         auto start = std::chrono::steady_clock::now(); // Start the timer
         auto schemeSpecs = make_shared<FDSchemeSpecs>(2, _mesh->directions());
         auto directions = _mesh->directions();
@@ -185,21 +181,21 @@ namespace LinearAlgebra {
                         auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(
                                 colinearDOF[iDof]);
                         //_matrix->at(thisDOFPosition, neighbourDOFPosition) += weight2 * normalVector[i];
-                        double &ijElement = _matrix->getElement(thisDOFPosition, neighbourDOFPosition);
+                        double &ijElement = K->getElement(thisDOFPosition, neighbourDOFPosition);
                         ijElement += weight2 * normalVector[indexDirectionI];
-                        _matrix->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
+                        K->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
                     }
                     else if (neighbourDOF->constraintType() == Fixed) {
                         auto dirichletContribution = neighbourDOF->value() * weight2 * normalVector[indexDirectionI];
-                        _rhsVector->at(thisDOFPosition) -= dirichletContribution;
+                        RHS->at(thisDOFPosition) -= dirichletContribution;
                     }
                 }
             }
-            _rhsVector->at(thisDOFPosition) += dof.second;
+            RHS->at(thisDOFPosition) += dof.second;
         }
     }
 
-    map<short unsigned, map<Direction, map<vector<Position>, short>>> EquilibriumLinearSystemInitializer::
+    map<short unsigned, map<Direction, map<vector<Position>, short>>> EquilibriumLinearSystemBuilder::
     _initiatePositionsAndPointsMap(short unsigned &maxDerivativeOrder, vector<Direction> &directions) {
         map<short unsigned, map<Direction, map<vector<Position>, short>>> positionsAndPoints;
         for (short unsigned derivativeOrder = 1; derivativeOrder <= maxDerivativeOrder; derivativeOrder++) {
@@ -213,7 +209,7 @@ namespace LinearAlgebra {
         return positionsAndPoints;
     }
 
-    tuple<vector<Position>,short> EquilibriumLinearSystemInitializer::
+    tuple<vector<Position>,short> EquilibriumLinearSystemBuilder::
     _getQualifiedFromAvailable(map<vector<Position>,unsigned short>& availablePositionsAndPoints,
                                map<vector<Position>,short>& templatePositionsAndPoints){
         map<vector<Position>,short> qualifiedPositionsAndPoints = map<vector<Position>,short>();

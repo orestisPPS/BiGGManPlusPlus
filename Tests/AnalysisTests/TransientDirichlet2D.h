@@ -1,30 +1,30 @@
 //
-// Created by hal9000 on 9/12/23.
+// Created by hal9000 on 10/20/23.
 //
 
-#ifndef UNTITLED_STEADYSTATE2DTEST_H
-#define UNTITLED_STEADYSTATE2DTEST_H
+#ifndef UNTITLED_TRANSIENTDIRICHLET2D_H
+#define UNTITLED_TRANSIENTDIRICHLET2D_H
 
-#endif //UNTITLED_STEADYSTATE2DTEST_H
 
 #include <cassert>
-#include "../../Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.h"
+#include "../../Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientFiniteDifferenceAnalysis.h"
 #include "../../StructuredMeshGeneration/MeshFactory.h"
 #include "../../StructuredMeshGeneration/MeshSpecs.h"
 #include "../../StructuredMeshGeneration/DomainBoundaryFactory.h"
 #include "../../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
+#include "../../LinearAlgebra/NumericalIntegrators/NewmarkNumericalIntegrator.h"
 
 namespace Tests {
 
-    class SteadyState2DTest {
+    class TransientDirichlet2D {
     public:
-        static void runTests(){
-            _testDiffusionDirichlet2D();
+        static void runTests() {
+            _testTransientDiffusionDirichlet2D();
         }
-        
+
     private:
 
-        static void _testDiffusionDirichlet2D(){
+        static void _testTransientDiffusionDirichlet2D() {
             logTestStart("testDiffusionDirichlet2D");
 
             map<Direction, unsigned> numberOfNodes;
@@ -34,7 +34,7 @@ namespace Tests {
             auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 0, 0, 0);
             auto meshFactory = make_shared<MeshFactory>(specs);
             auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
-            meshFactory->buildMesh(2, meshBoundaries->parallelogram(numberOfNodes, 4, 4, 0, 0));
+            meshFactory->buildMesh(2, meshBoundaries->parallelogram(numberOfNodes, 1, 1, 0, 0));
             shared_ptr<Mesh> mesh = meshFactory->mesh;
 
 /*            auto fileNameMesh = "test_2D_dirichlet.vtk";
@@ -47,32 +47,41 @@ namespace Tests {
             auto top = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
                                                                                                            ({{Temperature, 500}})));
             auto left = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                            ({{Temperature, 200}})));
+                                                                                                            ({{Temperature, 20}})));
             auto right = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
                                                                                                              ({{Temperature, 0}})));
-
-
-
-            auto pdeProperties = make_shared<SpatialPDEProperties>(3, ScalarField);
-            pdeProperties->setIsotropicSpatialProperties(10, 0, 0, 0);
-
-            auto heatTransferPDE = make_shared<SteadyStatePartialDifferentialEquation>(pdeProperties, Laplace);
-
-            auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
-
             auto dummyBCMap = make_shared<map<Position, shared_ptr<BoundaryCondition>>>();
             dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Left, left));
             dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Right, right));
             dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Top, top));
             dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Bottom, bottom));
-
-
             auto boundaryConditions = make_shared<DomainBoundaryConditions>(dummyBCMap);
+
+            auto initialConditions = make_shared<InitialConditions>(0, 0);
+
+
+            auto pdeSpatialProperties = make_shared<SpatialPDEProperties>(3, ScalarField);
+            pdeSpatialProperties->setIsotropicSpatialProperties(0.1, 0, 0, 0);
+
+            auto pdeTemporalProperties = make_shared<TransientPDEProperties>(3, ScalarField);
+            pdeTemporalProperties->setIsotropicTemporalProperties(0, 1);
+            //pdeTemporalProperties->setIsotropicTemporalProperties(0, 0);
+
+            auto heatTransferPDE = make_shared<TransientPartialDifferentialEquation>(pdeSpatialProperties,
+                                                                                     pdeTemporalProperties, Laplace);
+
+            auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
+
             auto temperatureDOF = new TemperatureScalar_DOFType();
-            auto problem = make_shared<SteadyStateMathematicalProblem>(heatTransferPDE, boundaryConditions, temperatureDOF);
+            auto problem = make_shared<TransientMathematicalProblem>(heatTransferPDE, boundaryConditions,
+                                                                     initialConditions, temperatureDOF);
+
             auto solver = make_shared<ConjugateGradientSolver>(1E-9, 1E4, L2, 10);
-            auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specsFD);
-            analysis->linearSystem->exportToMatlabFile("ststDiffusionLinearSystem.m", "/home/hal9000/code/BiGGMan++/Testing/", true);
+            auto integration = make_shared<NewmarkNumericalIntegrator>(0.25, 0.5);
+            auto analysis = make_shared<TransientFiniteDifferenceAnalysis>(0.0, 0.1, 20, problem, mesh, solver, integration, specsFD);
+
+            //analysis->linearSystem->exportToMatlabFile("transientDiffusionLinearSystem.m",
+                                                     //  "/home/hal9000/code/BiGGMan++/Testing/", true);
 
             analysis->solve();
 
@@ -83,17 +92,17 @@ namespace Tests {
             auto fieldType = "Temperature";
             Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
 
-            auto targetCoords = NumericalVector<double>{2, 2, 0};
+            auto targetCoords = NumericalVector<double>{0.5, 0.5, 0};
 
             auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-3);
 
-            auto absoluteRelativeError = abs(targetSolution[0] - 55) / 55;
+            auto absoluteRelativeError = abs(targetSolution[0] - 149.989745970325) / 149.989745970325;
 
-            assert(absoluteRelativeError< 1E-12);
+            assert(absoluteRelativeError < 1E-3);
             logTestEnd();
         }
 
-        static void logTestStart(const std::string& testName) {
+        static void logTestStart(const std::string &testName) {
             std::cout << "Running " << testName << "... ";
         }
 
@@ -101,5 +110,7 @@ namespace Tests {
             std::cout << "\033[1;32m[PASSED ]\033[0m\n";  // This adds a green [PASSED] indicator
         }
     };
-
 } // Tests
+    
+
+#endif //UNTITLED_TRANSIENTDIRICHLET2D_H

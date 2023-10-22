@@ -7,18 +7,21 @@
 namespace NumericalAnalysis {
     
     SteadyStateFiniteDifferenceAnalysis::SteadyStateFiniteDifferenceAnalysis(
-            const shared_ptr<SteadyStateMathematicalProblem>& mathematicalProblem, const shared_ptr<Mesh>& mesh, const shared_ptr<Solver>& solver,
-            const shared_ptr<FDSchemeSpecs>&schemeSpecs, CoordinateType coordinateSystem) :
-            FiniteDifferenceAnalysis(mathematicalProblem, mesh, solver, schemeSpecs, coordinateSystem) {
+            shared_ptr<SteadyStateMathematicalProblem> mathematicalProblem,
+            shared_ptr<Mesh> mesh,
+            shared_ptr<Solver> solver,
+            shared_ptr<FDSchemeSpecs> schemeSpecs, CoordinateType coordinateSystem) :
+            FiniteDifferenceAnalysis(mathematicalProblem, std::move(mesh), std::move(solver), std::move(schemeSpecs), coordinateSystem),
+            steadyStateMathematicalProblem(std::move(mathematicalProblem)){
         
-        auto linearSystemInitializer =
-                make_unique<EquilibriumLinearSystemInitializer>(degreesOfFreedom, mesh, mathematicalProblem, schemeSpecs, coordinateSystem);
-        linearSystemInitializer->createLinearSystem();
-        this->linearSystem = linearSystemInitializer->linearSystem;
-        solver->setLinearSystem(linearSystem);
+        auto linearSystemInitializer = make_unique<EquilibriumLinearSystemBuilder>(
+                degreesOfFreedom, this->mesh, steadyStateMathematicalProblem, this->schemeSpecs, this->coordinateSystem);
+        linearSystemInitializer->assembleSteadyStateLinearSystem();
+        this->linearSystem = make_shared<LinearSystem>(linearSystemInitializer->K, linearSystemInitializer->RHS);
+        this->solver->setLinearSystem(linearSystem);
     }
     
-    void SteadyStateFiniteDifferenceAnalysis::solve() const {
+    void SteadyStateFiniteDifferenceAnalysis::solve() {
         solver->solve();
     }
     

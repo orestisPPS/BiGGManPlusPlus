@@ -6,13 +6,11 @@
 
 namespace NumericalAnalysis {
     
-    FiniteDifferenceAnalysis::FiniteDifferenceAnalysis(shared_ptr<MathematicalProblem>problem,
-                                                       shared_ptr<Mesh> mesh,
-                                                       shared_ptr<Solver> solver,
-                                                       shared_ptr<FDSchemeSpecs> specs,
-                                                       CoordinateType coordinateSystem) :
-                                schemeSpecs(std::move(specs)),
-                                NumericalAnalysis(std::move(problem), std::move(mesh), std::move(solver) ) {
+    FiniteDifferenceAnalysis::FiniteDifferenceAnalysis(shared_ptr<MathematicalProblem> mathematicalProblem,
+                                                       shared_ptr<Mesh> mesh, shared_ptr<Solver> solver,
+                                                       shared_ptr<FDSchemeSpecs> schemeSpecs, CoordinateType coordinateSystem) :
+            NumericalAnalysis(std::move(mathematicalProblem), std::move(mesh), std::move(solver), coordinateSystem),
+            schemeSpecs(std::move(schemeSpecs)) {
     }
     
 

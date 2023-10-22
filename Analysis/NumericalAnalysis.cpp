@@ -7,12 +7,14 @@
 #include <utility>
 
 namespace NumericalAnalysis {
-    NumericalAnalysis::NumericalAnalysis(shared_ptr<MathematicalProblem>mathematicalProblem,
-                                         shared_ptr<Mesh> mesh,
-                                         shared_ptr<Solver> solver,
+    NumericalAnalysis::NumericalAnalysis(shared_ptr<MathematicalProblem> mathematicalProblem,
+                                         shared_ptr<Mesh> mesh, shared_ptr<Solver> solver,
                                          CoordinateType coordinateSystem) :
-            mathematicalProblem(std::move(mathematicalProblem)), mesh(std::move(mesh)), linearSystem(nullptr),
-            degreesOfFreedom(initiateDegreesOfFreedom()), solver(std::move(solver)) {
+                                         
+                                         mathematicalProblem(std::move(mathematicalProblem)), mesh(std::move(mesh)),
+                                         solver(std::move(solver)),
+                                         coordinateSystem(coordinateSystem) {
+        degreesOfFreedom = std::move(initiateDegreesOfFreedom());
     }
     
     shared_ptr<AnalysisDegreesOfFreedom> NumericalAnalysis::initiateDegreesOfFreedom() const {
@@ -20,7 +22,7 @@ namespace NumericalAnalysis {
                                                      mathematicalProblem->degreesOfFreedom);
     }
     
-    void NumericalAnalysis::solve() const {
+    void NumericalAnalysis::solve(){
         solver->solve();
     }
 

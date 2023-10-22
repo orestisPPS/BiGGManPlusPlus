@@ -6,7 +6,7 @@
 #define UNTITLED_ANALYSIS_H
 
 #include "../MathematicalEntities/MathematicalProblem/MathematicalProblem.h"
-#include "../LinearAlgebra/EquilibriumLinearSystemInitializer.h"
+#include "FiniteDifferenceAnalysis/EquilibriumLinearSystemBuilder.h"
 #include "../LinearAlgebra/Solvers/Solver.h"
 #include "../Utility/Exporters/Exporters.h"
 
@@ -21,12 +21,14 @@ namespace NumericalAnalysis {
     class  NumericalAnalysis {
         public:
         NumericalAnalysis(shared_ptr<MathematicalProblem> mathematicalProblem, shared_ptr<Mesh> mesh,
-                          shared_ptr<Solver> solver, CoordinateType coordinateSystem = Natural);
+                          shared_ptr<Solver> solver,CoordinateType coordinateSystem = Natural);
         
         
         shared_ptr<MathematicalProblem> mathematicalProblem;
         
         shared_ptr<Mesh> mesh;
+        
+        CoordinateType coordinateSystem;
                 
         shared_ptr<AnalysisDegreesOfFreedom> degreesOfFreedom;
         
@@ -34,14 +36,14 @@ namespace NumericalAnalysis {
         
         shared_ptr<Solver> solver;
 
-        virtual void solve() const;
+        virtual void solve();
         
         void applySolutionToDegreesOfFreedom() const;
         
         NumericalVector<double> getSolutionAtNode(NumericalVector<double>& nodeCoordinates, double tolerance = 1E-4) const;
         
     protected:
-        unique_ptr<EquilibriumLinearSystemInitializer> _linearSystemInitializer;
+        unique_ptr<EquilibriumLinearSystemBuilder> _linearSystemInitializer;
 
         shared_ptr<AnalysisDegreesOfFreedom> initiateDegreesOfFreedom() const;
     };

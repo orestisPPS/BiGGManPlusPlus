@@ -13,12 +13,14 @@ namespace NumericalAnalysis {
     class SteadyStateFiniteDifferenceAnalysis : public FiniteDifferenceAnalysis{
     public:
         
-        SteadyStateFiniteDifferenceAnalysis(const shared_ptr<SteadyStateMathematicalProblem>& mathematicalProblem,
-                                            const shared_ptr<Mesh>& mesh,
-                                            const shared_ptr<Solver>& solver,
-                                            const shared_ptr<FDSchemeSpecs>&schemeSpecs, CoordinateType coordinateSystem = Natural);
+        SteadyStateFiniteDifferenceAnalysis(shared_ptr<SteadyStateMathematicalProblem> mathematicalProblem,
+                                            shared_ptr<Mesh> mesh,
+                                            shared_ptr<Solver> solver,
+                                            shared_ptr<FDSchemeSpecs> schemeSpecs, CoordinateType coordinateSystem = Natural);
         
-        void solve() const override;
+        shared_ptr<SteadyStateMathematicalProblem> steadyStateMathematicalProblem;
+        
+        void solve() override;
     };
 
 } // NumericalAnalysis

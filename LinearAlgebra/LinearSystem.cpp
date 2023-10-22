@@ -38,29 +38,10 @@ namespace LinearAlgebra {
         outputFile << "]';" << endl;
 
         // Write the command to solve the system
-        outputFile << "x = A \\ b;" << endl;
-
-        // Write the command to solve the system
-        outputFile << "x = A \\ b;" << endl;
+        outputFile << "x = A \\ b" << endl;
 
         outputFile << "[L, U] = lu(A);" << endl;
-
-
-        if (printSolution) {
-            // Write the command to create a grid for evaluating the solution
-            outputFile << "[X,Y] = meshgrid(0:0.1:1, 0:0.1:1);" << endl;
-
-            // Write the command to evaluate the solution at each point on the grid
-            outputFile << "Z = x(1)*X + x(2)*Y + x(3);" << endl;
-
-            // Write the command to plot the solution
-            outputFile << "figure;" << endl;
-            outputFile << "surf(X,Y,Z);" << endl;
-            outputFile << "xlabel('x');" << endl;
-            outputFile << "ylabel('y');" << endl;
-            outputFile << "zlabel('z');" << endl;
-            outputFile << "colorbar;" << endl;
-        }
+        
             outputFile.close();
     }
 }// LinearAlgebra

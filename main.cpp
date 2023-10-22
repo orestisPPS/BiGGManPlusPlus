@@ -1,7 +1,8 @@
 #include <iostream>
 #include "Tests/AnalysisTests/SteadyState3DNeumann.h"
-#include "Tests/AnalysisTests/SteadyState2DTest.h"
+#include "Tests/AnalysisTests/SteadyStateDirichlet2D.h"
 #include "Tests/AnalysisTests/SteadyStateDirichlet3D.h"
+#include "Tests/AnalysisTests/TransientDirichlet2D.h"
 #include "Tests/LanczosEigenDecompositionTest.h"
 #include "Tests/NumericalVectorTest.h"
 #include "Tests/IterativeSolversTest.h"
@@ -33,7 +34,8 @@ int main() {
     delete lanczosTest;*/
 
     //Tests::IterativeSolversTest::runTests();
-    Tests::SteadyState2DTest::runTests();
+    //Tests::SteadyStateDirichlet2D::runTests();
+    Tests::TransientDirichlet2D::runTests();
     //Tests::SteadyState3DNeumann::runTests();
     //Tests::MeshGenerator::buildMesh();
 /*    auto vectorTest = new NumericalVectorTest();

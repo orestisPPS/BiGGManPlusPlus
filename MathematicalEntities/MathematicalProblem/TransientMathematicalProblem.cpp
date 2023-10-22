@@ -11,8 +11,8 @@ namespace MathematicalEntities {
     
     TransientMathematicalProblem::TransientMathematicalProblem(
             shared_ptr<TransientPartialDifferentialEquation> pde, shared_ptr<DomainBoundaryConditions> bcs,
-            unique_ptr<InitialConditions> initialConditions, struct Field_DOFType *degreesOfFreedom) :
-            MathematicalProblem(pde, std::move(bcs), degreesOfFreedom),
+            shared_ptr<InitialConditions> initialConditions, struct Field_DOFType *degreesOfFreedom) :
+            SteadyStateMathematicalProblem(pde, std::move(bcs), degreesOfFreedom),
             transientPDE(std::move(pde)), _initialConditions(std::move(initialConditions)) {
         
     }

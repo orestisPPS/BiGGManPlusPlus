@@ -4,10 +4,10 @@
 
 #ifndef UNTITLED_TRANSIENTPDEPROPERTIES_H
 #define UNTITLED_TRANSIENTPDEPROPERTIES_H
-#include "SecondOrderLinearPDEProperties.h"
+#include "SpatialPDEProperties.h"
 namespace MathematicalEntities {
 
-    class TransientPDEProperties : public SecondOrderLinearPDEProperties {
+    class TransientPDEProperties : public SpatialPDEProperties {
     
     public:
         explicit TransientPDEProperties(unsigned short physicalSpaceDimensions, FieldType fieldType);

@@ -108,7 +108,7 @@ namespace LinearAlgebra {
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
             _availableThreads = other._availableThreads;
             _values = make_shared<vector<T>>(dereference_trait<InputType>::size(other));
-            _deepCopy(other);
+            deepCopy(other);
         }
         
         
@@ -118,7 +118,7 @@ namespace LinearAlgebra {
         */
         explicit NumericalVector(const std::shared_ptr<NumericalVector<T>> &other) {
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
-            _deepCopy(other);
+            deepCopy(other);
             _availableThreads = other->_availableThreads;
         }
         
@@ -128,7 +128,7 @@ namespace LinearAlgebra {
          */
         explicit NumericalVector(const std::unique_ptr<NumericalVector<T>> &other) {
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
-            _deepCopy(other);
+            deepCopy(other);
             _availableThreads = other->_availableThreads;
         }
         
@@ -138,7 +138,7 @@ namespace LinearAlgebra {
          */
         explicit NumericalVector(const NumericalVector<T> *other) {
             static_assert(std::is_arithmetic<T>::value, "Template type T must be an arithmetic type (integral or floating-point)");
-            _deepCopy(other);
+            deepCopy(other);
             _availableThreads = other->_availableThreads;
         }
 
@@ -152,7 +152,7 @@ namespace LinearAlgebra {
         NumericalVector &operator=(const InputType &other) {
             
             if (this != &other) {
-                _deepCopy(other);
+                deepCopy(other);
                 _availableThreads = other.getAvailableThreads();
             }
             return *this;
@@ -364,6 +364,31 @@ namespace LinearAlgebra {
                 }
             };
             _threading.executeParallelJob(fillJob, _values->size(), _availableThreads);
+        }
+
+        /**
+        * @brief Performs a deep copy from the source to the current object.
+        * 
+        * This method uses the dereference_trait to handle various types of sources 
+        * such as raw pointers, unique pointers, shared pointers, and direct objects.
+        * 
+        * @param source The source object to be copied from.
+        */
+        template<typename InputType>
+        void deepCopy(const InputType &source) {
+
+            if (size() != dereference_trait<InputType>::size(source)) {
+                throw std::invalid_argument("Source vector must be the same size as the destination vector.");
+            }
+
+            const T *sourceData = dereference_trait<InputType>::dereference(source);
+
+            auto deepCopyThreadJob = [&](unsigned start, unsigned end) {
+                for (unsigned i = start; i < end && i < _values->size(); ++i) {
+                    (*_values)[i] = sourceData[i];
+                }
+            };
+            _threading.executeParallelJob(deepCopyThreadJob, _values->size(), _availableThreads);
         }
 
         /**
@@ -1197,7 +1222,7 @@ namespace LinearAlgebra {
             unsigned availableThreads = (userDefinedThreads > 0) ? userDefinedThreads : _availableThreads;
             _threading.executeParallelJob(scaleJob, _values->size(), availableThreads);
         }
-        
+
         void printVertically(const string& name = " "){
             cout << " name = [ " << endl;
             for (auto &value: *_values){
@@ -1205,22 +1230,34 @@ namespace LinearAlgebra {
             }
             cout << " ] " << endl;
         }
-        
-        void printWithIndex(const string& name = " "){
-            cout << " name = [ " << endl;
+
+        void printVerticallyWithIndex(const string& name = " "){
+            cout << name << " = [ " << endl;
             for (unsigned i = 0; i < _values->size(); ++i){
                 cout << i << " : " << (*_values)[i] << endl;
             }
             cout << " ] " << endl;
         }
-        
+
+
         void printHorizontally(const string& name = " "){
             std::ostream os (std::cout.rdbuf());
-            os << " name = [ ";
+            os << name << " = [ ";
             for (const auto &value: *_values){
                 os << value << " ";
             }
+            os << " ] " << "\n" << endl;
         }
+        
+        void printHorizontallyWithIndex(const string& name = " "){
+            std::ostream os (std::cout.rdbuf());
+            os << name << " = [ ";
+            for (unsigned i = 0; i < _values->size(); ++i){
+                os << i << " : " << (*_values)[i] << " ";
+            }
+            os << " ] " << "\n" << endl;
+        }
+        
 
 /*        void exportCSV(const std::string& fileName, const std::string& filePath, const std::string& delimiter = ",") const {
             std::ofstream file;
@@ -1245,31 +1282,6 @@ namespace LinearAlgebra {
         
         unsigned _availableThreads; ///< The number of threads available for operations on this vector.
         
-
-        /**
-        * @brief Performs a deep copy from the source to the current object.
-        * 
-        * This method uses the dereference_trait to handle various types of sources 
-        * such as raw pointers, unique pointers, shared pointers, and direct objects.
-        * 
-        * @param source The source object to be copied from.
-        */
-        template<typename InputType>
-        void _deepCopy(const InputType &source) {
-
-            if (size() != dereference_trait<InputType>::size(source)) {
-                throw std::invalid_argument("Source vector must be the same size as the destination vector.");
-            }
-
-            const T *sourceData = dereference_trait<InputType>::dereference(source);
-
-            auto deepCopyThreadJob = [&](unsigned start, unsigned end) {
-                for (unsigned i = start; i < end && i < _values->size(); ++i) {
-                    (*_values)[i] = sourceData[i];
-                }
-            };
-            _threading.executeParallelJob(deepCopyThreadJob, _values->size(), _availableThreads);
-        }
 
         /**
         * @brief Checks if the elements of the current object are equal to those of the provided source.

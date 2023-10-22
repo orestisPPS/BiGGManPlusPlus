@@ -105,7 +105,7 @@ namespace LinearAlgebra {
             if (this != &other) {
                 // Using the dereference trait to obtain the pointer to the source data
                 const T* otherData = dereference_trait<T>::dereference(other);
-                _deepCopy(otherData);
+                deepCopy(otherData);
                 _parallelizationMethod = other._parallelizationMethod;
             }
             return *this;

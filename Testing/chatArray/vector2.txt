@@ -448,7 +448,7 @@
         * 
         * @param source The source object to be copied from.
         */
-        void _deepCopy(const T*& source, size_t size) {
+        void deepCopy(const T*& source, size_t size) {
 
             if (_values->size() != source->size()) {
                 throw std::invalid_argument("Source vector must be the same size as the destination vector.");

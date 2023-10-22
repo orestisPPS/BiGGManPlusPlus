@@ -702,7 +702,7 @@
         * @param source The source object to be copied from.
         */
         template<typename U>
-        void _deepCopy(const U &source) {
+        void deepCopy(const U &source) {
             const auto &dereferencedSource = dereference_trait<U>::dereference(source);
 
             if (_values->size() != dereferencedSource.size()) {
