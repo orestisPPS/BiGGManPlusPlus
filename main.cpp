@@ -1,8 +1,9 @@
 #include <iostream>
 #include "Tests/AnalysisTests/SteadyState3DNeumann.h"
 #include "Tests/AnalysisTests/SteadyStateDirichlet2D.h"
-#include "Tests/AnalysisTests/SteadyStateDirichlet3D.h"
+#include "Tests/AnalysisTests/SteadyState3DDirichlet.h"
 #include "Tests/AnalysisTests/TransientDirichlet2D.h"
+#include "Tests/AnalysisTests/TransientDirichlet3D.h"
 #include "Tests/LanczosEigenDecompositionTest.h"
 #include "Tests/NumericalVectorTest.h"
 #include "Tests/IterativeSolversTest.h"
@@ -24,18 +25,20 @@ using namespace DegreesOfFreedom;
 
 int main() {
 
-    //auto analysisTest = new NumericalAnalysis::StStFDTest();
-/*
-    auto neumannTest = new Tests::SteadyState3DNeumann();
-    delete neumannTest;
-*/
+    //Tests::SteadyStateDirichlet2D::runTests();
+    //Tests::TransientDirichlet2D::runTests();
+    //Tests::SteadyState3DDirichlet::runTests();
+    Tests::SteadyState3DNeumann::runTests();
+    //Tests::TransientDirichlet3D::runTests();
+    
 
 /*    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();
     delete lanczosTest;*/
 
     //Tests::IterativeSolversTest::runTests();
     //Tests::SteadyStateDirichlet2D::runTests();
-    Tests::TransientDirichlet2D::runTests();
+    //Tests::TransientDirichlet3D::runTests();
+    //Tests::TransientDirichlet3D::runTests();
     //Tests::SteadyState3DNeumann::runTests();
     //Tests::MeshGenerator::buildMesh();
 /*    auto vectorTest = new NumericalVectorTest();
@@ -46,6 +49,11 @@ int main() {
     //auto qrTest = new Tests::QRTest();
 
     //auto dirichletTest = new Tests::SteadyStateDirichlet3D();
+    
+    Tests::SteadyState3DDirichlet::runTests();
+
+    //Tests::SteadyState3DNeumann::runTests();
+
     //auto cudaOperations = new Tests::OperationsCUDA();
     //auto singleThreadVectorOperations = new Tests::VectorOperationsTest();
 

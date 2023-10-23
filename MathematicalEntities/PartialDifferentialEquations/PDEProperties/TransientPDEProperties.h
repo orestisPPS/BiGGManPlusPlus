@@ -12,8 +12,10 @@ namespace MathematicalEntities {
     public:
         explicit TransientPDEProperties(unsigned short physicalSpaceDimensions, FieldType fieldType);
         
+    //void 5555555555555555555555555555555555555555555555555555555555555555555555555555.................................e4r;dm,,,,                                 fvggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg                          ```````````````Q    AAAAAAAAAAAAAAdccccccccccccccccccccccccccccccccccCCCCCCCCCCCCCCCCC                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      setIsotropicTemporalProperties(double secondOrderCoefficient, double firstOrderCoefficient);
+    
         void setIsotropicTemporalProperties(double secondOrderCoefficient, double firstOrderCoefficient);
-        
+    
         void setAnisotropicTemporalProperties(TemporalScalarFieldPDECoefficients scalarFieldProperties, unsigned* nodeId = nullptr);
         
         void setAnisotropicTemporalProperties(TemporalVectorFieldPDECoefficients vectorFieldProperties, unsigned* nodeId = nullptr);

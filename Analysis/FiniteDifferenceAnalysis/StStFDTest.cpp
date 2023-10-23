@@ -142,7 +142,7 @@ namespace NumericalAnalysis {
         auto targetCoords = NumericalVector<double>{2, 2};
         auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-6);
         
-        cout<<"Target Solution: "<< targetSolution[0] << endl;
+        cout<<"Computed Value : "<< targetSolution[0] << endl;
 
         auto fileName = "temperatureField.vtk";
         auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";

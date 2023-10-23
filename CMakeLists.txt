@@ -121,7 +121,7 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp 
         LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h 
         LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp
-        Tests/AnalysisTests/SteadyState3DNeumann.h Tests/AnalysisTests/SteadyState3DNeumann.cpp 
+        Tests/AnalysisTests/SteadyState3DNeumann.h
         Discretization/Elements/Element.h 
         Discretization/Elements/Element.cpp
         Discretization/Elements/MeshElements.h
@@ -130,8 +130,7 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h 
         LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp
         LinearAlgebra/Operations/MultiThreadVectorOperations.h
-        Tests/AnalysisTests/SteadyStateDirichlet3D.h
-        Tests/AnalysisTests/SteadyStateDirichlet3D.cpp
+        Tests/AnalysisTests/SteadyState3DDirichlet.h
         Tests/Mesh3dTest.h
         Tests/Mesh3dTest.cpp
         LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.h
@@ -198,6 +197,8 @@ add_executable(untitled main.cpp
         Discretization/Time/TimeEntity.h
         Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientAnalysisResults.cpp
         Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientAnalysisResults.h
+        Tests/AnalysisTests/TransientDirichlet3D.h
+        Tests/AnalysisTests/TransientNeumann3D.h
 )
 
 

@@ -27,9 +27,9 @@ namespace NumericalAnalysis {
             C->setElement(dofIndex, dofIndex, c);
             M->setElement(dofIndex, dofIndex, m);
         }
-        C->printFullMatrix("C");
+/*        C->printFullMatrix("C");
         M->printFullMatrix("M");
-        K->printFullMatrix("K");
+        K->printFullMatrix("K");*/
         //effectiveRHS = make_shared<NumericalVector<double>>(RHS);
     }
     

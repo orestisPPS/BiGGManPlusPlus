@@ -100,7 +100,7 @@ namespace Tests {
         //auto targetCoords = NumericalVector<double>{1.5, 1.5, 3};
         //auto targetCoords = NumericalVector<double>{5, 5, 5};
         auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-1);
-        cout<<"Target Solution: "<< targetSolution[0] << endl;
+        cout<<"Computed Value : "<< targetSolution[0] << endl;
 
 
 

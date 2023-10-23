@@ -70,6 +70,7 @@ namespace NumericalAnalysis {
                         result[i] = dof->value();
                         i++;
                     }
+                    return result;
                 }
             }
         }
