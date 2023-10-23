@@ -92,7 +92,7 @@ namespace NumericalAnalysis {
                         auto colinearCoordinates = graph.getSameColinearNodalCoordinates(_coordinateType, filteredNodeGraph);
                         auto colinearDOF = graph.getColinearDOF(dof->type(), directionI, filteredNodeGraph);
                         
-                        auto taylorPoint = (*node->coordinates.getPositionVector(Parametric))[indexDirectionI];
+                        auto taylorPoint = (*node->coordinates.getPositionVector(_coordinateType))[indexDirectionI];
                         auto weights = calculateWeightsOfDerivativeOrder(*colinearCoordinates[directionI]->getVectorSharedPtr(),
                                                                          derivativeOrder, taylorPoint);
 
@@ -169,9 +169,10 @@ namespace NumericalAnalysis {
                 auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
                 auto colinearCoordinates = graph.getSameColinearNodalCoordinatesOnBoundary(_coordinateType, filteredNodeGraph);
                 auto colinearDOF = graph.getColinearDOFOnBoundary(dof.first->type(), directionI, filteredNodeGraph);
-                auto taylorPoint = (*node->coordinates.getPositionVector(Parametric))[indexDirectionI];
+                auto taylorPoint = (*node->coordinates.getPositionVector(_coordinateType))[indexDirectionI];
                 auto weights = calculateWeightsOfDerivativeOrder(*colinearCoordinates[directionI]->getVectorSharedPtr(),
                                                                  errorOrderDerivative1, taylorPoint);
+
                 
                 for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
                     auto neighbourDOF = colinearDOF[iDof];
@@ -193,6 +194,12 @@ namespace NumericalAnalysis {
             }
             RHS->at(thisDOFPosition) += dof.second;
         }
+
+
+
+        auto end = std::chrono::steady_clock::now(); // Stop the timer
+        cout << "Linear System Assembled in "
+             << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
     }
 
     map<short unsigned, map<Direction, map<vector<Position>, short>>> EquilibriumLinearSystemBuilder::

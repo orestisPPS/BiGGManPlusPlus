@@ -25,11 +25,11 @@ using namespace DegreesOfFreedom;
 
 int main() {
 
-    //Tests::SteadyStateDirichlet2D::runTests();
-    //Tests::TransientDirichlet2D::runTests();
-    //Tests::SteadyState3DDirichlet::runTests();
-    Tests::SteadyState3DNeumann::runTests();
-    //Tests::TransientDirichlet3D::runTests();
+    //Tests::SteadyStateDirichlet2D::runTests(); //Pass
+    //Tests::TransientDirichlet2D::runTests(); //Pass
+    //Tests::SteadyState3DDirichlet::runTests(); //Pass
+    Tests::SteadyState3DNeumann::runTests(); //Fail
+    Tests::TransientDirichlet3D::runTests(); //Fail
     
 
 /*    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();

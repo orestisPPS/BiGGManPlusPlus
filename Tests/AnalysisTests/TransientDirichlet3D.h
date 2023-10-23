@@ -74,7 +74,7 @@ namespace Tests {
             pdeSpatialProperties->setIsotropicSpatialProperties(10, 0, 0, 0);
             
             auto pdeTemporalProperties = make_shared<TransientPDEProperties>(3, ScalarField);
-            pdeTemporalProperties->setIsotropicTemporalProperties(0, 0);
+            pdeTemporalProperties->setIsotropicTemporalProperties(0, -1);
 
             auto heatTransferPDE = make_shared<TransientPartialDifferentialEquation>(pdeSpatialProperties, pdeTemporalProperties);
 
