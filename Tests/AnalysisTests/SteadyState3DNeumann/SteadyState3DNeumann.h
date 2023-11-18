@@ -6,11 +6,11 @@
 #define UNTITLED_STEADYSTATE3DNEUMANN_H
 
 #include <cassert>
-#include "../../Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.h"
-#include "../../StructuredMeshGeneration/MeshFactory.h"
-#include "../../StructuredMeshGeneration/MeshSpecs.h"
-#include "../../StructuredMeshGeneration/DomainBoundaryFactory.h"
-#include "../../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
+#include "../../../Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.h"
+#include "../../../StructuredMeshGeneration/MeshFactory.h"
+#include "../../../StructuredMeshGeneration/MeshSpecs.h"
+#include "../../../StructuredMeshGeneration/DomainBoundaryFactory.h"
+#include "../../../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
 
 
 namespace Tests {
@@ -136,13 +136,13 @@ namespace Tests {
             // 127.83613628736045
             auto bottom = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
                                                                                                               ({{Temperature, 1000}})));
-            auto top = make_shared<BoundaryCondition>(Neumann, make_shared<map<DOFType, double>>(map<DOFType, double>
+            auto top = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
                                                                                                            ({{Temperature, 0}})));
-            auto left = make_shared<BoundaryCondition>(Neumann, make_shared<map<DOFType, double>>(map<DOFType, double>
+            auto left = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
                                                                                                             ({{Temperature, 5}})));
-            auto right = make_shared<BoundaryCondition>(Neumann, make_shared<map<DOFType, double>>(map<DOFType, double>
+            auto right = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
                                                                                                              ({{Temperature, 0}})));
-            auto front = make_shared<BoundaryCondition>(Neumann, make_shared<map<DOFType, double>>(map<DOFType, double>
+            auto front = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
                                                                                                              ({{Temperature, 0}})));
             auto back = make_shared<BoundaryCondition>(Neumann, make_shared<map<DOFType, double>>(map<DOFType, double>
                                                                                                             ({{Temperature, 0}})));

@@ -1,9 +1,9 @@
 #include <iostream>
-#include "Tests/AnalysisTests/SteadyState3DNeumann.h"
-#include "Tests/AnalysisTests/SteadyStateDirichlet2D.h"
-#include "Tests/AnalysisTests/SteadyState3DDirichlet.h"
-#include "Tests/AnalysisTests/TransientDirichlet2D.h"
-#include "Tests/AnalysisTests/TransientDirichlet3D.h"
+#include "Tests/AnalysisTests/SteadyState3DNeumann/SteadyState3DNeumann.h"
+#include "Tests/AnalysisTests/SteadyStateDirichlet2D/SteadyStateDirichlet2D.h"
+#include "Tests/AnalysisTests/SteadyState3DDirichlet/SteadyState3DDirichlet.h"
+#include "Tests/AnalysisTests/Transient2DDirichlet/TransientDirichlet2D.h"
+#include "Tests/AnalysisTests/TransientDirichlet3D/TransientDirichlet3D.h"
 #include "Tests/LanczosEigenDecompositionTest.h"
 #include "Tests/NumericalVectorTest.h"
 #include "Tests/IterativeSolversTest.h"
@@ -26,10 +26,10 @@ using namespace DegreesOfFreedom;
 int main() {
 
     //Tests::SteadyStateDirichlet2D::runTests(); //Pass
-    //Tests::TransientDirichlet2D::runTests(); //Pass
+    Tests::TransientDirichlet2D::runTests(); //Pass
     //Tests::SteadyState3DDirichlet::runTests(); //Pass
-    Tests::SteadyState3DNeumann::runTests(); //Fail
-    Tests::TransientDirichlet3D::runTests(); //Fail
+    //Tests::SteadyState3DNeumann::runTests(); //Fail
+    //Tests::TransientDirichlet3D::runTests(); //Fail
     
 
 /*    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();

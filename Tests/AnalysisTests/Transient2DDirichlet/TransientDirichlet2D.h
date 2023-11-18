@@ -7,12 +7,12 @@
 
 
 #include <cassert>
-#include "../../Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientFiniteDifferenceAnalysis.h"
-#include "../../StructuredMeshGeneration/MeshFactory.h"
-#include "../../StructuredMeshGeneration/MeshSpecs.h"
-#include "../../StructuredMeshGeneration/DomainBoundaryFactory.h"
-#include "../../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
-#include "../../LinearAlgebra/NumericalIntegrators/NewmarkNumericalIntegrator.h"
+#include "../../../Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientFiniteDifferenceAnalysis.h"
+#include "../../../StructuredMeshGeneration/MeshFactory.h"
+#include "../../../StructuredMeshGeneration/MeshSpecs.h"
+#include "../../../StructuredMeshGeneration/DomainBoundaryFactory.h"
+#include "../../../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
+#include "../../../LinearAlgebra/NumericalIntegrators/NewmarkNumericalIntegrator.h"
 
 namespace Tests {
 
@@ -80,15 +80,16 @@ namespace Tests {
             cout << "Elapsed time: " << std::chrono::duration_cast<std::chrono::milliseconds>(endAnalysisTime - startAnalysisTime).count() << " ms" << endl;
             
             auto fileName = "temperature.vtk";
-            auto filePath = "/home/hal9000/code/BiGGMan++/Testing/transientVTK/";
+            auto filePath = "/home/hal9000/code/BiGGMan++/Tests/AnalysisTests/Transient2DDirichlet";
             auto fieldType = "Temperature";
             Utility::Exporters::exportTransientScalarFieldResultInVTK(filePath, fileName, fieldType, mesh, totalSteps);
 
             auto targetCoords = NumericalVector<double>{0.5, 0.5, 0};
             //auto targetCoords = NumericalVector<double>{2, 2, 0};
             auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-3);
+            targetSolution.exportCSV(filePath, "biggMannSolution");
             targetSolution.printVerticallyWithIndex("Solution");
-
+            //0.3279032790882641,5.959866049560129,23.327234434676296,43.39089546228296,62.08687503609156,78.11091674856848,91.75732178444765,103.14608999939946,112.54633691428205,120.26233357134024,126.58035882987187,131.7492042549288,135.9771601315341,139.43572273709907,142.26519893515157,144.58019316462156,146.47433266468704,148.02415293847162,149.29224932201706,150.3298313589199
             auto absoluteRelativeError = abs(targetSolution[targetSolution.size() - 1] - 149.989745970325) / 149.989745970325;
 
             assert(absoluteRelativeError < 1E-2);

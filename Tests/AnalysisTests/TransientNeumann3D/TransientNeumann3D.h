@@ -6,12 +6,12 @@
 #define UNTITLED_TRANSIENTDIRICHLET3D_H
 
 #include <cassert>
-#include "../../Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientFiniteDifferenceAnalysis.h"
-#include "../../StructuredMeshGeneration/MeshFactory.h"
-#include "../../StructuredMeshGeneration/MeshSpecs.h"
-#include "../../StructuredMeshGeneration/DomainBoundaryFactory.h"
-#include "../../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
-#include "../../LinearAlgebra/NumericalIntegrators/NewmarkNumericalIntegrator.h"
+#include "../../../Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientFiniteDifferenceAnalysis.h"
+#include "../../../StructuredMeshGeneration/MeshFactory.h"
+#include "../../../StructuredMeshGeneration/MeshSpecs.h"
+#include "../../../StructuredMeshGeneration/DomainBoundaryFactory.h"
+#include "../../../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
+#include "../../../LinearAlgebra/NumericalIntegrators/NewmarkNumericalIntegrator.h"
 
 
 namespace Tests {

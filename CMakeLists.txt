@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 project(untitled LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 # Attempt to enable CUDA language. If it fails, continue without CUDA.
 include(CheckLanguage)
@@ -121,7 +121,7 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Iterative/StationaryIterative/StationaryIterative.cpp 
         LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h 
         LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.cpp
-        Tests/AnalysisTests/SteadyState3DNeumann.h
+        Tests/AnalysisTests/SteadyState3DNeumann/SteadyState3DNeumann.h
         Discretization/Elements/Element.h 
         Discretization/Elements/Element.cpp
         Discretization/Elements/MeshElements.h
@@ -130,7 +130,7 @@ add_executable(untitled main.cpp
         LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h 
         LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.cpp
         LinearAlgebra/Operations/MultiThreadVectorOperations.h
-        Tests/AnalysisTests/SteadyState3DDirichlet.h
+        Tests/AnalysisTests/SteadyState3DDirichlet/SteadyState3DDirichlet.h
         Tests/Mesh3dTest.h
         Tests/Mesh3dTest.cpp
         LinearAlgebra/EigenDecomposition/LanczosEigenDecomposition.h
@@ -168,7 +168,7 @@ add_executable(untitled main.cpp
         LinearAlgebra/EigenDecomposition/IEigenvalueDecomposition.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/MatrixStorageDataProviders/NumericalMatrixDataStorageAccessProviders/NumericalMatrixDataStorageAccessProvider.h
         LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrixEnums.h
-        Tests/AnalysisTests/SteadyStateDirichlet2D.h
+        Tests/AnalysisTests/SteadyStateDirichlet2D/SteadyStateDirichlet2D.h
         Tests/IterativeSolversTest.h
         Tests/MeshGenerator.h
         MathematicalEntities/InitialConditions/InitialConditions.cpp
@@ -190,15 +190,15 @@ add_executable(untitled main.cpp
         MathematicalEntities/PartialDifferentialEquations/TransientPartialDifferentialEquation.h
         Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientLinearSystemBuilder.cpp
         Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientLinearSystemBuilder.h
-        Tests/AnalysisTests/TransientDirichlet2D.h
+        Tests/AnalysisTests/Transient2DDirichlet/TransientDirichlet2D.h
         LinearAlgebra/NumericalIntegrators/NewmarkNumericalIntegrator.cpp
         LinearAlgebra/NumericalIntegrators/NewmarkNumericalIntegrator.h
         Discretization/Time/TimeEntity.cpp
         Discretization/Time/TimeEntity.h
         Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientAnalysisResults.cpp
         Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientAnalysisResults.h
-        Tests/AnalysisTests/TransientDirichlet3D.h
-        Tests/AnalysisTests/TransientNeumann3D.h
+        Tests/AnalysisTests/TransientDirichlet3D/TransientDirichlet3D.h
+        Tests/AnalysisTests/TransientNeumann3D/TransientNeumann3D.h
 )
 
 

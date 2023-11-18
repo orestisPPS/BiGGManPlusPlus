@@ -13,6 +13,8 @@
 #include <valarray>
 #include <random>
 #include <iostream>
+#include <filesystem>
+#include <fstream>
 #include "../../../ThreadingOperations/ThreadingOperations.h"
 using namespace LinearAlgebra;
 using namespace std;
@@ -1257,23 +1259,25 @@ namespace LinearAlgebra {
             }
             os << " ] " << "\n" << endl;
         }
-        
 
-/*        void exportCSV(const std::string& fileName, const std::string& filePath, const std::string& delimiter = ",") const {
+
+        void exportCSV(const std::string& filePath, const std::string& fileName) const {
             std::ofstream file;
-            std::filesystem::path path = filePath;
-            path /= fileName + ".csv";
-            file.open(path);
+            std::string fullPath = filePath + "/" + fileName + ".csv";
+            cout << "Exporting to " << fullPath << endl;
+
+            file.open(fullPath);
             if (!file.is_open()) {
                 throw std::runtime_error("Could not open file.");
             }
+
             for (unsigned i = 0; i < _values->size(); ++i) {
-                file << (*_values)[i];
-                if (i < _values->size() - 1) {
-                    file << delimiter;
-                }
+                file << (*_values)[i] << '\n';  // Write each value in a new line
             }
-        }*/
+
+            file.close();
+        }
+
 
     protected:
         shared_ptr<vector<T>> _values; ///< The underlying data.

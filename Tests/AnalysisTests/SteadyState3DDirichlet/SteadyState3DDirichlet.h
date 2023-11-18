@@ -1,30 +1,32 @@
 //
-// Created by hal9000 on 10/22/23.
+// Created by hal9000 on 7/30/23.
 //
 
-#ifndef UNTITLED_TRANSIENTDIRICHLET3D_H
-#define UNTITLED_TRANSIENTDIRICHLET3D_H
+#ifndef UNTITLED_STEADYSTATE3DDIRICHLET_H
+#define UNTITLED_STEADYSTATE3DDIRICHLET_H
 
 #include <cassert>
-#include "../../Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientFiniteDifferenceAnalysis.h"
-#include "../../StructuredMeshGeneration/MeshFactory.h"
-#include "../../StructuredMeshGeneration/MeshSpecs.h"
-#include "../../StructuredMeshGeneration/DomainBoundaryFactory.h"
-#include "../../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
-#include "../../LinearAlgebra/NumericalIntegrators/NewmarkNumericalIntegrator.h"
+#include "../../../Analysis/FiniteDifferenceAnalysis/SteadyStateFiniteDifferenceAnalysis.h"
+#include "../../../StructuredMeshGeneration/MeshFactory.h"
+#include "../../../StructuredMeshGeneration/MeshSpecs.h"
+#include "../../../StructuredMeshGeneration/DomainBoundaryFactory.h"
+#include "../../../LinearAlgebra/Solvers/Direct/SolverLUP.h"
+#include "../../../LinearAlgebra/Solvers/Iterative/StationaryIterative/SORSolver.h"
+#include "../../../LinearAlgebra/Solvers/Iterative/GradientBasedIterative/ConjugateGradientSolver.h"
 
 
 namespace Tests {
 
-    class TransientDirichlet3D {
+    class SteadyState3DDirichlet {
+        
     public:
+        SteadyState3DDirichlet();
         static void runTests(){
-            _testTransientDirichlet3D();
+            _testDiffusionDirichlet3D();
         }
         
-        private:
-        static void _testTransientDirichlet3D(){
-
+    private:
+        static void _testDiffusionDirichlet3D(){
             logTestStart("testDiffusionDirichlet3D");logTestStart("testDiffusionDirichlet3D");
 
             map<Direction, unsigned> numberOfNodes;
@@ -43,7 +45,7 @@ namespace Tests {
 
             // 127.83613628736045
             auto bottom = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                              ({{Temperature, 100}})));
+                                                                                                              ({{Temperature, 1000}})));
             auto top = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
                                                                                                            ({{Temperature, 100}})));
             auto left = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
@@ -55,6 +57,17 @@ namespace Tests {
             auto back = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
                                                                                                             ({{Temperature, 0}})));
 
+            shared_ptr<Mesh> mesh = meshFactory->mesh;
+            auto fileNameMesh = "meshRebuilt.vtk";
+            auto filePathMesh = "/home/hal9000/code/BiGGMan++/Testing/";
+            mesh->storeMeshInVTKFile(filePathMesh, fileNameMesh, Natural, false);
+
+            auto pdeProperties = make_shared<SpatialPDEProperties>(3, ScalarField);
+            pdeProperties->setIsotropicSpatialProperties(0.10, 0, 0, 0);
+
+            auto heatTransferPDE = make_shared<SteadyStatePartialDifferentialEquation>(pdeProperties, Laplace);
+
+            auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
 
             auto dummyBCMap = make_shared<map<Position, shared_ptr<BoundaryCondition>>>();
             dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Left, left));
@@ -66,68 +79,54 @@ namespace Tests {
 
             auto boundaryConditions = make_shared<DomainBoundaryConditions>(dummyBCMap);
 
-            auto initialConditions = make_shared<InitialConditions>(0, 0);
-            
-            shared_ptr<Mesh> mesh = meshFactory->mesh;
-
-            auto pdeSpatialProperties = make_shared<SpatialPDEProperties>(3, ScalarField);
-            pdeSpatialProperties->setIsotropicSpatialProperties(10, 0, 0, 0);
-            
-            auto pdeTemporalProperties = make_shared<TransientPDEProperties>(3, ScalarField);
-            pdeTemporalProperties->setIsotropicTemporalProperties(0, -1);
-
-            auto heatTransferPDE = make_shared<TransientPartialDifferentialEquation>(pdeSpatialProperties, pdeTemporalProperties);
-
-            auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
-            
             auto temperatureDOF = new TemperatureScalar_DOFType();
 
-            auto problem = make_shared<TransientMathematicalProblem>(heatTransferPDE, boundaryConditions, initialConditions, temperatureDOF);
+            auto problem = make_shared<SteadyStateMathematicalProblem>(heatTransferPDE, boundaryConditions, temperatureDOF);
 
-            auto solver = make_shared<ConjugateGradientSolver>(1E-9, 1E4, L2, 10);
-            auto integration = make_shared<NewmarkNumericalIntegrator>(0.25, 0.5);
-            auto initialTime = 0.0;
-            auto stepSize = 1;
-            auto totalSteps = 20;
-            auto analysis = make_shared<TransientFiniteDifferenceAnalysis>(initialTime, stepSize, totalSteps, problem, mesh, solver, integration, specsFD);
-
-            auto startAnalysisTime = std::chrono::high_resolution_clock::now();
-            analysis->solve();
-            auto endAnalysisTime = std::chrono::high_resolution_clock::now();
-            cout << "Elapsed time: " << std::chrono::duration_cast<std::chrono::milliseconds>(endAnalysisTime - startAnalysisTime).count() << " ms" << endl;
-
-            auto fileName = "temperature.vtk";
-            auto filePath = "/home/hal9000/code/BiGGMan++/Testing/transientVTK/";
-            auto fieldType = "Temperature";
-            Utility::Exporters::exportTransientScalarFieldResultInVTK(filePath, fileName, fieldType, mesh, totalSteps);
+            // auto solver = make_shared<SolverLUP>(1E-20, true);
+            //auto solver = make_shared<JacobiSolver>(VectorNormType::L2, 1E-10, 1E4, true, vTechKickInYoo);
+            //auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo, VectorNormType::LInf, 1E-9);
+            //auto solver = make_shared<GaussSeidelSolver>(VectorNormType::L2, 1E-9, 1E4, false, turboVTechKickInYoo);
+            auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2);
+            //auto solver = make_shared<SORSolver>(1.8, VectorNormType::L2, 1E-5);
+            auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specsFD);
 
             analysis->solve();
 
             analysis->applySolutionToDegreesOfFreedom();
-            
+
+            auto fileName = "temperatureField.vtk";
+            auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
+            auto fieldType = "Temperature";
+            Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
+
+            //auto targetCoords = NumericalVector<double>{0.5, 0.5};
+            //auto targetCoords = NumericalVector<double>{1.5, 1.5, 1.5};
             auto targetCoords = NumericalVector<double>{2, 2, 2};
             //auto targetCoords = NumericalVector<double>{1.5, 1.5, 3};
             //auto targetCoords = NumericalVector<double>{5, 5, 5};
             auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-1);
             cout<<"Computed Value : "<< targetSolution[0] << endl;
-            cout<<"Expected Solution: "<< 36.6666666666666 << endl;
-            auto absoluteRelativeError = abs(targetSolution[0] - 36.6666666666666
-            ) / 36.6666666666666;
+            auto absoluteRelativeError = abs(targetSolution[0] - 186.6666666666664
+            ) / 186.6666666666664;
 
             assert(absoluteRelativeError < 1E-12);
             logTestEnd();
-        }
-        
 
-        static void logTestStart(const std::string &testName) {
+        }
+
+
+        static void logTestStart(const std::string& testName) {
             std::cout << "Running " << testName << "... ";
         }
 
         static void logTestEnd() {
             std::cout << "\033[1;32m[PASSED ]\033[0m\n";  // This adds a green [PASSED] indicator
         }
+
+
     };
 
 } // Tests
 
-#endif //UNTITLED_TRANSIENTDIRICHLET3D_H
+#endif //UNTITLED_STEADYSTATE3DDIRICHLET_H

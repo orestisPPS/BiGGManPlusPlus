@@ -9,6 +9,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <filesystem>
 #include "../../LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 #include "../../Discretization/Mesh/Mesh.h"
 
@@ -67,9 +68,18 @@ namespace Utility {
             unsigned int nx = mesh->nodesPerDirection.at(One);
             unsigned int ny = mesh->nodesPerDirection.at(Two);
             unsigned int nz = mesh->nodesPerDirection.at(Three);
-            
+            std::filesystem::path dirPath = filePath + "/vtk_results";
+
+            if (!filesystem::exists(dirPath)) {
+                filesystem::create_directories(dirPath);
+            }
+
+            cout << "Saving vtk results in " << dirPath << endl;
+
+            // Rest of the function implementation
             for (unsigned step = 0; step < totalSteps; ++step) {
-                ofstream outputFile(filePath + fileName + "_" + to_string(step) + ".vtk");
+                ofstream outputFile(dirPath / (fileName + "_" + to_string(step) + ".vtk"));
+                
 
                 // Header
                 outputFile << "# vtk DataFile Version 3.0 \n";
