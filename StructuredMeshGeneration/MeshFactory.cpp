@@ -20,10 +20,8 @@ namespace StructuredMeshGenerator{
         
         auto start = chrono::steady_clock::now();
         
-        auto pdeProperties = make_shared<SpatialPDEProperties>(mesh->dimensions(), VectorField);
-        pdeProperties->setLocallyAnisotropicSpatialProperties(pdePropertiesFromMetrics);
-
-        auto pde = make_shared<SteadyStatePartialDifferentialEquation>(pdeProperties, Laplace);
+        auto pde = make_shared<PartialDifferentialEquation>(VectorField, mesh->dimensions(), false);
+        pde->spatialDerivativesCoefficients()->setLocallyAnisotropic(pdePropertiesFromMetrics);
         
         auto specs = make_shared<FDSchemeSpecs>(schemeOrder, schemeOrder, mesh->directions());
         
@@ -48,7 +46,7 @@ namespace StructuredMeshGenerator{
         auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specs, Template);
         analysis->solve();
         
-        analysis->linearSystem->exportToMatlabFile("linearSystemMeshGen.m", "/home/hal9000/code/BiGGMan++/Testing/", true);
+        //analysis->linearSystem->exportToMatlabFile("linearSystemMeshGen.m", "/home/hal9000/code/BiGGMan++/Testing/", true);
         //analysis->linearSystem->solution->printHorizontally();
         
         analysis->applySolutionToDegreesOfFreedom();

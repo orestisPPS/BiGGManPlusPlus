@@ -10,8 +10,8 @@ namespace MathematicalEntities {
         
     }
     
-    void SpatialPDEProperties::setIsotropicSpatialProperties(double secondOrderCoefficient, double firstOrderCoefficient,
-                                                             double zerothOrderCoefficient, double sourceTerm) {
+    void SpatialPDEProperties::setIsotropic(double secondOrderCoefficient, double firstOrderCoefficient,
+                                            double zerothOrderCoefficient, double sourceTerm) {
         if (_fieldType == ScalarField) {
 
             auto secondOrderCoefficients = make_unique<NumericalMatrix<double>>(_dimensions, _dimensions);
@@ -43,53 +43,53 @@ namespace MathematicalEntities {
         }
     }
     
-    void SpatialPDEProperties::setAnisotropicSpatialProperties(SpatialScalarFieldPDEProperties scalarFieldProperties, unsigned* nodeId) {
+    void SpatialPDEProperties::setAnisotropic(SpatialScalarFieldPDEProperties scalarFieldProperties, unsigned* nodeId) {
         switch (_fieldType) {
             case ScalarField:
                 if (_locallyAnisotropicScalarFieldSpatialProperties != nullptr && nodeId != nullptr)
                     _locallyAnisotropicScalarFieldSpatialProperties->at(nodeId) = std::move(scalarFieldProperties);
                 else
-                    throw invalid_argument("SteadyStatePDEProperties::setAnisotropicSpatialProperties:"
-                                           " Node ID not found. If new nodes need to be assigned use setLocallyAnisotropicSpatialProperties instead. ");
+                    throw invalid_argument("SteadyStatePDEProperties::setAnisotropic:"
+                                           " Node ID not found. If new nodes need to be assigned use setLocallyAnisotropic instead. ");
                 break;
             case VectorField:
                 throw invalid_argument(
-                        "SteadyStatePDEProperties::setAnisotropicSpatialProperties: Cannot set anisotropic spatial properties for a vector field.");
+                        "SteadyStatePDEProperties::setAnisotropic: Cannot set anisotropic spatial properties for a vector field.");
                 break;
         }
     }
     
-    void SpatialPDEProperties::setAnisotropicSpatialProperties(SpatialVectorFieldPDEProperties vectorFieldProperties, unsigned* nodeId) {
+    void SpatialPDEProperties::setAnisotropic(SpatialVectorFieldPDEProperties vectorFieldProperties, unsigned* nodeId) {
         switch (_fieldType) {
             case VectorField:
                 if (_locallyAnisotropicVectorFieldSpatialProperties != nullptr && nodeId != nullptr)
                     _locallyAnisotropicVectorFieldSpatialProperties->at(nodeId) = std::move(vectorFieldProperties);
                 else
-                    throw invalid_argument("SteadyStatePDEProperties::setAnisotropicSpatialProperties:"
-                                           " Node ID not found. If new nodes need to be assigned use setLocallyAnisotropicSpatialProperties instead. ");
+                    throw invalid_argument("SteadyStatePDEProperties::setAnisotropic:"
+                                           " Node ID not found. If new nodes need to be assigned use setLocallyAnisotropic instead. ");
                 break;
             case ScalarField:
                 throw invalid_argument(
-                        "SteadyStatePDEProperties::setAnisotropicSpatialProperties: Cannot set anisotropic spatial properties for a scalar field.");
+                        "SteadyStatePDEProperties::setAnisotropic: Cannot set anisotropic spatial properties for a scalar field.");
                 break;
         }
     }
     
-    void SpatialPDEProperties::setLocallyAnisotropicSpatialProperties(shared_ptr<map<unsigned*, SpatialScalarFieldPDEProperties>> spatialProperties) {
+    void SpatialPDEProperties::setLocallyAnisotropic(shared_ptr<map<unsigned*, SpatialScalarFieldPDEProperties>> spatialProperties) {
         if (_fieldType == ScalarField) {
             _locallyAnisotropicScalarFieldSpatialProperties = std::move(spatialProperties);
         }
         else
-            throw invalid_argument("SteadyStatePDEProperties::setLocallyAnisotropicSpatialProperties: Cannot set anisotropic spatial properties for a vector field.");
+            throw invalid_argument("SteadyStatePDEProperties::setLocallyAnisotropic: Cannot set anisotropic spatial properties for a vector field.");
     }
     
     
-    void SpatialPDEProperties::setLocallyAnisotropicSpatialProperties(shared_ptr<map<unsigned*, SpatialVectorFieldPDEProperties>> spatialProperties) {
+    void SpatialPDEProperties::setLocallyAnisotropic(shared_ptr<map<unsigned*, SpatialVectorFieldPDEProperties>> spatialProperties) {
         if (_fieldType == VectorField) {
             _locallyAnisotropicVectorFieldSpatialProperties = std::move(spatialProperties);
         }
         else
-            throw invalid_argument("SteadyStatePDEProperties::setLocallyAnisotropicSpatialProperties: Cannot set anisotropic spatial properties for a scalar field.");
+            throw invalid_argument("SteadyStatePDEProperties::setLocallyAnisotropic: Cannot set anisotropic spatial properties for a scalar field.");
     }
     
     double SpatialPDEProperties::getDependentVariableTermCoefficient(unsigned derivativeOrder, Direction direction1, Direction direction2) {

@@ -41,45 +41,26 @@ namespace Tests {
             //meshFactory->buildMesh(2, meshBoundaries->annulus_3D_ripGewrgiou(numberOfNodes, 0.5, 1, 0, 180, 5));
             //meshFactory->mesh->createElements(Hexahedron, 2);
             meshFactory->mesh->storeMeshInVTKFile("/home/hal9000/code/BiGGMan++/Testing/", "threeDeeMeshBoi.vtk", Natural, false);
-
-            // 127.83613628736045
-            auto bottom = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                              ({{Temperature, 100}})));
-            auto top = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                           ({{Temperature, 100}})));
-            auto left = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                            ({{Temperature, 20}})));
-            auto right = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                             ({{Temperature, 0}})));
-            auto front = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                             ({{Temperature, 0}})));
-            auto back = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                            ({{Temperature, 0}})));
-
+            
             shared_ptr<Mesh> mesh = meshFactory->mesh;
             auto fileNameMesh = "meshRebuilt.vtk";
             auto filePathMesh = "/home/hal9000/code/BiGGMan++/Testing/";
             mesh->storeMeshInVTKFile(filePathMesh, fileNameMesh, Natural, false);
 
-            auto pdeProperties = make_shared<SpatialPDEProperties>(3, ScalarField);
-            pdeProperties->setIsotropicSpatialProperties(10, 0, 0, 0);
-
-            auto heatTransferPDE = make_shared<SteadyStatePartialDifferentialEquation>(pdeProperties, Laplace);
-
+            auto heatTransferPDE = make_shared<PartialDifferentialEquation>(ScalarField, 3);
+            heatTransferPDE->spatialDerivativesCoefficients()->setIsotropic(10, 0, 0, 0);
+            
             auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
-
-            auto dummyBCMap = make_shared<map<Position, shared_ptr<BoundaryCondition>>>();
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Left, left));
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Right, right));
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Top, top));
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Bottom, bottom));
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Front, front));
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Back, back));
-
-            auto boundaryConditions = make_shared<DomainBoundaryConditions>(dummyBCMap);
-
+            
             auto temperatureDOF = new TemperatureScalar_DOFType();
 
+
+            // 127.83613628736045
+            auto boundaryConditions = make_shared<DomainBoundaryConditions>();
+            boundaryConditions->setBoundaryCondition({Right, Front, Back}, Dirichlet, Temperature, 0.0);
+            boundaryConditions->setBoundaryCondition({Bottom, Top}, Dirichlet, Temperature, 100.0);
+            boundaryConditions->setBoundaryCondition({Left}, Dirichlet, Temperature, 20.0);
+            
             auto problem = make_shared<SteadyStateMathematicalProblem>(heatTransferPDE, boundaryConditions, temperatureDOF);
 
             // auto solver = make_shared<SolverLUP>(1E-20, true);
@@ -153,9 +134,9 @@ namespace Tests {
             mesh->storeMeshInVTKFile(filePathMesh, fileNameMesh, Natural, false);
 
             auto pdeProperties = make_shared<SpatialPDEProperties>(3, ScalarField);
-            pdeProperties->setIsotropicSpatialProperties(10, 0, 0, 0);
+            pdeProperties->setIsotropic(10, 0, 0, 0);
 
-            auto heatTransferPDE = make_shared<SteadyStatePartialDifferentialEquation>(pdeProperties, Laplace);
+            auto heatTransferPDE = make_shared<PartialDifferentialEquation>(pdeProperties, Laplace);
 
             auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
 

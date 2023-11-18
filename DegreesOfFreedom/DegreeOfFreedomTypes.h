@@ -76,6 +76,7 @@ namespace DegreesOfFreedom {
             DegreesOfFreedom = new std::vector<DOFType*>(1);
             DegreesOfFreedom->at(0) =new DOFType(Position1);
         }
+        vector<DOFType> lol = {Position1, Position2, Position3};
     };
     
     struct nodalPositionVectorField2D_DOFType : public Field_DOFType {

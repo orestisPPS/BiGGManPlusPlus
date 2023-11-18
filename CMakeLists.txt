@@ -184,10 +184,6 @@ add_executable(untitled main.cpp
         MathematicalEntities/PartialDifferentialEquations/PDEProperties/TransientPDEProperties.h
         MathematicalEntities/PartialDifferentialEquations/PDEProperties/SpatialPDEProperties.cpp
         MathematicalEntities/PartialDifferentialEquations/PDEProperties/SpatialPDEProperties.h
-        MathematicalEntities/PartialDifferentialEquations/SteadyStatePartialDifferentialEquation.cpp
-        MathematicalEntities/PartialDifferentialEquations/SteadyStatePartialDifferentialEquation.h
-        MathematicalEntities/PartialDifferentialEquations/TransientPartialDifferentialEquation.cpp
-        MathematicalEntities/PartialDifferentialEquations/TransientPartialDifferentialEquation.h
         Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientLinearSystemBuilder.cpp
         Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientLinearSystemBuilder.h
         Tests/AnalysisTests/Transient2DDirichlet/TransientDirichlet2D.h

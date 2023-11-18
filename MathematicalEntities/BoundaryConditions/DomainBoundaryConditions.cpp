@@ -49,8 +49,19 @@ namespace MathematicalEntities {
         _bcAtPosition->insert(pair<Position, shared_ptr<BoundaryCondition>>(boundaryPosition,
                 make_shared<BoundaryCondition>(bcType, make_shared<map<DOFType, double>>( map<DOFType, double>( {{dofType, fixedValue}})))));
     }
-    
 
+    void DomainBoundaryConditions::setBoundaryCondition(std::initializer_list<Position> boundaryPositions,
+                                                        BoundaryConditionType bcType, DOFType dofType,
+                                                        double fixedValue) {
+        if (_bcAtPosition == nullptr) {
+            _bcAtPosition = make_shared<map<Position, shared_ptr<BoundaryCondition>>>();
+        }
+        for (auto &boundaryPosition : boundaryPositions) {
+            _bcAtPosition->insert(pair<Position, shared_ptr<BoundaryCondition>>(boundaryPosition,
+                    make_shared<BoundaryCondition>(bcType, make_shared<map<DOFType, double>>( map<DOFType, double>( {{dofType, fixedValue}}))))); 
+        }
+
+    }
 
 
 } // MathematicalEntities

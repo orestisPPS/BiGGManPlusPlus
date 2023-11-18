@@ -11,8 +11,8 @@ namespace MathematicalEntities {
 
     }
 
-    void MathematicalEntities::TransientPDEProperties::setIsotropicTemporalProperties(double secondOrderCoefficient,
-                                                                                      double firstOrderCoefficient) {
+    void MathematicalEntities::TransientPDEProperties::setIsotropic(double secondOrderCoefficient,
+                                                                    double firstOrderCoefficient) {
         if (_fieldType == FieldType::ScalarField) {
            // _scalarFieldGlobalTemporalProperties.secondOrderCoefficient = make_unique<double>(secondOrderCoefficient / 9);
             _scalarFieldGlobalTemporalProperties.secondOrderCoefficient = make_unique<double>(secondOrderCoefficient);
@@ -27,7 +27,7 @@ namespace MathematicalEntities {
         }
     }
 
-    void MathematicalEntities::TransientPDEProperties::setAnisotropicTemporalProperties(
+    void MathematicalEntities::TransientPDEProperties::setAnisotropic(
             TemporalScalarFieldPDECoefficients scalarFieldProperties, unsigned int *nodeId) {
         switch (_fieldType) {
             case FieldType::ScalarField:
@@ -35,21 +35,21 @@ namespace MathematicalEntities {
                     _locallyAnisotropicScalarFieldTemporalProperties->at(nodeId) = std::move(scalarFieldProperties);
                 }
                 else
-                    throw invalid_argument("TransientPDEProperties::setAnisotropicTemporalProperties:"
-                                           " Node ID not found. If new nodes need to be assigned use setLocallyAnisotropicTemporalProperties.");
+                    throw invalid_argument("TransientPDEProperties::setAnisotropic:"
+                                           " Node ID not found. If new nodes need to be assigned use setLocallyAnisotropic.");
                 break;
             case FieldType::VectorField:
-                throw invalid_argument("TransientPDEProperties::setAnisotropicTemporalProperties:"
+                throw invalid_argument("TransientPDEProperties::setAnisotropic:"
                                        " Cannot set anisotropic temporal properties for a vector field.");
                 break;
         }
     }
     
-    void MathematicalEntities::TransientPDEProperties::setAnisotropicTemporalProperties(
+    void MathematicalEntities::TransientPDEProperties::setAnisotropic(
             TemporalVectorFieldPDECoefficients vectorFieldProperties, unsigned int *nodeId) {
         switch (_fieldType) {
             case FieldType::ScalarField:
-                throw invalid_argument("TransientPDEProperties::setAnisotropicTemporalProperties:"
+                throw invalid_argument("TransientPDEProperties::setAnisotropic:"
                                        " Cannot set anisotropic temporal properties for a scalar field.");
                 break;
             case FieldType::VectorField:
@@ -57,30 +57,30 @@ namespace MathematicalEntities {
                     _locallyAnisotropicVectorFieldTemporalProperties->at(nodeId) = std::move(vectorFieldProperties);
                 }
                 else
-                    throw invalid_argument("TransientPDEProperties::setAnisotropicTemporalProperties:"
-                                           " Node ID not found. If new nodes need to be assigned use setLocallyAnisotropicTemporalProperties.");
+                    throw invalid_argument("TransientPDEProperties::setAnisotropic:"
+                                           " Node ID not found. If new nodes need to be assigned use setLocallyAnisotropic.");
                 break;
         }
     }
 
-    void MathematicalEntities::TransientPDEProperties::setLocallyAnisotropicTemporalProperties(
+    void MathematicalEntities::TransientPDEProperties::setLocallyAnisotropic(
             unique_ptr<map<unsigned int*, TemporalScalarFieldPDECoefficients>> scalarFieldProperties) {
         if (_fieldType == ScalarField) {
             _locallyAnisotropicScalarFieldTemporalProperties = std::move(scalarFieldProperties);
         }
         else
-            throw invalid_argument("TransientPDEProperties::setLocallyAnisotropicTemporalProperties:"
+            throw invalid_argument("TransientPDEProperties::setLocallyAnisotropic:"
                                    " Cannot set locally anisotropic temporal properties for a vector field.");
 
     }     
     
-    void MathematicalEntities::TransientPDEProperties::setLocallyAnisotropicTemporalProperties(
-            unique_ptr<map<unsigned int*, TemporalVectorFieldPDECoefficients>> vectorFieldProperties) {
+    void MathematicalEntities::TransientPDEProperties::setLocallyAnisotropic(
+            unique_ptr<map<unsigned int*, TemporalVectorFieldPDECoefficients>> scalarFieldProperties) {
         if (_fieldType == VectorField) {
-            _locallyAnisotropicVectorFieldTemporalProperties = std::move(vectorFieldProperties);
+            _locallyAnisotropicVectorFieldTemporalProperties = std::move(scalarFieldProperties);
         }
         else
-            throw invalid_argument("TransientPDEProperties::setLocallyAnisotropicTemporalProperties:"
+            throw invalid_argument("TransientPDEProperties::setLocallyAnisotropic:"
                                    " Cannot set locally anisotropic temporal properties for a scalar field.");
     }
 

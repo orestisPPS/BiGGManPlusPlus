@@ -14,15 +14,15 @@ namespace MathematicalEntities {
         
     //void 5555555555555555555555555555555555555555555555555555555555555555555555555555.................................e4r;dm,,,,                                 fvggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg                          ```````````````Q    AAAAAAAAAAAAAAdccccccccccccccccccccccccccccccccccCCCCCCCCCCCCCCCCC                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      setIsotropicTemporalProperties(double secondOrderCoefficient, double firstOrderCoefficient);
     
-        void setIsotropicTemporalProperties(double secondOrderCoefficient, double firstOrderCoefficient);
+        void setIsotropic(double secondOrderCoefficient, double firstOrderCoefficient);
     
-        void setAnisotropicTemporalProperties(TemporalScalarFieldPDECoefficients scalarFieldProperties, unsigned* nodeId = nullptr);
+        void setAnisotropic(TemporalScalarFieldPDECoefficients scalarFieldProperties, unsigned* nodeId = nullptr);
         
-        void setAnisotropicTemporalProperties(TemporalVectorFieldPDECoefficients vectorFieldProperties, unsigned* nodeId = nullptr);
+        void setAnisotropic(TemporalVectorFieldPDECoefficients vectorFieldProperties, unsigned* nodeId = nullptr);
         
-        void setLocallyAnisotropicTemporalProperties(unique_ptr<map<unsigned*, TemporalScalarFieldPDECoefficients>> scalarFieldProperties);
+        void setLocallyAnisotropic(unique_ptr<map<unsigned*, TemporalScalarFieldPDECoefficients>> scalarFieldProperties);
         
-        void setLocallyAnisotropicTemporalProperties(unique_ptr<map<unsigned*, TemporalVectorFieldPDECoefficients>> scalarFieldProperties);
+        void setLocallyAnisotropic(unique_ptr<map<unsigned*, TemporalVectorFieldPDECoefficients>> scalarFieldProperties);
         
         double getTemporalCoefficient(unsigned derivativeOrder, Direction direction = None);
         

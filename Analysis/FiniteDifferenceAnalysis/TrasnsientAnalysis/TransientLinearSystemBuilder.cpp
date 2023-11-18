@@ -22,8 +22,8 @@ namespace NumericalAnalysis {
             auto dofIndex = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
             auto dofDirection = directionOfDof.at(dof->type());
             auto dofParentNode = dof->parentNode();
-            auto c = _transientMathematicalProblem->transientPDE->transientProperties->getTemporalCoefficient(1, dofParentNode, dofDirection);
-            auto m = _transientMathematicalProblem->transientPDE->transientProperties->getTemporalCoefficient(2, dofParentNode, dofDirection);
+            auto c = _transientMathematicalProblem->pde->temporalDerivativesCoefficients()->getTemporalCoefficient(1, dofParentNode, dofDirection);
+            auto m = _transientMathematicalProblem->pde->temporalDerivativesCoefficients()->getTemporalCoefficient(2, dofParentNode, dofDirection);
             C->setElement(dofIndex, dofIndex, c);
             M->setElement(dofIndex, dofIndex, m);
         }

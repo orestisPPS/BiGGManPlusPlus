@@ -36,8 +36,8 @@ namespace MathematicalEntities {
          * @param zerothOrderCoefficient Coefficient for the zeroth order spatial derivative term.
          * @param sourceTerm The source term for the PDE.
          */
-        void setIsotropicSpatialProperties(double secondOrderCoefficient, double firstOrderCoefficient,
-                                           double zerothOrderCoefficient, double sourceTerm);
+        void setIsotropic(double secondOrderCoefficient, double firstOrderCoefficient,
+                          double zerothOrderCoefficient, double sourceTerm);
 
         /**
          * @brief Set anisotropic spatial properties for scalar fields. The properties can vary from node to node and
@@ -47,7 +47,7 @@ namespace MathematicalEntities {
          * @param nodeId Pointer to the node ID.
          * @throws invalid_argument If the node ID is not found.
          */
-        void setAnisotropicSpatialProperties(SpatialScalarFieldPDEProperties scalarFieldProperties, unsigned* nodeId);
+        void setAnisotropic(SpatialScalarFieldPDEProperties scalarFieldProperties, unsigned* nodeId);
 
         /**
          * @brief Set anisotropic spatial properties for vector fields. The properties can vary from node to node and
@@ -57,7 +57,7 @@ namespace MathematicalEntities {
          * @param nodeId Pointer to the node ID.
          * @throws invalid_argument If the node ID is not found.
          */
-        void setAnisotropicSpatialProperties(SpatialVectorFieldPDEProperties vectorFieldProperties, unsigned* nodeId);
+        void setAnisotropic(SpatialVectorFieldPDEProperties vectorFieldProperties, unsigned* nodeId);
 
         /**
          * @brief Set locally anisotropic spatial properties for scalar fields. The properties can vary from node to node and
@@ -66,7 +66,7 @@ namespace MathematicalEntities {
          * @param spatialProperties Map of node IDs to their anisotropic properties for scalar fields.
          * @throws invalid_argument If trying to set for a vector field.
          */
-        void setLocallyAnisotropicSpatialProperties(shared_ptr<map<unsigned*, SpatialScalarFieldPDEProperties>> spatialProperties);
+        void setLocallyAnisotropic(shared_ptr<map<unsigned*, SpatialScalarFieldPDEProperties>> spatialProperties);
 
         /**
          * @brief Set locally anisotropic spatial properties for vector fields. The properties can vary from node to node and
@@ -75,7 +75,7 @@ namespace MathematicalEntities {
          * @param spatialProperties Map of node IDs to their anisotropic properties for vector fields.
          * @throws invalid_argument If trying to set for a scalar field.
          */
-        void setLocallyAnisotropicSpatialProperties(shared_ptr<map<unsigned*, SpatialVectorFieldPDEProperties>> spatialProperties);
+        void setLocallyAnisotropic(shared_ptr<map<unsigned*, SpatialVectorFieldPDEProperties>> spatialProperties);
 
         /**
          * @brief Retrieve the coefficient of the dependent variable term without node ID.
@@ -118,7 +118,6 @@ namespace MathematicalEntities {
         shared_ptr<map<unsigned*, SpatialScalarFieldPDEProperties>> _locallyAnisotropicScalarFieldSpatialProperties;
         
         shared_ptr<map<unsigned*, SpatialVectorFieldPDEProperties>> _locallyAnisotropicVectorFieldSpatialProperties;
-        
     };
 
 } // SecondOrderLinearPDEProperties

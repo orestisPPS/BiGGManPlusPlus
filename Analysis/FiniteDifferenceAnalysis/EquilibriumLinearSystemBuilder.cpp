@@ -57,13 +57,13 @@ namespace NumericalAnalysis {
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
 
             //Derivative order 0
-            auto zeroOrderCoefficient = _steadyStateMathematicalProblem->steadyStatePDE->spatialProperties->getIndependentVariableTermCoefficient(node->id.global);
+            auto zeroOrderCoefficient = _steadyStateMathematicalProblem->pde->spatialDerivativesCoefficients()->getIndependentVariableTermCoefficient(node->id.global);
             if (zeroOrderCoefficient != 0)
                 K->setElement(thisDOFPosition, thisDOFPosition, zeroOrderCoefficient);
             //Define the position of the dof in the NumericalMatrix
 
             //add source term
-            RHS->at(thisDOFPosition) += _steadyStateMathematicalProblem->steadyStatePDE->spatialProperties->getIndependentVariableTermCoefficient(node->id.global);
+            RHS->at(thisDOFPosition) += _steadyStateMathematicalProblem->pde->spatialDerivativesCoefficients()->getIndependentVariableTermCoefficient(node->id.global);
 
             //March through all the non-zero derivative orders 
             for (auto derivativeOrder = 1; derivativeOrder <= maxDerivativeOrder; derivativeOrder++) {
@@ -72,7 +72,7 @@ namespace NumericalAnalysis {
                 for (auto &directionI: directions) {
                     unsigned indexDirectionI = spatialDirectionToUnsigned[directionI];
                     
-                    double iThDerivativePDECoefficient = _steadyStateMathematicalProblem->steadyStatePDE->spatialProperties->getDependentVariableTermCoefficient(derivativeOrder, node->id.global, directionI);
+                    double iThDerivativePDECoefficient = _steadyStateMathematicalProblem->pde->spatialDerivativesCoefficients()->getDependentVariableTermCoefficient(derivativeOrder, node->id.global, directionI);
                     if (iThDerivativePDECoefficient != 0) {
                         
                         //Check if the available positions are qualified for the current derivative order

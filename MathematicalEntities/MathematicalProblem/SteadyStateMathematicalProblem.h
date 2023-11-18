@@ -4,15 +4,13 @@
 #ifndef UNUNTITLED_STEADYSTATEMATHEMATICALPROBLEM_H
 #define UNUNTITLED_STEADYSTATEMATHEMATICALPROBLEM_H
 #include "MathematicalProblem.h"
-#include "../PartialDifferentialEquations/SteadyStatePartialDifferentialEquation.h"
 namespace MathematicalEntities{
     class SteadyStateMathematicalProblem : public MathematicalProblem{
     public:
-        SteadyStateMathematicalProblem(shared_ptr<SteadyStatePartialDifferentialEquation> pde,
+        SteadyStateMathematicalProblem(shared_ptr<PartialDifferentialEquation> pde,
                                        shared_ptr<DomainBoundaryConditions> bcs,
                                        struct Field_DOFType* degreesOfFreedom);
         
-        shared_ptr<SteadyStatePartialDifferentialEquation> steadyStatePDE;
     };
     
 }

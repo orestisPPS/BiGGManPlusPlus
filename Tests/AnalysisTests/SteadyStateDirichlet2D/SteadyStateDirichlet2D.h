@@ -42,33 +42,18 @@ namespace Tests {
             auto filePathMesh = "/home/hal9000/code/BiGGMan++/Testing/";
             mesh->storeMeshInVTKFile(filePathMesh, fileNameMesh, Natural, false);*/
             // 127.83613628736045
-
-            auto bottom = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                              ({{Temperature, 100}})));
-            auto top = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                           ({{Temperature, 500}})));
-            auto left = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                            ({{Temperature, 20}})));
-            auto right = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                             ({{Temperature, 0}})));
-
-
-
-            auto pdeProperties = make_shared<SpatialPDEProperties>(3, ScalarField);
-            pdeProperties->setIsotropicSpatialProperties(10, 0, 0, 0);
-
-            auto heatTransferPDE = make_shared<SteadyStatePartialDifferentialEquation>(pdeProperties, Laplace);
+            
+            auto heatTransferPDE = make_shared<PartialDifferentialEquation>(ScalarField, mesh->dimensions(), false);
+            heatTransferPDE->spatialDerivativesCoefficients()->setIsotropic(10, 0, 0, 0);
+            
 
             auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
 
-            auto dummyBCMap = make_shared<map<Position, shared_ptr<BoundaryCondition>>>();
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Left, left));
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Right, right));
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Top, top));
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Bottom, bottom));
-
-
-            auto boundaryConditions = make_shared<DomainBoundaryConditions>(dummyBCMap);
+            auto boundaryConditions = make_shared<DomainBoundaryConditions>();
+            boundaryConditions->setBoundaryCondition(Position::Left, Dirichlet, Temperature, 20);
+            boundaryConditions->setBoundaryCondition(Position::Right, Dirichlet, Temperature, 0);
+            boundaryConditions->setBoundaryCondition(Position::Top, Dirichlet, Temperature, 500);
+            boundaryConditions->setBoundaryCondition(Position::Bottom, Dirichlet, Temperature, 100);
             auto temperatureDOF = new TemperatureScalar_DOFType();
             auto problem = make_shared<SteadyStateMathematicalProblem>(heatTransferPDE, boundaryConditions, temperatureDOF);
             auto solver = make_shared<ConjugateGradientSolver>(1E-9, 1E4, L2, 10);

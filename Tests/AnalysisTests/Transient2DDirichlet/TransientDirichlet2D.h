@@ -36,6 +36,10 @@ namespace Tests {
             auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
             meshFactory->buildMesh(2, meshBoundaries->parallelogram(numberOfNodes, 1, 1, 0, 0));
             shared_ptr<Mesh> mesh = meshFactory->mesh;
+
+            auto pde = make_shared<PartialDifferentialEquation>(ScalarField, 2, true);
+            pde->spatialDerivativesCoefficients()->setIsotropic(0.1, 0, 0, 0);
+            pde->temporalDerivativesCoefficients()->setIsotropic(0, -1);
             
             auto boundaryConditions = make_shared<DomainBoundaryConditions>();
             boundaryConditions->setBoundaryCondition(Bottom, Dirichlet, Temperature, 1);
@@ -43,29 +47,18 @@ namespace Tests {
             boundaryConditions->setBoundaryCondition(Left, Dirichlet, Temperature, 2);
             boundaryConditions->setBoundaryCondition(Right, Dirichlet, Temperature, 0);
             
-
             auto initialConditions = make_shared<InitialConditions>(0, 0);
-            
-            auto pdeSpatialProperties = make_shared<SpatialPDEProperties>(2, ScalarField);
-            pdeSpatialProperties->setIsotropicSpatialProperties(0.1, 0, 0, 0);
 
-            auto pdeTemporalProperties = make_shared<TransientPDEProperties>(2, ScalarField);
-            pdeTemporalProperties->setIsotropicTemporalProperties(0, -1);
-            //pdeTemporalProperties->setIsotropicTemporalProperties(0, 0);
-
-            auto heatTransferPDE = make_shared<TransientPartialDifferentialEquation>(pdeSpatialProperties,
-                                                                                     pdeTemporalProperties, Laplace);
             auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
             auto temperatureDOF = new TemperatureScalar_DOFType();
-            auto problem = make_shared<TransientMathematicalProblem>(heatTransferPDE, boundaryConditions,
-                                                                     initialConditions, temperatureDOF);
+            auto problem = make_shared<TransientMathematicalProblem>(pde, boundaryConditions, initialConditions, temperatureDOF);
             auto solver = make_shared<ConjugateGradientSolver>(1E-9, 1E4, L2, 10);
-            //auto integration = make_shared<NewmarkNumericalIntegrator>(0.25, 0.5);
             auto integration = make_shared<NewmarkNumericalIntegrator>(0.25, 0.5);
             auto initialTime = 0.0;
             auto stepSize = 1;
             auto totalSteps = 30;
-            auto analysis = make_shared<TransientFiniteDifferenceAnalysis>(initialTime, stepSize, totalSteps, problem, mesh, solver, integration, specsFD);
+            auto analysis = make_shared<TransientFiniteDifferenceAnalysis>(initialTime, stepSize, totalSteps, problem, mesh,
+                                                                           solver, integration, specsFD);
             
             auto startAnalysisTime = std::chrono::high_resolution_clock::now();
             analysis->solve();

@@ -69,14 +69,10 @@ namespace Tests {
             auto initialConditions = make_shared<InitialConditions>(0, 0);
             
             shared_ptr<Mesh> mesh = meshFactory->mesh;
-
-            auto pdeSpatialProperties = make_shared<SpatialPDEProperties>(3, ScalarField);
-            pdeSpatialProperties->setIsotropicSpatialProperties(0.10, 0, 0, 0);
             
-            auto pdeTemporalProperties = make_shared<TransientPDEProperties>(3, ScalarField);
-            pdeTemporalProperties->setIsotropicTemporalProperties(0, -1);
-
-            auto heatTransferPDE = make_shared<TransientPartialDifferentialEquation>(pdeSpatialProperties, pdeTemporalProperties);
+            auto heatTransferPDE = make_shared<PartialDifferentialEquation>(ScalarField, 3);\
+            heatTransferPDE->spatialDerivativesCoefficients()->setIsotropic(0.10, 0, 0, 0);
+            heatTransferPDE->temporalDerivativesCoefficients()->setIsotropic(0, -1);
 
             auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
             

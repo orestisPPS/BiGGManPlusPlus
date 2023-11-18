@@ -60,10 +60,9 @@ namespace MathematicalEntities {
          */
         shared_ptr<BoundaryCondition> getBoundaryConditionAtPosition(Position boundaryPosition, unsigned* nodeID);
         
-         void setBoundaryCondition(Position boundaryPosition, BoundaryConditionType bcType, DOFType dofType, double fixedValue);
+        void setBoundaryCondition(Position boundaryPosition, BoundaryConditionType bcType, DOFType dofType, double fixedValue);
+        void setBoundaryCondition(std::initializer_list<Position> boundaryPositions, BoundaryConditionType bcType, DOFType dofType, double fixedValue);
          
-         
-
 
     private:
         shared_ptr<map<Position, shared_ptr<map<unsigned int*, shared_ptr<BoundaryCondition>>>>> _nodalBcAtPosition;  ///< Holds the boundary conditions for each position and node ID.

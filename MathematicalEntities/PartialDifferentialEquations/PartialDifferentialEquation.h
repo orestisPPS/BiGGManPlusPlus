@@ -1,11 +1,10 @@
 //
 // Created by hal9000 on 12/2/22.
 //
-#pragma once
 #ifndef UNTITLED_DIFFERENTIALEQUATION_H
 #define UNTITLED_DIFFERENTIALEQUATION_H
 
-#include "PDEProperties/SecondOrderLinearPDEProperties.h"
+#include "PDEProperties/TransientPDEProperties.h"
 using namespace MathematicalEntities;
 
 namespace MathematicalEntities {
@@ -21,15 +20,47 @@ namespace MathematicalEntities {
         Wave
     };
     
+    enum DerivativeOrder{
+        None,
+        Zeroth,
+        First,
+        Second
+    };
+    
     class PartialDifferentialEquation {
     public:
         explicit PartialDifferentialEquation(shared_ptr<SecondOrderLinearPDEProperties> properties, PDEType type);
         shared_ptr<SecondOrderLinearPDEProperties> properties;
-        PDEType type();
+
+        explicit PartialDifferentialEquation(FieldType fieldType, unsigned short dimensions, bool isTransient = false);
+        
+
+        
+        const FieldType &fieldType() const;
+        
+        unsigned short dimensions() const;
+        
+        bool isTransient() const;
+        
+        const shared_ptr<SpatialPDEProperties>& spatialDerivativesCoefficients() const;
+        
+        const shared_ptr<TransientPDEProperties>& temporalDerivativesCoefficients() const;
+        
+        
+        
 
 
     protected:
-        PDEType _type;
+        FieldType _fieldType;
+        
+        unsigned short _dimensions;
+        
+        bool _isTransient;
+
+        shared_ptr<SpatialPDEProperties> _spatialDerivativesCoefficients;
+
+        shared_ptr<TransientPDEProperties> _temporalDerivativesCoefficients;
+        
     };
 
 } // MathematicalEntities
