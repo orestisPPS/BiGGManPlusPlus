@@ -37,7 +37,7 @@ namespace Tests {
             meshFactory->buildMesh(2, meshBoundaries->parallelogram(numberOfNodes, 1, 1, 0, 0));
             shared_ptr<Mesh> mesh = meshFactory->mesh;
             
-            auto bottom = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
+/*            auto bottom = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
                                                                                                               ({{Temperature, 100}})));
             auto top = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
                                                                                                            ({{Temperature, 500}})));
@@ -49,8 +49,14 @@ namespace Tests {
             dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Left, left));
             dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Right, right));
             dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Top, top));
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Bottom, bottom));
-            auto boundaryConditions = make_shared<DomainBoundaryConditions>(dummyBCMap);
+            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Bottom, bottom));*/
+
+            auto boundaryConditions = make_shared<DomainBoundaryConditions>();
+            boundaryConditions->setBoundaryCondition(Bottom, Dirichlet, Temperature, 100);
+            boundaryConditions->setBoundaryCondition(Top, Dirichlet, Temperature, 500);
+            boundaryConditions->setBoundaryCondition(Left, Dirichlet, Temperature, 20);
+            boundaryConditions->setBoundaryCondition(Right, Dirichlet, Temperature, 0);
+            
 
             auto initialConditions = make_shared<InitialConditions>(0, 0);
             

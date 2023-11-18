@@ -23,19 +23,25 @@ namespace MathematicalEntities {
      */
     class DomainBoundaryConditions {
     public:
+
+        explicit DomainBoundaryConditions();
+        
+        
         /**
          * @brief Constructs the domain boundary conditions with a specific map of positions and boundary conditions.
          *
          * @param bcAtPosition Pointer to a map of positions and their corresponding boundary conditions.
          */
         explicit DomainBoundaryConditions(shared_ptr<map<Position, shared_ptr<BoundaryCondition>>> bcAtPosition);
+        
+
 
         /**
          * @brief Constructs the domain boundary conditions with a specific map of positions and nodal boundary conditions.
          *
          * @param nodalBcAtPosition Pointer to a map of positions and their corresponding nodal boundary conditions.
          */
-        explicit DomainBoundaryConditions(shared_ptr<map <Position, shared_ptr<map<unsigned int, shared_ptr<BoundaryCondition>>>>> nodalBcAtPosition);
+        explicit DomainBoundaryConditions(shared_ptr<map <Position, shared_ptr<map<unsigned int*, shared_ptr<BoundaryCondition>>>>> nodalBcAtPosition);
 
         /**
          * @brief Gets the boundary condition at a specified position and nodeID.
@@ -52,11 +58,15 @@ namespace MathematicalEntities {
          * @throws std::out_of_range If boundaryPosition or nodeID is not found in the respective map.
          * @throws std::runtime_error If no boundary conditions are found.
          */
-        shared_ptr<BoundaryCondition> getBoundaryConditionAtPosition(Position boundaryPosition, unsigned nodeID);
+        shared_ptr<BoundaryCondition> getBoundaryConditionAtPosition(Position boundaryPosition, unsigned* nodeID);
+        
+         void setBoundaryCondition(Position boundaryPosition, BoundaryConditionType bcType, DOFType dofType, double fixedValue);
+         
+         
 
 
     private:
-        shared_ptr<map<Position, shared_ptr<map<unsigned int, shared_ptr<BoundaryCondition>>>>> _nodalBcAtPosition;  ///< Holds the boundary conditions for each position and node ID.
+        shared_ptr<map<Position, shared_ptr<map<unsigned int*, shared_ptr<BoundaryCondition>>>>> _nodalBcAtPosition;  ///< Holds the boundary conditions for each position and node ID.
         shared_ptr<map<Position, shared_ptr<BoundaryCondition>>> _bcAtPosition;  ///< Holds the boundary conditions for each position.
     };
 

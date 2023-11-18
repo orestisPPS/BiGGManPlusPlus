@@ -58,7 +58,7 @@ namespace NumericalAnalysis {
             //March through the nodes at the Position  that is the key of the domainBoundary map
             for (auto & node : *nodesAtPosition){
 
-                auto bcAtPosition = domainBoundaryConditions-> getBoundaryConditionAtPosition(position,  *node->id.global);
+                auto bcAtPosition = domainBoundaryConditions-> getBoundaryConditionAtPosition(position,  node->id.global);
                 auto dofValue = -1.0;
                 auto dirichletNeumannConflicts = list<DegreeOfFreedom*>();
                 for (auto& dofType : *problemDOFTypes->DegreesOfFreedom){
