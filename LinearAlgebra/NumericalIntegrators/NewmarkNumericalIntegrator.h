@@ -22,9 +22,9 @@ namespace LinearAlgebra {
     protected:
 
         
-        void _calculateFirstOrderDerivative() override;
+/*        void _calculateFirstOrderDerivative() override;
         
-        void _calculateSecondOrderDerivative() override;
+        void _calculateSecondOrderDerivative() override;*/
         
         void _calculateHigherOrderDerivatives() override;
 

@@ -13,8 +13,10 @@ namespace LinearAlgebra {
         _checkTimeParameters();
         _checkSolver();
         
-        if (stepIndex == 0)
+        if (stepIndex == 0){
+            _calculateHigherOrderDerivatives();
             assembleEffectiveMatrix();
+        }
         
         assembleEffectiveRHS();
         _currentLinearSystem = make_shared<LinearSystem>(_K_hat, _RHS_hat);
@@ -22,10 +24,6 @@ namespace LinearAlgebra {
         _solver->solve();
         _U_new->deepCopy(_currentLinearSystem->solution);
         _calculateHigherOrderDerivatives();
-
-        //_U_new->printHorizontallyWithIndex("U_new");
-        //_U_dot_new->printHorizontallyWithIndex("U_dot_new");
-        //_U_dot_dot_new->printHorizontallyWithIndex("U_dot_dot_new");
         
         _U_old->deepCopy(_U_new);
         _U_dot_old->deepCopy(_U_dot_new);
@@ -50,8 +48,15 @@ namespace LinearAlgebra {
     }
     
     void NewmarkNumericalIntegrator::assembleEffectiveMatrix() {
-        _M->add(_C, _K_hat, _a0, _a1);
-        _K_hat->add(_K, _K_hat);
+/*        _M->add(_C, _K_hat, _a0, _a1);
+        _K_hat->add(_K, _K_hat);*/
+        auto size = _M->numberOfRows();
+        for (unsigned i = 0; i < size; ++i) {
+            for (unsigned j = 0; j < size; ++j) {
+                _K_hat->setElement(i, j,
+                                   _K->getElement(i, j) + _a0 * _M->getElement(i, j) + _a1 * _C->getElement(i, j));
+            }
+        }
     }
     
     void NewmarkNumericalIntegrator::assembleEffectiveRHS() {
@@ -80,35 +85,12 @@ namespace LinearAlgebra {
         };
         ThreadingOperations<double>::executeParallelJob(sumJob, _sum->size(), 1);
     }
-
-    void NewmarkNumericalIntegrator::_calculateSecondOrderDerivative() {
-        
-        auto secondOrderTerm = [&](unsigned start, unsigned end) -> void{
-            for (unsigned i = start; i < end; ++i) {
-                (*_U_dot_dot_new)[i] =
-                        _a0 * (*_U_new)[i] - _a0 * (*_U_old)[i] - _a2 * (*_U_dot_old)[i] - _a3 * (*_U_dot_dot_old)[i];
-            }
-        };
-        
-        ThreadingOperations<double>::executeParallelJob(secondOrderTerm, _sum->size(), 1);
-        
-    }
     
-
-    void NewmarkNumericalIntegrator::_calculateFirstOrderDerivative() {
-        auto firstOrderTerm = [&](unsigned start, unsigned end) -> void{
-            for (unsigned i = start; i < end; ++i) {
-                (*_U_dot_new)[i] = (*_U_dot_old)[i] + _a6 * (*_U_dot_dot_old)[i] + _a7 * (*_U_dot_dot_new)[i];
-            }
-        };
-        
-        ThreadingOperations<double>::executeParallelJob(firstOrderTerm, _sum->size(), 1);
-    }
 
     void NewmarkNumericalIntegrator::_calculateHigherOrderDerivatives() {
         auto calculateDerivativesJob = [&](unsigned start, unsigned end) -> void{
             for (unsigned i = start; i < end; ++i) {
-                (*_U_dot_dot_new)[i] = _a0 * (*_U_new)[i] - _a0 * (*_U_old)[i] - _a2 * (*_U_dot_old)[i] - _a3 * (*_U_dot_dot_old)[i];
+                (*_U_dot_dot_new)[i] = _a0 * ((*_U_new)[i] - (*_U_old)[i]) - _a2 * (*_U_dot_old)[i] - _a3 * (*_U_dot_dot_old)[i];
                 (*_U_dot_new)[i] = (*_U_dot_old)[i] + _a6 * (*_U_dot_dot_old)[i] + _a7 * (*_U_dot_dot_new)[i];
             }
         };

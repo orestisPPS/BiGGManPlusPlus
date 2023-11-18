@@ -28,8 +28,8 @@ namespace Tests {
             logTestStart("testDiffusionDirichlet2D");
 
             map<Direction, unsigned> numberOfNodes;
-            numberOfNodes[Direction::One] = 5;
-            numberOfNodes[Direction::Two] = 5;
+            numberOfNodes[Direction::One] = 11;
+            numberOfNodes[Direction::Two] = 11;
 
             auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 0, 0, 0);
             auto meshFactory = make_shared<MeshFactory>(specs);
@@ -37,24 +37,10 @@ namespace Tests {
             meshFactory->buildMesh(2, meshBoundaries->parallelogram(numberOfNodes, 1, 1, 0, 0));
             shared_ptr<Mesh> mesh = meshFactory->mesh;
             
-/*            auto bottom = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                              ({{Temperature, 100}})));
-            auto top = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                           ({{Temperature, 500}})));
-            auto left = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                            ({{Temperature, 20}})));
-            auto right = make_shared<BoundaryCondition>(Dirichlet, make_shared<map<DOFType, double>>(map<DOFType, double>
-                                                                                                             ({{Temperature, 0}})));
-            auto dummyBCMap = make_shared<map<Position, shared_ptr<BoundaryCondition>>>();
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Left, left));
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Right, right));
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Top, top));
-            dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Bottom, bottom));*/
-
             auto boundaryConditions = make_shared<DomainBoundaryConditions>();
-            boundaryConditions->setBoundaryCondition(Bottom, Dirichlet, Temperature, 100);
-            boundaryConditions->setBoundaryCondition(Top, Dirichlet, Temperature, 500);
-            boundaryConditions->setBoundaryCondition(Left, Dirichlet, Temperature, 20);
+            boundaryConditions->setBoundaryCondition(Bottom, Dirichlet, Temperature, 1);
+            boundaryConditions->setBoundaryCondition(Top, Dirichlet, Temperature, 5);
+            boundaryConditions->setBoundaryCondition(Left, Dirichlet, Temperature, 2);
             boundaryConditions->setBoundaryCondition(Right, Dirichlet, Temperature, 0);
             
 
@@ -74,10 +60,11 @@ namespace Tests {
             auto problem = make_shared<TransientMathematicalProblem>(heatTransferPDE, boundaryConditions,
                                                                      initialConditions, temperatureDOF);
             auto solver = make_shared<ConjugateGradientSolver>(1E-9, 1E4, L2, 10);
+            //auto integration = make_shared<NewmarkNumericalIntegrator>(0.25, 0.5);
             auto integration = make_shared<NewmarkNumericalIntegrator>(0.25, 0.5);
             auto initialTime = 0.0;
-            auto stepSize = 0.1;
-            auto totalSteps = 20;
+            auto stepSize = 1;
+            auto totalSteps = 30;
             auto analysis = make_shared<TransientFiniteDifferenceAnalysis>(initialTime, stepSize, totalSteps, problem, mesh, solver, integration, specsFD);
             
             auto startAnalysisTime = std::chrono::high_resolution_clock::now();
