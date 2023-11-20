@@ -2,8 +2,8 @@
 // Created by hal9000 on 1/28/23.
 //
 
-#ifndef UNTITLED_FDSCHEMESPECS_H
-#define UNTITLED_FDSCHEMESPECS_H
+#ifndef UNTITLED_FINITEDIFFERENCESCHEMEORDER_H
+#define UNTITLED_FINITEDIFFERENCESCHEMEORDER_H
 
 #include <map>
 #include <tuple>
@@ -32,7 +32,7 @@ enum FDSchemeType{
 namespace LinearAlgebra {
 
     
-    class FDSchemeSpecs {
+    class FiniteDifferenceSchemeOrder {
     public:
         
         // Specifications of a first derivative finite difference scheme.
@@ -40,7 +40,7 @@ namespace LinearAlgebra {
         // Input: Map containing the type of the scheme and the order of the scheme at each direction
         //        For example : schemeTypeAndOrderAtDirectionFirstDerivative[One] = (Central, 2)
         //        SpaceEntityType: The space entity for which the scheme is being built (Axis, Plane, Volume)
-        explicit FDSchemeSpecs(const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirectionFirstDerivative);
+        explicit FiniteDifferenceSchemeOrder(const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirectionFirstDerivative);
         
         // Specifications of a first and second derivative finite difference scheme.
         // Use this constructor for equations up to second order.
@@ -51,33 +51,33 @@ namespace LinearAlgebra {
         //        diagonalTermsCalculated: If true, the diagonal terms of the equation will be calculated with
         //                                 a central scheme of order Δx_i^2. If false or neglected the diagonal
         //                                 terms will not be added to the scheme
-        FDSchemeSpecs(const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirectionFirstDerivative,
-                      const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirectionSecondDerivative,
-                      bool diagonalTermsCalculated = false);
+        FiniteDifferenceSchemeOrder(const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirectionFirstDerivative,
+                                    const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirectionSecondDerivative,
+                                    bool diagonalTermsCalculated = false);
         
         // Specifications of a first derivative finite difference scheme.
         // Use this constructor for first order equations where the scheme type and order are the same for all directions.
-        FDSchemeSpecs(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder, const vector<Direction> &directions);
+        FiniteDifferenceSchemeOrder(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder, const vector<Direction> &directions);
         
         
-        FDSchemeSpecs(unsigned short firstDerivativeOrder, const vector<Direction> &directions);
+        FiniteDifferenceSchemeOrder(unsigned short firstDerivativeOrder, const vector<Direction> &directions);
         
         
         
         // Specifications of a first and second derivative finite difference scheme.
         // Use this constructor for equations up to second order where the scheme type and order are 
         // the same for all directions.
-        FDSchemeSpecs(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder,
-                      FDSchemeType secondDerivativeSchemeType, unsigned secondDerivativeOrder,
-                      const vector<Direction> &directions, bool diagonalTermsCalculated = false);
+        FiniteDifferenceSchemeOrder(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder,
+                                    FDSchemeType secondDerivativeSchemeType, unsigned secondDerivativeOrder,
+                                    const vector<Direction> &directions, bool diagonalTermsCalculated = false);
 
         // Specifications of a first and second derivative finite difference scheme.
         // Use this constructor for equations up to second order where the scheme type and order are 
         // the same for all directions.
-        FDSchemeSpecs(unsigned firstDerivativeOrder, unsigned secondDerivativeOrder,
-                      const vector<Direction> &directions, bool diagonalTermsCalculated = false);
+        FiniteDifferenceSchemeOrder(unsigned firstDerivativeOrder, unsigned secondDerivativeOrder,
+                                    const vector<Direction> &directions, bool diagonalTermsCalculated = false);
         
-        ~FDSchemeSpecs();
+        ~FiniteDifferenceSchemeOrder();
         
         map<unsigned, map<Direction, tuple<FDSchemeType, int>>>* schemeTypeAndOrderAtDirectionForDerivativeOrder;
         
@@ -94,4 +94,4 @@ namespace LinearAlgebra {
 
 } // LinearAlgebra
 
-#endif //UNTITLED_FDSCHEMESPECS_H
+#endif //UNTITLED_FINITEDIFFERENCESCHEMEORDER_H

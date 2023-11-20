@@ -32,7 +32,7 @@ namespace LinearAlgebra {
         IterativeSolver::_cudaSolution();
     }
 
-    void ConjugateGradientSolver::_performMethodIteration() {
+    void ConjugateGradientSolver::_performMethodSolution() {
         _printInitializationText();
         auto start = std::chrono::high_resolution_clock::now();
         double alpha = 0.0;

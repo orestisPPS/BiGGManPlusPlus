@@ -68,7 +68,7 @@ namespace LinearAlgebra {
 
         void setInitialSolution(double initialValue) override;
         
-        virtual void _performMethodIteration();
+        virtual void _performMethodSolution();
         
         virtual void _cudaSolution();
         
@@ -78,8 +78,7 @@ namespace LinearAlgebra {
         
         void _printIterationAndNorm(unsigned displayFrequency = 100) const;
         
-        void printAnalysisOutcome(unsigned totalIterations, double exitNorm, std::chrono::high_resolution_clock::time_point startTime,
-                                  std::chrono::high_resolution_clock::time_point finishTime) const;
+        void printAnalysisOutcome(unsigned totalIterations, double exitNorm, std::chrono::high_resolution_clock::duration computationTime) const;
         
         
     };

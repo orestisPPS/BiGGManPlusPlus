@@ -49,7 +49,6 @@ namespace Tests {
             
             auto initialConditions = make_shared<InitialConditions>(0, 0);
 
-            auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
             auto temperatureDOF = new TemperatureScalar_DOFType();
             auto problem = make_shared<TransientMathematicalProblem>(pde, boundaryConditions, initialConditions, temperatureDOF);
             auto solver = make_shared<ConjugateGradientSolver>(1E-9, 1E4, L2, 10);
@@ -58,7 +57,7 @@ namespace Tests {
             auto stepSize = 1;
             auto totalSteps = 30;
             auto analysis = make_shared<TransientFiniteDifferenceAnalysis>(initialTime, stepSize, totalSteps, problem, mesh,
-                                                                           solver, integration, specsFD);
+                                                                           solver, integration);
             
             auto startAnalysisTime = std::chrono::high_resolution_clock::now();
             analysis->solve();

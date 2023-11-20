@@ -2,13 +2,13 @@
 // Created by hal9000 on 1/28/23.
 //
 
-#include "FDSchemeSpecs.h"
+#include "FiniteDifferenceSchemeOrder.h"
 
 
 
 namespace LinearAlgebra {
     
-    FDSchemeSpecs::FDSchemeSpecs(const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirection){
+    FiniteDifferenceSchemeOrder::FiniteDifferenceSchemeOrder(const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirection){
         schemeTypeAndOrderAtDirectionForDerivativeOrder = new map<unsigned, map<Direction, tuple<FDSchemeType, int>>>();
         schemeTypeAndOrderAtDirectionForDerivativeOrder->
         insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>(1, schemeTypeAndOrderAtDirection));
@@ -19,9 +19,9 @@ namespace LinearAlgebra {
         schemeTypeFixed = true;
     }
     
-    FDSchemeSpecs::FDSchemeSpecs(const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirectionFirstDerivative,
-                                 const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirectionSecondDerivative,
-                                 bool diagonalTermsCalculated){
+    FiniteDifferenceSchemeOrder::FiniteDifferenceSchemeOrder(const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirectionFirstDerivative,
+                                                             const map<Direction,tuple<FDSchemeType, int>>& schemeTypeAndOrderAtDirectionSecondDerivative,
+                                                             bool diagonalTermsCalculated){
         schemeTypeAndOrderAtDirectionForDerivativeOrder = new map<unsigned, map<Direction, tuple<FDSchemeType, int>>>();
         schemeTypeAndOrderAtDirectionForDerivativeOrder->
         insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>(1, schemeTypeAndOrderAtDirectionFirstDerivative));
@@ -32,8 +32,8 @@ namespace LinearAlgebra {
         schemeTypeFixed = true;
     }
     
-    FDSchemeSpecs::FDSchemeSpecs(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder,
-                                 const vector<Direction> &directions) {
+    FiniteDifferenceSchemeOrder::FiniteDifferenceSchemeOrder(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder,
+                                                             const vector<Direction> &directions) {
         schemeTypeAndOrderAtDirectionForDerivativeOrder = new map<unsigned, map<Direction, tuple<FDSchemeType, int>>>();
         //Insert Specs for first derivative
         schemeTypeAndOrderAtDirectionForDerivativeOrder->insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>
@@ -46,7 +46,7 @@ namespace LinearAlgebra {
 
     }
     
-    FDSchemeSpecs::FDSchemeSpecs(unsigned short firstDerivativeErrorOrder, const vector<Direction> &directions) {
+    FiniteDifferenceSchemeOrder::FiniteDifferenceSchemeOrder(unsigned short firstDerivativeErrorOrder, const vector<Direction> &directions) {
         schemeTypeAndOrderAtDirectionForDerivativeOrder = new map<unsigned, map<Direction, tuple<FDSchemeType, int>>>();
         //Insert Specs for first derivative
         schemeTypeAndOrderAtDirectionForDerivativeOrder->insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>
@@ -58,9 +58,9 @@ namespace LinearAlgebra {
         schemeTypeFixed = true;
     }
     
-    FDSchemeSpecs::FDSchemeSpecs(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder,
-                                 FDSchemeType secondDerivativeSchemeType, unsigned secondDerivativeOrder,
-                                 const vector<Direction> &directions, bool diagonalTermsCalculated) {
+    FiniteDifferenceSchemeOrder::FiniteDifferenceSchemeOrder(FDSchemeType firstDerivativeSchemeType, unsigned firstDerivativeOrder,
+                                                             FDSchemeType secondDerivativeSchemeType, unsigned secondDerivativeOrder,
+                                                             const vector<Direction> &directions, bool diagonalTermsCalculated) {
         
         schemeTypeAndOrderAtDirectionForDerivativeOrder = new map<unsigned, map<Direction, tuple<FDSchemeType, int>>>();
         //Insert Specs for first derivative
@@ -78,8 +78,8 @@ namespace LinearAlgebra {
         schemeTypeFixed = true;
     }
     
-    FDSchemeSpecs::FDSchemeSpecs(unsigned firstDerivativeOrder, unsigned secondDerivativeOrder,
-                                 const vector<Direction> &directions, bool diagonalTermsCalculated) {
+    FiniteDifferenceSchemeOrder::FiniteDifferenceSchemeOrder(unsigned firstDerivativeOrder, unsigned secondDerivativeOrder,
+                                                             const vector<Direction> &directions, bool diagonalTermsCalculated) {
         schemeTypeAndOrderAtDirectionForDerivativeOrder = new map<unsigned, map<Direction, tuple<FDSchemeType, int>>>();
         //Insert Specs for first derivative
         schemeTypeAndOrderAtDirectionForDerivativeOrder->insert(pair<unsigned, map<Direction, tuple<FDSchemeType, int>>>
@@ -96,12 +96,12 @@ namespace LinearAlgebra {
         schemeTypeFixed = false;
     }
     
-    FDSchemeSpecs::~FDSchemeSpecs() {
+    FiniteDifferenceSchemeOrder::~FiniteDifferenceSchemeOrder() {
         delete schemeTypeAndOrderAtDirectionForDerivativeOrder;
     }
 
     
-    void FDSchemeSpecs::checkInput() const {
+    void FiniteDifferenceSchemeOrder::checkInput() const {
         for (auto &derivativeOrder : *schemeTypeAndOrderAtDirectionForDerivativeOrder) {
             //Check if the order of the scheme is between the supported values (1,2,3,4,5)
             for (auto &direction : derivativeOrder.second) {
@@ -138,7 +138,7 @@ namespace LinearAlgebra {
         }
     }
 
-    unsigned FDSchemeSpecs::getErrorOrderOfSchemeTypeForDerivative(unsigned int derivativeOrder) const {
+    unsigned FiniteDifferenceSchemeOrder::getErrorOrderOfSchemeTypeForDerivative(unsigned int derivativeOrder) const {
         if (!schemeTypeFixed)
             return get<1>(schemeTypeAndOrderAtDirectionForDerivativeOrder->at(derivativeOrder).at(One));
         else
@@ -148,7 +148,7 @@ namespace LinearAlgebra {
         
     }
 
-    unsigned FDSchemeSpecs::getErrorForDerivativeOfArbitraryScheme(unsigned int derivativeOrder) const {
+    unsigned FiniteDifferenceSchemeOrder::getErrorForDerivativeOfArbitraryScheme(unsigned int derivativeOrder) const {
         if (schemeTypeFixed){
             bool found = false;
             for (auto &direction : schemeTypeAndOrderAtDirectionForDerivativeOrder->at(derivativeOrder))

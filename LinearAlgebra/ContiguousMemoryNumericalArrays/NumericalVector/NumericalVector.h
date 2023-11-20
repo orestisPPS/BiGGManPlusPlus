@@ -342,8 +342,12 @@ namespace LinearAlgebra {
         * 
         * @return unsigned int Size of the vector.
         */
-        unsigned int size() const {
+        [[nodiscard]] unsigned int size() const {
             return _values->size();
+        }
+        
+        [[nodiscard]] double sizeInKB() const {
+            return _values->size() * sizeof(T) / 1024.0;
         }
         
         
@@ -351,7 +355,7 @@ namespace LinearAlgebra {
          * @brief Checks if the vector is empty.
          * @return true if the vector is empty, false otherwise.
          */
-        bool empty() const {
+        [[nodiscard]] bool empty() const {
             return _values->empty();
         }
         
@@ -463,7 +467,7 @@ namespace LinearAlgebra {
         * @brief Returns the number of threads used for vector operations.
         * @return unsigned int The number of threads used for vector operations.
         */
-        unsigned getAvailableThreads() const{
+        [[nodiscard]] unsigned getAvailableThreads() const{
             return _availableThreads;
         }
 

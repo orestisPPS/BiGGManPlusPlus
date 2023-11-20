@@ -28,6 +28,10 @@ namespace LinearAlgebra {
             }
         }
         
+        double sizeInKB() override {
+            return this->_values->sizeInKB();
+        }
+        
         T& getElement(unsigned row, unsigned column) override {
             return this->_values->getDataPointer()[row * this->_numberOfColumns + column];
         }

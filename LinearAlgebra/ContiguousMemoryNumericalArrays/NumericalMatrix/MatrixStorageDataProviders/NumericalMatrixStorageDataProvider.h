@@ -22,6 +22,8 @@ namespace LinearAlgebra {
             elementSetters = unordered_map<NumericalMatrixFormType, T&()>();*/
         }
         
+        virtual double sizeInKB() {}
+        
         virtual ~NumericalMatrixStorageDataProvider() = default;
         
         shared_ptr<NumericalVector<T>>& getValues(){

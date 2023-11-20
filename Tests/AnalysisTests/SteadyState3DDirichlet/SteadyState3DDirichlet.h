@@ -50,8 +50,6 @@ namespace Tests {
             
             auto heatTransferPDE = make_shared<PartialDifferentialEquation>(ScalarField, 3, false);
             heatTransferPDE->spatialDerivativesCoefficients()->setIsotropic(0.10, 0, 0, 0);
-
-            auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
             
 
             auto boundaryConditions = make_shared<DomainBoundaryConditions>();
@@ -70,7 +68,7 @@ namespace Tests {
             //auto solver = make_shared<GaussSeidelSolver>(VectorNormType::L2, 1E-9, 1E4, false, turboVTechKickInYoo);
             auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2);
             //auto solver = make_shared<SORSolver>(1.8, VectorNormType::L2, 1E-5);
-            auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specsFD);
+            auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver);
 
             analysis->solve();
 

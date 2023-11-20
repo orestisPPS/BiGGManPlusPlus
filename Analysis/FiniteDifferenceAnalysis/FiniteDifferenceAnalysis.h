@@ -5,7 +5,7 @@
 #ifndef UNTITLED_FINITEDIFFERENCEANALYSIS_H
 #define UNTITLED_FINITEDIFFERENCEANALYSIS_H
 
-#include "../../LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h"
+#include "../../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeOrder.h"
 #include "../NumericalAnalysis.h"
 
 using namespace LinearAlgebra;
@@ -17,11 +17,9 @@ namespace NumericalAnalysis {
     class FiniteDifferenceAnalysis : public NumericalAnalysis {
     public:
         FiniteDifferenceAnalysis(shared_ptr<MathematicalProblem> mathematicalProblem,
-                                 shared_ptr<Mesh> mesh,
-                                 shared_ptr<Solver> solver,
-                                 shared_ptr<FDSchemeSpecs> schemeSpecs, CoordinateType coordinateSystem = Natural);
+                                 shared_ptr<Mesh> mesh, shared_ptr<Solver> solver, shared_ptr<FiniteDifferenceSchemeOrder> schemeSpecs);
         
-        shared_ptr<FDSchemeSpecs> schemeSpecs;
+        shared_ptr<FiniteDifferenceSchemeOrder> schemeSpecs;
        
     };
 

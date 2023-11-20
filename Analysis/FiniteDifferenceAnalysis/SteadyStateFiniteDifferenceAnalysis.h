@@ -14,9 +14,7 @@ namespace NumericalAnalysis {
     public:
         
         SteadyStateFiniteDifferenceAnalysis(shared_ptr<SteadyStateMathematicalProblem> mathematicalProblem,
-                                            shared_ptr<Mesh> mesh,
-                                            shared_ptr<Solver> solver,
-                                            shared_ptr<FDSchemeSpecs> schemeSpecs, CoordinateType coordinateSystem = Natural);
+                                            shared_ptr<Mesh> mesh, shared_ptr<Solver> solver, shared_ptr<FiniteDifferenceSchemeOrder> schemeSpecs = nullptr);
         
         shared_ptr<SteadyStateMathematicalProblem> steadyStateMathematicalProblem;
         

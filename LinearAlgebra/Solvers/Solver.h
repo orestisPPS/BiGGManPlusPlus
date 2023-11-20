@@ -14,6 +14,7 @@ namespace LinearAlgebra {
         Iterative,
         PreconditionedIterative
     };
+    
 
     class Solver {
         
@@ -44,6 +45,11 @@ namespace LinearAlgebra {
         SolverType _solverType;
 
         bool _isLinearSystemSet;
+
+        std::chrono::high_resolution_clock::duration computationTime;
+        
+        unsigned int _solutionsInitialized = 0;
+        
 
     };
 

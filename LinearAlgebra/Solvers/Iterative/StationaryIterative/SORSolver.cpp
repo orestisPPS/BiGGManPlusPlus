@@ -12,7 +12,7 @@ namespace LinearAlgebra{
         _solverName = "SOR";
     }
     
-    void SORSolver::_performMethodIteration() {
+    void SORSolver::_performMethodSolution() {
         auto n = _linearSystem->matrix->numberOfRows();
         for (unsigned row = 0; row < n; ++row) {
             double sum = 0.0;

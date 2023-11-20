@@ -6,14 +6,15 @@
 #include "TransientFiniteDifferenceAnalysis.h"
 
 namespace NumericalAnalysis {
-    TransientFiniteDifferenceAnalysis::TransientFiniteDifferenceAnalysis(double initialTime, double stepSize, unsigned totalSteps,
-            shared_ptr<TransientMathematicalProblem> mathematicalProblem,
-            shared_ptr<Mesh> mesh,
-            shared_ptr<Solver> solver,
-            shared_ptr<NumericalIntegrator> integrationMethod,
-            shared_ptr<FDSchemeSpecs> schemeSpecs,
-            CoordinateType coordinateSystem) :
-            FiniteDifferenceAnalysis(mathematicalProblem, std::move(mesh), std::move(solver), std::move(schemeSpecs), coordinateSystem) {
+    TransientFiniteDifferenceAnalysis::TransientFiniteDifferenceAnalysis(double initialTime, double stepSize,
+                                                                         unsigned totalSteps,
+                                                                         shared_ptr<TransientMathematicalProblem> mathematicalProblem,
+                                                                         shared_ptr<Mesh> mesh,
+                                                                         shared_ptr<Solver> solver,
+                                                                         shared_ptr<NumericalIntegrator> integrationMethod,
+                                                                         shared_ptr<FiniteDifferenceSchemeOrder> schemeSpecs)
+            :
+            FiniteDifferenceAnalysis(mathematicalProblem, std::move(mesh), std::move(solver), std::move(schemeSpecs)) {
 
         _initialTime = initialTime;
         _finalTime = initialTime + totalSteps * stepSize;

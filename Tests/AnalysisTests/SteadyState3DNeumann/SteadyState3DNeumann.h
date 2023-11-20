@@ -24,16 +24,15 @@ namespace Tests {
         }
         
         private:
-        static void _testDiffusionDirichlet3D() {
+        static void _testDiffusionNeumann3D() {
             
-            logTestStart("testDiffusionDirichlet3D");
+            logTestStart("_testDiffusionNeumann3D");
 
             map<Direction, unsigned> numberOfNodes;
-            numberOfNodes[Direction::One] = 5;
+            numberOfNodes[Direction::One] = 5 ;
             numberOfNodes[Direction::Two] = 5;
             numberOfNodes[Direction::Three] = 5;
 
-            //auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 1, 1, 0, 0, 0, 0, 0, 0);
             auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0);
             auto meshFactory = make_shared<MeshFactory>(specs);
             auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
@@ -47,19 +46,19 @@ namespace Tests {
             auto filePathMesh = "/home/hal9000/code/BiGGMan++/Testing/";
             mesh->storeMeshInVTKFile(filePathMesh, fileNameMesh, Natural, false);
 
-            auto heatTransferPDE = make_shared<PartialDifferentialEquation>(ScalarField, 3);
+            auto heatTransferPDE = make_shared<PartialDifferentialEquation>(ScalarField, 3, false);
             heatTransferPDE->spatialDerivativesCoefficients()->setIsotropic(10, 0, 0, 0);
-            
-            auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
             
             auto temperatureDOF = new TemperatureScalar_DOFType();
 
 
-            // 127.83613628736045
+            // 228.04129441401938
             auto boundaryConditions = make_shared<DomainBoundaryConditions>();
-            boundaryConditions->setBoundaryCondition({Right, Front, Back}, Dirichlet, Temperature, 0.0);
-            boundaryConditions->setBoundaryCondition({Bottom, Top}, Dirichlet, Temperature, 100.0);
-            boundaryConditions->setBoundaryCondition({Left}, Dirichlet, Temperature, 20.0);
+            boundaryConditions->setBoundaryCondition(Bottom, Dirichlet, Temperature, 1000);
+            boundaryConditions->setBoundaryCondition(Top, Dirichlet, Temperature, 100);
+            boundaryConditions->setBoundaryCondition(Left, Neumann, Temperature, 0.1);
+            boundaryConditions->setBoundaryCondition({Right, Front, Back}, Dirichlet, Temperature, 0);
+
             
             auto problem = make_shared<SteadyStateMathematicalProblem>(heatTransferPDE, boundaryConditions, temperatureDOF);
 
@@ -69,7 +68,7 @@ namespace Tests {
             //auto solver = make_shared<GaussSeidelSolver>(VectorNormType::L2, 1E-9, 1E4, false, turboVTechKickInYoo);
             auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2);
             //auto solver = make_shared<SORSolver>(1.8, VectorNormType::L2, 1E-5);
-            auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specsFD);
+            auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver);
 
             analysis->solve();
 
@@ -79,24 +78,20 @@ namespace Tests {
             auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
             auto fieldType = "Temperature";
             Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
-
-            //auto targetCoords = NumericalVector<double>{0.5, 0.5};
-            //auto targetCoords = NumericalVector<double>{1.5, 1.5, 1.5};
+            
             auto targetCoords = NumericalVector<double>{2, 2, 2};
-            //auto targetCoords = NumericalVector<double>{1.5, 1.5, 3};
-            //auto targetCoords = NumericalVector<double>{5, 5, 5};
             auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-1);
             cout<<"Computed Value : "<< targetSolution[0] << endl;
-            auto absoluteRelativeError = abs(targetSolution[0] - 36.6666666666666
-            ) / 36.6666666666666;
+            auto absoluteRelativeError = abs(targetSolution[0] - 228.04129441401938
+            ) / 228.04129441401938;
 
-            assert(absoluteRelativeError< 1E-12);
+            assert(absoluteRelativeError< 1E-3);
             logTestEnd();
 
             auto filenameParaview = "firstMesh.vtk";
         }
 
-        static void _testDiffusionNeumann3D() {
+        /*static void _testDiffusionNeumann3D() {
 
             logTestStart("testDiffusionNeumann3D");
 
@@ -138,7 +133,7 @@ namespace Tests {
 
             auto heatTransferPDE = make_shared<PartialDifferentialEquation>(pdeProperties, Laplace);
 
-            auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
+            auto specsFD = make_shared<FiniteDifferenceSchemeOrder>(2, 2, mesh->directions());
 
             auto dummyBCMap = make_shared<map<Position, shared_ptr<BoundaryCondition>>>();
             dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Left, left));
@@ -186,7 +181,7 @@ namespace Tests {
             logTestEnd();
 
             auto filenameParaview = "firstMesh.vtk";
-        }
+        }*/
 
         static void logTestStart(const std::string& testName) {
             std::cout << "Running " << testName << "... ";

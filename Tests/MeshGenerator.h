@@ -60,7 +60,7 @@ namespace Tests{
 
             auto heatTransferPDE = make_shared<PartialDifferentialEquation>(pdeProperties, Laplace);
 
-            auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
+            auto specsFD = make_shared<FiniteDifferenceSchemeOrder>(2, 2, mesh->directions());
 
             auto dummyBCMap = make_shared<map<Position, shared_ptr<BoundaryCondition>>>();
             dummyBCMap->insert(pair<Position, shared_ptr<BoundaryCondition>>(Position::Left, left));

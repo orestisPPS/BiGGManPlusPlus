@@ -52,8 +52,8 @@ add_executable(untitled main.cpp
         PositioningInSpace/PhysicalSpaceEntities/PhysicalSpaceEntity.h
         LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeWeightsStructuredGrid.cpp
         LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeWeightsStructuredGrid.h
-        LinearAlgebra/FiniteDifferences/FDSchemeSpecs.cpp
-        LinearAlgebra/FiniteDifferences/FDSchemeSpecs.h
+        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeOrder.cpp
+        LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeOrder.h
         Analysis/FiniteDifferenceAnalysis/FiniteDifferenceAnalysis.h
         Discretization/Node/NodalCoordinates.h
         Discretization/Node/NodalCoordinates.cpp

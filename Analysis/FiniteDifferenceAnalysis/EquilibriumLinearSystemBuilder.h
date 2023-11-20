@@ -21,7 +21,7 @@ namespace NumericalAnalysis {
 
     public:
         explicit EquilibriumLinearSystemBuilder(const shared_ptr<AnalysisDegreesOfFreedom>& analysisDegreesOfFreedom, const shared_ptr<Mesh> &mesh,
-                                                const shared_ptr<SteadyStateMathematicalProblem>& mathematicalProblem, const shared_ptr<FDSchemeSpecs>& specs,
+                                                const shared_ptr<SteadyStateMathematicalProblem>& mathematicalProblem, const shared_ptr<FiniteDifferenceSchemeOrder>& specs,
                                                 CoordinateType = Natural);
         
         shared_ptr<LinearSystem> linearSystem;
@@ -36,7 +36,7 @@ namespace NumericalAnalysis {
 
     protected:
         
-        shared_ptr<FDSchemeSpecs> _specs;
+        shared_ptr<FiniteDifferenceSchemeOrder> _specs;
         
         CoordinateType _coordinateType;
 

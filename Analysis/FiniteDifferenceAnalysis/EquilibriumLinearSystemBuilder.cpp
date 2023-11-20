@@ -12,7 +12,7 @@ namespace NumericalAnalysis {
     
     EquilibriumLinearSystemBuilder::
     EquilibriumLinearSystemBuilder(const shared_ptr<AnalysisDegreesOfFreedom>& analysisDegreesOfFreedom, const shared_ptr<Mesh> &mesh,
-                                   const shared_ptr<SteadyStateMathematicalProblem>& mathematicalProblem, const shared_ptr<FDSchemeSpecs>& specs,
+                                   const shared_ptr<SteadyStateMathematicalProblem>& mathematicalProblem, const shared_ptr<FiniteDifferenceSchemeOrder>& specs,
                                    CoordinateType coordinateSystem) :
             linearSystem(nullptr), _analysisDegreesOfFreedom(analysisDegreesOfFreedom), _mesh(mesh),
             _steadyStateMathematicalProblem(mathematicalProblem), _specs(specs) {
@@ -134,11 +134,12 @@ namespace NumericalAnalysis {
         auto templatePositionsAndPointsMap = _initiatePositionsAndPointsMap(maxDerivativeOrder, directions);
         auto schemeBuilder = FiniteDifferenceSchemeBuilder(_specs);
 
-        auto errorOrderDerivative1 = _specs->getErrorOrderOfSchemeTypeForDerivative(1);
+        auto errorOrderDerivative1 = 2;
 
         schemeBuilder.templatePositionsAndPoints(1, errorOrderDerivative1, directions,
                                                  templatePositionsAndPointsMap[1]);
 
+        auto boundaryNodeToPositionMap = _mesh->getBoundaryNodeToPositionMap();
 
         auto maxNeighbours = schemeBuilder.getMaximumNumberOfPointsForArbitrarySchemeType();
 
@@ -148,7 +149,8 @@ namespace NumericalAnalysis {
             //Define the node where the dof belongs
             auto node = _mesh->nodeFromID(dof.first->parentNode());
             auto thisDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof.first);
-            auto boundaryNodeToPositionMap = _mesh->getBoundaryNodeToPositionMap();
+
+            
             auto normalVector = _mesh->getNormalUnitVectorOfBoundaryNode(boundaryNodeToPositionMap->at(node), node);
             //Find the node neighbours with a span equal to the maximum number of points needed for the scheme to be consistent
             auto graph = IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap,
@@ -156,63 +158,46 @@ namespace NumericalAnalysis {
 
             //This gives correct results
             auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
-            
-            //March through all the non-zero derivative orders 
-            for (auto derivativeOrder = 1; derivativeOrder <= maxDerivativeOrder; derivativeOrder++) {
 
-                //Decompose scheme into directional components
-                for (auto &directionI: directions) {
-                    unsigned indexDirectionI = spatialDirectionToUnsigned[directionI];
+            //Decompose scheme into directional components
+            for (auto &directionI: directions) {
+                unsigned indexDirectionI = spatialDirectionToUnsigned[directionI];
 
-                    //Check if the available positions are qualified for the current derivative order
-                    /*auto qualifiedPositions = _getQualifiedFromAvailable(
-                            availablePositionsAndDepth[directionI], templatePositionsAndPointsMap[derivativeOrder][directionI]);*/
-                    auto qualifiedPositions = _getQualifiedFromAvailable(
-                            availablePositionsAndDepth[directionI],
-                            templatePositionsAndPointsMap[derivativeOrder][directionI]);
-                    //auto scheme = FiniteDifferenceSchemeBuilder::getSchemeWeightsFromQualifiedPositions(
-                    //qualifiedPositions, directionI, errorOrderDerivative1, 1);
 
-                    auto graphFilter = map<Position, unsigned short>();
-                    for (auto &position: get<0>(qualifiedPositions)) {
-                        graphFilter.insert(pair<Position, unsigned short>(position, get<1>(qualifiedPositions)));
-                    }
-                    auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
-                    auto colinearCoordinates = graph.getSameColinearNodalCoordinatesOnBoundary(_coordinateType,
-                                                                                     filteredNodeGraph);
-                    auto colinearDOF = graph.getColinearDOFOnBoundary(dof.first->type(), directionI, filteredNodeGraph);
+                //Check if the available positions are qualified for the current derivative order
+                auto qualifiedPositions = _getQualifiedFromAvailable(
+                        availablePositionsAndDepth[directionI], templatePositionsAndPointsMap[1][directionI]);
 
-                    auto taylorPoint = (*node->coordinates.getPositionVector(_coordinateType))[indexDirectionI];
-                    auto weights = calculateWeightsOfDerivativeOrder(
-                            *colinearCoordinates[directionI]->getVectorSharedPtr(),
-                            derivativeOrder, taylorPoint);
 
-                    //NumericalVector<double> &schemeWeights = scheme.weights;
-                    for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
-                        auto neighbourDOF = colinearDOF[iDof];
-                        auto weight2 = weights[iDof];
+                auto graphFilter = map<Position, unsigned short>();
+                for (auto &position: get<0>(qualifiedPositions)) {
+                    graphFilter.insert(pair<Position, unsigned short>(position, get<1>(qualifiedPositions)));
+                }
+                auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
+                auto colinearCoordinates = graph.getSameColinearNodalCoordinatesOnBoundary(_coordinateType, filteredNodeGraph);
+                auto colinearDOF = graph.getColinearDOFOnBoundary(dof.first->type(), directionI, filteredNodeGraph);
 
-                        if (neighbourDOF->constraintType() == Free) {
-                            auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(
-                                    neighbourDOF);
-                            double ijElement = K->getElement(thisDOFPosition, neighbourDOFPosition);
-                            ijElement += weight2 * normalVector[indexDirectionI];
-                            K->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
-                        } else if (neighbourDOF->constraintType() == Fixed) {
-                            auto dirichletContribution =
-                                    neighbourDOF->value() * weight2 * normalVector[indexDirectionI];
-                            (*RHS)[thisDOFPosition] -= dirichletContribution;
-                        }
+                auto taylorPoint = (*node->coordinates.getPositionVector(_coordinateType))[indexDirectionI];
+                auto weights = calculateWeightsOfDerivativeOrder(*colinearCoordinates[directionI]->getVectorSharedPtr(), 1, taylorPoint);
+
+                //NumericalVector<double> &schemeWeights = scheme.weights;
+                for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
+                    auto neighbourDOF = colinearDOF[iDof];
+                    //auto weight = schemeWeights[iDof] * iThDerivativePDECoefficient / denominator;
+                    auto weight2 = weights[iDof] * normalVector[indexDirectionI];
+                    if (neighbourDOF->constraintType() == Free) {
+                        auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOF[iDof]);
+                        double ijElement = K->getElement(thisDOFPosition, neighbourDOFPosition);
+                        ijElement += weight2 * normalVector[indexDirectionI];
+                        K->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
                     }
                 }
-                (*RHS)[thisDOFPosition] += dof.second;
             }
-           
+            (*RHS)[thisDOFPosition]+= dof.second;
         }
         auto end = std::chrono::steady_clock::now(); // Stop the timer
-        cout << "Linear System Assembled in "
-             << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
-        //K->dataStorage->finalizeElementAssignment();
+        cout << "Linear System Assembled in " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << endl;
+        //K->dataStorage->finalizeElementAssignment()
 
     }
    

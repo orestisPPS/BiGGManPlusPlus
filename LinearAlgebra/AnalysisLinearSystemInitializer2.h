@@ -23,7 +23,7 @@ namespace LinearAlgebra {
 
     public:
         explicit AnalysisLinearSystemInitializer2(shared_ptr<AnalysisDegreesOfFreedom> analysisDegreesOfFreedom, shared_ptr<Mesh> mesh,
-                                                 shared_ptr<MathematicalProblem> mathematicalProblem, shared_ptr<FDSchemeSpecs> specs);
+                                                 shared_ptr<MathematicalProblem> mathematicalProblem, shared_ptr<FiniteDifferenceSchemeOrder> specs);
 
         ~AnalysisLinearSystemInitializer2();
 
@@ -37,7 +37,7 @@ namespace LinearAlgebra {
 
         shared_ptr<MathematicalProblem> _mathematicalProblem;
 
-        shared_ptr<FDSchemeSpecs> _specs;
+        shared_ptr<FiniteDifferenceSchemeOrder> _specs;
 
         shared_ptr<NumericalMatrix<double>>_matrix;
         

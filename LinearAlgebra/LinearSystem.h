@@ -10,19 +10,18 @@
 namespace LinearAlgebra {
 
     class LinearSystem {
-        
+
     public:
-        
+
         LinearSystem(shared_ptr<NumericalMatrix<double>> matrix, shared_ptr<NumericalVector<double>> rhs);
         
-
         shared_ptr<NumericalMatrix<double>> matrix;
 
         shared_ptr<NumericalVector<double>> rhs;
 
         shared_ptr<NumericalVector<double>> solution;
-        
-        void exportToMatlabFile(const string& fileName, const string& filePath, bool printSolution ) const;
+
+        void exportToMatlabFile(const string &fileName, const string &filePath, bool printSolution) const;
     };
 
 } // LinearAlgebra

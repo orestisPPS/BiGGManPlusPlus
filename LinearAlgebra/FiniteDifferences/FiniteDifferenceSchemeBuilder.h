@@ -5,7 +5,7 @@
 #ifndef UNTITLED_FIBITEDIFFERENCESCHEMEBUILDER_H
 #define UNTITLED_FIBITEDIFFERENCESCHEMEBUILDER_H
 
-#include "FDSchemeSpecs.h"
+#include "FiniteDifferenceSchemeOrder.h"
 #include "FiniteDifferenceSchemeWeightsStructuredGrid.h"
 #include "../../Discretization/Node/IsoparametricNodeGraph.h"
 using namespace Discretization;
@@ -17,7 +17,7 @@ namespace LinearAlgebra {
     class FiniteDifferenceSchemeBuilder {
     public:
         //
-        explicit FiniteDifferenceSchemeBuilder(shared_ptr<FDSchemeSpecs> schemeSpecs);
+        explicit FiniteDifferenceSchemeBuilder(shared_ptr<FiniteDifferenceSchemeOrder> schemeSpecs);
 
         // Map containing the sum of the weights for each position of the
         map<Position, double>* schemeWeightAtPosition;
@@ -34,7 +34,7 @@ namespace LinearAlgebra {
         
         Scheme getSchemeAtDirection(Direction direction, unsigned derivativeOrder, unsigned errorOrder) const;
         
-        shared_ptr<FDSchemeSpecs> _schemeSpecs;
+        shared_ptr<FiniteDifferenceSchemeOrder> _schemeSpecs;
         //Maps the order of the scheme to the type of the scheme and the neighbouring points needed to build it
         // for a first derivative finite difference scheme.
         //For example Order 2, type central, 3 points

@@ -7,7 +7,7 @@
 namespace LinearAlgebra {
     
     //Creates a Finite Difference Scheme For an input 
-    FiniteDifferenceSchemeBuilder::FiniteDifferenceSchemeBuilder(shared_ptr<FDSchemeSpecs> schemeSpecs) : _schemeSpecs(schemeSpecs) {
+    FiniteDifferenceSchemeBuilder::FiniteDifferenceSchemeBuilder(shared_ptr<FiniteDifferenceSchemeOrder> schemeSpecs) : _schemeSpecs(schemeSpecs) {
     }
     
     short unsigned FiniteDifferenceSchemeBuilder::getNumberOfGhostNodesNeeded() const {

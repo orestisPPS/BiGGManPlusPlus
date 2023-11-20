@@ -16,7 +16,7 @@ namespace LinearAlgebra {
         explicit JacobiSolver(double tolerance = 1E-5, unsigned maxIterations = 1E4, VectorNormType normType = L2,
                               unsigned userDefinedThreads = 0, bool printOutput = true, bool throwExceptionOnMaxFailure = true);
     protected:
-        void _performMethodIteration() override;
+        void _performMethodSolution() override;
         
     };
 

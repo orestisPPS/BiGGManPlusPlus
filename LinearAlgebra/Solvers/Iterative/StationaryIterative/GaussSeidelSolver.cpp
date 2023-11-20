@@ -14,7 +14,7 @@ namespace LinearAlgebra {
         _solverName = "Gauss-Seidel";
     }
 
-    void GaussSeidelSolver::_performMethodIteration() {
+    void GaussSeidelSolver::_performMethodSolution() {
         auto n = _linearSystem->matrix->numberOfRows();
         for (unsigned row = 0; row < n; ++row) {
             double sum = 0.0;

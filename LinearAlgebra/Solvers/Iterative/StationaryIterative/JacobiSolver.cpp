@@ -13,7 +13,7 @@ namespace LinearAlgebra {
         _residualNorms = make_shared<list<double>>();
     }
     
-    void JacobiSolver::_performMethodIteration(){
+    void JacobiSolver::_performMethodSolution(){
         auto n = _linearSystem->matrix->numberOfRows();
         for (unsigned row = 0; row < n; ++row) {
             double sum = 0.0;

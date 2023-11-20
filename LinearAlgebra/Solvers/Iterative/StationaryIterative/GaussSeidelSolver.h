@@ -16,7 +16,7 @@ namespace LinearAlgebra {
 
     protected:
         
-        void _performMethodIteration() override;
+        void _performMethodSolution() override;
         
     private:
     };  

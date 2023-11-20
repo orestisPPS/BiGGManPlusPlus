@@ -47,7 +47,7 @@ namespace Tests {
             heatTransferPDE->spatialDerivativesCoefficients()->setIsotropic(10, 0, 0, 0);
             
 
-            auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
+            auto specsFD = make_shared<FiniteDifferenceSchemeOrder>(2, 2, mesh->directions());
 
             auto boundaryConditions = make_shared<DomainBoundaryConditions>();
             boundaryConditions->setBoundaryCondition(Position::Left, Dirichlet, Temperature, 20);

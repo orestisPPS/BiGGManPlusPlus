@@ -21,7 +21,7 @@ namespace LinearAlgebra {
 
         void _initializeVectors() override;
         
-        void _performMethodIteration() override;
+        void _performMethodSolution() override;
         
         void _cudaSolution() override;
         

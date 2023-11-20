@@ -269,7 +269,7 @@ namespace Discretization {
             colinearNodes = &IsoParametricNodeGraph::getSameColinearNodalCoordinates;
 
         auto start = std::chrono::steady_clock::now(); // Start the timer
-        auto schemeSpecs = make_shared<FDSchemeSpecs>(2, directions());
+        auto schemeSpecs = make_shared<FiniteDifferenceSchemeOrder>(2, directions());
         auto directions = this->directions();
         short unsigned maxDerivativeOrder = 1;
         auto parametricCoordsMap = getCoordinatesToNodesMap(Parametric);

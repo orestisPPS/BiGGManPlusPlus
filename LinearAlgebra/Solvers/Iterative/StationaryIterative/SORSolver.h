@@ -15,7 +15,7 @@ namespace LinearAlgebra{
                            unsigned userDefinedThreads = 0, bool printOutput = true, bool throwExceptionOnMaxFailure = true);
 
     protected:
-        void _performMethodIteration() override;
+        void _performMethodSolution() override;
         
     private:
         

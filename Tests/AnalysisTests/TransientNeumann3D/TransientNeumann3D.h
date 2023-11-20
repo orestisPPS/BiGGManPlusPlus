@@ -69,7 +69,7 @@ namespace Tests {
 
             auto heatTransferPDE = make_shared<PartialDifferentialEquation>(pdeSpatialProperties,
                                                                                      pdeTemporalProperties, Laplace);
-            auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
+            auto specsFD = make_shared<FiniteDifferenceSchemeOrder>(2, 2, mesh->directions());
             auto temperatureDOF = new TemperatureScalar_DOFType();
             auto problem = make_shared<TransientMathematicalProblem>(heatTransferPDE, boundaryConditions,
                                                                      initialConditions, temperatureDOF);

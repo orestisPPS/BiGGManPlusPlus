@@ -29,7 +29,7 @@ namespace LinearAlgebra {
     void StationaryIterative::_cudaSolution() {
     }
 
-    void StationaryIterative::_performMethodIteration() {
+    void StationaryIterative::_performMethodSolution() {
     }
 
 }

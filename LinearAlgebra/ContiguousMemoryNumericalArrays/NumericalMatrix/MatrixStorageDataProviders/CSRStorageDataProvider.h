@@ -32,6 +32,10 @@ namespace LinearAlgebra {
             _columnIndices = std::move(columnIndices);
             _rowOffsets = std::move(rowOffsets);
         }
+        
+        double sizeInKB() override {
+            return this->_values->sizeInKB() + _columnIndices->sizeInKB() + _rowOffsets->sizeInKB();
+        }
 
         vector<shared_ptr<NumericalVector<unsigned>>> getSupplementaryVectors() override{
             return {this->_columnIndices, this->_rowOffsets};

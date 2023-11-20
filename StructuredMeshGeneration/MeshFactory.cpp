@@ -23,7 +23,7 @@ namespace StructuredMeshGenerator{
         auto pde = make_shared<PartialDifferentialEquation>(VectorField, mesh->dimensions(), false);
         pde->spatialDerivativesCoefficients()->setLocallyAnisotropic(pdePropertiesFromMetrics);
         
-        auto specs = make_shared<FDSchemeSpecs>(schemeOrder, schemeOrder, mesh->directions());
+        auto specs = make_shared<FiniteDifferenceSchemeOrder>(schemeOrder, schemeOrder, mesh->directions());
         
 
         Field_DOFType* dofTypes = nullptr;
@@ -43,7 +43,8 @@ namespace StructuredMeshGenerator{
         
         auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2, 1);
         
-        auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specs, Template);
+        auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver);
+        analysis->setAnalysisCoordinateSystem(Template);
         analysis->solve();
         
         //analysis->linearSystem->exportToMatlabFile("linearSystemMeshGen.m", "/home/hal9000/code/BiGGMan++/Testing/", true);

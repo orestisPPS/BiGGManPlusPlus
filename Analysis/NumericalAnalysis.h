@@ -20,8 +20,9 @@ namespace NumericalAnalysis {
 
     class  NumericalAnalysis {
         public:
-        NumericalAnalysis(shared_ptr<MathematicalProblem> mathematicalProblem, shared_ptr<Mesh> mesh,
-                          shared_ptr<Solver> solver,CoordinateType coordinateSystem = Natural);
+        NumericalAnalysis(shared_ptr<MathematicalProblem> mathematicalProblem, shared_ptr<Mesh> mesh, shared_ptr<Solver> solver);
+        
+        void setAnalysisCoordinateSystem(CoordinateType coordinateSystem);
         
         
         shared_ptr<MathematicalProblem> mathematicalProblem;

@@ -15,9 +15,9 @@ namespace NumericalAnalysis {
     public:
         TransientFiniteDifferenceAnalysis(double initialTime, double stepSize, unsigned totalSteps,
                                           shared_ptr<TransientMathematicalProblem> mathematicalProblem,
-                                          shared_ptr<Mesh> mesh,
-                                          shared_ptr<Solver> solver, shared_ptr<NumericalIntegrator> integrationMethod,
-                                          shared_ptr<FDSchemeSpecs> schemeSpecs, CoordinateType coordinateSystem = Natural);
+                                          shared_ptr<Mesh> mesh, shared_ptr<Solver> solver,
+                                          shared_ptr<NumericalIntegrator> integrationMethod,
+                                          shared_ptr<FiniteDifferenceSchemeOrder> schemeSpecs = nullptr);
         
         
         void solve() override;

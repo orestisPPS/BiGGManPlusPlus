@@ -6,7 +6,7 @@
 
 namespace NumericalAnalysis {
     TransientLinearSystemBuilder::TransientLinearSystemBuilder(const shared_ptr<AnalysisDegreesOfFreedom>& analysisDegreesOfFreedom, const shared_ptr<Mesh> &mesh,
-                                                               const shared_ptr<TransientMathematicalProblem>& mathematicalProblem, const shared_ptr<FDSchemeSpecs>& specs,
+                                                               const shared_ptr<TransientMathematicalProblem>& mathematicalProblem, const shared_ptr<FiniteDifferenceSchemeOrder>& specs,
                                                                CoordinateType coordinateSystem):
                                                                EquilibriumLinearSystemBuilder(analysisDegreesOfFreedom, mesh, mathematicalProblem, specs, coordinateSystem),
                                                                _transientMathematicalProblem(mathematicalProblem) {

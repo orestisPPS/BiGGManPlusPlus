@@ -73,8 +73,6 @@ namespace Tests {
             auto heatTransferPDE = make_shared<PartialDifferentialEquation>(ScalarField, 3);\
             heatTransferPDE->spatialDerivativesCoefficients()->setIsotropic(0.10, 0, 0, 0);
             heatTransferPDE->temporalDerivativesCoefficients()->setIsotropic(0, -1);
-
-            auto specsFD = make_shared<FDSchemeSpecs>(2, 2, mesh->directions());
             
             auto temperatureDOF = new TemperatureScalar_DOFType();
 
@@ -85,7 +83,7 @@ namespace Tests {
             auto initialTime = 0.0;
             auto stepSize = 1;
             auto totalSteps = 20;
-            auto analysis = make_shared<TransientFiniteDifferenceAnalysis>(initialTime, stepSize, totalSteps, problem, mesh, solver, integration, specsFD);
+            auto analysis = make_shared<TransientFiniteDifferenceAnalysis>(initialTime, stepSize, totalSteps, problem, mesh, solver, integration);
 
             auto startAnalysisTime = std::chrono::high_resolution_clock::now();
             analysis->solve();

@@ -74,21 +74,20 @@ namespace LinearAlgebra {
     void IterativeSolver::solve() {
         if (!_isLinearSystemSet)
             throw std::invalid_argument("Linear system must be set before solving.");
+        auto start = std::chrono::high_resolution_clock::now();
         _iterativeSolution();
         _linearSystem->solution = std::move(_xNew);
+        auto end = std::chrono::high_resolution_clock::now();
+        computationTime = end - start;
     }
 
     void IterativeSolver::_iterativeSolution() {
-        auto start = std::chrono::high_resolution_clock::now();
-        unsigned n = _linearSystem->matrix->numberOfRows();
         _exitNorm = 1.0;
         _difference = make_shared<NumericalVector<double>>(_linearSystem->rhs->size());
-        _performMethodIteration();
-        while (_iteration < _maxIterations && _exitNorm >= _tolerance) {
-
-        }
+        _solutionsInitialized++;
+        _performMethodSolution();
         auto end = std::chrono::high_resolution_clock::now();
-        printAnalysisOutcome(_iteration, _exitNorm, start, end);
+        printAnalysisOutcome(_iteration, _exitNorm, computationTime);
 
 
 
@@ -128,7 +127,7 @@ namespace LinearAlgebra {
 
     }
     
-    void IterativeSolver::_performMethodIteration() {
+    void IterativeSolver::_performMethodSolution() {
         
     }
     
@@ -156,12 +155,11 @@ namespace LinearAlgebra {
 
     }
     
-    void IterativeSolver::printAnalysisOutcome(unsigned totalIterations, double exitNorm,  std::chrono::high_resolution_clock::time_point startTime,
-                                                   std::chrono::high_resolution_clock::time_point finishTime) const{
+    void IterativeSolver::printAnalysisOutcome(unsigned totalIterations, double exitNorm, std::chrono::high_resolution_clock::duration computationTime) const{
         bool isInMicroSeconds = false;
-        auto _elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(finishTime - startTime).count();
+        auto _elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(computationTime).count();
         if (_elapsedTime == 0) {
-            _elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(finishTime - startTime).count();
+            _elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(computationTime).count();
             isInMicroSeconds = true;
         }
         if (isInMicroSeconds) {

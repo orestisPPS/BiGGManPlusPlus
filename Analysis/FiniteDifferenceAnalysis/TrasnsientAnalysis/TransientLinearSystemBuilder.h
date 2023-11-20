@@ -17,7 +17,7 @@ namespace NumericalAnalysis {
 
     public:
         explicit TransientLinearSystemBuilder(const shared_ptr<AnalysisDegreesOfFreedom>& analysisDegreesOfFreedom, const shared_ptr<Mesh> &mesh,
-                                              const shared_ptr<TransientMathematicalProblem>& mathematicalProblem, const shared_ptr<FDSchemeSpecs>& specs, CoordinateType = Natural);
+                                              const shared_ptr<TransientMathematicalProblem>& mathematicalProblem, const shared_ptr<FiniteDifferenceSchemeOrder>& specs, CoordinateType = Natural);
 
         
         shared_ptr<NumericalMatrix<double>> M;
