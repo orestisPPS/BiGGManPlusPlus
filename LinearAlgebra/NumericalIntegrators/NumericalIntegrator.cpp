@@ -27,6 +27,10 @@ namespace LinearAlgebra {
         _solverSet = true;
     }
     
+    const shared_ptr<Solver> & NumericalIntegrator::getSolver() const {
+        return _solver;
+    }
+    
     void NumericalIntegrator::assembleEffectiveMatrix() {
         
     }

@@ -8,7 +8,6 @@ namespace LinearAlgebra{
                          unsigned userDefinedThreads, bool printOutput, bool throwExceptionOnMaxFailure)
                 : StationaryIterative(tolerance, maxIterations, normType, userDefinedThreads, printOutput, throwExceptionOnMaxFailure) {
         _relaxationParameter = relaxationParameter;
-        _residualNorms = make_shared<list<double>>();
         _solverName = "SOR";
     }
     

@@ -26,9 +26,9 @@ using namespace DegreesOfFreedom;
 int main() {
 
     //Tests::SteadyStateDirichlet2D::runTests(); //Pass
-    //Tests::TransientDirichlet2D::runTests(); //Pass
+    Tests::TransientDirichlet2D::runTests(); //Pass
     //Tests::SteadyState3DDirichlet::runTests(); //Pass
-    Tests::SteadyState3DNeumann::runTests(); //Fail
+    //Tests::SteadyState3DNeumann::runTests(); //Fail
     //Tests::TransientDirichlet3D::runTests(); //Fail
     
 

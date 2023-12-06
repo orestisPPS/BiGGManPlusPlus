@@ -195,6 +195,12 @@ add_executable(untitled main.cpp
         Analysis/FiniteDifferenceAnalysis/TrasnsientAnalysis/TransientAnalysisResults.h
         Tests/AnalysisTests/TransientDirichlet3D/TransientDirichlet3D.h
         Tests/AnalysisTests/TransientNeumann3D/TransientNeumann3D.h
+        Logging/Logs.cpp
+        Logging/Logs.h
+        Logging/Timer.cpp
+        Logging/Timer.h
+        Logging/ChronoDurationConverters.cpp
+        Logging/ChronoDurationConverters.h
 )
 
 

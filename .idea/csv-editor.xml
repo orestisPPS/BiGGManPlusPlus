@@ -3,7 +3,133 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_04122023_022556.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_04122023_023253.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_06122023_010824.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_06122023_011520.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_06122023_222651.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_06122023_223037.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_06122023_224527.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_07122023_001550.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_07122023_001850.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_07122023_002631.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_07122023_004331.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_07122023_010337.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_07122023_010648.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_07122023_011458.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_07122023_011609.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_07122023_011717.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_07122023_011754.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/Tests/AnalysisTests/Transient2DDirichlet/biggMannSolution.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Tests/AnalysisTests/Transient2DDirichlet/exports/results.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

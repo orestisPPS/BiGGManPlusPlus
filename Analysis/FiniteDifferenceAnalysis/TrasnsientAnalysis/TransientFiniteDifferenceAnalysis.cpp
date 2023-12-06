@@ -32,6 +32,7 @@ namespace NumericalAnalysis {
         for (unsigned int i = 0; i < _totalSteps; ++i) {
             _integrationMethod->solveCurrentTimeStep(i, _initialTime + i * _stepSize, _stepSize);
             cout << "Time step " << i << " solved" << endl;
+            _integrationMethod->getSolver()->logs.storeAndResetCurrentLogs();
         }
         applySolutionToDegreesOfFreedom();
     }

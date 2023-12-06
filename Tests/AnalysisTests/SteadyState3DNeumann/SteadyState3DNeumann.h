@@ -67,6 +67,7 @@ namespace Tests {
             //auto solver = make_shared<GaussSeidelSolver>(turboVTechKickInYoo, VectorNormType::LInf, 1E-9);
             //auto solver = make_shared<GaussSeidelSolver>(VectorNormType::L2, 1E-9, 1E4, false, turboVTechKickInYoo);
             auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2);
+            solver->keepDetailedLogs = true;
             //auto solver = make_shared<SORSolver>(1.8, VectorNormType::L2, 1E-5);
             auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver);
 
@@ -78,6 +79,7 @@ namespace Tests {
             auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
             auto fieldType = "Temperature";
             Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
+            analysis->solver->logs.exportToCSV("/home/hal9000/code/BiGGMan++/Testing/", "conjugateGradientSolverLogs.csv");
             
             auto targetCoords = NumericalVector<double>{2, 2, 2};
             auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-1);

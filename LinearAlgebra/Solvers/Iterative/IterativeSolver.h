@@ -35,6 +35,7 @@ namespace LinearAlgebra {
         void solve() override;
         
     protected:
+        
         double _tolerance;
 
         unsigned _maxIterations;
@@ -44,7 +45,6 @@ namespace LinearAlgebra {
         unsigned _userDefinedThreads;
         
         unsigned _iteration;
-        
         
         double _exitNorm;
         
@@ -58,11 +58,8 @@ namespace LinearAlgebra {
         
         bool _printOutput;
         
-        shared_ptr<list<double>> _residualNorms;
-
         string _solverName;
 
-        void _iterativeSolution();
 
         void setInitialSolution(shared_ptr<NumericalVector<double>> initialSolution) override;
 
@@ -79,7 +76,6 @@ namespace LinearAlgebra {
         void _printIterationAndNorm(unsigned displayFrequency = 100) const;
         
         void printAnalysisOutcome(unsigned totalIterations, double exitNorm, std::chrono::high_resolution_clock::duration computationTime) const;
-        
         
     };
     

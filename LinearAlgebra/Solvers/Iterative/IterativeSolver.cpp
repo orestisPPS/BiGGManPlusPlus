@@ -17,10 +17,11 @@ namespace LinearAlgebra {
         Solver(),
         _tolerance(tolerance), _maxIterations(maxIterations), _normType(normType), _userDefinedThreads(userDefinedThreads),
         _printOutput(printOutput), _throwExceptionOnMaxFailure(throwExceptionOnMaxFailure), _iteration(0), _exitNorm(0.0),
-        _xNew(nullptr), _xOld(nullptr), _residualNorms(make_shared<list<double>>()) {
-        
+        _xNew(nullptr), _xOld(nullptr) {
         _linearSystemInitialized = false;
         _vectorsInitialized = false;
+        logs = Logs(_solverName);
+
     }
 
     IterativeSolver::~IterativeSolver() {
@@ -72,23 +73,18 @@ namespace LinearAlgebra {
     }
 
     void IterativeSolver::solve() {
+        _iteration = 0;
         if (!_isLinearSystemSet)
             throw std::invalid_argument("Linear system must be set before solving.");
-        auto start = std::chrono::high_resolution_clock::now();
-        _iterativeSolution();
-        _linearSystem->solution = std::move(_xNew);
-        auto end = std::chrono::high_resolution_clock::now();
-        computationTime = end - start;
-    }
-
-    void IterativeSolver::_iterativeSolution() {
-        _exitNorm = 1.0;
-        _difference = make_shared<NumericalVector<double>>(_linearSystem->rhs->size());
-        _solutionsInitialized++;
+        logs.startSingleObservationTimer("Total Computation Time");
+        
         _performMethodSolution();
-        auto end = std::chrono::high_resolution_clock::now();
-        printAnalysisOutcome(_iteration, _exitNorm, computationTime);
-
+        _linearSystem->solution = std::move(_xNew);
+        
+        logs.stopSingleObservationTimer("Total Computation Time");
+        logs.setSingleObservationLogData("Iterations", _iteration);
+        logs.setSingleObservationLogData("Exit Norm", _exitNorm);
+    }
 
 
 /*        else if (_parallelization == CUDA) {
@@ -123,10 +119,6 @@ namespace LinearAlgebra {
 
         }*/
 
-
-
-    }
-    
     void IterativeSolver::_performMethodSolution() {
         
     }

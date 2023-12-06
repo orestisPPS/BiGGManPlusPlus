@@ -21,6 +21,8 @@ namespace LinearAlgebra {
         
         void setSolver(shared_ptr<Solver> solver);
         
+        const shared_ptr<Solver> & getSolver() const;
+        
         void setMatricesAndVector(shared_ptr<NumericalMatrix<double>> & M, shared_ptr<NumericalMatrix<double>> & C,
                                  shared_ptr<NumericalMatrix<double>> & K, shared_ptr<NumericalVector<double>> & RHS);
 
@@ -38,8 +40,8 @@ namespace LinearAlgebra {
         virtual void solveCurrentTimeStep(unsigned stepIndex, double currentTime, double currentTimeStep);
         
         virtual void solveCurrentTimeStepWithMatrixRebuild();
-        
-        
+
+        shared_ptr<Solver> _solver;
 
 
         
@@ -71,7 +73,7 @@ namespace LinearAlgebra {
         shared_ptr<NumericalVector<double>> _matrixVectorProduct2;
          
         shared_ptr<LinearSystem> _currentLinearSystem;
-        shared_ptr<Solver> _solver;
+
         
         bool _timeParametersSet = false;
         bool _dataSet = false;

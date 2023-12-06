@@ -10,7 +10,6 @@ namespace LinearAlgebra {
                                unsigned userDefinedThreads, bool printOutput, bool throwExceptionOnMaxFailure) :
             StationaryIterative(tolerance, maxIterations, normType, userDefinedThreads, printOutput, throwExceptionOnMaxFailure) {
         _solverName = "Jacobi";
-        _residualNorms = make_shared<list<double>>();
     }
     
     void JacobiSolver::_performMethodSolution(){

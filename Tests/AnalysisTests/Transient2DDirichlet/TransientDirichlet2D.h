@@ -51,11 +51,12 @@ namespace Tests {
 
             auto temperatureDOF = new TemperatureScalar_DOFType();
             auto problem = make_shared<TransientMathematicalProblem>(pde, boundaryConditions, initialConditions, temperatureDOF);
-            auto solver = make_shared<ConjugateGradientSolver>(1E-9, 1E4, L2, 10);
+            auto solver = make_shared<ConjugateGradientSolver>(1E-4, 1E4, L2, 10);
             auto integration = make_shared<NewmarkNumericalIntegrator>(0.25, 0.5);
             auto initialTime = 0.0;
             auto stepSize = 1;
-            auto totalSteps = 30;
+            auto totalSteps = 20;
+            //auto totalSteps = 30;
             auto analysis = make_shared<TransientFiniteDifferenceAnalysis>(initialTime, stepSize, totalSteps, problem, mesh,
                                                                            solver, integration);
             
@@ -68,7 +69,7 @@ namespace Tests {
             auto filePath = "/home/hal9000/code/BiGGMan++/Tests/AnalysisTests/Transient2DDirichlet";
             auto fieldType = "Temperature";
             Utility::Exporters::exportTransientScalarFieldResultInVTK(filePath, fileName, fieldType, mesh, totalSteps);
-
+            analysis->solver->logs.exportToCSV("/home/hal9000/code/BiGGMan++/Testing/", "conjugateGradientSolverLogs.csv");
             auto targetCoords = NumericalVector<double>{0.5, 0.5, 0};
             //auto targetCoords = NumericalVector<double>{2, 2, 0};
             auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-3);

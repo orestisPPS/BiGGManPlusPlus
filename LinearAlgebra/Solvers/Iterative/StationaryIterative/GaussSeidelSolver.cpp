@@ -10,7 +10,6 @@ namespace LinearAlgebra {
                                          unsigned userDefinedThreads, bool printOutput, bool throwExceptionOnMaxFailure)
             : StationaryIterative(tolerance, maxIterations, normType, userDefinedThreads, printOutput,
                                   throwExceptionOnMaxFailure) {
-        _residualNorms = make_shared<list<double>>();
         _solverName = "Gauss-Seidel";
     }
 

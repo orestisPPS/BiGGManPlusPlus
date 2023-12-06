@@ -33,9 +33,9 @@ namespace LinearAlgebra {
         
         shared_ptr<NumericalVector<double>> _matrixVectorMultiplication;
         
-        unique_ptr<double> _alpha;
+        double _alpha;
         
-        unique_ptr<double> _beta;
+        double _beta;
         
     };
 } // LinearAlgebra

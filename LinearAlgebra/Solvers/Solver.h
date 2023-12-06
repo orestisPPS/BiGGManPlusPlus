@@ -6,6 +6,7 @@
 #define UNTITLED_SOLVER_H
 
 #include "../LinearSystem.h"
+#include "../../Logging/Logs.h"
 
 namespace LinearAlgebra {
     
@@ -19,7 +20,12 @@ namespace LinearAlgebra {
     class Solver {
         
     public:
+        bool printOutput = false;
         
+        bool keepDetailedLogs = false;
+
+        Logs logs;
+
         void setLinearSystem(shared_ptr<LinearSystem> linearSystem);
 
         SolverType type();
@@ -29,6 +35,7 @@ namespace LinearAlgebra {
         virtual void setInitialSolution(shared_ptr<NumericalVector<double>> initialValue);
 
         virtual void setInitialSolution(double initialValue);
+        
         
     protected:
         
@@ -45,10 +52,6 @@ namespace LinearAlgebra {
         SolverType _solverType;
 
         bool _isLinearSystemSet;
-
-        std::chrono::high_resolution_clock::duration computationTime;
-        
-        unsigned int _solutionsInitialized = 0;
         
 
     };
