@@ -7,12 +7,11 @@
 
 
 Logs::Logs(std::string logName) :   _logName(std::move(logName)),
-                                    _currentSingleObservationTimers(make_unique<map<string, Timer>>()),
-                                    _currentMultipleObservationTimers(make_unique<map<string, list<Timer>>>()),
-                                    _singleObservationData(make_unique<map<string, list<double>>>()),
-                                    _multipleObservationData(make_unique<map<string, list<list<double>>>>()),
-                                    _singleObservationTimers(make_unique<map<string, list<chrono::duration<double>>>>()),
-                                    _multipleObservationTimers(make_unique<map<string, list<list<chrono::duration<double>>>>>()),
+                                    _currentTimers(make_unique<unordered_map<string, Timer>>()),
+                                    _singleObservationData(make_unique<unordered_map<string, list<double>>>()),
+                                    _multipleObservationData(make_unique<unordered_map<string, list<list<double>>>>()),
+                                    _singleObservationTimers(make_unique<unordered_map<string, list<chrono::duration<double>>>>()),
+                                    _multipleObservationTimers(make_unique<unordered_map<string, list<list<chrono::duration<double>>>>>()),
                                     _comments(make_unique<string>()) {
 }
 
@@ -22,59 +21,56 @@ void Logs::addComment(string comment) {
 
 void Logs::startSingleObservationTimer(const std::string &logName) {
 
-    if (_currentSingleObservationTimers->find(logName) == _currentSingleObservationTimers->end())
-        _currentSingleObservationTimers->insert(make_pair(logName, Timer(logName)));
-    else
-        _currentSingleObservationTimers->at(logName) = Timer(logName);
-    _currentSingleObservationTimers->at(logName).start();
+    if (_currentTimers->find(logName) == _currentTimers->end())
+        _currentTimers->insert(make_pair(logName, Timer()));
+    _currentTimers->at(logName) = Timer();
+    _currentTimers->at(logName).start();
 }
 
 void Logs::stopSingleObservationTimer(const std::string &logName) {
-    if (_currentSingleObservationTimers->find(logName) == _currentSingleObservationTimers->end())
+    if (_currentTimers->find(logName) == _currentTimers->end())
         throw std::runtime_error("Logs::stopSingleObservationTimer: Timer " + logName + " does not exist.");
-    
-    _currentSingleObservationTimers->at(logName).stop();
+
+    _currentTimers->at(logName).stop();
     if (_singleObservationTimers->find(logName) == _singleObservationTimers->end())
         _singleObservationTimers->emplace(logName, list<chrono::duration<double>>());
-    _singleObservationTimers->at(logName).push_back(_currentSingleObservationTimers->at(logName).duration());
-}
-
-const chrono::duration<double>& Logs::getSingleObservationDuration(const std::string &logName) {
-    if (_singleObservationTimers->find(logName) == _singleObservationTimers->end())
-        throw std::runtime_error("Logs::getSingleObservationDuration: Timer " + logName + " does not exist.");
     
-    return _singleObservationTimers->at(logName).back();
+    _singleObservationTimers->at(logName).push_back(_currentTimers->at(logName).duration());
 }
 
 void Logs::startMultipleObservationsTimer(const std::string &logName) {
-    if (_currentMultipleObservationTimers->find(logName) == _currentMultipleObservationTimers->end())
-        _currentMultipleObservationTimers->insert(make_pair(logName, list<Timer>()));
-    auto timer = Timer(logName);
-    timer.start();
-    _currentMultipleObservationTimers->at(logName).push_back(timer);
+    Timer timer = Timer();
+    if (_currentTimers->find(logName) == _currentTimers->end())
+        _currentTimers->insert(make_pair(logName, timer));
+
+        _currentTimers->at(logName).start();
 }
 
 void Logs::stopMultipleObservationsTimer(const std::string &logName) {
-    if (_currentMultipleObservationTimers->find(logName) == _currentMultipleObservationTimers->end())
+    if (_currentTimers->find(logName) == _currentTimers->end())
         throw std::runtime_error("Logs::stopMultipleObservationsTimer: Timer " + logName + " does not exist.");
+
+    _currentTimers->at(logName).stop();
+
+    if (_multipleObservationTimers->find(logName) == _multipleObservationTimers->end())
+        _multipleObservationTimers->emplace(logName, list<list<chrono::duration<double>>>());
     
-    _currentMultipleObservationTimers->at(logName).back().stop();
+    if (_multipleObservationTimers->at(logName).empty()) {
+        _multipleObservationTimers->at(logName).emplace_back();
+    }
+    _multipleObservationTimers->at(logName).back().push_back(_currentTimers->at(logName).duration());
+    
 }
 
-const list<chrono::duration<double>>& Logs::getMultipleObservationsDurations(const std::string &logName) {
-    if (_multipleObservationTimers->find(logName) == _multipleObservationTimers->end())
-        throw std::runtime_error("Logs::getMultipleObservationsDurations: Timer " + logName + " does not exist.");
-    
-    return _multipleObservationTimers->at(logName).back();
-}
 
 void Logs::storeAndResetCurrentLogs() {
-    for (auto &timerPair : *_currentMultipleObservationTimers) {
+    for (auto &timerPair : *_multipleObservationTimers) {
+        timerPair.second.emplace_back();
     }
-    _currentMultipleObservationTimers->clear();
+    _currentTimers->clear();
     
     for (auto &data: *_multipleObservationData) {
-       data.second.emplace_back();   
+        data.second.emplace_back();
     }
 }
 
@@ -83,7 +79,6 @@ void Logs::setSingleObservationLogData(const std::string &logName, double value)
         _singleObservationData->emplace(logName, list<double>());
     _singleObservationData->at(logName).push_back(value);
 }
-
 
 void Logs::setMultipleObservationsLogData(const std::string &logName, double value) {
     // Check if logName exists in the map
@@ -101,13 +96,6 @@ void Logs::setMultipleObservationsLogData(const std::string &logName, const list
     _multipleObservationData->at(logName).push_back(values);
 }
 
-
-list<double> Logs::getMultipleObservationsLogData(const std::string &logName) {
-    if (_multipleObservationData->find(logName) == _multipleObservationData->end())
-        throw std::runtime_error("Logs::getMultipleObservationsLogData: Data " + logName + " does not exist.");
-    
-    return _multipleObservationData->at(logName).back();
-}
 
 void Logs::exportToCSV(const string &filePath, const string &fileName) {
     // Get current time
@@ -187,7 +175,7 @@ void Logs::exportToCSV(const string &filePath, const string &fileName) {
     if (!_singleObservationTimers->empty()) {
         file << "#Region: Single Observation Timers" << std::endl;
         for (const auto &timerPair : *_singleObservationTimers) {
-            file << timerPair.first << std::endl;
+            file << "Timer:" << timerPair.first << std::endl;
             for (const auto &timer : timerPair.second) {
                 file << timer.count() << std::endl;
             }
@@ -196,27 +184,35 @@ void Logs::exportToCSV(const string &filePath, const string &fileName) {
     
     // Adding multiple observation timers
     if (!_multipleObservationTimers->empty()) {
-        file << "#Region: Multiple Observation Timers" << std::endl;
-        for (const auto &timerPair : *_multipleObservationTimers) {
-            file << timerPair.first << std::endl;
-            //For each timer in the list
-            auto timersMatrix = vector<vector<chrono::duration<double>>>(timerPair.second.size());
-            index = 0;
-            for (const auto &listOfVectors : timerPair.second) {
-                //For each timer in the list
-                for (const auto &timer : listOfVectors) {
-                    timersMatrix[index].push_back(timer);
-                }
+        size_t maxLengthTimers;
+        unsigned logIndexTimers = 0;
+        for (const auto& pair : *_multipleObservationTimers) {
+            auto &logName = pair.first;
+            list<list<chrono::duration<double>>> logLists = pair.second;
+            maxLengthTimers = 0;
+            for (const auto &totalCallsList: logLists) {
+                maxLengthTimers = std::max(maxLengthTimers, totalCallsList.size());
             }
-            for (const auto &timerList : timersMatrix) {
-                for (size_t i = 0; i < timerList.size(); ++i) {
-                    file << timerList[i].count();
-                    if (i != timerList.size() - 1) {
+            auto dataMatrix = make_unique<LinearAlgebra::Array<double>>(logLists.size(), maxLengthTimers);
+            for (const auto &totalCallsList: logLists) {
+                for (const auto &value: totalCallsList) {
+                    dataMatrix->at(logIndexTimers, index) = value.count();
+                    ++index;
+                }
+                ++logIndexTimers;
+                index = 0;
+            }
+            file << "Timer:" << logName << std::endl;
+            for (size_t i = 0; i < maxLengthTimers; ++i) {
+                for (size_t j = 0; j < logLists.size(); ++j) {
+                    file << dataMatrix->at(j, i);
+                    if (j != logLists.size() - 1) {
                         file << ",";
                     }
                 }
                 file << std::endl;
             }
+            file << std::endl;
         }
     }
 

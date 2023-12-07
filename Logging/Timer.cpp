@@ -2,16 +2,14 @@
 // Created by hal9000 on 11/21/23.
 //
 
+#include <iostream>
 #include "Timer.h"
 
-Timer::Timer(std::string loggedName) {
-    _name = std::move(loggedName);
-    _running = false;
-}
+Timer::Timer() : _running(false) { }
 
 void Timer::start() {
     if (_running) {
-        std::cout << "Timer " << _name << " is already running." << std::endl;
+        throw std::runtime_error("Timer::start: Timer is already running.");
         return;
     }
     _start = std::chrono::high_resolution_clock::now();
@@ -20,13 +18,13 @@ void Timer::start() {
 
 void Timer::stop() {
     if (!_running) {
-        std::cout << "Timer " << _name << " is not running." << std::endl;
+        std::cout << "Timer::stop: Timer is not running." << std::endl;
         return;
     }
     _end = std::chrono::high_resolution_clock::now();
-    _duration = _end - _start;
+    _running = false;
 }
 
 std::chrono::duration<double> Timer::duration() const {
-    return _duration;
+    return _end - _start;
 }

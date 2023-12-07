@@ -122,6 +122,34 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_07122023_024920.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_07122023_025647.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_07122023_025713.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Testing/conjugateGradientSolverLogs.csv_07122023_030222.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/Tests/AnalysisTests/Transient2DDirichlet/biggMannSolution.csv">
           <value>
             <Attribute>
