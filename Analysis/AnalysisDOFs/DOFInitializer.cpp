@@ -18,10 +18,10 @@ namespace NumericalAnalysis {
         freeDegreesOfFreedom = make_shared<vector<DegreeOfFreedom*>>();
         fixedDegreesOfFreedom = make_shared<vector<DegreeOfFreedom*>>();
         internalDegreesOfFreedom = make_shared<vector<DegreeOfFreedom*>>();
-        fluxDegreesOfFreedom = make_shared<map<DegreeOfFreedom*, double>>();
+        fluxDegreesOfFreedom = make_shared<unordered_map<DegreeOfFreedom*, double>>();
 
-        totalDegreesOfFreedomMap = make_shared<map<unsigned, DegreeOfFreedom*>>();
-        totalDegreesOfFreedomMapInverse = make_shared<map<DegreeOfFreedom*, unsigned>>();
+        totalDegreesOfFreedomMap = make_shared<unordered_map<unsigned, DegreeOfFreedom*>>();
+        totalDegreesOfFreedomMapInverse = make_shared<unordered_map<DegreeOfFreedom*, unsigned>>();
         
         _initiateInternalNodeDOFs(mesh, degreesOfFreedom);
 
@@ -55,7 +55,7 @@ namespace NumericalAnalysis {
         for (auto & domainBoundary : *mesh->boundaryNodes){
             auto position = domainBoundary.first;
             auto nodesAtPosition = domainBoundary.second;
-            //March through the nodes at the Position  that is the key of the domainBoundary map
+            //March through the nodes at the Position  that is the key of the domainBoundary unordered_map
             for (auto & node : *nodesAtPosition){
 
                 auto bcAtPosition = domainBoundaryConditions-> getBoundaryConditionAtPosition(position,  node->id.global);

@@ -46,6 +46,15 @@ namespace Discretization {
         return *this;
     }
 
+    Node::~Node() {
+        
+        for (auto &dof : *degreesOfFreedom) {
+            delete dof;
+            dof = nullptr;
+        }
+        degreesOfFreedom.reset();
+    }
+
 
 }// Discretization
     

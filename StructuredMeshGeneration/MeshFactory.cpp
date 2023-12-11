@@ -189,7 +189,7 @@ namespace StructuredMeshGenerator{
     }
 
     void MeshFactory::_calculatePDEPropertiesFromMetrics() {
-        pdePropertiesFromMetrics = make_unique<map<unsigned*, SpatialVectorFieldPDEProperties>>();
+        pdePropertiesFromMetrics = make_unique<unordered_map<unsigned*, SpatialVectorFieldPDEProperties>>();
         auto size = mesh->dimensions();
         for (auto &node : *mesh->totalNodesVector) {
             

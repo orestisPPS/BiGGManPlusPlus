@@ -79,7 +79,7 @@ namespace Tests {
             auto filePath = "/home/hal9000/code/BiGGMan++/Testing/";
             auto fieldType = "Temperature";
             Utility::Exporters::exportScalarFieldResultInVTK(filePath, fileName, fieldType, analysis->mesh);
-            analysis->solver->logs.exportToCSV("/home/hal9000/code/BiGGMan++/Testing/", "conjugateGradientSolverLogs.csv");
+            //analysis->solver->//logs.exportToCSV("/home/hal9000/code/BiGGMan++/Testing/", "conjugateGradientSolverLogs.csv");
             
             auto targetCoords = NumericalVector<double>{2, 2, 2};
             auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-1);

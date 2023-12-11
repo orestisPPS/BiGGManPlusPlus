@@ -8,22 +8,14 @@
 
 namespace Discretization {
     
-    Mesh1D::Mesh1D(shared_ptr<Array<Node*>>nodes) : Mesh(nodes){
-        this->_nodesMatrix = std::move(nodes);
+    Mesh1D::Mesh1D(shared_ptr<Array<Node*>>nodes) : Mesh(std::move(nodes)){
+        logs.startSingleObservationTimer("Mesh Initialization");
         initialize();
-        _nodesMap = _createNodesMap();
+        logs.stopSingleObservationTimer("Mesh Initialization");
     }
     
     Mesh1D::~Mesh1D() {
-        //Deallocate all node pointers of the mesh
-        for (int i = 0; i < nodesPerDirection[One] ; ++i) {
-            delete (*_nodesMatrix)(i);
-            (*_nodesMatrix)(i) = nullptr;
-        }
-        _nodesMatrix = nullptr;
-
         _cleanMeshDataStructures();
-        
     }
     
     unsigned Mesh1D::dimensions() {
@@ -84,22 +76,20 @@ namespace Discretization {
         throw runtime_error("Not implemented yet!");
     }
     
-    shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh1D::_addDBoundaryNodesToMap() {
-        auto boundaries = make_shared<map<Position, shared_ptr<vector<Node*>>>>();
-        auto leftBoundary = new vector<Node*>(1);
-        auto rightBoundary = new vector<Node*>(1);
-        leftBoundary->push_back(Mesh::node(0));
-        rightBoundary->push_back(Mesh::node(Mesh::nodesPerDirection[Direction::One] - 1));
-        boundaries->insert( pair<Position, shared_ptr<vector<Node*>>>(Position::Left, leftBoundary));
-        return boundaries;
+    void Mesh1D::_addDBoundaryNodesToMap() {
+        boundaryNodes = make_shared<map<Position, shared_ptr<vector<Node*>>>>();
+        auto leftBoundary = make_shared<vector<Node*>>(1);
+        auto rightBoundary = make_shared<vector<Node*>>(1);
+        (*leftBoundary)[0] = Mesh::node(0);
+        (*rightBoundary)[0] = Mesh::node(Mesh::nodesPerDirection[Direction::One] - 1);
+        boundaryNodes->insert(make_pair(Left, make_shared<vector<Node*>>(*leftBoundary)));
+        boundaryNodes->insert(make_pair(Right, make_shared<vector<Node*>>(*rightBoundary)));
     }
     
-    shared_ptr<vector<Node*>> Mesh1D::_addTotalNodesToVector() {
-        auto totalNodes = make_shared<vector<Node*>>(numberOfTotalNodes());
-        for (int i = 0; i < nodesPerDirection[Direction::One]; i++) {
-            totalNodes->at(i) = node(i);
-        }
-        return totalNodes;
+    void Mesh1D::_addTotalNodesToVector() {
+        totalNodesVector = make_shared<vector<Node*>>(numberOfTotalNodes());
+        for (int i = 0; i < nodesPerDirection[Direction::One]; i++)
+            (*totalNodesVector)[i] = node(i);
     }
     
     void Mesh1D::createElements(ElementType elementType, unsigned int nodesPerEdge) {

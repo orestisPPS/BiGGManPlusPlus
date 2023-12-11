@@ -11,8 +11,6 @@ namespace NumericalAnalysis {
             shared_ptr<Mesh> mesh, shared_ptr<Solver> solver, shared_ptr<FiniteDifferenceSchemeOrder> schemeSpecs) :
             FiniteDifferenceAnalysis(mathematicalProblem, std::move(mesh), std::move(solver), std::move(schemeSpecs)),
             steadyStateMathematicalProblem(std::move(mathematicalProblem)){
-        
-
     }
     
     void SteadyStateFiniteDifferenceAnalysis::solve() {
@@ -76,8 +74,4 @@ namespace NumericalAnalysis {
         }
         throw runtime_error("Target Node not found");
     }
-    
-
-
-    //void SteadyStateFiniteDifferenceAnalysis::createLinearSystem() {
 } // NumericalAnalysis

@@ -49,7 +49,7 @@ namespace LinearAlgebra {
         _directionVectorOld->deepCopy(_residualOld);
         
         while (_iteration < _maxIterations) {
-            logs.startMultipleObservationsTimer("CG Iteration Time");
+            //logs.startMultipleObservationsTimer("CG Iteration Time");
             
             _matrixVectorMultiplication->fill(0.0);
             _linearSystem->matrix->multiplyVector(_directionVectorOld, _matrixVectorMultiplication);
@@ -71,19 +71,18 @@ namespace LinearAlgebra {
                 _residualOld->deepCopy(_residualNew);
                 _directionVectorOld->deepCopy(_directionVectorNew);
                 _xOld->deepCopy(_xNew);
-                logs.stopMultipleObservationsTimer("CG Iteration Time");
-                logs.setMultipleObservationsLogData("CG Residual Norm", _exitNorm);
+                //logs.stopMultipleObservationsTimer("CG Iteration Time");
+                //logs.setMultipleObservationsLogData("CG Residual Norm", _exitNorm);
                 //_printIterationAndNorm(10) ;
             }
             else {
-                _xNew->deepCopy(_xOld);
-                logs.stopMultipleObservationsTimer("CG Iteration Time");
-                logs.setMultipleObservationsLogData("CG Residual Norm", _exitNorm);
+                //logs.stopMultipleObservationsTimer("CG Iteration Time");
+                //logs.setMultipleObservationsLogData("CG Residual Norm", _exitNorm);
                 break;
             }
             _iteration++;
             cout << "Iteration: " << _iteration << " Residual Norm: " << _exitNorm << endl;
-            //logs.storeAndResetCurrentLogs();
+            ////logs.storeAndResetCurrentLogs();
         }
     };
 } // LinearAlgebra

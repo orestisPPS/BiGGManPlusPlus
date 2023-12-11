@@ -23,11 +23,11 @@ namespace NumericalAnalysis {
         
         shared_ptr<vector<DegreeOfFreedom*>> internalDegreesOfFreedom;
         
-        shared_ptr<map<DegreeOfFreedom*, double>> fluxDegreesOfFreedom;
+        shared_ptr<unordered_map<DegreeOfFreedom*, double>> fluxDegreesOfFreedom;
 
-        shared_ptr<map<unsigned, DegreeOfFreedom*>> totalDegreesOfFreedomMap;
+        shared_ptr<unordered_map<unsigned, DegreeOfFreedom*>> totalDegreesOfFreedomMap;
 
-        shared_ptr<map<DegreeOfFreedom*, unsigned>> totalDegreesOfFreedomMapInverse;
+        shared_ptr<unordered_map<DegreeOfFreedom*, unsigned>> totalDegreesOfFreedomMapInverse;
 
         shared_ptr<unsigned int> numberOfFixedDOF;
 

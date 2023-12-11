@@ -49,14 +49,14 @@ class Logs {
         
     private:
 
-    unique_ptr<unordered_map<string, Timer>> _currentTimers;
-    unique_ptr<unordered_map<string, list<chrono::duration<double>>>> _singleObservationTimers;
-    unique_ptr<unordered_map<string, list<list<chrono::duration<double>>>>> _multipleObservationTimers;
-    unique_ptr<unordered_map<string, list<double>>> _singleObservationData;
-    unique_ptr<unordered_map<string, list<list<double>>>> _multipleObservationData;
-        
-        unique_ptr<string> _comments;
-        
+        unique_ptr<unordered_map<string, Timer>> _currentTimers;
+        unique_ptr<unordered_map<string, list<chrono::duration<double>>>> _singleObservationTimers;
+        unique_ptr<unordered_map<string, list<list<chrono::duration<double>>>>> _multipleObservationTimers;
+        unique_ptr<unordered_map<string, list<double>>> _singleObservationData;
+        unique_ptr<unordered_map<string, list<list<double>>>> _multipleObservationData;
+            
+        unique_ptr<list<string>> _comments;
+            
         string _logName;
         
 };

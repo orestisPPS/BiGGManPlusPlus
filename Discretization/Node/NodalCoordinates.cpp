@@ -14,7 +14,10 @@ namespace Discretization {
     _positionVectors(make_unique<map<CoordinateType, shared_ptr<NumericalVector<double>>>>()) { }
     
     NodalCoordinates::~NodalCoordinates() {
-        _positionVectors->clear();
+        for (auto& tuple : *_positionVectors){
+            tuple.second.reset();
+        }
+        _positionVectors.reset();
     }
     
     NodalCoordinates& NodalCoordinates::operator=(const NodalCoordinates& other){

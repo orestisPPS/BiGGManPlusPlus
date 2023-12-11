@@ -20,6 +20,8 @@ namespace Discretization
 
         Node();
         
+        ~Node();
+        
         //= operator
         Node& operator=(const Node& other);
         

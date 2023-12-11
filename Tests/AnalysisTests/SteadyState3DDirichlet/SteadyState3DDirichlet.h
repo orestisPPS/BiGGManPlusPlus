@@ -20,14 +20,13 @@ namespace Tests {
     class SteadyState3DDirichlet {
         
     public:
-        SteadyState3DDirichlet();
         static void runTests(){
             _testDiffusionDirichlet3D();
         }
         
     private:
         static void _testDiffusionDirichlet3D(){
-            logTestStart("testDiffusionDirichlet3D");logTestStart("testDiffusionDirichlet3D");
+            logTestStart("testDiffusionDirichlet3D");
 
             map<Direction, unsigned> numberOfNodes;
             numberOfNodes[Direction::One] = 5;
@@ -96,15 +95,16 @@ namespace Tests {
 
 
         static void logTestStart(const std::string& testName) {
-            std::cout << "Running " << testName << "... ";
+            std::cout << "Running " << testName << "... " << std::endl;
         }
 
         static void logTestEnd() {
-            std::cout << "\033[1;32m[PASSED ]\033[0m\n";  // This adds a green [PASSED] indicator
+            std::cout << "\033[1;32m[PASSED ]\033[0m\n" << std::endl;  // This adds a green [PASSED] indicator
         }
 
 
     };
+    
 
 } // Tests
 

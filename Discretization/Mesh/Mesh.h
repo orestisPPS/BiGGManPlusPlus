@@ -13,6 +13,7 @@
 #include "../../LinearAlgebra/FiniteDifferences/FDWeightCalculator.h"
 #include "../Elements/Element.h"
 #include "../Elements/MeshElements.h"
+#include "../../Logging/Logs.h"
 
 
 using namespace Discretization;
@@ -43,7 +44,9 @@ namespace Discretization {
         
         shared_ptr<MeshSpecs> specs;
         
-        shared_ptr<map<Node*, shared_ptr<Metrics>>> metrics;
+        shared_ptr<unordered_map<Node*, shared_ptr<Metrics>>> metrics;
+        
+        Logs logs;
         
         //---------------Implemented parent class methods--------------
         
@@ -77,9 +80,10 @@ namespace Discretization {
         void initialize();
 
         shared_ptr<map<vector<double>, Node*>> getCoordinatesToNodesMap(CoordinateType coordinateType = Natural);
-        
-        unique_ptr<map<Node*, Position>> getBoundaryNodeToPositionMap() const;
-        
+
+        unique_ptr<unordered_map<Node *, Position>> getBoundaryNodeToPositionMap() const;
+
+
         //-----------------Virtual parent class methods-----------------
         virtual unsigned dimensions();
         
@@ -114,44 +118,29 @@ namespace Discretization {
         
         shared_ptr<Array<Node*>>_nodesMatrix;
         
-        map<unsigned*, Node*>* _nodesMap;
-        
-        
-        map<unsigned*, Node*>* _createNodesMap() const;
-        
-        
-        /// @brief Adds all  nodes at the _totalNodesVector and the boundary nodes to the _boundaryNodes map with respect to
-        // Position enum of the boundary they belong
-        //  runtime_error if the mesh is not initialized
-        /// @throws  runtime_error if the mesh is not initialized
-        void _categorizeNodes();
-        
-        void _createNumberOfNodesPerDirectionMap();
+        unique_ptr<unordered_map<unsigned*, Node*>> _nodesMap;
         
         void _cleanMeshDataStructures();
         
-        shared_ptr<map<Direction, unsigned>> _createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth);
-        
-        //Adds the boundary nodes of the  mesh to a map pointer of enum Position and vector pointers of node pointers
-        virtual shared_ptr<map<Position, shared_ptr<vector<Node*>>>>_addDBoundaryNodesToMap();
-        
-        
-        virtual shared_ptr<vector<Node*>> _addTotalNodesToVector();
-        
-        //virtual GhostPseudoMesh* _createGhostPseudoMesh(unsigned ghostLayerDepth);
+
         
         
         private:
-        void _arbitrarilySpacedMeshMetrics(CoordinateType coordinateSystem);
         
         /// \brief Calculates the metrics of all the nodes of a uniformly spaced mesh.
         /// @param coordinateSystem _The coordinate system that the metrics will be calculated. If the metrics are calculated
         ///             during the mesh generation, then the coordinate system is Template. If the metrics are calculated for another
         ///             analysis, then the coordinate system is Natural. This is called twice for internal and boundary nodes 
         /// \param nodes A unique pointer to a vector of Node pointers that are either internal or boundary nodes
-        void _uniformlySpacedMetrics(CoordinateType coordinateSystem, unique_ptr<vector<Discretization::Node *>> nodes, bool areBoundary);
+        void _arbitrarilySpacedMeshMetrics(CoordinateType coordinateSystem, unique_ptr<vector<Discretization::Node *>> nodes, bool areBoundary);
         
-    
+        virtual void _createNodeToIdMap();
+
+        virtual void _addDBoundaryNodesToMap();
+
+        virtual void _addTotalNodesToVector();
+        
+
     };
 }
 

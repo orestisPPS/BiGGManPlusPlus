@@ -10,26 +10,16 @@
 #include "Tests/QRTest.h"
 #include "Tests/OperationsCUDA.h"
 #include "Tests/NumericalMatrixTest.h"
-#include "StructuredMeshGeneration/MeshTest2D.h"
-#include "DegreesOfFreedom/DegreeOfFreedomTypes.h"
-#include "Analysis/FiniteDifferenceAnalysis/StStFDTest.h"
-
-#include "LinearAlgebra/FiniteDifferences/FDWeightCalculator.h"
-#include <functional>
-#include <list>
-using namespace MathematicalEntities;
-using namespace LinearAlgebra;
-using namespace DegreesOfFreedom;
 
 
 
 int main() {
 
     //Tests::SteadyStateDirichlet2D::runTests(); //Pass
-    Tests::TransientDirichlet2D::runTests(); //Pass
+    //Tests::TransientDirichlet2D::runTests(); //Pass
     //Tests::SteadyState3DDirichlet::runTests(); //Pass
-    //Tests::SteadyState3DNeumann::runTests(); //Fail
-    //Tests::TransientDirichlet3D::runTests(); //Fail
+    Tests::SteadyState3DNeumann::runTests(); //Pass
+    Tests::TransientDirichlet3D::runTests(); //Fail
     
 
 /*    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();
@@ -41,23 +31,17 @@ int main() {
     //Tests::TransientDirichlet3D::runTests();
     //Tests::SteadyState3DNeumann::runTests();
     //Tests::MeshGenerator::buildMesh();
-/*    auto vectorTest = new NumericalVectorTest();
-    vectorTest->runTests();
-    Tests::NumericalMatrixTest::runTests();*/
+    //Tests::NumericalVectorTest::runTests();
+    //Tests::NumericalMatrixTest::runTests();
 
 
     //auto qrTest = new Tests::QRTest();
 
-    //auto dirichletTest = new Tests::SteadyStateDirichlet3D();
-    
-    Tests::SteadyState3DDirichlet::runTests();
-
-    //Tests::SteadyState3DNeumann::runTests();
 
     //auto cudaOperations = new Tests::OperationsCUDA();
     //auto singleThreadVectorOperations = new Tests::VectorOperationsTest();
 
-    cout << "y000000o" << endl;
+    cout << "That's All Folks!" << endl;
 
 }
 

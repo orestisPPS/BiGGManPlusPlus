@@ -43,9 +43,9 @@ namespace Discretization {
         
     protected:
         
-        shared_ptr<map<Position, shared_ptr<vector<Node*>>>>_addDBoundaryNodesToMap() override;
+        void _addDBoundaryNodesToMap() override;
         
-        shared_ptr<vector<Node*>> _addTotalNodesToVector() override;
+        void _addTotalNodesToVector() override;
         
         //GhostPseudoMesh* _createGhostPseudoMesh(unsigned ghostLayerDepth) override;
     };

@@ -11,11 +11,8 @@ namespace Discretization {
     Mesh::Mesh(shared_ptr<Array<Node*>>nodes) {
         _nodesMatrix = std::move(nodes);
         isInitialized = false;
-        _nodesMatrix = nullptr;
-        boundaryNodes = nullptr;
-        totalNodesVector = nullptr;
-        _nodesMap = nullptr;
         elements = nullptr;
+        logs = Logs("Mesh");
     }
 
     Mesh::~Mesh() {
@@ -76,17 +73,12 @@ namespace Discretization {
 
     void Mesh::initialize() {
         isInitialized = true;
-        _createNumberOfNodesPerDirectionMap();
-        _categorizeNodes();
-    }
-
-    shared_ptr<map<Position, shared_ptr<vector<Node*>>>> Mesh::_addDBoundaryNodesToMap() {
-        return nullptr;
-    }
-
-
-    shared_ptr<vector<Node *>>Mesh::_addTotalNodesToVector() {
-        return nullptr;
+        nodesPerDirection.insert(make_pair(One, _nodesMatrix->numberOfRows()));
+        nodesPerDirection.insert(make_pair(Two, _nodesMatrix->numberOfColumns()));
+        nodesPerDirection.insert(make_pair(Three, _nodesMatrix->numberOfAisles()));
+        _addDBoundaryNodesToMap();
+        _addTotalNodesToVector();
+        _createNodeToIdMap();
     }
     
     unique_ptr<vector<Node*>> Mesh::getBoundaryNodesVector(){
@@ -97,168 +89,26 @@ namespace Discretization {
                     boundaryNodesList.push_back(node);
         return make_unique<vector<Node*>>(boundaryNodesList.begin(), boundaryNodesList.end());
     }
-    
-    void Mesh::_categorizeNodes() {
-        if (isInitialized) {
-            boundaryNodes = _addDBoundaryNodesToMap();
-            totalNodesVector = _addTotalNodesToVector();
-        } else
-            throw std::runtime_error("Mesh has not been initialized");
-    }
-
-    void Mesh::_createNumberOfNodesPerDirectionMap() {
-        if (isInitialized) {
-            nodesPerDirection.insert(pair<Direction, unsigned>(One, _nodesMatrix->numberOfRows()));
-            nodesPerDirection.insert(pair<Direction, unsigned>(Two, _nodesMatrix->numberOfColumns()));
-            nodesPerDirection.insert(pair<Direction, unsigned>(Three, _nodesMatrix->numberOfAisles()));
-        } else
-            throw std::runtime_error("Mesh has not been initialized");
-    }
-
-    map<unsigned*, Node *> *Mesh::_createNodesMap() const {
-        if (isInitialized) {
-            auto nodesMap = new map<unsigned*, Node *>();
-            for (auto &node: *totalNodesVector) {
-
-                nodesMap->insert(pair<unsigned*, Node *>(node->id.global, node));
-            }
-            return nodesMap;
-        } else
-            throw std::runtime_error("Mesh has not been initialized");
-    }
 
     void Mesh::_cleanMeshDataStructures() {
-        //search all boundaryNodes map and deallocate all vector pointer values
+        //search all boundaryNodes unordered_map and deallocate all vector pointer values
         for (auto &node : *totalNodesVector) {
             delete node;
             node = nullptr;
         }
         totalNodesVector = nullptr;
         boundaryNodes = nullptr;
-        delete _nodesMap;
-        _nodesMap = nullptr;
-    }
-
-    shared_ptr<map<Direction, unsigned>> Mesh::_createNumberOfGhostNodesPerDirectionMap(unsigned ghostLayerDepth) {
-        auto numberOfGhostNodesPerDirection = make_shared<map<Direction, unsigned>>();
-        for (auto &direction: directions()) {
-            numberOfGhostNodesPerDirection->insert(pair<Direction, unsigned>(direction, ghostLayerDepth));
-        }
-        return numberOfGhostNodesPerDirection;
+        _nodesMatrix = nullptr;
     }
 
     void Mesh::calculateMeshMetrics(CoordinateType coordinateSystem, bool isUniformMesh) {
-        metrics = make_shared<map<Node*, shared_ptr<Metrics>>>();
-
-        if (isUniformMesh) {
-            _uniformlySpacedMetrics(coordinateSystem, getBoundaryNodesVector(), true);
-            _uniformlySpacedMetrics(coordinateSystem, getInternalNodesVector(), false);
-        } else {
-            //_arbitrarilySpacedMeshMetrics(coordinateSystem);
-        }
-        
-/*        for (auto &node: *metrics) {
-            //node.first->printNode();
-            cout << "Node " << node.first << endl;
-            cout << "covariant tensor" << endl;
-            node.second->covariantTensor->print();
-            cout << "contravariant tensor" << endl;
-            node.second->contravariantTensor->print();
-            cout << "---------------------------------" << endl;
-        }*/
+        metrics = make_shared<unordered_map<Node*, shared_ptr<Metrics>>>();
+        _arbitrarilySpacedMeshMetrics(coordinateSystem, getBoundaryNodesVector(), true);
+        _arbitrarilySpacedMeshMetrics(coordinateSystem, getInternalNodesVector(), false);
     }
-
-/*    GhostPseudoMesh* Mesh::_createGhostPseudoMesh(unsigned ghostLayerDepth) {
-        return nullptr;
-    }*/
     
-/*    void Mesh::_arbitrarilySpacedMeshMetrics(CoordinateType coordinateSystem) {
-        if (isInitialized) {
-            //Initialize Mesh Metrics map
-            metrics = make_shared<map<unsigned, shared_ptr<Metrics>>>();
 
-            //Create Scheme Specs. Metrics are calculated by a central ("diamond") scheme
-            auto schemeSpecs = make_shared<FDSchemeSpecs>(Central, specs->metricsOrder, directions());
-            //Create Scheme Builder to gain access to utility functions for the scheme creation
-            auto schemeBuilder = new FiniteDifferenceSchemeBuilder(schemeSpecs);
-            // Initiate GhostPseudoMesh
-            //auto ghostMesh = _createGhostPseudoMesh(schemeBuilder->getNumberOfGhostNodesNeeded());
-            
-            //March through all the nodes of the mesh and calculate its metrics
-            for (auto &node: *totalNodesVector) {
-                //Find Neighbors in a manner that applies the same numerical scheme to all nodes
-                auto neighbours = schemeBuilder->getNumberOfDiagonalNeighboursNeeded();
-                //Initiate Node Graph
-                auto graph = new IsoParametricNodeGraph(node, schemeBuilder->getNumberOfGhostNodesNeeded(), ghostMesh->parametricCoordToNodeMap,
-                                                        nodesPerDirection, false);
-
-                //Get the adjusted node graph that contains only the nodes that are needed to calculate the FD scheme
-                auto nodeGraph = graph->getNodeGraph(neighbours);
-
-                //Initialize Metrics class for the current node.
-                auto nodeMetrics = new Metrics(node, dimensions());
-
-                //Get the co-linear nodal coordinates (Left-Right -> 1, Up-Down -> 2, Front-Back -> 3)
-                auto parametricCoords = graph->getSameColinearNodalCoordinates(Parametric);
-                auto templateCoords = graph->getSameColinearNodalCoordinates(coordinateSystem);
-
-
-                auto directionsVector = directions();
-                //March through all the directions I (g_i = d(x_j)/d(x_i))
-                for (auto&  directionI : directionsVector){//Initialize the weights vector. Their values depend on whether the mesh is uniform or not.
-
-                    auto i = spatialDirectionToUnsigned[directionI];
-                    
-                    auto covariantBaseVectorI = NumericalVector<double>(directionsVector.size(), 0);
-                    auto contravariantBaseVectorI = NumericalVector<double>(directionsVector.size(), 0);
-                    
-                    auto covariantWeights = calculateWeightsOfDerivativeOrder(
-                            parametricCoords[directionI][i], 1, node->coordinates(Parametric, i));
-                    auto contravariantWeights = calculateWeightsOfDerivativeOrder(
-                            templateCoords[directionI][i], 1, node->coordinates(coordinateSystem, i));
-                    
-                    for (auto &directionJ: directionsVector){
-                        auto j = spatialDirectionToUnsigned[directionJ];
-                        auto coords = NumericalVector<double>(templateCoords[directionI][j].size());
-                        for (unsigned k=0; k<coords.size(); ++k){
-                            coords[k] = templateCoords[directionI][j][k];
-                        }
-                        //Covariant base vectors (dr_i/dξ_i)
-                        //g_1 = {dx/dξ, dy/dξ, dz/dξ}
-                        //g_2 = {dx/dη, dy/dη, dz/dη}
-                        //g_3 = {dx/dζ, dy/dζ, dz/dζ}
-                        //auto gi = VectorOperations::dotProduct(covariantWeights, templateCoordsMap[directionJ]);
-                        covariantBaseVectorI[j] = covariantWeights.dotProduct(coords);
-
-                        for (unsigned k=0; k<coords.size(); ++k){
-                            coords[k] = parametricCoords[directionI][j][k];
-                        }
-                        //Contravariant base vectors (dξ_i/dr_i)
-                        //g^1 = {dξ/dx, dξ/dy, dξ/dz}
-                        //g^2 = {dη/dx, dη/dy, dη/dz}
-                        //g^3 = {dζ/dx, dζ/dy, dζ/dz}
-                        contravariantBaseVectorI[j] = contravariantWeights.dotProduct(coords);
-                        
-                    }
-                    nodeMetrics->covariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(directionI, covariantBaseVectorI));
-                    nodeMetrics->contravariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(directionI, contravariantBaseVectorI));
-                }
-
-                nodeMetrics->calculateCovariantTensor();
-                nodeMetrics->calculateContravariantTensor();
-                metrics->insert(pair<unsigned, shared_ptr<Metrics> >(*node->id.global, nodeMetrics));
-
-            }
-            delete ghostMesh;
-            delete schemeBuilder;
-            schemeBuilder = nullptr;
-            schemeSpecs = nullptr;
-        }
-        else
-            throw std::runtime_error("Mesh is not initialized");
-    }*/
-
-    void Mesh::_uniformlySpacedMetrics(CoordinateType coordinateSystem, unique_ptr<vector<Discretization::Node *>> nodes, bool areBoundary) {
+    void Mesh::_arbitrarilySpacedMeshMetrics(CoordinateType coordinateSystem, unique_ptr<vector<Discretization::Node *>> nodes, bool areBoundary) {
 
         using findColinearNodes = map<Direction, shared_ptr<NumericalVector<double>>> (IsoParametricNodeGraph::*)(CoordinateType, map<Position, vector<Node*>>& ) const;
         findColinearNodes colinearNodes;
@@ -379,8 +229,8 @@ namespace Discretization {
         return parametricCoordToNodeMap;
     }
 
-    unique_ptr<map<Node *, Position>> Mesh::getBoundaryNodeToPositionMap() const {
-        auto boundaryNodeToPositionMap = make_unique<map<Node *, Position>>();
+    unique_ptr<unordered_map<Node *, Position>> Mesh::getBoundaryNodeToPositionMap() const {
+        auto boundaryNodeToPositionMap = make_unique<unordered_map<Node *, Position>>();
         for (auto &boundary : *boundaryNodes)
             for (auto &node : *boundary.second)
                 boundaryNodeToPositionMap->insert(pair<Node *, Position>(node, boundary.first));
@@ -398,6 +248,19 @@ namespace Discretization {
     void Mesh::storeMeshInVTKFile(const string &filePath, const string &fileName, CoordinateType coordinateType,
                                   bool StoreOnlyNodes) const {
 
+    }
+
+
+    void Mesh::_addDBoundaryNodesToMap() {
+    }
+
+    void Mesh::_addTotalNodesToVector() {
+    }
+    
+    void Mesh::_createNodeToIdMap() {
+        _nodesMap = make_unique<unordered_map<unsigned*, Node*>>();
+        for (auto &node : *totalNodesVector)
+            _nodesMap->insert(make_pair(node->id.global, node));
     }
 
 } // Discretization

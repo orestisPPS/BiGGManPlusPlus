@@ -55,7 +55,6 @@ namespace MathematicalEntities {
             case VectorField:
                 throw invalid_argument(
                         "SteadyStatePDEProperties::setAnisotropic: Cannot set anisotropic spatial properties for a vector field.");
-                break;
         }
     }
     
@@ -75,7 +74,7 @@ namespace MathematicalEntities {
         }
     }
     
-    void SpatialPDEProperties::setLocallyAnisotropic(shared_ptr<map<unsigned*, SpatialScalarFieldPDEProperties>> spatialProperties) {
+    void SpatialPDEProperties::setLocallyAnisotropic(shared_ptr<unordered_map<unsigned*, SpatialScalarFieldPDEProperties>> spatialProperties) {
         if (_fieldType == ScalarField) {
             _locallyAnisotropicScalarFieldSpatialProperties = std::move(spatialProperties);
         }
@@ -84,7 +83,7 @@ namespace MathematicalEntities {
     }
     
     
-    void SpatialPDEProperties::setLocallyAnisotropic(shared_ptr<map<unsigned*, SpatialVectorFieldPDEProperties>> spatialProperties) {
+    void SpatialPDEProperties::setLocallyAnisotropic(shared_ptr<unordered_map<unsigned*, SpatialVectorFieldPDEProperties>> spatialProperties) {
         if (_fieldType == VectorField) {
             _locallyAnisotropicVectorFieldSpatialProperties = std::move(spatialProperties);
         }

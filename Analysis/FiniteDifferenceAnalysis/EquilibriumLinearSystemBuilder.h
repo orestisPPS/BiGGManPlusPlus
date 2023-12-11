@@ -4,6 +4,7 @@
 
 #ifndef UNTITLED_EQUILIBRIUMLINEARSYSTEMBUILDER_H
 #define UNTITLED_EQUILIBRIUMLINEARSYSTEMBUILDER_H
+#include <unordered_map>
 #include "../../LinearAlgebra/ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
 #include "../../Discretization/Node/IsoparametricNodeGraph.h"
 #include "../../Utility/Exporters/Exporters.h"
@@ -12,6 +13,7 @@
 #include "../../Discretization/Mesh/Mesh.h"
 #include "../../MathematicalEntities/MathematicalProblem/MathematicalProblem.h"
 #include "../../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
+#include "../../Logging/Logs.h"
 using namespace MathematicalEntities;
 using namespace NumericalAnalysis;
 
@@ -30,9 +32,12 @@ namespace NumericalAnalysis {
 
         shared_ptr<NumericalVector<double>> RHS;
         
+        Logs logs;
+        
         void assembleSteadyStateLinearSystem();
         
         void updateRHS();
+        
 
     protected:
         
@@ -45,6 +50,8 @@ namespace NumericalAnalysis {
         shared_ptr<AnalysisDegreesOfFreedom> _analysisDegreesOfFreedom;
         
         shared_ptr<map<vector<double>, Node*>> _parametricCoordToNodeMap;
+        
+        unique_ptr<unordered_map<Node*, IsoParametricNodeGraph>> _nodeGraphs;
 
         static map<short unsigned, map<Direction, map<vector<Position>, short>>>
         _initiatePositionsAndPointsMap(short unsigned& maxDerivativeOrder, vector<Direction>& directions);

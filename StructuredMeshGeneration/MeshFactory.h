@@ -29,7 +29,7 @@ namespace StructuredMeshGenerator {
         
         shared_ptr<Mesh> mesh;
 
-        shared_ptr<map<unsigned*, SpatialVectorFieldPDEProperties>> pdePropertiesFromMetrics;
+        shared_ptr<unordered_map<unsigned*, SpatialVectorFieldPDEProperties>> pdePropertiesFromMetrics;
         
         void buildMesh(unsigned short schemeOrder, shared_ptr<DomainBoundaryConditions>) const;
         

@@ -2,6 +2,7 @@
 // Created by hal9000 on 11/21/23.
 //
 
+#include <filesystem>
 #include "Logs.h"
 #include "../LinearAlgebra/Array/Array.h"
 
@@ -12,11 +13,11 @@ Logs::Logs(std::string logName) :   _logName(std::move(logName)),
                                     _multipleObservationData(make_unique<unordered_map<string, list<list<double>>>>()),
                                     _singleObservationTimers(make_unique<unordered_map<string, list<chrono::duration<double>>>>()),
                                     _multipleObservationTimers(make_unique<unordered_map<string, list<list<chrono::duration<double>>>>>()),
-                                    _comments(make_unique<string>()) {
+                                    _comments(make_unique<list<string>>()) {
 }
 
 void Logs::addComment(string comment) {
-    _comments->append(comment);
+    _comments->push_back(std::move(comment));
 }
 
 void Logs::startSingleObservationTimer(const std::string &logName) {
@@ -43,7 +44,7 @@ void Logs::startMultipleObservationsTimer(const std::string &logName) {
     if (_currentTimers->find(logName) == _currentTimers->end())
         _currentTimers->insert(make_pair(logName, timer));
 
-        _currentTimers->at(logName).start();
+    _currentTimers->at(logName).start();
 }
 
 void Logs::stopMultipleObservationsTimer(const std::string &logName) {
@@ -59,7 +60,6 @@ void Logs::stopMultipleObservationsTimer(const std::string &logName) {
         _multipleObservationTimers->at(logName).emplace_back();
     }
     _multipleObservationTimers->at(logName).back().push_back(_currentTimers->at(logName).duration());
-    
 }
 
 
@@ -100,16 +100,19 @@ void Logs::setMultipleObservationsLogData(const std::string &logName, const list
 void Logs::exportToCSV(const string &filePath, const string &fileName) {
     // Get current time
     auto now = std::chrono::system_clock::now();
-    auto now_c = std::chrono::system_clock::to_time_t(now);
-    std::tm now_tm = *std::localtime(&now_c);
+    auto now_as_time_t = std::chrono::system_clock::to_time_t(now);
+    auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
 
-    // Create a timestamp string
+    std::tm now_tm = *std::localtime(&now_as_time_t);
+
+    // Create a timestamp string with milliseconds
     std::ostringstream timestamp;
-    timestamp << std::put_time(&now_tm, "%d%m%Y_%H%M%S");
-
+    timestamp << std::put_time(&now_tm, "%d%m%Y_%H%M%S_") << std::setfill('0') << std::setw(3) << now_ms.count();
     // Create a unique filename with timestamp
     std::string filename = filePath + "/" + fileName + "_" + timestamp.str() + ".csv";
-
+    if (std::filesystem::exists(filename)) {
+        throw std::runtime_error("File already exists: " + filename);
+    }
     std::ofstream file(filename);
 
     // Check if file is opened successfully
@@ -124,6 +127,7 @@ void Logs::exportToCSV(const string &filePath, const string &fileName) {
             file << "# " << comment << std::endl;
         }
         file << std::endl;
+        file.flush();
     }
     // Adding single observation Data
     if (!_singleObservationData->empty()) {
@@ -135,40 +139,46 @@ void Logs::exportToCSV(const string &filePath, const string &fileName) {
             }
             file << std::endl;
         }
+        file.flush();
     }
 
     unsigned index = 0;
-    // Adding multiple observation Data
-    file << "#Region: Multiple Observation Data" << std::endl;
-    size_t maxLength;
     unsigned logIndex = 0;
-    for (const auto& pair : *_multipleObservationData) {
-        auto &logName = pair.first;
-        list<list<double>> logLists = pair.second;
-        maxLength = 0;
-        for (const auto &totalCallsList: logLists) {
-            maxLength = std::max(maxLength, totalCallsList.size());
-        }
-        auto dataMatrix = make_unique<LinearAlgebra::Array<double>>(logLists.size(), maxLength);
-        for (const auto &totalCallsList: logLists) {
-            for (const auto &value: totalCallsList) {
-                dataMatrix->at(logIndex, index) = value;
-                ++index;
+    size_t maxLogSize;
+
+    // Adding multiple observation Data
+    if (!_multipleObservationData->empty()) {
+        file << "#Region: Multiple Observation Data" << std::endl;
+
+        for (const auto& pair : *_multipleObservationData) {
+
+            auto &logName = pair.first;
+            list<list<double>> listOfLists = pair.second;
+            for (const auto &listInList: listOfLists) {
+                maxLogSize = std::max(maxLogSize, listInList.size());
             }
-            ++logIndex;
-            index = 0;
-        }
-        file << "LogEntry:" << logName << std::endl;
-        for (size_t i = 0; i < maxLength; ++i) {
-            for (size_t j = 0; j < logLists.size(); ++j) {
-                file << dataMatrix->at(j, i);
-                if (j != logLists.size() - 1) {
-                    file << ",";
+            auto dataMatrix = LinearAlgebra::Array<double>(maxLogSize, listOfLists.size());
+            for (const auto &listInList: listOfLists) {
+                for (const auto &value: listInList) {
+                    dataMatrix(index, logIndex) = value;
+                    ++index;
                 }
+                ++logIndex;
+                index = 0;
+            }
+            file << "LogEntry:" << logName << std::endl;
+            for (size_t i = 0; i < maxLogSize; ++i) {
+                for (size_t j = 0; j < listOfLists.size(); ++j) {
+                    file << dataMatrix(i, j);
+                    if (j != listOfLists.size() - 1) {
+                        file << ",";
+                    }
+                }
+                file << std::endl;
             }
             file << std::endl;
+            file.flush();
         }
-        file << std::endl;
     }
     
     // Adding single observation timers
@@ -179,34 +189,34 @@ void Logs::exportToCSV(const string &filePath, const string &fileName) {
             for (const auto &timer : timerPair.second) {
                 file << timer.count() << std::endl;
             }
+            file << std::endl;
         }
+        file.flush();
     }
-    
     // Adding multiple observation timers
     if (!_multipleObservationTimers->empty()) {
-        size_t maxLengthTimers;
-        unsigned logIndexTimers = 0;
-        for (const auto& pair : *_multipleObservationTimers) {
-            auto &logName = pair.first;
-            list<list<chrono::duration<double>>> logLists = pair.second;
-            maxLengthTimers = 0;
-            for (const auto &totalCallsList: logLists) {
-                maxLengthTimers = std::max(maxLengthTimers, totalCallsList.size());
+        file << "#Region: Multiple Observation Timers" << std::endl;
+        for (const auto &pair: *_multipleObservationTimers) {
+            list<list<chrono::duration<double>>> listOfLists = pair.second;
+            logIndex = 0;
+            maxLogSize = 0;
+            for (const auto &listInList: listOfLists) {
+                maxLogSize = std::max(maxLogSize, listInList.size());
             }
-            auto dataMatrix = make_unique<LinearAlgebra::Array<double>>(logLists.size(), maxLengthTimers);
-            for (const auto &totalCallsList: logLists) {
-                for (const auto &value: totalCallsList) {
-                    dataMatrix->at(logIndexTimers, index) = value.count();
+            auto dataMatrix = LinearAlgebra::Array<double>(maxLogSize, listOfLists.size());
+            for (const auto &listInList: listOfLists) {
+                for (const auto &value: listInList) {
+                    dataMatrix(index, logIndex) = value.count();
                     ++index;
                 }
-                ++logIndexTimers;
+                ++logIndex;
                 index = 0;
             }
-            file << "Timer:" << logName << std::endl;
-            for (size_t i = 0; i < maxLengthTimers; ++i) {
-                for (size_t j = 0; j < logLists.size(); ++j) {
-                    file << dataMatrix->at(j, i);
-                    if (j != logLists.size() - 1) {
+            file << "Timer:" << pair.first << std::endl;
+            for (size_t i = 0; i < maxLogSize; ++i) {
+                for (size_t j = 0; j < listOfLists.size(); ++j) {
+                    file << dataMatrix(i, j);
+                    if (j != listOfLists.size() - 1) {
                         file << ",";
                     }
                 }
@@ -215,7 +225,7 @@ void Logs::exportToCSV(const string &filePath, const string &fileName) {
             file << std::endl;
         }
     }
-
+    file.flush();
     file.close();
 }
 

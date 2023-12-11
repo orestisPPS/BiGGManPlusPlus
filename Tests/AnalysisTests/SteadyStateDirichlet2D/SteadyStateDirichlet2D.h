@@ -37,7 +37,7 @@ namespace Tests {
             auto meshBoundaries = make_shared<DomainBoundaryFactory>(meshFactory->mesh);
             meshFactory->buildMesh(2, meshBoundaries->parallelogram(numberOfNodes, 4, 4, 0, 0));
             shared_ptr<Mesh> mesh = meshFactory->mesh;
-
+            
 /*            auto fileNameMesh = "test_2D_dirichlet.vtk";
             auto filePathMesh = "/home/hal9000/code/BiGGMan++/Testing/";
             mesh->storeMeshInVTKFile(filePathMesh, fileNameMesh, Natural, false);*/
@@ -58,7 +58,7 @@ namespace Tests {
             auto problem = make_shared<SteadyStateMathematicalProblem>(heatTransferPDE, boundaryConditions, temperatureDOF);
             auto solver = make_shared<ConjugateGradientSolver>(1E-9, 1E4, L2, 10);
             auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver, specsFD);
-            analysis->linearSystem->exportToMatlabFile("ststDiffusionLinearSystem.m", "/home/hal9000/code/BiGGMan++/Testing/", true);
+            //analysis->linearSystem->exportToMatlabFile("ststDiffusionLinearSystem.m", "/home/hal9000/code/BiGGMan++/Testing/", true);
 
             analysis->solve();
 

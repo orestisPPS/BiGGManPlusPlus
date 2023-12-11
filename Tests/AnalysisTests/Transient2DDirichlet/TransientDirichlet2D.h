@@ -69,7 +69,7 @@ namespace Tests {
             auto filePath = "/home/hal9000/code/BiGGMan++/Tests/AnalysisTests/Transient2DDirichlet";
             auto fieldType = "Temperature";
             Utility::Exporters::exportTransientScalarFieldResultInVTK(filePath, fileName, fieldType, mesh, totalSteps);
-            analysis->solver->logs.exportToCSV("/home/hal9000/code/BiGGMan++/Testing/", "conjugateGradientSolverLogs.csv");
+            //analysis->solver->logs.exportToCSV("/home/hal9000/code/BiGGMan++/Testing/", "conjugateGradientSolverLogs.csv");
             auto targetCoords = NumericalVector<double>{0.5, 0.5, 0};
             //auto targetCoords = NumericalVector<double>{2, 2, 0};
             auto targetSolution = analysis->getSolutionAtNode(targetCoords, 1E-3);
