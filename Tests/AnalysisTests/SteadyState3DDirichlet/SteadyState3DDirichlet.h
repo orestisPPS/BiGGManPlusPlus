@@ -31,7 +31,7 @@ namespace Tests {
             map<Direction, unsigned> numberOfNodes;
             numberOfNodes[Direction::One] = 5;
             numberOfNodes[Direction::Two] = 5;
-            numberOfNodes[Direction::Three] = 5;
+            numberOfNodes[Direction::Three] = 5 ;
 
             //auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 1, 1, 0, 0, 0, 0, 0, 0);
             auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0);

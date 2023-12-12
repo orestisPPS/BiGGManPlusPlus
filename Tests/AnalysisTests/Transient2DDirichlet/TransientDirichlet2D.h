@@ -54,8 +54,8 @@ namespace Tests {
             auto solver = make_shared<ConjugateGradientSolver>(1E-4, 1E4, L2, 10);
             auto integration = make_shared<NewmarkNumericalIntegrator>(0.25, 0.5);
             auto initialTime = 0.0;
-            auto stepSize = 1;
-            auto totalSteps = 20;
+            auto stepSize = 0.2;
+            auto totalSteps = 100;
             //auto totalSteps = 30;
             auto analysis = make_shared<TransientFiniteDifferenceAnalysis>(initialTime, stepSize, totalSteps, problem, mesh,
                                                                            solver, integration);

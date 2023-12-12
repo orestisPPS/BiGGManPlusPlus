@@ -103,14 +103,17 @@ namespace Discretization {
 
     void Mesh::calculateMeshMetrics(CoordinateType coordinateSystem, bool isUniformMesh) {
         metrics = make_shared<unordered_map<Node*, shared_ptr<Metrics>>>();
+        cout << "Calculating mesh metrics..." << endl;
         _arbitrarilySpacedMeshMetrics(coordinateSystem, getBoundaryNodesVector(), true);
         _arbitrarilySpacedMeshMetrics(coordinateSystem, getInternalNodesVector(), false);
+        cout << "Finished calculating mesh metrics" << endl;
     }
     
 
     void Mesh::_arbitrarilySpacedMeshMetrics(CoordinateType coordinateSystem, unique_ptr<vector<Discretization::Node *>> nodes, bool areBoundary) {
 
-        using findColinearNodes = map<Direction, shared_ptr<NumericalVector<double>>> (IsoParametricNodeGraph::*)(CoordinateType, map<Position, vector<Node*>>& ) const;
+        using findColinearNodes = map<Direction, shared_ptr<NumericalVector<double>>> (IsoParametricNodeGraph::*)(
+                CoordinateType, map<Position, vector<Node *>> &) const;
         findColinearNodes colinearNodes;
 
         if (areBoundary)
@@ -128,95 +131,94 @@ namespace Discretization {
 
         auto errorOrderDerivative1 = schemeSpecs->getErrorForDerivativeOfArbitraryScheme(1);
 
-        map<short unsigned, map<Direction, map<vector<Position>, short>>> templatePositionsAndPointsMap = schemeBuilder.initiatePositionsAndPointsMap(maxDerivativeOrder, directions);
-        schemeBuilder.templatePositionsAndPoints(1, errorOrderDerivative1, directions, templatePositionsAndPointsMap[1]);
+        map<short unsigned, map<Direction, map<vector<Position>, short>>> templatePositionsAndPointsMap = schemeBuilder.initiatePositionsAndPointsMap(
+                maxDerivativeOrder, directions);
+        schemeBuilder.templatePositionsAndPoints(1, errorOrderDerivative1, directions,
+                                                 templatePositionsAndPointsMap[1]);
         auto maxNeighbours = schemeBuilder.getMaximumNumberOfPointsForArbitrarySchemeType();
+        for (auto node: *nodes)
+            metrics->insert(make_pair(node, make_shared<Metrics>(node, directions.size())));
 
-        for (auto &node: *nodes) {
+        auto nodalMetricsCalculationJob = [&](unsigned startNodeIndex, unsigned endNodeIndex) -> void {
 
-            auto graph = IsoParametricNodeGraph(node, maxNeighbours, parametricCoordsMap, nodesPerDirection, false);
-            auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
-            auto nodeMetrics = make_shared<Metrics>(node, dimensions());
-            //Loop through all the directions to find g_i = d(x_j)/d(x_i), g^i = d(x_i)/d(x_j)
-            for (auto &directionI: directions) {
-                auto i = spatialDirectionToUnsigned[directionI];
-                auto covariantBaseVectorI = NumericalVector<double>(directions.size(), 0);
-                auto contravariantBaseVectorI = NumericalVector<double>(directions.size(), 0);
+            for (auto nodeIndex = startNodeIndex; nodeIndex < endNodeIndex; nodeIndex++) {
+                Node *node = (*nodes)[nodeIndex];
+                auto graph = IsoParametricNodeGraph(node, maxNeighbours, parametricCoordsMap, nodesPerDirection,
+                                                    false);
+                auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
+                auto nodeMetrics = metrics->at(node);
+                //Loop through all the directions to find g_i = d(x_j)/d(x_i), g^i = d(x_i)/d(x_j)
+                for (auto &directionI: directions) {
+                    auto i = spatialDirectionToUnsigned[directionI];
+                    auto covariantBaseVectorI = NumericalVector<double>(directions.size(), 0);
+                    auto contravariantBaseVectorI = NumericalVector<double>(directions.size(), 0);
 
+                    for (auto &directionJ: directions) {
+                        auto j = spatialDirectionToUnsigned[directionJ];
 
-                for (auto &directionJ : directions){
-                    auto j = spatialDirectionToUnsigned[directionJ];
+                        //Check if the available positions are qualified for the current derivative order
+                        auto qualifiedPositions = schemeBuilder.getQualifiedFromAvailable(
+                                availablePositionsAndDepth[directionJ],
+                                templatePositionsAndPointsMap[1][directionJ]);
 
-                    //Check if the available positions are qualified for the current derivative order
-                    auto qualifiedPositions = schemeBuilder.getQualifiedFromAvailable(
-                            availablePositionsAndDepth[directionJ], templatePositionsAndPointsMap[1][directionJ]);
-
-                    auto graphFilter = map<Position, unsigned short>();
-                    for (auto &tuple: qualifiedPositions) {
-                        for (auto &point: tuple.first) {
-                            graphFilter.insert(pair<Position, unsigned short>(point, tuple.second));
+                        auto graphFilter = map<Position, unsigned short>();
+                        for (auto &tuple: qualifiedPositions) {
+                            for (auto &point: tuple.first) {
+                                graphFilter.insert(pair<Position, unsigned short>(point, tuple.second));
+                            }
                         }
+                        auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
+
+                        auto parametricCoords = (graph.*colinearNodes)(Parametric, filteredNodeGraph);
+                        auto templateCoords = (graph.*colinearNodes)(coordinateSystem, filteredNodeGraph);
+
+                        auto taylorPointParametric = (*node->coordinates.getPositionVector(Parametric))[i];
+                        auto covariantWeights = calculateWeightsOfDerivativeOrder(
+                                *parametricCoords[directionJ]->getVectorSharedPtr(), 1, taylorPointParametric);
+
+                        auto taylorPointTemplate = (*node->coordinates.getPositionVector(coordinateSystem))[i];
+                        auto contravariantWeights = calculateWeightsOfDerivativeOrder(
+                                *templateCoords[directionJ]->getVectorSharedPtr(), 1, taylorPointTemplate);
+
+
+                        //Check if the number of weights and the number of nodes match
+                        if (covariantWeights.size() != parametricCoords[directionJ]->size()) {
+                            throw std::runtime_error(
+                                    "Number of weights and number of template nodal coords do not match"
+                                    " for node " + to_string(*node->id.global) +
+                                    " in direction " + to_string(directionI) +
+                                    " Cannot calculate covariant base vectors");
+                        }
+
+                        if (contravariantWeights.size() != templateCoords[directionJ]->size()) {
+                            throw std::runtime_error(
+                                    "Number of weights and number of parametric nodal coords do not match"
+                                    " for node " + to_string(*node->id.global) +
+                                    " in direction " + to_string(directionI) +
+                                    " Cannot calculate contravariant base vectors");
+                        }
+
+                        //Covariant base vectors (dr_i/dξ_i)
+                        //g_1 = {dx/dξ, dy/dξ, dz/dξ}
+                        //g_2 = {dx/dη, dy/dη, dz/dη} 
+                        //g_3 = {dx/dζ, dy/dζ, dz/dζ}
+                        covariantBaseVectorI[i] = covariantWeights.dotProduct(templateCoords[directionJ]);
+                        //Contravariant base vectors (dξ_i/dr_i)
+                        //g^1 = {dξ/dx, dξ/dy, dξ/dz}
+                        //g^2 = {dη/dx, dη/dy, dη/dz}
+                        //g^3 = {dζ/dx, dζ/dy, dζ/dz}
+                        contravariantBaseVectorI[i] = contravariantWeights.dotProduct(parametricCoords[directionJ]);
                     }
-                    auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
-
-                    auto parametricCoords = (graph.*colinearNodes)(Parametric, filteredNodeGraph);
-                    auto templateCoords = (graph.*colinearNodes)(coordinateSystem, filteredNodeGraph);
-
-                    //Get the FD scheme weights for the current direction
-/*                    auto covariantWeights = scheme.weights;
-                    auto contravariantWeights = covariantWeights;*/
-                    
-
-                    auto taylorPointParametric = (*node->coordinates.getPositionVector(Parametric))[i];
-                    auto covariantWeights = calculateWeightsOfDerivativeOrder(
-                            *parametricCoords[directionJ]->getVectorSharedPtr(), 1, taylorPointParametric);
-
-                    auto taylorPointTemplate = (*node->coordinates.getPositionVector(coordinateSystem))[i];
-                    auto contravariantWeights = calculateWeightsOfDerivativeOrder(
-                            *templateCoords[directionJ]->getVectorSharedPtr(), 1, taylorPointTemplate);
-
-                    
-                    //Check if the number of weights and the number of nodes match
-                    if (covariantWeights.size() != parametricCoords[directionJ]->size()) {
-                        throw std::runtime_error(
-                                "Number of weights and number of template nodal coords do not match"
-                                " for node " + to_string(*node->id.global) +
-                                " in direction " + to_string(directionI) +
-                                " Cannot calculate covariant base vectors");
-                    }
-
-                    if (contravariantWeights.size() != templateCoords[directionJ]->size()) {
-                        throw std::runtime_error(
-                                "Number of weights and number of parametric nodal coords do not match"
-                                " for node " + to_string(*node->id.global) +
-                                " in direction " + to_string(directionI) +
-                                " Cannot calculate contravariant base vectors");
-                    }
-
-                    //Covariant base vectors (dr_i/dξ_i)
-                    //g_1 = {dx/dξ, dy/dξ, dz/dξ}
-                    //g_2 = {dx/dη, dy/dη, dz/dη} 
-                    //g_3 = {dx/dζ, dy/dζ, dz/dζ}
-                    covariantBaseVectorI[i] = covariantWeights.dotProduct(templateCoords[directionJ]);
-                    //Contravariant base vectors (dξ_i/dr_i)
-                    //g^1 = {dξ/dx, dξ/dy, dξ/dz}
-                    //g^2 = {dη/dx, dη/dy, dη/dz}
-                    //g^3 = {dζ/dx, dζ/dy, dζ/dz}
-                    contravariantBaseVectorI[i] = contravariantWeights.dotProduct(parametricCoords[directionJ]);
+                    nodeMetrics->covariantBaseVectors->insert(
+                            pair<Direction, NumericalVector<double>>(directionI, covariantBaseVectorI));
+                    nodeMetrics->contravariantBaseVectors->insert(
+                            pair<Direction, NumericalVector<double>>(directionI, contravariantBaseVectorI));
                 }
-                nodeMetrics->covariantBaseVectors->insert(
-                        pair<Direction, NumericalVector<double>>(directionI, covariantBaseVectorI));
-                nodeMetrics->contravariantBaseVectors->insert(
-                        pair<Direction, NumericalVector<double>>(directionI, contravariantBaseVectorI));
-
-
+                nodeMetrics->calculateCovariantTensor();
+                nodeMetrics->calculateContravariantTensor();
             }
-            nodeMetrics->calculateCovariantTensor();
-            nodeMetrics->calculateContravariantTensor();
-            metrics->insert(pair<Node*, shared_ptr<Metrics> >(node, nodeMetrics));
-            //nodeMetrics->contravariantTensor->printFullMatrix("contravariant tensor");
-            //nodeMetrics->covariantTensor->printFullMatrix("covariant tensor");
-        }
+        };
+        ThreadingOperations<double>::executeParallelJob(nodalMetricsCalculationJob, nodes->size(), 12);
     }
     
 

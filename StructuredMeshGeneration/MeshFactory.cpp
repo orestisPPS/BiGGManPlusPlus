@@ -41,7 +41,7 @@ namespace StructuredMeshGenerator{
         
         auto problem = make_shared<SteadyStateMathematicalProblem>(std::move(pde), std::move(boundaryConditions), dofTypes);
         
-        auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2, 1);
+        auto solver = make_shared<ConjugateGradientSolver>(1E-12, 1E4, L2, 12);
         
         auto analysis = make_shared<SteadyStateFiniteDifferenceAnalysis>(problem, mesh, solver);
         analysis->setAnalysisCoordinateSystem(Template);

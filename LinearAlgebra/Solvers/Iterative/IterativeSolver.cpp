@@ -79,7 +79,7 @@ namespace LinearAlgebra {
         logs.startSingleObservationTimer("Total Computation Time");
         
         _performMethodSolution();
-        _linearSystem->solution = std::move(_xNew);
+        _linearSystem->solution->deepCopy(_xNew);
         
         logs.stopSingleObservationTimer("Total Computation Time");
         logs.setSingleObservationLogData("Iterations", _iteration);

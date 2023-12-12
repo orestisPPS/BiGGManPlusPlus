@@ -1,4 +1,4 @@
-/snap/clion/259/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S /home/hal9000/code/BiGGMan++ -B /home/hal9000/code/BiGGMan++
+/snap/clion/260/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S /home/hal9000/code/BiGGMan++ -B /home/hal9000/code/BiGGMan++
 CMake Deprecation Warning:
   Support for "Extra Generators" like
 

@@ -22,11 +22,12 @@ namespace NumericalAnalysis {
         K = make_shared<NumericalMatrix<double>>(*_analysisDegreesOfFreedom->numberOfFreeDOF, *_analysisDegreesOfFreedom->numberOfFreeDOF);
         _parametricCoordToNodeMap = _mesh->getCoordinatesToNodesMap(Parametric);
         logs = Logs("EquilibriumLinearSystemBuilder");
-        logs.addComment("Tuning Session Dirichlet 11x11x11: Added hashmaps to pde properties");
-        logs.addComment("Tuning Session Dirichlet 11x11x11: Created hashmap of node graphs");
+        logs.addComment("Tuning Session Dirichlet 11x11x11: Multi Thread Execution");
+        logs.addComment("GIVE GAS YOU HANDICAPPED");
+        logs.addComment("Tuning Session Dirichlet 11x11x11: System Size" +
+        to_string(_analysisDegreesOfFreedom->freeDegreesOfFreedom->size()));
     }
     
-
     void EquilibriumLinearSystemBuilder::assembleSteadyStateLinearSystem() {
         cout << "Assembling Linear System" << endl;
         logs.startSingleObservationTimer("Equilibrium Linear System Assembly");
@@ -50,86 +51,90 @@ namespace NumericalAnalysis {
             _nodeGraphs->insert(pair<Node*, IsoParametricNodeGraph>(
                     node, IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap, _mesh->nodesPerDirection, false)));
         }
-        //Iterate over all the free degrees of freedom
-        for (auto &dof: *_analysisDegreesOfFreedom->internalDegreesOfFreedom) {
-            logs.startMultipleObservationsTimer("DOF Assembly");
+        
+        auto dofDataStructuresContributionJob = [&](unsigned startDofIndex, unsigned endDofIndex) ->void{
+            for (unsigned dofIndex = startDofIndex; dofIndex < endDofIndex; ++dofIndex) {
+                //logs.startMultipleObservationsTimer("DOF Assembly");
+                DegreeOfFreedom* dof = (*_analysisDegreesOfFreedom->internalDegreesOfFreedom)[dofIndex];
+                //Define the node where the dof belongs
+                auto node = _mesh->nodeFromID(dof->parentNode());
+                auto thisDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
+                //logs.startMultipleObservationsTimer("IsoParametricNodeGraph");
+                //Find the node neighbours with a span equal to the maximum number of points needed for the scheme to be consistent
+                auto graph = _nodeGraphs->at(node);
 
-            //Define the node where the dof belongs
-            auto node = _mesh->nodeFromID(dof->parentNode());
-            auto thisDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(dof);
-            logs.startMultipleObservationsTimer("IsoParametricNodeGraph");
-            //Find the node neighbours with a span equal to the maximum number of points needed for the scheme to be consistent
-            auto graph = _nodeGraphs->at(node);
-/*            auto graph = IsoParametricNodeGraph(node, maxNeighbours, _parametricCoordToNodeMap,
-                                                _mesh->nodesPerDirection, false);*/
-            logs.stopMultipleObservationsTimer("IsoParametricNodeGraph");
-                                                        
-            auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
+                //logs.stopMultipleObservationsTimer("IsoParametricNodeGraph");
 
-            //Derivative order 0
-            auto zeroOrderCoefficient = _steadyStateMathematicalProblem->pde->spatialDerivativesCoefficients()->getIndependentVariableTermCoefficient(node->id.global);
-            if (zeroOrderCoefficient != 0)
-                K->setElement(thisDOFPosition, thisDOFPosition, zeroOrderCoefficient);
-            //Define the position of the dof in the NumericalMatrix
+                auto availablePositionsAndDepth = graph.getColinearPositionsAndPoints(directions);
 
-            //add source term
-            RHS->at(thisDOFPosition) += _steadyStateMathematicalProblem->pde->spatialDerivativesCoefficients()->getIndependentVariableTermCoefficient(node->id.global);
+                //Derivative order 0
+                auto zeroOrderCoefficient = _steadyStateMathematicalProblem->pde->spatialDerivativesCoefficients()->getIndependentVariableTermCoefficient(node->id.global);
+                if (zeroOrderCoefficient != 0)
+                    K->setElement(thisDOFPosition, thisDOFPosition, zeroOrderCoefficient);
+                //Define the position of the dof in the NumericalMatrix
 
-            //March through all the non-zero derivative orders 
-            for (auto derivativeOrder = 1; derivativeOrder <= maxDerivativeOrder; derivativeOrder++) {
+                //add source term
+                RHS->at(thisDOFPosition) += _steadyStateMathematicalProblem->pde->spatialDerivativesCoefficients()->getIndependentVariableTermCoefficient(node->id.global);
 
-                //Decompose scheme into directional components
-                for (auto &directionI: directions) {
-                    unsigned indexDirectionI = spatialDirectionToUnsigned[directionI];
-                    
-                    double iThDerivativePDECoefficient = _steadyStateMathematicalProblem->pde->spatialDerivativesCoefficients()->getDependentVariableTermCoefficient(derivativeOrder, node->id.global, directionI);
-                    if (iThDerivativePDECoefficient != 0) {
-                        
-                        //Check if the available positions are qualified for the current derivative order
-                        auto qualifiedPositions = _getQualifiedFromAvailable(
-                                availablePositionsAndDepth[directionI], templatePositionsAndPointsMap[derivativeOrder][directionI]);
-                        
-                        auto graphFilter = map<Position, unsigned short>();
-                        for (auto &position: get<0>(qualifiedPositions)) {
-                            graphFilter.insert(pair<Position, unsigned short>(position, get<1>(qualifiedPositions)));
-                        }
-                        auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
-                        auto colinearCoordinates = graph.getSameColinearNodalCoordinates(_coordinateType, filteredNodeGraph);
-                        auto colinearDOF = graph.getColinearDOF(dof->type(), directionI, filteredNodeGraph);
-                        
-                        auto taylorPoint = (*node->coordinates.getPositionVector(_coordinateType))[indexDirectionI];
-                        logs.startMultipleObservationsTimer("Weight Calculation");
-                        auto weights = calculateWeightsOfDerivativeOrder(*colinearCoordinates[directionI]->getVectorSharedPtr(),
-                                                                         derivativeOrder, taylorPoint);
-                        logs.stopMultipleObservationsTimer("Weight Calculation");
+                //March through all the non-zero derivative orders 
+                for (auto derivativeOrder = 1; derivativeOrder <= maxDerivativeOrder; derivativeOrder++) {
 
-                        //NumericalVector<double> &schemeWeights = scheme.weights;
-                        logs.startMultipleObservationsTimer("Matrix and RHS Assembly");
-                        for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
-                            auto neighbourDOF = colinearDOF[iDof];
-                            //auto weight = schemeWeights[iDof] * iThDerivativePDECoefficient / denominator;
-                            auto weight2 = weights[iDof] * iThDerivativePDECoefficient;
-                            if (neighbourDOF->constraintType() == Free) {
-                                auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOF[iDof]);
-                                double ijElement = K->getElement(thisDOFPosition, neighbourDOFPosition);
-                                ijElement += weight2;
-                                K->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
+                    //Decompose scheme into directional components
+                    for (auto &directionI: directions) {
+                        unsigned indexDirectionI = spatialDirectionToUnsigned[directionI];
+
+                        double iThDerivativePDECoefficient = _steadyStateMathematicalProblem->pde->spatialDerivativesCoefficients()->getDependentVariableTermCoefficient(derivativeOrder, node->id.global, directionI);
+                        if (iThDerivativePDECoefficient != 0) {
+
+                            //Check if the available positions are qualified for the current derivative order
+                            auto qualifiedPositions = _getQualifiedFromAvailable(
+                                    availablePositionsAndDepth[directionI], templatePositionsAndPointsMap[derivativeOrder][directionI]);
+
+                            auto graphFilter = map<Position, unsigned short>();
+                            for (auto &position: get<0>(qualifiedPositions)) {
+                                graphFilter.insert(pair<Position, unsigned short>(position, get<1>(qualifiedPositions)));
                             }
-                            else if (neighbourDOF->constraintType() == Fixed) {
-                                auto dirichletContribution = neighbourDOF->value() * weight2;
-                                (*RHS)[thisDOFPosition] -=  dirichletContribution;
+                            auto filteredNodeGraph = graph.getNodeGraph(graphFilter);
+                            auto colinearCoordinates = graph.getSameColinearNodalCoordinates(_coordinateType, filteredNodeGraph);
+                            auto colinearDOF = graph.getColinearDOF(dof->type(), directionI, filteredNodeGraph);
+
+                            auto taylorPoint = (*node->coordinates.getPositionVector(_coordinateType))[indexDirectionI];
+                            //logs.startMultipleObservationsTimer("Weight Calculation");
+                            auto weights = calculateWeightsOfDerivativeOrder(*colinearCoordinates[directionI]->getVectorSharedPtr(),
+                                                                             derivativeOrder, taylorPoint);
+                            //logs.stopMultipleObservationsTimer("Weight Calculation");
+
+                            //NumericalVector<double> &schemeWeights = scheme.weights;
+                            //logs.startMultipleObservationsTimer("Matrix and RHS Assembly");
+                            for (int iDof = 0; iDof < colinearDOF.size(); ++iDof) {
+                                auto neighbourDOF = colinearDOF[iDof];
+                                //auto weight = schemeWeights[iDof] * iThDerivativePDECoefficient / denominator;
+                                auto weight2 = weights[iDof] * iThDerivativePDECoefficient;
+                                if (neighbourDOF->constraintType() == Free) {
+                                    auto neighbourDOFPosition = _analysisDegreesOfFreedom->totalDegreesOfFreedomMapInverse->at(colinearDOF[iDof]);
+                                    double ijElement = K->getElement(thisDOFPosition, neighbourDOFPosition);
+                                    ijElement += weight2;
+                                    K->setElement(thisDOFPosition, neighbourDOFPosition, ijElement);
+                                }
+                                else if (neighbourDOF->constraintType() == Fixed) {
+                                    auto dirichletContribution = neighbourDOF->value() * weight2;
+                                    (*RHS)[thisDOFPosition] -=  dirichletContribution;
+                                }
                             }
+                            //logs.stopMultipleObservationsTimer("Matrix and RHS Assembly");
                         }
-                        logs.stopMultipleObservationsTimer("Matrix and RHS Assembly");
                     }
                 }
-            }
-            logs.stopMultipleObservationsTimer("DOF Assembly");
-        }
-        _addNeumannBoundaryConditions();
-        logs.stopSingleObservationTimer("Equilibrium Linear System Assembly");
+                //logs.stopMultipleObservationsTimer("DOF Assembly");
+
+            };
+        };
+        //Iterate over all the free degrees of freedom
+        logs.startSingleObservationTimer("Equilibrium Linear System Assembly Single Thread");
+        ThreadingOperations<double>::executeParallelJob(dofDataStructuresContributionJob, _analysisDegreesOfFreedom->internalDegreesOfFreedom->size(), 12);
+        logs.stopSingleObservationTimer("Equilibrium Linear System Assembly Single Thread");
+
         logs.exportToCSV("/home/hal9000/code/BiGGMan++/Testing/performance_logs/linear_system_initialization/", "EquilibriumLinearSystemBuilderLogs");
-        cout << "Linear System Assembled" << endl;
     }
 
     //TODO : Fix as above

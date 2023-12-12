@@ -13,6 +13,7 @@
 #include "../../Discretization/Mesh/Mesh.h"
 #include "../../MathematicalEntities/MathematicalProblem/MathematicalProblem.h"
 #include "../../LinearAlgebra/FiniteDifferences/FiniteDifferenceSchemeBuilder.h"
+#include "../../ThreadingOperations/ThreadingOperations.h"
 #include "../../Logging/Logs.h"
 using namespace MathematicalEntities;
 using namespace NumericalAnalysis;

@@ -9,11 +9,11 @@
 namespace LinearAlgebra {
     
     LinearSystem::LinearSystem(shared_ptr<NumericalMatrix<double>> inputMatrix, shared_ptr<NumericalVector<double>> inputRHS) :
-            matrix(std::move(inputMatrix)), rhs(std::move(inputRHS)), solution(nullptr) {}
+            matrix(std::move(inputMatrix)), rhs(std::move(inputRHS)),
+            solution(make_shared<NumericalVector<double>>(rhs->size())), logs(Logs("LinearSystem")) {
+         _setLogs();
+    }
     
-
-
-
     void LinearSystem::exportToMatlabFile(const string& fileName, const string& filePath, bool printSolution) const {
 
         ofstream outputFile(filePath + fileName);
@@ -43,5 +43,12 @@ namespace LinearAlgebra {
         outputFile << "[L, U] = lu(A);" << endl;
         
             outputFile.close();
+    }
+
+    void LinearSystem::_setLogs() {
+        logs.setSingleObservationLogData("Matrix size", matrix->dataStorage->sizeInKB());
+        logs.setSingleObservationLogData("RHS size", rhs->sizeInKB());
+        logs.setSingleObservationLogData("Solution size", solution->sizeInKB());
+        logs.setSingleObservationLogData("Total size", matrix->dataStorage->sizeInKB() + rhs->sizeInKB() + solution->sizeInKB());
     }
 }// LinearAlgebra

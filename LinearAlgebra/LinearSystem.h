@@ -6,6 +6,7 @@
 #define UNTITLED_LINEARSYSTEM_H
 
 #include "ContiguousMemoryNumericalArrays/NumericalMatrix/NumericalMatrix.h"
+#include "../Logging/Logs.h"
 
 namespace LinearAlgebra {
 
@@ -22,6 +23,12 @@ namespace LinearAlgebra {
         shared_ptr<NumericalVector<double>> solution;
 
         void exportToMatlabFile(const string &fileName, const string &filePath, bool printSolution) const;
+        
+        Logs logs;
+        
+    private:
+        
+        void _setLogs();
     };
 
 } // LinearAlgebra

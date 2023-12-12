@@ -81,8 +81,6 @@ namespace LinearAlgebra {
                 break;
             }
             _iteration++;
-            cout << "Iteration: " << _iteration << " Residual Norm: " << _exitNorm << endl;
-            ////logs.storeAndResetCurrentLogs();
         }
     };
 } // LinearAlgebra

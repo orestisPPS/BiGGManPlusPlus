@@ -14,29 +14,29 @@
 
 
 int main() {
-
+    //NUMERICAL VECTOR AND MATRIX TESTS.
+    //Tests::NumericalVectorTest::runTests();
+    //Tests::NumericalMatrixTest::runTests();
+    
+    //ANALYSIS TESTS.
     //Tests::SteadyStateDirichlet2D::runTests(); //Pass
-    //Tests::TransientDirichlet2D::runTests(); //Pass
-    //Tests::SteadyState3DDirichlet::runTests(); //Pass
-    Tests::SteadyState3DNeumann::runTests(); //Pass
-    Tests::TransientDirichlet3D::runTests(); //Fail
+    //Tests::TransientDirichlet2D::runTests(); //Fail
+    Tests::SteadyState3DDirichlet::runTests(); //Pass
+    //Tests::SteadyState3DNeumann::runTests(); //Pass
+    //Tests::TransientDirichlet3D::runTests(); //Fail
     
 
 /*    auto lanczosTest = new Tests:: LanczosEigenDecompositionTest();
     delete lanczosTest;*/
 
     //Tests::IterativeSolversTest::runTests();
-    //Tests::SteadyStateDirichlet2D::runTests();
     //Tests::TransientDirichlet3D::runTests();
     //Tests::TransientDirichlet3D::runTests();
     //Tests::SteadyState3DNeumann::runTests();
     //Tests::MeshGenerator::buildMesh();
-    //Tests::NumericalVectorTest::runTests();
-    //Tests::NumericalMatrixTest::runTests();
 
 
-    //auto qrTest = new Tests::QRTest();
-
+    
 
     //auto cudaOperations = new Tests::OperationsCUDA();
     //auto singleThreadVectorOperations = new Tests::VectorOperationsTest();
