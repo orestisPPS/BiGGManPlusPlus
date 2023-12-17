@@ -13,7 +13,7 @@ namespace LinearAlgebra {
     class NumericalMatrixMathematicalOperationsProvider {
     public:
         explicit NumericalMatrixMathematicalOperationsProvider(unsigned numberOfRows, unsigned numberOfColumns,
-                shared_ptr<NumericalMatrixStorageDataProvider<T>> storageData) :
+                shared_ptr<NumericalMatrixStorageDataProvider<T>>& storageData) :
                 _numberOfRows(numberOfRows), _numberOfColumns(numberOfColumns), _storageData(storageData){ }
                 
         virtual void matrixScalarMultiplication(T scaleThis) {
@@ -65,7 +65,7 @@ namespace LinearAlgebra {
         
                 
     protected:
-        shared_ptr<NumericalMatrixStorageDataProvider<T>> _storageData;
+        shared_ptr<NumericalMatrixStorageDataProvider<T>>& _storageData;
         
         unsigned _numberOfRows;
         

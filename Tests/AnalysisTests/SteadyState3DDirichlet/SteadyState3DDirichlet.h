@@ -29,9 +29,9 @@ namespace Tests {
             logTestStart("testDiffusionDirichlet3D");
 
             map<Direction, unsigned> numberOfNodes;
-            numberOfNodes[Direction::One] = 5;
-            numberOfNodes[Direction::Two] = 5;
-            numberOfNodes[Direction::Three] = 5 ;
+            numberOfNodes[Direction::One] = 11;
+            numberOfNodes[Direction::Two] = 11;
+            numberOfNodes[Direction::Three] = 11 ;
 
             //auto specs = make_shared<MeshSpecs>(numberOfNodes, 2, 1, 1, 0, 0, 0, 0, 0, 0);
             auto specs = make_shared<MeshSpecs>(numberOfNodes, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0);

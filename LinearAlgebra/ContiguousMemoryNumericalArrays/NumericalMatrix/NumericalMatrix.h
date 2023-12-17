@@ -557,13 +557,13 @@ namespace LinearAlgebra {
             }
         }
         
-        unique_ptr<FullMatrixMathematicalOperationsProvider<T>> _initializeMath(){
+        unique_ptr<NumericalMatrixMathematicalOperationsProvider<T>> _initializeMath(){
             switch (dataStorage->getStorageType()) {
                 case FullMatrix:
                     return make_unique<FullMatrixMathematicalOperationsProvider<T>>(_numberOfRows, _numberOfColumns, dataStorage);
                     break;
                 case CSR:
-                    return make_unique<FullMatrixMathematicalOperationsProvider<T>>(_numberOfRows, _numberOfColumns, dataStorage);
+                    return make_unique<CSRMathematicalOperationsProvider<T>>(_numberOfRows, _numberOfColumns, dataStorage);
                     break;
                 default:
                     throw std::invalid_argument("Invalid storage type.");

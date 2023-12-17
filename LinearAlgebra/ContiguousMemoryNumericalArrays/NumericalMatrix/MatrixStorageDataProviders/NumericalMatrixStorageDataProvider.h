@@ -22,7 +22,7 @@ namespace LinearAlgebra {
             elementSetters = unordered_map<NumericalMatrixFormType, T&()>();*/
         }
         
-        virtual double sizeInKB() {}
+        virtual double sizeInKB() {return -1;}
         
         virtual ~NumericalMatrixStorageDataProvider() = default;
         
@@ -32,7 +32,17 @@ namespace LinearAlgebra {
             return _values;
         }
         
-        virtual vector<shared_ptr<NumericalVector<unsigned>>> getSupplementaryVectors(){ return {}; }
+        void setValues(shared_ptr<NumericalVector<T>> values){
+            _values = std::move(values);
+        }
+        
+        virtual vector<shared_ptr<NumericalVector<unsigned>>> getSupplementaryVectors() {
+            return {};
+        }
+        
+        virtual void setSupplementaryVectors(vector<shared_ptr<NumericalVector<unsigned>>> supplementaryVectors) {
+            return;
+        }
         
         const NumericalMatrixStorageType& getStorageType(){
             return _storageType;

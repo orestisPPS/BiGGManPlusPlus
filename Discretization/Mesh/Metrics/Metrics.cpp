@@ -13,32 +13,7 @@ namespace Discretization{
             contravariantBaseVectors = make_unique<map<Direction, NumericalVector<double>>>();
             covariantTensor = make_unique<NumericalMatrix<double>>(dimensions, dimensions);
             contravariantTensor = make_unique<NumericalMatrix<double>>(dimensions, dimensions);
-
-/*            switch (dimensions) {
-                case 1:
-                    covariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(One, NumericalVector<double>()));
-                    contravariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(One, NumericalVector<double>()));
-                    break;
-                case 2:
-                    covariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(One, NumericalVector<double>()));
-                    covariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(Two, NumericalVector<double>()));
-                    
-                    contravariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(One, NumericalVector<double>()));
-                    contravariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(Two, NumericalVector<double>()));
-                    break;
-                case 3:
-                    covariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(One, NumericalVector<double>()));
-                    covariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(Two, NumericalVector<double>()));
-                    covariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(Three, NumericalVector<double>()));
-                    
-                    contravariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(One, NumericalVector<double>()));
-                    contravariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(Two, NumericalVector<double>()));
-                    contravariantBaseVectors->insert(pair<Direction, NumericalVector<double>>(Three, NumericalVector<double>()));
-                    break;
-                default:
-                    throw runtime_error("Invalid number of dimensions! You are getting into Einsteins field->");
-            }*/
-
+            
             covariantTensor = make_unique<NumericalMatrix<double>>(dimensions, dimensions);
             contravariantTensor = make_unique<NumericalMatrix<double>>(dimensions, dimensions);
             jacobian = make_unique<double>();

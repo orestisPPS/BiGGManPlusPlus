@@ -17,8 +17,8 @@ namespace LinearAlgebra {
                 NumericalMatrixStorageDataProvider<T>(numberOfRows, numberOfColumns, formType, availableThreads),
                 _builder(numberOfRows, numberOfColumns),
                 _zero(static_cast<T>(0)) {
-            this->_storageType = NumericalMatrixStorageType::CoordinateList;
-            this->_values = make_shared<NumericalVector<T>>(numberOfRows * numberOfColumns, 0, availableThreads);
+            //this->_storageType = NumericalMatrixStorageType::CoordinateList;
+            //this->_values = make_shared<NumericalVector<T>>(numberOfRows * numberOfColumns, 0, availableThreads);
         }
 
     protected:

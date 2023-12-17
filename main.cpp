@@ -16,12 +16,12 @@
 int main() {
     //NUMERICAL VECTOR AND MATRIX TESTS.
     //Tests::NumericalVectorTest::runTests();
-    //Tests::NumericalMatrixTest::runTests();
+    Tests::NumericalMatrixTest::runTests();
     
     //ANALYSIS TESTS.
     //Tests::SteadyStateDirichlet2D::runTests(); //Pass
     //Tests::TransientDirichlet2D::runTests(); //Fail
-    Tests::SteadyState3DDirichlet::runTests(); //Pass
+    //Tests::SteadyState3DDirichlet::runTests(); //Pass
     //Tests::SteadyState3DNeumann::runTests(); //Pass
     //Tests::TransientDirichlet3D::runTests(); //Fail
     

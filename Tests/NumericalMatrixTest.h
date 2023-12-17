@@ -13,9 +13,8 @@ namespace Tests {
             runTests();
         }
         static void runTests(){
+            //Full Matrix tests
             testFullMatrixElementAssignment();
-            testCSRMatrixWithOnSpotElementAssignment();
-            testCSRMatrixWithCOOElementAssignment();
             testMatrixAddition();
             testMatrixSubtraction();
             testMatrixMultiplication();
@@ -29,11 +28,19 @@ namespace Tests {
             testMatrixVectorRowWisePartialMultiplicationMultiThread();
             testMatrixVectorColumnWisePartialMultiplicationMultiThread();
             
+            //CSR tests
+            testCSRMatrixWithOnSpotElementAssignment();
+            testCSRMatrixWithCOOElementAssignment();
+            testCSRMatrixOnSpotAccess();
+            testCSRMatrixCOOAccess();
+            testMatrixAdditionCSR();
+
+            
         }
         
         static void testFullMatrixElementAssignment(){
             logTestStart("testFullMatrixElementAssignment");
-            NumericalMatrix<double> matrixFull = NumericalMatrix<double>(5, 5, FullMatrix);
+            NumericalMatrix<double> matrixFull = NumericalMatrix<double>(5, 5);
             matrixFull.setElement(0, 0, 3);
             matrixFull.setElement(1, 3, 7);
             matrixFull.setElement(3, 1, 4);
@@ -74,6 +81,51 @@ namespace Tests {
             NumericalVector<double> expectedValues = {5, 5, 5, 5};
             auto values = resultMatrix.dataStorage->getValues();
             assert(expectedValues == values);
+
+            logTestEnd();
+        }
+
+        static void testMatrixAdditionCSR() {
+            logTestStart("testCSRMatrixAddition");
+
+            // Initialize matrix A
+            // [3 0 0
+            //  0 0 7
+            //  0 0 0]
+            NumericalMatrix<double> matrixA = NumericalMatrix<double>(3, 3, CSR);
+            matrixA.setElement(0, 0, 3);
+            matrixA.setElement(1, 2, 7);
+
+            // Initialize matrix B
+            // [0 2 0
+            //  0 0 0
+            //  0 4 5]
+            NumericalMatrix<double> matrixB = NumericalMatrix<double>(3, 3, CSR);
+            matrixB.setElement(0, 1, 2);
+            matrixB.setElement(2, 1, 4);
+            matrixB.setElement(2, 2, 5);
+
+            // Perform addition
+            // [3 2 0
+            //  0 0 7
+            //  0 4 5]
+            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(3, 3, CSR);
+            matrixA.add(matrixB, resultMatrix, 1.0, 1.0, 1); // Assuming this method exists
+
+            // Fetch result data
+            auto values = resultMatrix.dataStorage->getValues();
+            auto columnIndices = resultMatrix.dataStorage->getSupplementaryVectors()[0];
+            auto rowOffsets = resultMatrix.dataStorage->getSupplementaryVectors()[1];
+
+            // Define expected results
+            NumericalVector<double> expectedValues = {3, 2, 7, 4, 5};
+            NumericalVector<unsigned> expectedRowOffsets = {0, 2, 3, 5};
+            NumericalVector<unsigned> expectedColumnIndices = {0, 1, 2, 1, 2};
+
+            // Assertions to check the results
+            assert(expectedValues == values);
+            assert(expectedRowOffsets == rowOffsets);
+            assert(expectedColumnIndices == columnIndices);
 
             logTestEnd();
         }
@@ -381,6 +433,11 @@ namespace Tests {
         static void testCSRMatrixWithOnSpotElementAssignment(){
             logTestStart("testCSRMatrixWithOnSpotAssignment");
             NumericalMatrix<double> matrixCSR = NumericalMatrix<double>(5, 5, CSR);
+            //[3 0 0 0 0,
+            // 0 0 0 7 0,
+            // 0 0 0 0 0,
+            // 0 4 0 0 0,
+            // 0 0 0 2 5]
             matrixCSR.setElement(0, 0, 3);
             matrixCSR.setElement(1, 3, 7);
             matrixCSR.setElement(3, 1, 4);
@@ -424,6 +481,46 @@ namespace Tests {
             assert(expectedValues == values);
             assert(expectedRowOffsets == rowOffsets);
             assert(expectedColumnIndices == columnIndices);
+            
+            logTestEnd();
+        }
+
+        static void testCSRMatrixOnSpotAccess(){
+            logTestStart("testCSRMatrixAccess");
+            NumericalMatrix<double> matrixCSR = NumericalMatrix<double>(5, 5, CSR);
+            matrixCSR.dataStorage->initializeElementAssignment();
+            matrixCSR.setElement(0, 0, 3);
+            matrixCSR.setElement(1, 3, 7);
+            matrixCSR.setElement(3, 1, 4);
+            matrixCSR.setElement(4, 3, 2);
+            matrixCSR.setElement(4, 4, 5);
+            matrixCSR.dataStorage->finalizeElementAssignment();
+
+            double nonZeroElement = matrixCSR.getElement(1, 3);
+            assert(nonZeroElement == 7);
+            double zeroElement = matrixCSR.getElement(0, 1);
+            assert(zeroElement == 0);
+            
+            logTestEnd();
+        }
+        
+        static void testCSRMatrixCOOAccess(){
+            logTestStart("testCSRMatrixAccess");
+            NumericalMatrix<double> matrixCSR = NumericalMatrix<double>(5, 5, CSR);
+            matrixCSR.dataStorage->initializeElementAssignment();
+            matrixCSR.setElement(0, 0, 3);
+            matrixCSR.setElement(1, 3, 7);
+            matrixCSR.setElement(3, 1, 4);
+            matrixCSR.setElement(4, 3, 2);
+            matrixCSR.setElement(4, 4, 5);
+
+
+            double nonZeroElement = matrixCSR.getElement(1, 3);
+            assert(nonZeroElement == 7);
+            double zeroElement = matrixCSR.getElement(0, 1);
+            assert(zeroElement == 0);
+
+            matrixCSR.dataStorage->finalizeElementAssignment();
             
             logTestEnd();
         }

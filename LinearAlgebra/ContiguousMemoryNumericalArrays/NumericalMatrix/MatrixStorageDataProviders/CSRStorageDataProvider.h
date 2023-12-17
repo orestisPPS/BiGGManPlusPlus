@@ -16,17 +16,16 @@ namespace LinearAlgebra {
         explicit CSRStorageDataProvider(unsigned numberOfRows, unsigned numberOfColumns, NumericalMatrixFormType formType, unsigned numberOfThreads)
                 : SparseMatrixDataStorageProvider<T>(numberOfRows, numberOfColumns, formType, numberOfThreads){
             this->_storageType = NumericalMatrixStorageType::CSR;
-            this->_values = make_shared<NumericalVector<T>>(0, 0, numberOfThreads);
-            _columnIndices = make_shared<NumericalVector<unsigned>>(0, 0, numberOfThreads);
-            _rowOffsets = make_shared<NumericalVector<unsigned>>(numberOfRows + 1, 0, numberOfThreads);
-            (*_rowOffsets)[0] = 0;
+            this->_values = make_shared<NumericalVector<T>>(0, static_cast<T>(0), numberOfThreads);
+            _columnIndices = make_shared<NumericalVector<unsigned>>(0, static_cast<unsigned>(0), numberOfThreads);
+            _rowOffsets = make_shared<NumericalVector<unsigned>>(numberOfRows + 1, static_cast<unsigned>(0), numberOfThreads);
         }
 
         explicit CSRStorageDataProvider(shared_ptr<NumericalVector<T>> values,
                                         shared_ptr<NumericalVector<unsigned>> columnIndices,
                                         shared_ptr<NumericalVector<unsigned>> rowOffsets,
                                         unsigned numberOfRows, unsigned numberOfColumns, unsigned numberOfThreads)
-                : SparseMatrixDataStorageProvider<T>(numberOfRows, numberOfColumns, numberOfThreads) {
+                : SparseMatrixDataStorageProvider<T>(numberOfRows, numberOfColumns, NumericalMatrixFormType::General, numberOfThreads) {
             this->_storageType = NumericalMatrixStorageType::CSR;
             this->_values = std::move(values);
             _columnIndices = std::move(columnIndices);
@@ -39,6 +38,13 @@ namespace LinearAlgebra {
 
         vector<shared_ptr<NumericalVector<unsigned>>> getSupplementaryVectors() override{
             return {this->_columnIndices, this->_rowOffsets};
+        }
+        
+        void setSupplementaryVectors(vector<shared_ptr<NumericalVector<unsigned>>> supplementaryVectors) override{
+            if (supplementaryVectors.size() != 2)
+                throw runtime_error("Invalid number of supplementary vectors.");
+            _columnIndices = std::move(supplementaryVectors[0]);
+            _rowOffsets = std::move(supplementaryVectors[1]);
         }
 
         T& getElement(unsigned int row, unsigned int column) override {
