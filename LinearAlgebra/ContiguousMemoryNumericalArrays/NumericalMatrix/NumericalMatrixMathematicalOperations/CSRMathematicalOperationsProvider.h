@@ -99,23 +99,87 @@ namespace LinearAlgebra {
         }
 
         void matrixSubtraction(shared_ptr<NumericalMatrixStorageDataProvider<T>>& inputMatrix,
-                               shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,
-                               T scaleThis, T scaleOther, unsigned availableThreads) override {
+                            shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,
+                            T scaleThis, T scaleOther, unsigned availableThreads) override {
 
-            T* thisValues = this->_storageData->getValues()->getDataPointer();
-            T* otherValues = inputMatrix->getValues()->getDataPointer();
-            T* resultValues = resultMatrix->getValues()->getDataPointer();
+            unsigned numRows = this->_numberOfRows;
 
-            unsigned size = this->_numberOfRows * this->_numberOfColumns;
+            T *thisValues = this->_storageData->getValues()->getDataPointer();
+            unsigned *thisRowPtr = this->_storageData->getSupplementaryVectors()[0]->getDataPointer();
+            unsigned *thisColInd = this->_storageData->getSupplementaryVectors()[1]->getDataPointer();
 
-            auto subtractJob = [&](unsigned start, unsigned end) -> void {
-                for (unsigned i = start; i < end && i < size; ++i) {
-                    resultValues[i] = scaleThis * thisValues[i] - scaleOther * otherValues[i];
+            T *otherValues = inputMatrix->getValues()->getDataPointer();
+            unsigned *otherRowPtr = inputMatrix->getSupplementaryVectors()[0]->getDataPointer();
+            unsigned *otherColInd = inputMatrix->getSupplementaryVectors()[1]->getDataPointer();
+
+            list<T> resultValues = list<T>();
+            auto resultRowPtr = make_shared<NumericalVector<unsigned>>(numRows + 1);
+            list<T> resultColInd = list<T>();
+
+            for (unsigned i = 0; i < numRows; ++i) {
+                unsigned thisRowStart = thisRowPtr[i];
+                unsigned thisRowEnd = thisRowPtr[i + 1];
+                unsigned otherRowStart = otherRowPtr[i];
+                unsigned otherRowEnd = otherRowPtr[i + 1];
+
+                unsigned thisRowInd = thisRowStart;
+                unsigned otherRowInd = otherRowStart;
+
+                while (thisRowInd < thisRowEnd and otherRowInd < otherRowEnd) {
+                    unsigned thisCol = thisColInd[thisRowInd];
+                    unsigned otherCol = otherColInd[otherRowInd];
+
+                    if (thisCol < otherCol) {
+                        resultValues.push_back(scaleThis * thisValues[thisRowInd]);
+                        resultColInd.push_back(thisCol);
+                        ++thisRowInd;
+                    } else if (thisCol > otherCol) {
+                        resultValues.push_back(-scaleOther * otherValues[otherRowInd]);
+                        resultColInd.push_back(otherCol);
+                        ++otherRowInd;
+                    } else {
+                        resultValues.push_back(
+                                scaleThis * thisValues[thisRowInd] - scaleOther * otherValues[otherRowInd]);
+                        resultColInd.push_back(thisCol);
+                        ++thisRowInd;
+                        ++otherRowInd;
+                    }
                 }
-            };
-            ThreadingOperations<T>::executeParallelJob(subtractJob, size, availableThreads);
 
+                while (thisRowInd < thisRowEnd) {
+                    resultValues.push_back(scaleThis * thisValues[thisRowInd]);
+                    resultColInd.push_back(thisColInd[thisRowInd]);
+                    ++thisRowInd;
+                }
+                
+                while (otherRowInd < otherRowEnd) {
+                    resultValues.push_back(-scaleOther * otherValues[otherRowInd]);
+                    resultColInd.push_back(otherColInd[otherRowInd]);
+                    ++otherRowInd;
+                }
+
+                (*resultRowPtr)[i + 1] = resultValues.size();
+            }
+
+
+            shared_ptr<NumericalVector<T>> resultValuesVector = make_shared<NumericalVector<T>>(resultValues.size());
+            shared_ptr<NumericalVector<unsigned>> resultColIndVector = make_shared<NumericalVector<unsigned>>(
+                    resultColInd.size());
+
+            unsigned i = 0;
+            for (auto value: resultValues) {
+                (*resultValuesVector)[i] = value;
+                ++i;
+            }
+            i = 0;
+            for (auto value: resultColInd) {
+                (*resultColIndVector)[i] = value;
+                ++i;
+            }
+            resultMatrix->setValues(std::move(resultValuesVector));
+            resultMatrix->setSupplementaryVectors({std::move(resultRowPtr),std::move(resultColIndVector)});
         }
+        
 
         void  matrixMultiplication(shared_ptr<NumericalMatrixStorageDataProvider<T>>& inputMatrix,
                                    shared_ptr<NumericalMatrixStorageDataProvider<T>>& resultMatrix,

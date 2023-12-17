@@ -34,6 +34,7 @@ namespace Tests {
             testCSRMatrixOnSpotAccess();
             testCSRMatrixCOOAccess();
             testMatrixAdditionCSR();
+            testMatrixSubtractionCSR();
 
             
         }
@@ -84,52 +85,7 @@ namespace Tests {
 
             logTestEnd();
         }
-
-        static void testMatrixAdditionCSR() {
-            logTestStart("testCSRMatrixAddition");
-
-            // Initialize matrix A
-            // [3 0 0
-            //  0 0 7
-            //  0 0 0]
-            NumericalMatrix<double> matrixA = NumericalMatrix<double>(3, 3, CSR);
-            matrixA.setElement(0, 0, 3);
-            matrixA.setElement(1, 2, 7);
-
-            // Initialize matrix B
-            // [0 2 0
-            //  0 0 0
-            //  0 4 5]
-            NumericalMatrix<double> matrixB = NumericalMatrix<double>(3, 3, CSR);
-            matrixB.setElement(0, 1, 2);
-            matrixB.setElement(2, 1, 4);
-            matrixB.setElement(2, 2, 5);
-
-            // Perform addition
-            // [3 2 0
-            //  0 0 7
-            //  0 4 5]
-            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(3, 3, CSR);
-            matrixA.add(matrixB, resultMatrix, 1.0, 1.0, 1); // Assuming this method exists
-
-            // Fetch result data
-            auto values = resultMatrix.dataStorage->getValues();
-            auto columnIndices = resultMatrix.dataStorage->getSupplementaryVectors()[0];
-            auto rowOffsets = resultMatrix.dataStorage->getSupplementaryVectors()[1];
-
-            // Define expected results
-            NumericalVector<double> expectedValues = {3, 2, 7, 4, 5};
-            NumericalVector<unsigned> expectedRowOffsets = {0, 2, 3, 5};
-            NumericalVector<unsigned> expectedColumnIndices = {0, 1, 2, 1, 2};
-
-            // Assertions to check the results
-            assert(expectedValues == values);
-            assert(expectedRowOffsets == rowOffsets);
-            assert(expectedColumnIndices == columnIndices);
-
-            logTestEnd();
-        }
-
+        
         static void testMatrixSubtraction() {
             logTestStart("testMatrixSubtraction");
 
@@ -228,8 +184,7 @@ namespace Tests {
 
             logTestEnd();
         }
-
-
+        
         static void testMatrixVectorColumnWisePartialMultiplication() {
             logTestStart("testMatrixVectorColumnWisePartialMultiplication");
 
@@ -259,9 +214,7 @@ namespace Tests {
 
             logTestEnd();
         }
-
-
-
+        
         static void testMatrixAdditionMultiThread() {
             logTestStart("testMatrixAdditionMultiThread");
 
@@ -397,8 +350,7 @@ namespace Tests {
 
             logTestEnd();
         }
-
-
+        
         static void testMatrixVectorColumnWisePartialMultiplicationMultiThread() {
             logTestStart("testMatrixVectorColumnWisePartialMultiplicationMultiThread");
 
@@ -428,8 +380,7 @@ namespace Tests {
 
             logTestEnd();
         }
-
-
+        
         static void testCSRMatrixWithOnSpotElementAssignment(){
             logTestStart("testCSRMatrixWithOnSpotAssignment");
             NumericalMatrix<double> matrixCSR = NumericalMatrix<double>(5, 5, CSR);
@@ -445,15 +396,15 @@ namespace Tests {
             matrixCSR.setElement(4, 4, 5);
 
             auto values = matrixCSR.dataStorage->getValues();
-            auto columnIndices = matrixCSR.dataStorage->getSupplementaryVectors()[0];
-            auto rowOffsets = matrixCSR.dataStorage->getSupplementaryVectors()[1];
+            auto rowPointers = matrixCSR.dataStorage->getSupplementaryVectors()[0];
+            auto columnIndices = matrixCSR.dataStorage->getSupplementaryVectors()[1];
 
             NumericalVector<double> expectedValues = {3, 7, 4, 2, 5};
             NumericalVector<unsigned> expectedRowOffsets = {0, 1, 2, 2, 3, 5};
             NumericalVector<unsigned> expectedColumnIndices = {0, 3, 1, 3, 4};
 
             assert(expectedValues == values);
-            assert(expectedRowOffsets == rowOffsets);
+            assert(expectedRowOffsets == rowPointers);
             assert(expectedColumnIndices == columnIndices);
             
             logTestEnd();
@@ -471,15 +422,15 @@ namespace Tests {
             matrixCSR.dataStorage->finalizeElementAssignment();
 
             auto values = matrixCSR.dataStorage->getValues();
-            auto columnIndices = matrixCSR.dataStorage->getSupplementaryVectors()[0];
-            auto rowOffsets = matrixCSR.dataStorage->getSupplementaryVectors()[1];
+            auto rowPointers = matrixCSR.dataStorage->getSupplementaryVectors()[0];
+            auto columnIndices = matrixCSR.dataStorage->getSupplementaryVectors()[1];
 
             NumericalVector<double> expectedValues = {3, 7, 4, 2, 5};
             NumericalVector<unsigned> expectedRowOffsets = {0, 1, 2, 2, 3, 5};
             NumericalVector<unsigned> expectedColumnIndices = {0, 3, 1, 3, 4};
 
             assert(expectedValues == values);
-            assert(expectedRowOffsets == rowOffsets);
+            assert(expectedRowOffsets == rowPointers);
             assert(expectedColumnIndices == columnIndices);
             
             logTestEnd();
@@ -525,6 +476,96 @@ namespace Tests {
             logTestEnd();
         }
 
+        static void testMatrixAdditionCSR() {
+            logTestStart("testCSRMatrixAddition");
+
+            // Initialize matrix A
+            // [3 0 0
+            //  0 0 7
+            //  0 0 0]
+            NumericalMatrix<double> matrixA = NumericalMatrix<double>(3, 3, CSR);
+            matrixA.setElement(0, 0, 3);
+            matrixA.setElement(1, 2, 7);
+
+            // Initialize matrix B
+            // [0 2 0
+            //  0 0 0
+            //  0 4 5]
+            NumericalMatrix<double> matrixB = NumericalMatrix<double>(3, 3, CSR);
+            matrixB.setElement(0, 1, 2);
+            matrixB.setElement(2, 1, 4);
+            matrixB.setElement(2, 2, 5);
+
+            // Perform addition
+            // [3 2 0
+            //  0 0 7
+            //  0 4 5]
+            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(3, 3, CSR);
+            matrixA.add(matrixB, resultMatrix, 1.0, 1.0, 1); // Assuming this method exists
+
+            // Fetch result data
+            auto values = resultMatrix.dataStorage->getValues();
+            auto rowPointers = resultMatrix.dataStorage->getSupplementaryVectors()[0];
+            auto columnIndices = resultMatrix.dataStorage->getSupplementaryVectors()[1];
+
+            // Define expected results
+            NumericalVector<double> expectedValues = {3, 2, 7, 4, 5};
+            NumericalVector<unsigned> expectedRowOffsets = {0, 2, 3, 5};
+            NumericalVector<unsigned> expectedColumnIndices = {0, 1, 2, 1, 2};
+
+            // Assertions to check the results
+            assert(expectedValues == values);
+            assert(expectedRowOffsets == rowPointers);
+            assert(expectedColumnIndices == columnIndices);
+
+            logTestEnd();
+        }
+
+        static void testMatrixSubtractionCSR() {
+            logTestStart("testCSRMatrixSubtraction");
+
+            // Initialize matrix A
+            // [3 0 0
+            //  0 0 7
+            //  0 0 0]
+            NumericalMatrix<double> matrixA = NumericalMatrix<double>(3, 3, CSR);
+            matrixA.setElement(0, 0, 3);
+            matrixA.setElement(1, 2, 7);
+
+            // Initialize matrix B
+            // [0 2 0
+            //  0 0 0
+            //  0 4 5]
+            NumericalMatrix<double> matrixB = NumericalMatrix<double>(3, 3, CSR);
+            matrixB.setElement(0, 1, 2);
+            matrixB.setElement(2, 1, 4);
+            matrixB.setElement(2, 2, 5);
+
+            // Perform subtraction
+            // [3 -2 0
+            //  0 0 7
+            //  0 -4 -5]
+            NumericalMatrix<double> resultMatrix = NumericalMatrix<double>(3, 3, CSR);
+            matrixA.subtract(matrixB, resultMatrix, 1.0, 1.0, 1);
+
+            // Fetch result data
+            auto values = resultMatrix.dataStorage->getValues();
+            auto rowPointers = resultMatrix.dataStorage->getSupplementaryVectors()[0];
+            auto columnIndices = resultMatrix.dataStorage->getSupplementaryVectors()[1];
+
+            // Define expected results
+            NumericalVector<double> expectedValues = {3, -2, 7, -4, -5};
+            NumericalVector<unsigned> expectedRowOffsets = {0, 2, 3, 5};
+            NumericalVector<unsigned> expectedColumnIndices = {0, 1, 2, 1, 2};
+
+            // Assertions to check the results
+            assert(expectedValues == values);
+            assert(expectedRowOffsets == rowPointers);
+            assert(expectedColumnIndices == columnIndices);
+
+            logTestEnd();
+        }
+        
         static void logTestStart(const std::string& testName) {
             std::cout << "Running " << testName << "... ";
         }

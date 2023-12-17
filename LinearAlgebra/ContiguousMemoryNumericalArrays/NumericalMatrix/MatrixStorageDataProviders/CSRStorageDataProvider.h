@@ -18,33 +18,33 @@ namespace LinearAlgebra {
             this->_storageType = NumericalMatrixStorageType::CSR;
             this->_values = make_shared<NumericalVector<T>>(0, static_cast<T>(0), numberOfThreads);
             _columnIndices = make_shared<NumericalVector<unsigned>>(0, static_cast<unsigned>(0), numberOfThreads);
-            _rowOffsets = make_shared<NumericalVector<unsigned>>(numberOfRows + 1, static_cast<unsigned>(0), numberOfThreads);
+            _rowPointers = make_shared<NumericalVector<unsigned>>(numberOfRows + 1, static_cast<unsigned>(0), numberOfThreads);
         }
 
         explicit CSRStorageDataProvider(shared_ptr<NumericalVector<T>> values,
                                         shared_ptr<NumericalVector<unsigned>> columnIndices,
-                                        shared_ptr<NumericalVector<unsigned>> rowOffsets,
+                                        shared_ptr<NumericalVector<unsigned>> rowPointers,
                                         unsigned numberOfRows, unsigned numberOfColumns, unsigned numberOfThreads)
                 : SparseMatrixDataStorageProvider<T>(numberOfRows, numberOfColumns, NumericalMatrixFormType::General, numberOfThreads) {
             this->_storageType = NumericalMatrixStorageType::CSR;
             this->_values = std::move(values);
             _columnIndices = std::move(columnIndices);
-            _rowOffsets = std::move(rowOffsets);
+            _rowPointers = std::move(rowPointers);
         }
         
         double sizeInKB() override {
-            return this->_values->sizeInKB() + _columnIndices->sizeInKB() + _rowOffsets->sizeInKB();
+            return this->_values->sizeInKB() + _columnIndices->sizeInKB() + _rowPointers->sizeInKB();
         }
 
         vector<shared_ptr<NumericalVector<unsigned>>> getSupplementaryVectors() override{
-            return {this->_columnIndices, this->_rowOffsets};
+            return {this->_rowPointers, this->_columnIndices};
         }
         
         void setSupplementaryVectors(vector<shared_ptr<NumericalVector<unsigned>>> supplementaryVectors) override{
             if (supplementaryVectors.size() != 2)
                 throw runtime_error("Invalid number of supplementary vectors.");
-            _columnIndices = std::move(supplementaryVectors[0]);
-            _rowOffsets = std::move(supplementaryVectors[1]);
+            _rowPointers = std::move(supplementaryVectors[0]);
+            _columnIndices = std::move(supplementaryVectors[1]);
         }
 
         T& getElement(unsigned int row, unsigned int column) override {
@@ -55,8 +55,8 @@ namespace LinearAlgebra {
                 return this->_builder.getElement(row, column);
             }
             else {
-                unsigned rowStart = (*_rowOffsets)[row];
-                unsigned rowEnd = (*_rowOffsets)[row + 1];
+                unsigned rowStart = (*_rowPointers)[row];
+                unsigned rowEnd = (*_rowPointers)[row + 1];
                 for (unsigned i = rowStart; i < rowEnd; i++) {
                     if ((*_columnIndices)[i] == column)
                         return (*this->_values)[i];
@@ -102,8 +102,8 @@ namespace LinearAlgebra {
             }
             
             //Check if the element already exists in csr format
-            unsigned rowStart = (*_rowOffsets)[row];
-            unsigned rowEnd = (*_rowOffsets)[row + 1];
+            unsigned rowStart = (*_rowPointers)[row];
+            unsigned rowEnd = (*_rowPointers)[row + 1];
             for (unsigned i = rowStart; i < rowEnd; i++) {
                 if ((*_columnIndices)[i] == column) {
                     (*this->_values)[i] = value;
@@ -114,7 +114,7 @@ namespace LinearAlgebra {
             if (!elementFound and value != static_cast<T>(0)){
                 vector<T>& valuesData = *this->_values->getData();
                 vector<unsigned>& columnIndicesData = *this->_columnIndices->getData();
-                vector<unsigned>& rowOffsetsData = *this->_rowOffsets->getData();
+                vector<unsigned>& rowPointersData = *this->_rowPointers->getData();
 
                 // Resize the vectors to accommodate the new element
                 valuesData.resize(valuesData.size() + 1);
@@ -132,7 +132,7 @@ namespace LinearAlgebra {
 
                 // Adjust the row offsets for subsequent rows
                 for (unsigned i = row + 1; i <= this->_numberOfRows; i++) {
-                    rowOffsetsData[i]++;
+                    rowPointersData[i]++;
                 }
 
             }
@@ -149,8 +149,8 @@ namespace LinearAlgebra {
             }
 
             // Check if the element exists in csr format
-            unsigned rowStart = (*_rowOffsets)[row];
-            unsigned rowEnd = (*_rowOffsets)[row + 1];
+            unsigned rowStart = (*_rowPointers)[row];
+            unsigned rowEnd = (*_rowPointers)[row + 1];
 
             // Identify the position of the element to be erased
             unsigned positionToErase = rowEnd; // Default to end (i.e., element not found)
@@ -165,7 +165,7 @@ namespace LinearAlgebra {
             if (positionToErase != rowEnd) {
                 auto &valuesData = *this->_values->getData();
                 auto &columnIndicesData = *this->_columnIndices->getData();
-                auto &rowOffsetsData = *this->_rowOffsets->getData();
+                auto &rowPointersData = *this->_rowPointers->getData();
 
                 // Shift elements to the left by one position, starting from the identified position
                 for (unsigned i = positionToErase; i < valuesData.size() - 1; i++) {
@@ -179,7 +179,7 @@ namespace LinearAlgebra {
 
                 // Adjust the row offsets for subsequent rows
                 for (unsigned i = row + 1; i <= this->_numberOfRows; i++) {
-                    rowOffsetsData[i]--;
+                    rowPointersData[i]--;
                 }
             }
         }
@@ -189,8 +189,8 @@ namespace LinearAlgebra {
                 throw runtime_error("Row index out of bounds.");
             }
             auto rowVector = make_shared<NumericalVector<T>>(this->_numberOfColumns, static_cast<T>(0));
-            unsigned int rowStart = (*_rowOffsets)[row];
-            unsigned int rowEnd = (*_rowOffsets)[row + 1];
+            unsigned int rowStart = (*_rowPointers)[row];
+            unsigned int rowEnd = (*_rowPointers)[row + 1];
 
             for (unsigned int i = rowStart; i < rowEnd; i++) {
                 (*rowVector)[(*_columnIndices)[i]] = (*this->_values)[i];
@@ -204,8 +204,8 @@ namespace LinearAlgebra {
             }
             auto columnVector = make_shared<NumericalVector<T>>(this->_numberOfRows, static_cast<T>(0));
             for (unsigned int row = 0; row < this->_numberOfRows; row++) {
-                unsigned int rowStart = (*_rowOffsets)[row];
-                unsigned int rowEnd = (*_rowOffsets)[row + 1];
+                unsigned int rowStart = (*_rowPointers)[row];
+                unsigned int rowEnd = (*_rowPointers)[row + 1];
                 for (unsigned int i = rowStart; i < rowEnd; i++) {
                     if ((*_columnIndices)[i] == column) {
                         (*columnVector)[row] = (*this->_values)[i];
@@ -233,7 +233,7 @@ namespace LinearAlgebra {
             
             this->_values = std::move(get<0>(dataVectors));
             this->_columnIndices = std::move(get<1>(dataVectors));
-            this->_rowOffsets = std::move(get<2>(dataVectors));
+            this->_rowPointers = std::move(get<2>(dataVectors));
         }
         
         void deepCopy(NumericalMatrixStorageDataProvider<T> &inputMatrixData) override {
@@ -246,7 +246,7 @@ namespace LinearAlgebra {
             
             this->_values = make_shared<NumericalVector<T>>(*inputValues);
             _columnIndices = make_shared<NumericalVector<unsigned>>(*inputColumnIndices);
-            _rowOffsets = make_shared<NumericalVector<unsigned>>(*inputRowOffsets);
+            _rowPointers = make_shared<NumericalVector<unsigned>>(*inputRowOffsets);
         }
         
         bool areElementsEqual(NumericalMatrixStorageDataProvider<T> &inputMatrixData) override {
@@ -259,13 +259,13 @@ namespace LinearAlgebra {
 
             return ((this->_values == inputValues) &&
                     (_columnIndices == inputColumnIndices) &&
-                    (_rowOffsets == inputRowOffsets));
+                    (_rowPointers == inputRowOffsets));
         }
         
 
     private:
             shared_ptr<NumericalVector<unsigned>> _columnIndices;
-            shared_ptr<NumericalVector<unsigned>> _rowOffsets;
+            shared_ptr<NumericalVector<unsigned>> _rowPointers;
 
     };
 
@@ -280,7 +280,7 @@ namespace LinearAlgebra {
 
           vector<T>& thisValues = *this->_values->getData();
           vector<unsigned>& thisColumnIndices = *this->_columnIndices->getData();
-          vector<unsigned>& thisRowPointers = *this->_rowOffsets->getData();
+          vector<unsigned>& thisRowPointers = *this->_rowPointers->getData();
 
           auto inputStorage = inputMatrixData.getNecessaryStorageVectors();
           vector<T>& inputValues = inputStorage[0];
@@ -358,7 +358,7 @@ namespace LinearAlgebra {
 
           vector<T>& thisValues = *this->_values->getData();
           vector<unsigned>& thisColumnIndices = *this->_columnIndices->getData();
-          vector<unsigned>& thisRowPointers = *this->_rowOffsets->getData();
+          vector<unsigned>& thisRowPointers = *this->_rowPointers->getData();
 
           auto inputStorage = inputMatrixData[0].getNecessaryStorageVectors();
           vector<T>& inputValues = inputStorage[0];
@@ -418,10 +418,10 @@ namespace LinearAlgebra {
                   // Adjust the row pointers for the threads after the first one
                   unsigned offset = localResultsRowPointers[t-1].back();
                   for (unsigned val : localResultsRowPointers[t]) {
-                      this->_rowOffsets->push_back(val + offset);
+                      this->_rowPointers->push_back(val + offset);
                   }
               } else {
-                  this->_rowOffsets->insert(this->_rowOffsets->end(), localResultsRowPointers[t].begin(), localResultsRowPointers[t].end());
+                  this->_rowPointers->insert(this->_rowPointers->end(), localResultsRowPointers[t].begin(), localResultsRowPointers[t].end());
               }
           }
       }
@@ -432,7 +432,7 @@ namespace LinearAlgebra {
 
           vector<T>& thisValues = *this->_values->getData();
           vector<unsigned>& thisColumnIndices = *this->_columnIndices->getData();
-          vector<unsigned>& thisRowPointers = *this->_rowOffsets->getData();
+          vector<unsigned>& thisRowPointers = *this->_rowPointers->getData();
 
           auto inputStorage = inputMatrixData[0].getNecessaryStorageVectors();
           vector<T>& inputValues = inputStorage[0];
@@ -509,7 +509,7 @@ namespace LinearAlgebra {
 
           vector<T>& thisValues = *this->_values->getData();
           vector<unsigned>& thisColumnIndices = *this->_columnIndices->getData();
-          vector<unsigned>& thisRowPointers = *this->_rowOffsets->getData();
+          vector<unsigned>& thisRowPointers = *this->_rowPointers->getData();
 
           auto inputStorage = inputMatrixData[0].getNecessaryStorageVectors();
           vector<T>& inputValues = inputStorage[0];
@@ -568,10 +568,10 @@ namespace LinearAlgebra {
                   // Adjust the row pointers for the threads after the first one
                   unsigned offset = localResultsRowPointers[t-1].back();
                   for (unsigned val : localResultsRowPointers[t]) {
-                      this->_rowOffsets->push_back(val + offset);
+                      this->_rowPointers->push_back(val + offset);
                   }
               } else {
-                  this->_rowOffsets->insert(this->_rowOffsets->end(), localResultsRowPointers[t].begin(), localResultsRowPointers[t].end());
+                  this->_rowPointers->insert(this->_rowPointers->end(), localResultsRowPointers[t].begin(), localResultsRowPointers[t].end());
               }
           }
       }
@@ -579,7 +579,7 @@ namespace LinearAlgebra {
       void matrixMultiply(NumericalMatrixStorage<T> &inputMatrixData, NumericalMatrixStorage<T>& resultMatrixData, T scaleThis, T scaleOther) override {
           T *thisValues = this->_values->getDataPointer();
           unsigned *thisColumnIndices = this->_columnIndices->getDataPointer();
-          unsigned *thisRowPointers = this->_rowOffsets->getDataPointer();
+          unsigned *thisRowPointers = this->_rowPointers->getDataPointer();
 
           T *inputValues = inputMatrixData[0];
           unsigned *inputColumnIndices = reinterpret_cast<unsigned*>(inputMatrixData[1]);

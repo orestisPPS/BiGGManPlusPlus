@@ -43,7 +43,7 @@ namespace LinearAlgebra{
         * 
         * The CSR format represents a sparse matrix using three one-dimensional arrays:
         * - The values array stores the non-zero elements in row-major order.
-        * - The rowOffsets array stores the starting index of the first non-zero element in each row.
+        * - The rowPointers array stores the starting index of the first non-zero element in each row.
         * - The columnIndices array stores the column indices of each element in the values array.
         * 
         * This function converts the matrix from the COO format, stored in the _cooMap, 
@@ -52,7 +52,7 @@ namespace LinearAlgebra{
         * @return A tuple containing three shared pointers:
         *         1. A pointer to the values array.
         *         2. A pointer to the columnIndices array.
-        *         3. A pointer to the rowOffsets array.
+        *         3. A pointer to the rowPointers array.
         * 
         * @throws runtime_error if the matrix is empty.
         */
@@ -68,7 +68,7 @@ namespace LinearAlgebra{
             
             auto values = make_shared<NumericalVector<T>>(_cooMapRowMajor->size());
             auto columnIndices = make_shared<NumericalVector<unsigned>>(_cooMapRowMajor->size());
-            auto rowOffsets = make_shared<NumericalVector<unsigned>>(_cooMapRowMajor->size() + 1);
+            auto rowPointers = make_shared<NumericalVector<unsigned>>(_cooMapRowMajor->size() + 1);
 
             unsigned currentIndex = 0;
             // Iterate through the entries in the COO map to build the CSR format.
@@ -79,16 +79,16 @@ namespace LinearAlgebra{
                 (*values)[currentIndex] = element.second;
                 (*columnIndices)[currentIndex] = col;
 
-                // Increment the rowOffsets for the current row and all subsequent rows
+                // Increment the rowPointers for the current row and all subsequent rows
                 for (unsigned r = row + 1; r <= _numberOfRows; r++) {
-                    (*rowOffsets)[r]++;
+                    (*rowPointers)[r]++;
                 }
 
                 // Move to the next position in values and columnIndices
                 ++currentIndex;
             }
             _cooMapRowMajor->clear();
-            return make_tuple(values, columnIndices, rowOffsets);
+            return make_tuple(values, columnIndices, rowPointers);
         }
 
         /**
@@ -155,15 +155,15 @@ namespace LinearAlgebra{
          * This function converts the matrix from the CSR format to the COO format and stores it in the _cooMap member.
          * 
          * @param values A NumericalVector containing the non-zero values of the matrix in row-major order.
-         * @param rowOffsets A NumericalVector containing the starting indices in the 'values' and 'columnIndices' arrays for each row.
+         * @param rowPointers A NumericalVector containing the starting indices in the 'values' and 'columnIndices' arrays for each row.
          * @param columnIndices A NumericalVector containing the column indices for each value in the 'values' array.
          */
         void getCOOMapFromCSR(NumericalVector<T> &values,
-                              NumericalVector<unsigned> &rowOffsets,
+                              NumericalVector<unsigned> &rowPointers,
                               NumericalVector<unsigned> &columnIndices) {
 
             // Ensure the provided vectors have valid data
-            if (values.empty() || rowOffsets.empty() || columnIndices.empty()) {
+            if (values.empty() || rowPointers.empty() || columnIndices.empty()) {
                 throw runtime_error("CSR data is incomplete.");
             }
             if (_elementAssignmentRunning){
@@ -176,9 +176,9 @@ namespace LinearAlgebra{
             // Iterate through each row of the matrix.
             for (unsigned row = 0; row < _numberOfRows; ++row) {
 
-                // Get the start and end indices for the current row from the rowOffsets array.
-                unsigned startId = rowOffsets[row];
-                unsigned endId = rowOffsets[row + 1];
+                // Get the start and end indices for the current row from the rowPointers array.
+                unsigned startId = rowPointers[row];
+                unsigned endId = rowPointers[row + 1];
 
                 // Iterate through the non-zero entries in the current row.
                 for (unsigned id = startId; id < endId; ++id) {
