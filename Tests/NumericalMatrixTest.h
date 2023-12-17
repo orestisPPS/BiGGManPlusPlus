@@ -35,6 +35,7 @@ namespace Tests {
             testCSRMatrixCOOAccess();
             testMatrixAdditionCSR();
             testMatrixSubtractionCSR();
+            testCSRMatrixVectorMultiplication();
 
             
         }
@@ -565,7 +566,36 @@ namespace Tests {
 
             logTestEnd();
         }
-        
+
+        static void testCSRMatrixVectorMultiplication() {
+            logTestStart("testCSRMatrixVectorMultiplication");
+
+            // Initialize the matrix in CSR format
+            NumericalMatrix<double> matrixCSR = NumericalMatrix<double>(2, 2, CSR);
+            matrixCSR.setElement(0, 0, 1);
+            matrixCSR.setElement(0, 1, 2);
+            matrixCSR.setElement(1, 0, 3);
+            matrixCSR.setElement(1, 1, 4);
+
+            // Define the vector for multiplication
+            NumericalVector<double> vector = {2, 3};
+
+            // Initialize the result vector
+            NumericalVector<double> resultVector = NumericalVector<double>(2);
+
+            // Perform the matrix-vector multiplication
+            matrixCSR.multiplyVector(vector, resultVector, 1.0, 1.0, 2);
+
+            // Define the expected result
+            NumericalVector<double> expectedValues = {8, 18};
+
+            // Assertions to check the results
+            assert(expectedValues == resultVector);
+
+            logTestEnd();
+        }
+
+
         static void logTestStart(const std::string& testName) {
             std::cout << "Running " << testName << "... ";
         }

@@ -209,23 +209,27 @@ namespace LinearAlgebra {
         }
 
         void vectorMultiplication(T *vector, T *resultVector, T scaleThis, T scaleOther, unsigned availableThreads) override {
+            unsigned numRows = this->_numberOfRows;
 
-            T* thisValues = this->_storageData->getValues()->getDataPointer();
+            T *thisValues = this->_storageData->getValues()->getDataPointer();
+            unsigned *thisRowPtr = this->_storageData->getSupplementaryVectors()[0]->getDataPointer();
+            unsigned *thisColInd = this->_storageData->getSupplementaryVectors()[1]->getDataPointer();
 
-            unsigned &numRows = this->_numberOfRows;
-            unsigned &numCols = this->_numberOfColumns;
-            unsigned &commonDim = this->_numberOfColumns;
-
-            auto multiplyJob = [&](unsigned startRow, unsigned endRow) -> void {
-                for (unsigned row = startRow; row < endRow && row < numRows; ++row) {
-                    T sum = 0;
-                    for (unsigned k = 0; k < commonDim; ++k) {
-                        sum += scaleThis * thisValues[row * commonDim + k] * scaleOther * vector[k];
+            // Initialize the result vector to zero
+            std::fill_n(resultVector, numRows, static_cast<T>(0));
+            
+            auto matrixVectorMultiplicationJob = [&] (unsigned startRow, unsigned endRow) -> void {
+                for (unsigned i = startRow; i < endRow && i < numRows; ++i) {
+                    T sum = static_cast<T>(0);
+                    // Iterate over each non-zero element of row i
+                    for (unsigned j = thisRowPtr[i]; j < thisRowPtr[i + 1]; ++j) {
+                        sum += scaleThis * thisValues[j] * vector[thisColInd[j]];
                     }
-                    resultVector[row] = sum;
+                    resultVector[i] = sum * scaleOther;
                 }
             };
-            ThreadingOperations<T>::executeParallelJob(multiplyJob, numRows, availableThreads);
+            
+            ThreadingOperations<T>::executeParallelJob(matrixVectorMultiplicationJob, numRows, availableThreads);
         }
 
         T vectorMultiplicationRowWisePartial(T *vector, unsigned targetRow, unsigned startColumn, unsigned endColumn,
