@@ -201,6 +201,10 @@ add_executable(untitled main.cpp
         Logging/Timer.h
         Logging/ChronoDurationConverters.cpp
         Logging/ChronoDurationConverters.h
+        Tests/NodeCacheLoyaltyOptimization.h
+        Tests/NodeCacheLoyaltyOptimization.h
+        Tests/NodeCacheLoyaltyOptimization.h
+        Tests/NodeCacheLoyaltyOptimization.h
 )
 
 

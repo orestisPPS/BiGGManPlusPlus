@@ -16,10 +16,10 @@
 int main() {
     //NUMERICAL VECTOR AND MATRIX TESTS.
     //Tests::NumericalVectorTest::runTests();
-    Tests::NumericalMatrixTest::runTests();
+    //Tests::NumericalMatrixTest::runTests();
     
     //ANALYSIS TESTS.
-    //Tests::SteadyStateDirichlet2D::runTests(); //Pass
+    Tests::SteadyStateDirichlet2D::runTests(); //Pass
     //Tests::TransientDirichlet2D::runTests(); //Fail
     //Tests::SteadyState3DDirichlet::runTests(); //Pass
     //Tests::SteadyState3DNeumann::runTests(); //Pass
@@ -43,6 +43,7 @@ int main() {
 
     cout << "That's All Folks!" << endl;
 
+    return 0;
 }
 
 

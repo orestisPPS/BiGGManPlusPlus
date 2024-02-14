@@ -1,0 +1,8 @@
+#Region: Comments
+# Tuning Session Dirichlet 11x11x11: Single Thread Execution
+# Tuning Session Dirichlet 11x11x11: System Size729
+
+#Region: Single Observation Timers
+Timer:Equilibrium Linear System Assembly Single Thread
+4.356568148000000e+00
+
